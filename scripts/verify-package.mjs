@@ -34,6 +34,32 @@ assert.match(index, /414/);
 assert.match(index, /0\/40[\s\S]*17\/40[\s\S]*34\/40/);
 assert.match(index, /does not prove better real-world judgment or lives saved/i);
 
+const guide = fs.readFileSync(path.join(ROOT, "public/docs/rescueworld-guide.html"), "utf8");
+assert.equal((guide.match(/href="\/rescueworld\.html"/g) ?? []).length, 3,
+  "all three guide actions must open the root viewer route");
+assert.doesNotMatch(guide, /href="\.\/rescueworld\.html"/,
+  "the guide must not resolve the viewer relative to /docs");
+assert.doesNotMatch(guide, /192\.168\.|:5185/,
+  "the guide must not publish a stale host-specific LAN address");
+
+for (const relative of [
+  "public/docs/submission-presentation.html",
+  "docs/rescueworld/submission-presentation.html",
+]) {
+  const presentation = fs.readFileSync(path.join(ROOT, relative), "utf8");
+  assert.doesNotMatch(presentation,
+    /video\/plan\/SCRIPT-V3|experiments\/kumamoto-real-response|app\/scripts\/audit-plain-text|board messages?\s+\d|Disaster Simulation Clarification\.pdf/,
+    `presentation cites an absent or obsolete source: ${relative}`);
+}
+for (const relative of [
+  "public/docs/emergence-presentation.html",
+  "docs/rescueworld/emergence-presentation.html",
+]) {
+  const presentation = fs.readFileSync(path.join(ROOT, relative), "utf8");
+  assert.doesNotMatch(presentation, /same incomplete information/i,
+    `presentation overstates the reconstructed information boundary: ${relative}`);
+}
+
 const textExtensions = new Set([
   ".css", ".geojson", ".html", ".js", ".json", ".jsonl", ".md", ".mjs", ".sh",
   ".toml", ".ts", ".txt", ".yml", ".yaml",
@@ -51,17 +77,18 @@ function walk(directory) {
 }
 walk(ROOT);
 
-const literal = (parts) => new RegExp(parts.join(""));
 const forbidden = [
-  [literal(["152\\.165", "\\.117\\.187"]), "VPN server address"],
-  [literal(["10\\.10", "\\.0\\.109"]), "private GPU address"],
-  [literal(["Meta#", "data#laB"]), "VPN shared key"],
-  [literal(["#\\.\\)8=", "tP_UiSG"]), "VPN password"],
-  [literal(["vpn-", "009"]), "VPN account"],
-  [literal(["\\/home\\/", "rndyrbrts\\/"]), "private remote path"],
+  [/\b10(?:\.\d{1,3}){3}\b/, "private network address"],
+  [/\b(?:server address|vpn server)\s*[:=]\s*(?:\d{1,3}\.){3}\d{1,3}\b/i,
+    "labeled VPN/server address"],
+  [/\b(?:pre[- ]shared key|shared secret|vpn (?:user(?:name)?|account|password))\s*[:=]/i,
+    "labeled VPN credential"],
+  [new RegExp(["L2TP", "\\/IPsec", "|IPsec ", "Shared Secret"].join(""), "i"),
+    "VPN configuration"],
+  [/\/home\/[a-z_][a-z0-9_-]{1,31}\//i, "private remote path"],
   [/BEGIN (?:RSA|OPENSSH|EC|DSA) PRIVATE KEY/, "private key"],
-  [literal(["github_", "pat_[A-Za-z0-9_]+"]), "GitHub token"],
-  [literal(["gh", "o_[A-Za-z0-9]+"]), "GitHub OAuth token"],
+  [new RegExp(["github", "_pat_", "[A-Za-z0-9_]+"].join("")), "GitHub token"],
+  [new RegExp(["gh", "o_", "[A-Za-z0-9]+"].join("")), "GitHub OAuth token"],
   [/\bsk-[A-Za-z0-9_-]{20,}/, "API key"],
   [new RegExp(["seven", "earths"].join("-"), "i"), "stale six-candidate work"],
   [new RegExp(["deep", "research", "report", "5"].join("-"), "i"), "stale July brief"],

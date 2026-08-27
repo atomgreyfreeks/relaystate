@@ -1905,8 +1905,8 @@ export const OUTCOMES = {
     countHead: "What the frozen experiment counted",
     /** the label on a row that carries a classification from the contract */
     marked: {
-      exceptional: "This decision went right every time",
-      perfect_repair: "One message repaired every answer",
+      exceptional: "All 8 simulated answers passed every prewritten check",
+      perfect_repair: "One message made all 8 corrected answers pass every prewritten check",
       persistent_problem: "This decision stayed wrong",
     } as Record<string, string>,
     /** the control on each row. Six words. */

@@ -197,8 +197,8 @@
       <h1>We rebuilt a real earthquake response, and software agents worked through eleven moments of decision.</h1>
       <div class="g2u">
         <div>
-          <p>On 28 July 2026 a magnitude 7.1 earthquake struck Kumamoto Prefecture in southern Japan. Rescue World replays 414 recorded moments from the seventy-two hours that followed, over the real ground where they happened.</p>
-          <p>Eleven of those moments are points where somebody had to decide something. At each one, software agents answered the same question the real responders faced, holding only the information that was public by that moment's deadline.</p>
+          <p>On 28 July 2026 a magnitude 7.1 earthquake struck Kumamoto Prefecture in southern Japan. Rescue World replays 414 events in a sealed viewer record covering the seventy-two hours that followed, over the real ground where they happened.</p>
+          <p>Eleven of those events are points where somebody had to decide something. At each one, software agents answered the same question the real responders faced, holding only the information that was public by that reconstructed deadline. Two scored moments also used explicit exercise assumptions where the public record did not reveal what a real desk knew.</p>
           <p>Rules written before the runs graded every answer by machine. The choice the real responders actually made is always shown first, and no screen ranks an agent against a person.</p>
           <p class="dim">One earthquake is replayed over the real ground of Kumamoto. A fleet of artificial-intelligence agents reads the reports, decides, and sends crews out. The evidence table those agents keep is grown the way a lichen grows. Claims sit on one side and sources on the other, so that neither one can spoil the other.</p>
         </div>
@@ -206,7 +206,7 @@
           <span class="tag m">Measured</span>
           <h3>What a judge should leave believing</h3>
           <p style="font-size:16.5px">Two small habits in how a decision is handed to the next person changed the measured quality of the work. This build shows exactly how much they changed it, and says plainly what was never measured at all.</p>
-          <p class="src">Recording: 414 events, 72 hours, 11 decision moments — docs/rescueworld/STORY-TEMPLATE.md. Incident facts — video/plan/SCRIPT-V3.md.</p>
+          <p class="src">Recording: 414 events, 72 hours and 11 decision moments — docs/rescueworld/STORY-TEMPLATE.md. Incident sources and transformations — product/disaster-replay/DATA-SOURCES.md.</p>
         </div>
       </div>
     </div>
@@ -246,7 +246,7 @@
           <li>It asks for decision episodes that explain why a timeline went a different way. Our trace does this in six steps: the real recorded choice first, what was known, what each way of working proposed, what the check caught, the correction, and the final action.</li>
           <li>It asks that a stand-in decision-maker be given the same imperfect information the real one had. Our recorded answers do this: the agents answered each moment eight separate times, holding only the reports that were public when that moment's deadline passed.</li>
         </ul>
-        <p class="src">Sources: the outside document Randy shared, read line by line against this build; board messages 1564, 1565 and 1589.</p>
+        <p class="src">Source: an external clarification supplied by the project lead, not included in this partner package. Claims about this build can be checked in docs/rescueworld/STORY-TEMPLATE.md.</p>
       </div>
     </div>
   </div>
@@ -275,7 +275,7 @@
             <li>Answers that broke at least one rule about sources, unknowns or allowed choices fell from 40 of 40 to 19 of 40.</li>
             <li>Of the unknowns each moment required an answer to name out loud, plain notes named none. The evidence table named 97 in every 100.</li>
           </ul>
-          <p class="src">Source: the frozen results at experiments/kumamoto-real-response/PRODUCTION-RESULTS.md, in the table of registered outcomes.</p>
+          <p class="src">Source: the frozen results at experiment/PRODUCTION-RESULTS.md, in the table of registered outcomes.</p>
         </div>
         <div class="measured">
           <span class="tag m">Measured</span>
@@ -291,7 +291,7 @@
             <li>It repaired 17 of the 23 answers that came back broken, and it broke none of the answers that already worked.</li>
             <li>It used at most one extra message per answer, and the length of the work grew 1.435 times against a ceiling of 1.5 set before the runs.</li>
           </ul>
-          <p class="src">Source: the frozen results at experiments/kumamoto-real-response/PRODUCTION-RESULTS.md, in the table for the one-correction claim.</p>
+          <p class="src">Source: the frozen results at experiment/PRODUCTION-RESULTS.md, in the table for the one-correction claim.</p>
         </div>
       </div>
       <p class="dim" style="font-size:13.5px;margin-top:14px">The deadline rule covered both habits: across all forty registered tries, the checker found zero answers that used a report which arrived later.</p>
@@ -326,7 +326,7 @@
           <p style="font-size:15px">One open model answered five decision moments rebuilt from the public record, eight separate times each. Two of those moments carry assumptions written for the exercise, because the public record does not show what the real desks held. This is one small sealed test, and a whole disaster holds far more decisions than five.</p>
         </div>
       </div>
-      <p class="src">Sources: the frozen results at experiments/kumamoto-real-response/PRODUCTION-RESULTS.md, both in the registered outcomes and in the limits written at the end; docs/rescueworld/SPACE-DATA-STORIES.md, story four.</p>
+      <p class="src">Sources: the frozen results at experiment/PRODUCTION-RESULTS.md, both in the registered outcomes and in the limits written at the end; docs/rescueworld/SPACE-DATA-STORIES.md, story four.</p>
     </div>
   </div>
 </section>
@@ -357,7 +357,7 @@
             <li>The finished audit lists 1,227 visible strings and finds zero failures. It separately explains 196 unusual but valid strings and excludes 25 codes or style names that never reach a screen.</li>
             <li>Recorded quotations remain byte-for-byte unchanged, mistakes included. Plain explanations are added in brackets beside internal terms, and the sealed recording keeps its original fingerprint.</li>
           </ul>
-          <p class="src">Sources: docs/rescueworld/PLAIN-TEXT-METHODS.md, parts two and four; a live run of app/scripts/audit-plain-text.mjs today.</p>
+          <p class="src">Source: docs/rescueworld/PLAIN-TEXT-METHODS.md, parts two and four. The recorded audit output is preserved there; the internal audit utility is not included in this handoff.</p>
         </div>
         <div>
           <div class="plainbox">
@@ -406,7 +406,7 @@
               <li class="p">The checkers, which grade an answer in code by rules fixed in advance.</li>
             </ul>
             <p style="font-size:14.5px">What still has to be built is the controlled replay that changes one admissible choice while holding everything else fixed. Until that exists, the product may explain rule-following but may not claim that a different choice caused a better outcome.</p>
-            <p class="src">Source: Disaster Simulation Clarification.pdf, recommendation to begin with verified post-run debriefs and move to live decision cards only after precision, hindsight and counterfactual validation.</p>
+            <p class="src">Source: the external Disaster Simulation Clarification briefing supplied by the project lead, not included in this partner package.</p>
           </div>
         </div>
         <div style="border-top:1px dashed rgba(232,168,127,.4); margin-top:20px; padding-top:16px">
