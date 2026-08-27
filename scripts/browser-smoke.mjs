@@ -67,13 +67,13 @@ try {
   assert.match(opening, /magnitude 7\.1 earthquake struck Kumamoto/i);
   assert.ok(await page.$eval("#gl", (canvas) => canvas instanceof HTMLCanvasElement
     && canvas.getBoundingClientRect().width > 1000));
-  await page.click("#briefGo");
-  await page.waitForFunction(() => document.querySelector("#brief")?.classList.contains("gone"));
 
   // The decision map must remain an action overview: eleven real decision moments, test evidence
   // on exactly five, and exactly 5 × 3 × 8 = 120 scored AI proposals. The six contextual moments
-  // may never grow invented result branches.
+  // may never grow invented result branches. Its own key must also work from a completely fresh
+  // tab, without making a reader start the replay with a different control first.
   await page.keyboard.press("b");
+  await page.waitForFunction(() => document.querySelector("#brief")?.classList.contains("gone"));
   await page.waitForFunction(() => document.querySelector("#tree")?.classList.contains("on"));
   await page.waitForFunction(() => Number.parseFloat(
     getComputedStyle(document.querySelector("#tree .tsel .rvbody")).opacity) > 0.95);
@@ -92,6 +92,34 @@ try {
   assert.deepEqual(await page.$$eval("#tree .tbranch .tbact", (nodes) =>
     nodes.map((node) => node.textContent)),
   ["four command teams", "three fire brigades", "one helicopter crew"]);
+
+  // Every milestone is also a map control. A click must select that exact decision and complete
+  // a real camera flight to the ground its proposed destinations stand on. Walking all eleven
+  // catches both dead milestones and a future handler that updates only the text panel.
+  const visitedMoments = [];
+  for (let i = 0; i < 11; i++) {
+    // Some consecutive decisions share the same destination. Put the camera at the same remote
+    // test pose before each click, so the assertion measures whether this milestone issued its
+    // own flight rather than whether two legitimate destinations happened to coincide.
+    await page.evaluate(() => window.__HERO.setPose({
+      tx: -0.48, ty: 0, tz: -0.48, yaw: 0.15, pitch: 0.9, dist: 1.8,
+    }));
+    const before = await page.evaluate(() => window.__HERO.camera());
+    await page.$$eval("#tree .tnode", (nodes, index) => nodes[index].click(), i);
+    await new Promise((resolve) => setTimeout(resolve, 1_250));
+    const after = await page.evaluate(() => ({
+      camera: window.__HERO.camera(),
+      moment: window.__HERO.treeState().moment,
+    }));
+    assert.ok(["tx", "ty", "tz", "dist"].every((key) => Number.isFinite(after.camera[key])),
+      `decision milestone ${i + 1} produced a non-finite camera pose`);
+    assert.ok(Math.hypot(after.camera.tx - before.tx, after.camera.ty - before.ty,
+      after.camera.tz - before.tz, after.camera.dist - before.dist) > 0.0001,
+    `decision milestone ${i + 1} did not move the camera`);
+    visitedMoments.push(after.moment);
+  }
+  assert.equal(new Set(visitedMoments).size, 11,
+    "the eleven milestones did not select eleven distinct decision moments");
   await page.screenshot({ path: "/tmp/rescue-world-partner-viewer.png" });
 
   // The same surface must fit a typical laptop without dropping a decision or hiding its action.
@@ -159,7 +187,8 @@ try {
   assert.deepEqual(noise, [], `browser warnings or errors: ${noise.join(" | ")}`);
 
   console.log("PASS: the partner hub loads, exposes four current review paths, and fits at 1440×900.");
-  console.log("PASS: the viewer opens 11 action-first decisions, exactly 120 scored proposals, and no invented branches.");
+  console.log("PASS: B opens the viewer from a fresh tab and all 11 decision milestones move the map.");
+  console.log("PASS: the viewer carries 11 action-first decisions, exactly 120 scored proposals, and no invented branches.");
   console.log("PASS: the ledger preserves 0/40 → 17/40 → 34/40 and the flagship keeps six semantic cards.");
   console.log("Screenshots: /tmp/rescue-world-partner-hub.png, /tmp/rescue-world-partner-viewer.png and /tmp/rescue-world-partner-viewer-laptop.png");
 } finally {

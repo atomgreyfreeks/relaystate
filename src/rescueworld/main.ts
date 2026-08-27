@@ -5606,6 +5606,55 @@ async function boot() {
       // press that opens it. Nothing is read until a reader asks for that try.
       seedDeskAt,
     );
+    // The world behind the screen answers whichever beacon a reader opens. Both ways of opening
+    // one are watched — the pointer on a beacon, and the two keys that walk the row — and both
+    // listeners are added after the screen's own, so the screen has already moved its choice by
+    // the time these read it back.
+    const treeBody = el("treeBody");
+    treeBody.addEventListener("click", (e) => {
+      if (e.target instanceof Element && e.target.closest(".tnode")) openedMomentChanged(true);
+    });
+    treeBody.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") openedMomentChanged(true);
+    });
+  }
+  /**
+   * Which moment of decision the screen has open. It is a record of what a reader chose to look
+   * at and nothing else: the playback tick, the event log and every number on the page are the
+   * same whether this holds a moment or nothing.
+   */
+  let openedMoment: string | null = null;
+  /** the closest a flight to one moment's destinations ever stands */
+  const TREE_FLY_DIST = 0.40;
+  /** how long that flight takes, which is the length every other flight on this page takes */
+  const TREE_FLY_SECONDS = 1.1;
+  /**
+   * Answer the beacon that is now open: fly to the ground its destinations stand on, and light
+   * the marks the record places for them while it stays open.
+   *
+   * A moment whose destinations the record places nowhere has no marks to fly to, so the camera
+   * stays where it is. The screen already says that moment reaches places this ground does not
+   * carry, and a camera sent to a position this page invented would be an invention.
+   */
+  function openedMomentChanged(fly: boolean) {
+    openedMoment = treeHandle?.state().moment ?? null;
+    const moment = openedMoment ? telegraphOf.get(openedMoment) ?? null : null;
+    if (!fly || !moment) return;
+    let west = Infinity, east = -Infinity, north = Infinity, south = -Infinity;
+    for (const stack of moment.stacks) {
+      const at = targetPos({ kind: "site", i: stack.site });
+      west = Math.min(west, at.x); east = Math.max(east, at.x);
+      north = Math.min(north, at.z); south = Math.max(south, at.z);
+    }
+    const x = (west + east) / 2, z = (north + south) / 2;
+    const mid = new THREE.Vector3(x, groundY(x, z), z);
+    // The stand-off is the one the directed camera already uses for a move over several places:
+    // half the widest side of the box those places cover, and never closer than the distance at
+    // which the frame holds painted ground. One destination covers no box, so it is centred.
+    const spread = Math.max(east - west, south - north) / 2;
+    const dist = clamp(
+      Math.max(spread * 1.8, standBackFor(mid, TREE_FLY_DIST)), TREE_FLY_DIST, WIDE_DIST);
+    rig.flyTo(mid.x, mid.y, mid.z, dist, TREE_FLY_SECONDS);
   }
   function showTree(on: boolean) {
     if (on && !treeAvailable) return;
@@ -5617,6 +5666,9 @@ async function boot() {
       // where they were watching rather than back at the start
       const reached = Math.min(TICKS, Math.floor(P.tick));
       treeHandle?.selectAt((momentId) => (treeTickOf.get(momentId) ?? 0) <= reached);
+      // the moment it opens on lights its own marks, but the camera is left where the viewer
+      // parked it: opening the screen is not a request to be taken somewhere
+      openedMomentChanged(false);
       treeBox.classList.remove("closing");
       treeBox.classList.add("on");
       // the world's own working chrome steps out while the instrument is up
@@ -6066,6 +6118,8 @@ async function boot() {
     return telegraphLead(i < 0 ? 0 : i);
   }
   const telegraphLeadOf = new Map(telegraphs.map((t) => [t.momentId, leadFor(t.tick)]));
+  /** the marks one moment of decision put on the ground, found by that moment's own name */
+  const telegraphOf = new Map(telegraphs.map((moment) => [moment.momentId, moment]));
 
   /** how far through its own life one telegraph stands at this tick, or nothing where it is shut */
   function telegraphAt(moment: Telegraph, tick: number): { fade: number; past: boolean } | null {
@@ -6202,10 +6256,17 @@ async function boot() {
     let lastPlaced: Rect | null = null;
     let crowded = 0;
     let crowdedFade = 0;
+    // The decision screen is open on one moment, and the world it stands over is the world that
+    // moment happened in, so while it is open that moment's marks are the marks on the ground
+    // and no others. Their strength is still the one their own deadline gives them: nothing is
+    // drawn as chosen before the tick the record chose it on.
+    const opened = treeIsOpen() && openedMoment
+      ? telegraphOf.get(openedMoment) ?? null
+      : null;
     for (const held of telegraphs) {
       const standing = held === live ? telegraphAt(held, tick) : null;
-      const fade = standing?.fade ?? 0;
-      const past = standing?.past ?? false;
+      const fade = opened ? (held === opened ? 1 : 0) : (standing?.fade ?? 0);
+      const past = opened ? tick >= held.tick : (standing?.past ?? false);
       for (const stack of held.stacks) {
         // Acceptance gate 6 of the action-first contract: once the deadline has passed, the
         // ground under a place the chosen action sends to carries the strongest mark on the
@@ -6626,8 +6687,11 @@ async function boot() {
     }
     const k = e.key;
     if (!begun) {
-      // While the briefing is up the only thing a key can do is start the run.
+      // While the briefing is up a key either starts the run or starts it and opens the screen
+      // it was pressed for. Under the briefing the decision screen's own key used to do nothing
+      // at all, so a fresh tab answered the key the control list names with a still frame.
       if (k === "Enter" || k === " ") { begin(); e.preventDefault(); }
+      else if (k.toLowerCase() === "b") { begin(); showTree(true); e.preventDefault(); }
       return;
     }
     if (debriefShown) {
