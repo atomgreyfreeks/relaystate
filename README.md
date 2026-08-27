@@ -37,9 +37,11 @@ to the public internet.
 
 The result is specific. Plain written notes produced `0/40` decisions that passed every prewritten
 check. An evidence table produced `17/40`. The same table plus one bounded correction produced
-`34/40`. The evidence-table claim failed its registered constraint non-inferiority rule; the
-bounded-feedback claim passed. These are traceability and rule-following results inside a
-reconstructed simulation. They do not prove better real-world judgment or lives saved.
+`34/40`. The evidence-table claim failed its registered resource-limit rule: it was allowed to
+reduce the share of answers that stayed inside the exercise's hard limits by no more than five
+percentage points, but that share fell by ten. The bounded-feedback claim passed. These are
+traceability and rule-following results inside a reconstructed simulation. They do not prove better
+real-world judgment or lives saved.
 
 ## Instructions for an AI coding harness
 
@@ -64,6 +66,10 @@ npm run test:browser
 set `RESCUE_CHROME` to its executable path. The test starts its own local server, opens the hub and
 the viewer, checks the opening interaction and decision ledger, saves screenshots under `/tmp`, and
 closes everything it started.
+
+On some systems, `npm ci` says it skipped the optional `fsevents` install script. That helper is not
+needed by this package; continue to `npm run verify`. Treat any other installation error as a real
+failure rather than assuming it is harmless.
 
 ## Package map
 
