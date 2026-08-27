@@ -30,9 +30,9 @@ to the public internet.
 
 1. Open the hub and read “What was built.”
 2. Open **Rescue World**, choose **Begin**, and let the opening act play.
-3. Press `L` for the eleven moments of decision.
-4. Press `T` on a selected decision to walk through its six-step agent trace.
-5. Press `R` for the experiment in complete sentences.
+3. Press `B` for the visual map of all eleven decisions and choose one moment.
+4. Press `T` to walk through that moment's six-step agent trace.
+5. Press `R` for the experiment in complete sentences; press `L` for the full decision list.
 6. Return to the hub and open **How this project grew**, then **Submission briefing**.
 
 The result is specific. Plain written notes produced `0/40` decisions that passed every prewritten

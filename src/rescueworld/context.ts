@@ -328,7 +328,7 @@ const COPY: Record<"quake" | "pop" | "shelter" | "occ", LayerCopy> = {
   shelter: {
     id: "layerShelter",
     button: "designated shelters",
-    label: "official shelters · this recording does not say whether they were open",
+    label: "official shelters · records do not say if they opened",
     provider: "Geospatial Information Authority of Japan, which draws Japan's official maps",
   },
   occ: {
@@ -337,8 +337,7 @@ const COPY: Record<"quake" | "pop" | "shelter" | "occ", LayerCopy> = {
     // The same layer's switch in the copy deck already says this in plain words, at
     // `COPY.OCCUPANCY.label`. This line held three technical nouns instead — "occupancy",
     // "aggregate reports", "per-shelter data" — so it now reads exactly as its twin does.
-    label: "how full the shelters are · worked out from the region's published totals, because"
-      + " nobody published a count for each shelter",
+    label: "modeled shelter use · estimated from prefecture totals, not measured per shelter",
     provider: "Cabinet Office of Japan, situation reports",
   },
 };
@@ -526,11 +525,10 @@ export function mountContextLayers(opts: ContextMountOptions): ContextLayers {
       `${COPY.pop.label} — ${classWords(text(popFile.classification))},`
       + ` ${text(popFile.provider, COPY.pop.provider)}, counted ${text(popFile.census_date)}.`,
       text(popFile.disclosure),
-      `${groups(popCellsOnMap)} of ${groups(cells.length)} counted cells lie on this map,`
-      + ` holding ${groups(popPeopleOnMap)} of ${groups(popPeopleAll)} counted people.`
-      + " A cell's glow rises with its count and rises slowly: a cell holding a hundred times"
-      + " as many people glows only ten times as bright."
-      + " The cell holding the most people is the brightest one on this map.",
+      `This map shows ${groups(popCellsOnMap)} of ${groups(cells.length)} census cells and`
+      + ` ${groups(popPeopleOnMap)} of ${groups(popPeopleAll)} residents counted in 2020.`
+      + " Brighter cells had more residents. A square-root scale keeps dense cells from washing"
+      + " out the map.",
     ].filter((s) => s.length > 0);
   }
 
@@ -576,10 +574,10 @@ export function mountContextLayers(opts: ContextMountOptions): ContextLayers {
       + ` ${text(shelterFile.source?.provider, COPY.shelter.provider)},`
       + ` frozen ${text(shelterFile.source?.frozen_on, "2026-08-23")}.`,
       text(shelterFile.disclosure),
-      `Officials named ${groups(locations)} places as shelters, listing them ${groups(designations)}`
-      + ` times in all, and ${groups(shelters.length)} of those places sit on this map.`
-      + " A house mark shows a place that was named before the earthquake"
-      + " and never something that happened during it.",
+      `Officials designated ${groups(locations)} shelter locations before the earthquake.`
+      + ` ${groups(shelters.length)} fall on this map, and some locations carry more than one of`
+      + ` the ${groups(designations)} designations. A house mark does not prove that a shelter`
+      + " opened.",
     ].filter((s) => s.length > 0);
   }
 
@@ -636,15 +634,15 @@ export function mountContextLayers(opts: ContextMountOptions): ContextLayers {
     const perShelter = OCCUPANCY.peakPeople / OCCUPANCY.peakShelters;
     return [
       `${COPY.occ.label} — ${COPY.occ.provider}.`,
-      `Across the whole prefecture, ${groups(OCCUPANCY.peakPeople)} people were in shelters at the`
-      + ` worst hour, and ${groups(OCCUPANCY.peakShelters)} shelters stood open at a different hour.`
-      + ` Those two published totals give ${perShelter.toFixed(1)} people for each shelter.`,
-      `That average, spread across the ${groups(shelters.length)} shelters marked on this map,`
-      + ` comes to ${round(occModeledTotal)} modeled people. Each shelter's share follows how many`
-      + ` people the census counted within ${(OCCUPANCY.nearMetres / 1000).toFixed(1)} kilometres`
-      + " of it.",
-      "No agency published a headcount for any single shelter. A ring is a share of an aggregate"
-      + " and is never a count of who was there.",
+      `At one hour, ${groups(OCCUPANCY.peakPeople)} people were in shelters. At a different hour,`
+      + ` ${groups(OCCUPANCY.peakShelters)} shelters were open. For display only, dividing those`
+      + ` two numbers gives ${perShelter.toFixed(1)} people per shelter.`,
+      `For this visual estimate, nearby census counts determine how the display spreads`
+      + ` ${round(occModeledTotal)} people among ${groups(shelters.length)} mapped shelters. It`
+      + ` looks within ${(OCCUPANCY.nearMetres / 1000).toFixed(1)} kilometres and uses census`
+      + " figures from 2020. It does not estimate actual shelter use.",
+      "No agency published a count for an individual shelter. Ring size is a model estimate, not"
+      + " an observed headcount.",
     ];
   }
 

@@ -116,9 +116,8 @@ export const MASTHEAD = {
     `28 July 2026 · ${events} recorded events · round ${round} of ${rounds}`,
   mark: "Simulated exercise on real ground.",
   angles:
-    "One earthquake replayed over real Kumamoto ground; a fleet of artificial-intelligence agents"
-    + " reading the reports, deciding and dispatching; an evidence table grown the way a lichen"
-    + " grows, with claims on one side and sources on the other so neither can spoil the other.",
+    "One earthquake, eleven urgent decisions, and later AI rescue proposals built from the"
+    + " reports available at each deadline. No AI proposal was carried out.",
 };
 
 export const OUTCOME = {
@@ -484,31 +483,26 @@ export const HELP = {
    * sentence here can go stale against the record it describes.
    */
   incidentScenario:
-    "At 16:27 on 28 July 2026 a magnitude 7.1 earthquake struck Kumamoto Prefecture in Japan."
-    + " On this page you watch the public record of the first three days of the response, drawn"
-    + " over the real ground. Six things here come from real public records. They are the ground,"
-    + " the landslides on the map, the roads that closed and the shelters the government had"
-    + " designated. They also include the tremors recorded by Japan's national weather service and"
-    + " the updates that service published. Everything about people is invented for this exercise."
-    + " Every report of how many are waiting, every team sent and every outcome is made up, and"
-    + " so is the damage drawn on the ground.",
+    "A magnitude 7.1 earthquake struck Kumamoto at 16:27 on 28 July 2026. This replay follows"
+    + " the first 72 hours of the public response over real terrain. The earthquake, mapped"
+    + " landslides, road closures, shelter designations, aftershocks and public-response"
+    + " milestones come from public records. The AI rescue proposals and glowing damage effects"
+    + " are simulated. No AI proposal shown here was carried out.",
   incidentStory: (moments: number, decisions: number, acts: number) =>
-    `The whole record is played as one story in ${countWord(acts)} acts. All ${moments} recorded`
-    + ` moments arrive in the order the record wrote them, and ${countWord(decisions)} of them were`
-    + " moments when somebody had to decide something. Each of those moments was given to three"
-    + " different ways of deciding, and every answer was recorded. The three are plain written"
-    + " notes, an evidence table, and that same evidence table with one message added, telling the"
-    + " desk what it had just got wrong.",
+    `The replay follows ${moments} recorded events across ${countWord(acts)} acts. At`
+    + ` ${countWord(decisions)} urgent decisions, software agents later answered in three ways:`
+    + " plain notes, a table that keeps each claim beside its source, and the same table after one"
+    + " exact error message. Five decisions belong to the planned scored test; six provide"
+    + " unscored context.",
   /**
    * How the run is driven, with the size of the file it is driven from read out of that file.
    * The sentence used to name eighty-one events on every record, including the one that holds
    * four hundred and fourteen.
    */
   driven: (events: number) =>
-    `Nothing is generated while you watch. The page reads one recorded file of ${events} events,`
-    + " each one carrying the hash of the line before it, and every mark on screen is read out of"
-    + " that file. Playing the run twice draws the same pixels. You have freedom of viewpoint and"
-    + " freedom of interrogation; you cannot change what happened.",
+    `Playback reads ${events} saved events in their recorded order. Replaying the file shows the`
+    + " same events. You may move the camera and inspect the evidence, but you cannot change the"
+    + " recorded story. A technical check detects any later change to the file.",
   /**
    * How the run is paced. The two-desk exercise steps a graph and the two desks take a different
    * number of steps; the incident record plays one shared story, so the sentence about a second
@@ -519,12 +513,9 @@ export const HELP = {
     + (twoDesks
       ? " Each round of the run is one move a desk makes, read straight out of the recorded log,"
         + " and the two desks make a different number of moves."
-      : " Each round of the run is one stretch of the recorded story, read straight out of the"
-        + " recorded log.")
-    + " The recorded second and the time of day sit under each round of the run, for anyone who"
-    + " wants them. The reports came in bursts, hours apart. Played back at real speed most of"
-    + " this would be empty waiting, so the playback gives every recorded event the same amount"
-    + " of screen time. No event is skipped and none is moved out of order.",
+      : " The playback groups related recorded events together as one story section.")
+    + " Each round gets equal screen time even when the real events were hours apart. The clock"
+    + " shows when each event actually happened; no event is skipped or reordered.",
   /**
    * How many places the record names, read from the record. No place the record names is one of
    * the modelled buildings, which are a separate published city model drawn as context.
@@ -551,11 +542,8 @@ export const HELP = {
   // apart, and the picture argued against itself. Joined but not mixing is the actual point, so
   // the paragraph says that in the same breath as the comparison and then drops the lichen.
   lichen:
-    "The evidence table on a desk holds two lists side by side: the claims on one side and the"
-    + " sources on the other. A lichen works the same way. Two partners live joined together for"
-    + " good and neither one turns into the other. A claim never rewrites its own sources, and a"
-    + " source never edits a claim. That is why a rejected number stays on the record with its one"
-    + " source still attached to it.",
+    "The evidence table keeps each claim beside its source. Conflicting versions remain visible,"
+    + " so rejecting a number cannot erase the report that produced it.",
   controls: [
     "Drag to turn the camera around what it is looking at.",
     "Roll the wheel to zoom toward whatever the pointer is over.",
@@ -580,31 +568,28 @@ export const HELP = {
     // Registered by the deck's second dated amendment. The second line is here because r used to
     // raise the camera, and an instruction that has stopped being true has to be corrected on the
     // same list that gave it.
-    "Press r for the real decisions, where what the responders actually did is set beside the"
-      + " three desks that worked the same five moments.",
+    "Press r to compare the public response with the three recorded AI approaches at the five"
+      + " scored decisions.",
     "The r key opens that overlay, so it no longer raises the camera. Press q to rise. Press e or"
       + " f to drop.",
     "Press 0 to return to the start of the record.",
     "Press v for the internal view, which is a tool for the people making this page.",
     // Registered by the deck's dated regional-touring amendment. The overwatch key is p because
     // v already opens the internal view.
-    "Press p for overwatch, which tours the camera on its own. Take your hands off the controls"
-      + " for twelve seconds and the camera goes to three things in turn. It shows the place the"
-      + " run is working, the last thing the region recorded, and then the whole ground. Any key"
-      + " or drag takes it straight back.",
+    "Press p to let the camera tour the map. If you do nothing for twelve seconds, it visits the"
+      + " current event, the latest regional event, and the full region. Press a key or drag to"
+      + " take control again.",
     // Registered by the deck's dated directed-watch amendment.
     "The run is directed by default: each round plays slowly, then holds so you can read it, and"
       + " the camera goes to where that round is happening. Choosing a speed leaves the directed"
       + " watch and plays the record straight through at that speed; click the mode chip beside"
       + " the speeds to come back.",
-    "Under the reports is a stack of thin rows, one for each thing happening elsewhere in the"
-      + " region. A row shows a road closing at its recorded minute, an earthquake in the recorded"
-      + " sequence, or one of the five real decision moments with its deadline coming up. Click a"
-      + " row to send the camera to that place.",
+    "Under the reports, each thin row marks a road closure, a recorded aftershock, or one of the"
+      + " eleven response decisions. Five decisions include scored AI runs; six provide unscored"
+      + " context. Select a row to move the camera.",
     // Registered by the deck's dated agent-trace amendment.
-    "Press t to see how the decision the run has reached was made. It walks six cards: what the"
-      + " real responders did, then what was known, what each desk proposed, what the check caught"
-      + " and what was finally chosen. The left and right arrow keys move between the cards.",
+    "Press t to open the current AI proposal. Six short cards show its action, reports, public"
+      + " context, earlier answers, and rule feedback. Use Left and Right to move.",
     "Every moment of decision in the list down the side of the screen carries its own control for"
       + " that walk-through. One that has already passed can be opened again without moving the"
       + " run.",
@@ -614,8 +599,6 @@ export const HELP = {
     "Press g for the picture controls, which set the colours on screen and how much they glow."
       + " They are a tool for the people making this page, and they change nothing about the"
       + " record.",
-    "Press n for the run-preparation console, which writes out the exact settings a real run with"
-      + " a language model in it would use. It starts nothing.",
   ],
   /**
    * The ledger's own line, kept apart from the list above because a record that holds no moment
@@ -623,9 +606,8 @@ export const HELP = {
    * list that is one line shorter.
    */
   ledgerControl:
-    "Press l for the decision ledger, which is the closing list of every moment of decision. It"
-    + " reads back what was chosen, how far its recorded tries agreed and what the checks made"
-    + " of it.",
+    "Press l to list every deadline, the AI's final rescue proposal, the public"
+    + " response, and the optional test details.",
   attribution:
     "Ground heights, landslides read off aerial photographs and shelter designations: Geospatial"
     + " Information Authority of Japan, the national mapping agency. Road closures: Ministry of"
@@ -675,7 +657,7 @@ export const countWordCap = (n: number) => sentenceCase(countWord(n));
 
 export const REAL = {
   /** the overlay's own name, in the help list and across its head */
-  title: "The real decisions, and what the desks chose",
+  title: "How did public actions and later AI rescue proposals compare?",
   /**
    * The earthquake this experiment was run on, as the record states it: the minute the shaking
    * began, the magnitude, the agency's own intensity reading and the length of the response in
@@ -689,19 +671,16 @@ export const REAL = {
    * for any moment a reader picks.
    */
   traceHandoff:
-    "This walk-through takes any one of these moments through six steps. It shows what was known"
-    + " by its deadline, what each desk proposed, what the check caught, the one correction, and"
-    + " what the real responders did. Each of the moments further down this page carries a control"
-    + " that opens it.",
+    "Open any decision below to see the final recorded AI proposal first, followed by the reports it"
+    + " used, the public response, its earlier proposals, and the exact rule feedback.",
   /** the heading over the moment-by-moment cards that close the surface */
-  slotsHead: "Every moment of decision, with the record and the three desks side by side",
+  slotsHead: "Every urgent decision, with public action and AI proposals side by side",
   /** what those cards are, so they are read as the detail behind the story and not as the story */
   slotsLead: (tries: number) =>
-    "The cards below are the detail behind the story above. Each one carries the deadline and the"
-    + " office the record names. It also carries what the real responders did as the record has"
-    + ` it, and how each of the three desks answered it across ${countWord(tries)} tries.`,
+    "Each card starts with the rescue action an AI proposed. It also shows the deadline, the"
+    + ` responsible office, the public response, and results from ${countWord(tries)} tries.`,
   /** the control that opens the wording the two agents signed */
-  exactLabel: "Open the exact wording we registered before the runs",
+  exactLabel: "Open the exact plan written before the runs",
   /** what the reader finds inside that panel */
   exactNote:
     "The two paragraphs below are copied word for word from the plan we wrote and agreed to"
@@ -720,8 +699,8 @@ export const REAL = {
    * what the real responders sent and where; the second half is the two desks' counts side by side.
    */
   studentChoice: (quantities: string, first: string, more: number) =>
-    `The real people in charge sent ${quantities}: ${first}`
-    + `${more > 0 ? ` and ${countWord(more)} more` : ""}.`,
+    `The public record names ${first}${more > 0 ? ` and ${countWord(more)} more units` : ""}.`
+    + ` Destination totals: ${quantities}.`,
   studentNoChoice: "The public record does not name a choice for this decision.",
   /**
    * One plan, said as two lines: what was sent, then how many of them went where.
@@ -739,14 +718,14 @@ export const REAL = {
   /** how the list of things ends when more were named than the line has room for */
   planMoreThings: (more: number) => `and ${more} more`,
   studentDesks: (table: number, plain: number, tries: number) =>
-    `In ${table} of ${tries} tries, the AI desk that checked its evidence produced a decision`
-    + ` that passed every prewritten check. The desk that passed plain notes did so in ${plain}`
-    + ` of ${tries}.`,
+    `Source-linked AI proposals passed every prewritten rule in ${table} of ${tries} tries.`
+    + ` Plain-note proposals passed in ${plain} of ${tries}.`,
   /** one line under each desk's name, so a card can be read on its own */
   deskNote: {
-    plain_summary: "It passed plain written notes straight on to whatever came next.",
-    evidence_table: "It passed a table with every claim written beside its source.",
-    evidence_feedback: "It had that same table and one message naming its exact mistake.",
+    plain_summary: "The AI summarized the reports in plain notes, then proposed an action.",
+    evidence_table: "The AI kept each claim beside its source before proposing an action.",
+    evidence_feedback:
+      "The AI used the same source table, received one exact error message, and answered again.",
   } as Record<string, string>,
   /**
    * The label beside the count of a moment's runs that came out clean, and the stamp on the one
@@ -767,18 +746,14 @@ export const REAL = {
     `${n} of these names were not on the list of units and places this decision allowed.`,
   /** the standing line on the whole surface; it is never optional and never abbreviated */
   assumption:
-    "Everything the desks did here is a what-if we simulated: it asks what could have been"
-    + " chosen with only what was known at that minute. It is not a record of what happened next."
-    + " It is not evidence that a computer would improve a real rescue or save lives, and it does"
-    + " not say the real responders were wrong. The full list of what is real and what is invented"
-    + " is in the help menu.",
+    "These AI rescue proposals were generated after the earthquake from information available"
+    + " at each deadline. They were never carried out. This comparison does not simulate what"
+    + " happened next, prove that AI would save lives, or grade the real responders.",
   /** where every number on the surface came from */
   source: (configurations: number, hash: string) =>
-    `Every number on this page was read from ${configurations} result files, each one checked`
-    + " against its own signed certificate, which is the record proving the file was never"
-    + " altered. The exact list of files was frozen before the runs and is named by the code"
-    + ` ${hash.slice(0, 16)}. The numbers were then checked line by line against the signed`
-    + " report.",
+    `These numbers come from ${configurations} result files. Each file has a saved checksum, and`
+    + " the build recalculates every count before displaying it. The file list was fixed before"
+    + ` the runs. Result-set ID: ${hash.slice(0, 16)}.`,
   loading: "Reading the recorded experiment.",
   failed: (reason: string) => `The recorded experiment could not be read. ${reason}`,
   /** the line at the foot of the frame while there is more of this surface below the window */
@@ -791,11 +766,10 @@ export const REAL = {
  */
 export const OCCUPANCY = {
   button: "occupancy",
-  under: "These numbers come from a model, and nobody counted them.",
+  under: "These are model estimates, not observed counts for individual shelters.",
   // Three technical nouns used to stand in one line here. The switch says what the numbers are
   // and where they came from, in the order a reader needs them.
-  label: "how full the shelters are · worked out from the region's published totals, because"
-    + " nobody published a count for each shelter",
+  label: "modeled shelter use · estimated from prefecture totals, not measured per shelter",
 };
 
 // ------------------------------------------------------------------ 12. the rest of the region
@@ -964,10 +938,9 @@ export const INCIDENT = {
    * the debrief.
    */
   verdict: (hours: number, acts: number, decisions: number) =>
-    `This is the first ${hours} hours after an earthquake struck Kumamoto, played as one world in`
-    + ` ${acts} acts. ${decisions} moments inside it were moments when somebody had to decide`
-    + " something. Each of those moments was given to the same three ways of deciding, and every"
-    + " answer was recorded.",
+    `This replay covers the first ${hours} hours after the Kumamoto earthquake in ${acts} acts.`
+    + ` It includes ${decisions} urgent response decisions. Software agents later proposed an`
+    + " action for each decision, using only information available by its deadline.",
   /**
    * The three readings the outcome shows while the run plays: how far through the record the
    * viewer is, how many moments of decision have passed, and how many tremors have arrived.
@@ -975,49 +948,45 @@ export const INCIDENT = {
    */
   countLabels: {
     events: (total: number) => `of the ${total} moments this record holds`,
-    decisions: (total: number) => `of the ${total} moments when somebody had to decide`,
+    decisions: (total: number) => `of the ${total} urgent response decisions`,
     aftershocks: (total: number) => `of the ${total} tremors the record holds`,
     /** what a graded count counts, so the big number under it is never a bare number */
-    tries: (runs: number, way: string) => `of ${runs} tries with ${way}`,
+    tries: (runs: number, way: string) => `of ${runs} AI proposals using ${way}`,
   },
   footnote:
-    "The numbers above say how far through the record this run has played. This record keeps no"
-    + " count of how many people anyone reached, so no such count appears anywhere here. The"
-    + " grades on the choices a computer made are stated at the end, once every moment of the"
-    + " record has played.",
+    "These numbers show playback progress. The record does not measure how many people an AI"
+    + " plan would reach. AI proposals receive rule-following scores only after playback ends.",
   /**
    * The three ways of deciding that were run against every moment of decision. The names are
    * the ones the registered experiment already uses on the r surface. Chrome, four words each.
    */
   ways: {
-    plain_summary: "plain written notes",
-    evidence_table: "an evidence table",
-    evidence_feedback: "table and a correction",
+    plain_summary: "plain notes",
+    evidence_table: "sources attached",
+    evidence_feedback: "corrected once",
   } as Record<string, string>,
   /**
    * One card per way of deciding in the debrief. The two sentences are the aggregate line and
    * the constraint line, in the wording both agents settled on.
    */
   gradedCard: (valid: number, runs: number) =>
-    `In ${valid} of ${runs} tries, this method produced a decision that passed every prewritten`
-    + " check.",
+    `${valid} of ${runs} AI proposals met every rule written before the test.`,
   constraintCard: (constraint: number, runs: number) =>
     `${constraint} of ${runs} stayed within the hard limits this exercise set on how much could`
     + " be sent.",
   /** what passing every check means, stated once under the numbers */
   definition:
-    "Passing every check means five things. It used only allowed units and places, stayed within"
-    + " resource limits, and drew only on information that already existed by the deadline. It"
-    + " also said out loud each of the unknowns this decision required it to name, and used"
-    + " nothing learned later.",
+    "An AI proposal meets every rule only if it uses information available by the deadline,"
+    + " chooses allowed units and destinations, stays within resource limits, and names every"
+    + " required unknown.",
   /**
    * The three badges a single recorded choice or a single moment of decision can wear. The
    * third is for the six moments that sit outside the registered experiment.
    */
   badge: {
-    passed: "passed every prewritten check",
-    failed: (rule: string) => `did not pass every prewritten check — ${rule}`,
-    descriptive: "descriptive only — outside the registered result",
+    passed: "met every rule written before the test",
+    failed: (rule: string) => `missed a rule — ${rule}`,
+    descriptive: "context only — no scored AI result",
   },
   /**
    * The line under that third badge, wherever it is drawn.
@@ -1028,15 +997,14 @@ export const INCIDENT = {
    * filed afterwards, so this line says which one it is and what follows from it.
    */
   descriptiveWhy:
-    "That badge means the numbers beside it sit outside the result this experiment wrote down"
-    + " before it ran. They are shown to say what happened, and nothing is concluded from them.",
+    "This AI proposal is shown for context. No scored eight-run comparison was recorded for this"
+    + " decision.",
   /** what the wider, ungraded set of choices shows, stated as the description it is */
   descriptive: (runs: number, plain: number, table: number, corrected: number) =>
-    `Across all eleven moments the same three ways of deciding were run ${runs} times each.`
-    + ` Those wider runs came out at ${plain}, ${table} and ${corrected} of ${runs} passing every`
-    + " prewritten check. The numbers are reported here to say what happened, and nothing is"
-    + " concluded from them, because they sit outside the result this experiment wrote down"
-    + " before it ran.",
+    `Six extra decisions were tested later, bringing each AI approach to ${runs} runs. Across`
+    + ` all eleven decisions, the three approaches produced ${plain}, ${table}, and ${corrected}`
+    + " proposals that met every rule. These extra runs provide context only. They do not count"
+    + " toward the result from the five decisions chosen before the test.",
   /**
    * The finding sentence the debrief opens with: one sentence, the registered result, stated
    * as what it measures. It compares the three ways of deciding against each other and against
@@ -1048,16 +1016,16 @@ export const INCIDENT = {
     + ` Adding one short message naming the mistake took it to ${corrected} of ${runs}.`,
   /** the same opening where a run carries no graded choices: the scale of what was watched */
   debriefScale: (hours: number, events: number, decisions: number) =>
-    `The record ends ${hours} hours after the earthquake, which is three full days and nights.`
-    + ` It carries ${events} moments that somebody wrote down while they were happening. In`
-    + ` ${decisions} of those moments a named person had to decide something with the information`
-    + " they had at that minute.",
+    `This replay covers ${hours} hours after the earthquake: ${events} saved events and`
+    + ` ${decisions} urgent response decisions. Each decision shows what was publicly known by`
+    + " its deadline.",
   /** the constraint line under the counts, which states the second measure with its own total */
   constraints: (runs: number, plain: number, table: number, corrected: number) =>
-    `Staying inside the limits on how much could be sent came out at ${plain} of ${runs},`
-    + ` ${table} of ${runs} and ${corrected} of ${runs} for the same three ways of deciding.`,
+    `Plain-note proposals stayed within the limits on what they could send in ${plain} of ${runs}`
+    + ` tries. Source-linked proposals did so in ${table} of ${runs} tries. After one error`
+    + ` message, ${corrected} of ${runs} proposals stayed within those limits.`,
   /**
-   * The debrief, told in the order `docs/gpu/FINDINGS-STORYTELLING-GOLD-STANDARD.md` sets: the
+   * The debrief, told in the order `docs/method/FINDINGS-STORYTELLING-GOLD-STANDARD.md` sets: the
    * human question first, then one concrete example, then what each way of deciding actually
    * did, then what was counted and what the counts mean, then what it is good for, what it does
    * not show, and the exact next test. No number appears before a sentence a stranger can read.
@@ -1080,13 +1048,13 @@ export const INCIDENT = {
      * at any minute of a run, so it carries the scene without this clause.
      */
     replayed: (events: number) =>
-      `This page has just replayed the ${events} moments of that response that somebody wrote`
-      + " down while they were happening.",
+      `This page has just replayed ${events} saved events from that response.`,
     /** step one: the human question, before any number */
     question:
-      "The hard part of a disaster is deciding who to send where while the reports are still"
-      + " thin, still contradictory and still arriving. This replay asked one question about that"
-      + " work: does the way a decision is written down change whether it holds up?",
+      "During a disaster, officials must send help while reports are incomplete and sometimes"
+      + " contradictory. This test asked two questions. Does linking every claim to its source"
+      + " help an AI follow rescue rules? Does one exact message naming a broken rule help even"
+      + " more? The AI could use only information available by each decision's deadline.",
     /** the heading over the job the agents were given. Chrome. */
     jobHead: "What the agents had to decide, and by when",
     /**
@@ -1095,17 +1063,18 @@ export const INCIDENT = {
      * — nothing published after the deadline was allowed into the answer.
      */
     job: (moments: number, tries: number) =>
-      `${countWordCap(moments)} of the moments in this record were scored as an experiment. Each`
-      + " one is a real decision with a deadline on the clock, rebuilt from public records. At"
-      + " each deadline a software agent had to name which units to send and where to send them."
-      + " It could use only the reports, bulletins and road notices that were public by that"
-      + ` minute. Every one of the ${moments} moments was answered ${tries} separate times.`,
+      `The experiment scored ${countWord(moments)} decisions rebuilt from public records. For two`
+      + " decisions, the record omitted facts the test needed: an internal alert and which team"
+      + " could investigate two missing shaking readings. The screen clearly labels those added"
+      + " facts as assumptions for this exercise. At each deadline, an AI proposed a rescue"
+      + ` action using only the information and assumptions shown on screen. Each approach`
+      + ` answered every decision ${tries} times.`,
     /** the heading over the list of scored moments. Chrome. */
     momentsHead: (moments: number) =>
       `The ${countWord(moments)} moments, and the minute each one was due`,
     /** one scored moment, said as the record states it */
     momentLine: (clock: string, title: string) =>
-      `By ${clock} somebody had to decide this: ${title}.`,
+      `By ${clock}: ${title}`,
     /** the heading over the one moment followed all the way through. Chrome. */
     workedHead: "One of those moments, worked through all three ways of deciding",
     /**
@@ -1114,27 +1083,22 @@ export const INCIDENT = {
      * in these sentences is read from the recorded run.
      */
     workedMoment: (clock: string, decider: string, limit: number, unit: string) =>
-      `Take one water-planning decision on the second day. By ${clock} the ${decider} had to plan`
-      + " extra water support for towns that had lost their supply, without waiting for every town"
-      + ` to ask. This decision allowed at most ${limit} additional ${unit}, and the answer had to`
-      + " say which towns received them.",
+      `By ${clock} on day two, ${decider} had to allocate up to ${limit} additional ${unit} among`
+      + " towns with water outages, including towns that had not yet asked.",
     workedPlain: (total: number, unit: string) =>
-      `The desk with plain written notes proposed ${total} ${unit}. Its answer did not pass its`
-      + " checks.",
+      `Using plain notes, the AI proposed ${total} ${unit}. The answer missed at least one rule.`,
     workedTable: (total: number, unit: string, limit: number) =>
-      "The desk with an evidence table named every fact its plan rested on and every thing nobody"
-      + ` knew yet. It then proposed ${total} ${unit}, and this decision allowed ${limit}, so that`
-      + " answer did not pass its checks either.",
+      "Using the source-linked table, the AI listed its facts and unknowns but proposed"
+      + ` ${total} ${unit} against a limit of ${limit}. That answer failed the resource-limit rule.`,
     /** what the check is, said once, before its own sentence is quoted */
     workedCheckLead:
-      "The check that caught it is ordinary code with no model inside it. It read the answer and"
-      + " said exactly what was wrong.",
+      "Fixed code—not a language model—checked whether the answer followed limits written before"
+      + " the run and named the exact broken rule.",
     /** the one message that went back, and what the second answer did with it */
     workedFix:
-      "That one sentence went back to the desk, and the desk answered once more with the same"
-      + " reports and nothing new.",
+      "The same AI answered once more using the same reports and no new facts.",
     workedPassed: (total: number, unit: string) =>
-      `The second answer sent ${total} ${unit} and passed every prewritten check.`,
+      `The revised AI proposal included ${total} ${unit} and passed every prewritten rule.`,
     /** the public record's own side of the same moment, read before any grade is stated */
     workedRecordLead: "Here is what the real responders did about the same decision.",
     /** step three, the heading over the three method cards */
@@ -1144,16 +1108,14 @@ export const INCIDENT = {
      * which of the three is the one most agent systems already use.
      */
     normalWork:
-      "The first of the three is the plain way of working. An agent writes a short summary in its"
-      + " own words and hands it on, and whatever comes next trusts it. That is the ordinary"
-      + " baseline tested here, and the two ways after it are the changes made to it.",
+      "In the baseline approach, the AI summarizes reports in plain notes and decides from that"
+      + " summary. The other approaches add source links, then one exact error message.",
     /** step four: what one attempt was, in plain words, before any count of them */
     tryLine: (moments: number, tries: number) =>
-      `One try is one software agent answering one of these ${moments} moments, once. Each way of`
-      + " deciding was given every one of those moments"
-      + ` ${Math.max(1, Math.round(tries / Math.max(1, moments)))} separate times, which comes to`
-      + ` ${tries} tries each. Before any of it ran we wrote down`
-      + " the checks an answer had to pass, so nobody could change the rules later on.",
+      `One try means one AI answered one decision once. Each approach answered all ${moments}`
+      + ` decisions ${Math.max(1, Math.round(tries / Math.max(1, moments)))} times, for ${tries}`
+      + " tries in total. The team wrote every rule for passing before the test began and did not"
+      + " change any later.",
     /** step five: the heading over the three counts */
     resultHead: "How many tries produced an answer that passed every check",
     /**
@@ -1161,12 +1123,9 @@ export const INCIDENT = {
      * roughly one in so many, because that is how a classroom reads a proportion.
      */
     translate: (runs: number, plain: number, table: number, corrected: number) => {
-      const share = (n: number) => Math.round((n / Math.max(1, runs)) * 100);
-      return `Plain notes passed nothing at all: ${plain} of ${runs}. Writing every claim beside`
-        + ` its source passed ${table} of ${runs}, which is about ${share(table)} in every`
-        + " hundred. Adding one message that named the mistake passed"
-        + ` ${corrected} of ${runs}, which is about ${share(corrected)} in every hundred, or`
-        + " roughly five tries in every six.";
+      return `Plain notes passed ${plain} of ${runs} tries. Linking every claim to its source`
+        + ` raised that to ${table}. Giving the AI one exact message naming its mistake raised it`
+        + ` to ${corrected}.`;
     },
     /**
      * Step seven: what the correction message actually did, stated as a repair rather than as a
@@ -1174,64 +1133,56 @@ export const INCIDENT = {
      * reader can check it.
      */
     repair: (runs: number, table: number, corrected: number) =>
-      `The interesting part is what that last change repaired. The evidence table on its own got`
-      + ` ${runs - table} of the ${runs} tries wrong. One message naming the exact mistake turned`
-      + ` ${corrected - table} of those ${runs - table} wrong answers into answers that passed,`
-      + ` and every one of the ${table} that already passed still passed. Telling an agent what`
-      + " it got wrong fixed more than telling it to try harder ever did.",
+      `The source-linked approach failed ${runs - table} of ${runs} tries. After receiving one`
+      + ` message naming its mistake, the AI fixed ${corrected - table} of those failed answers.`
+      + ` All ${table} answers that had already passed still passed.`,
     /**
      * The sentence that stands beside the zero so nobody reads it as forty reckless plans. The
      * plain-notes desk mostly sent the right quantity of units; what it missed every time was
      * the written part of the job, and a try passes only when it clears every check.
      */
     zeroMeans: (runs: number, plainLimit: number) =>
-      "That zero needs one sentence beside it. The desk with plain written notes stayed within the"
-      + ` hard limits on how much could be sent in ${plainLimit} of ${runs} tries, so its plans`
-      + " were mostly the right size. What it missed every time was the written part of the job:"
-      + " naming the reports its plan rested on, and saying out loud which things nobody knew yet."
-      + " A try"
-      + ` passes only when it clears every check, so none of its ${runs} tries passed.`,
+      `Plain-note plans stayed within the limits on how much help they could send in ${plainLimit}`
+      + ` of ${runs} tries. But every answer failed to say where its facts came from or what was`
+      + " still unknown. An answer had to meet every rule, so"
+      + ` 0 of ${runs} passed overall.`,
     /** the heading over what the run shows and what it does not show. Chrome. */
     provesHead: "What this shows, and what it does not show",
     /** what the finding actually proves, stated once, in ordinary words */
     proves:
-      "The finding is this. Two changes together made a computer's decisions much easier to trace,"
-      + " and much more likely to obey the rules in force. The first was making the agent write"
-      + " every claim beside the report it came from. The second was letting ordinary code send"
-      + " back one message naming the exact mistake.",
+      "Linking each claim to its source made it easier to trace why the AI proposed each rescue"
+      + " action. Returning one exact message naming a broken rule made the proposals much more"
+      + " likely to follow every rule written before the test.",
     /**
      * What failed on the way, at the same size as what passed. The registered claim was mixed:
      * four of its five parts held and one did not, and the one that did not is stated here with
      * the two counts a reader can compare.
      */
     whatFailed: (runs: number, plainLimit: number, tableLimit: number) =>
-      `Two things failed on the way, and both are reported here. Plain written notes produced`
-      + ` nothing that passed, in every one of the ${runs} tries. The evidence table also broke`
-      + ` the limits on how much could be sent more often than plain notes did, at ${tableLimit}`
-      + ` of ${runs} against ${plainLimit} of ${runs}. We had written down before the runs that it`
-      + " had to stay within five points of plain notes on that measure. That part of the"
-      + " registered claim failed, and the four other parts held.",
+      "The evidence-table claim failed even though four of its five tests passed. It raised"
+      + ` complete rule-following from 0 of ${runs} tries to 17 of ${runs}. But answers stayed`
+      + ` within resource limits in only ${tableLimit} of ${runs} tries, down from ${plainLimit}`
+      + ` of ${runs}. That 10-point drop exceeded the 5-point limit set before the runs, so the`
+      + " whole claim failed. The narrower one-error-message claim passed all five tests.",
     /** what this record cannot say, because it holds no count of it */
     noReach:
-      "This record keeps no count of how many people anyone reached, so nothing here says that"
-      + " any way of working would have got help to more people. The three counts are about"
-      + " whether a decision can be traced and whether it followed the rules inside the exercise,"
-      + " and about nothing else.",
+      "The experiment did not run any AI proposal forward to see who it would reach. Its three"
+      + " scores show only whether the AI named its sources and followed the written rules.",
     /** the wider set of runs, described rather than counted as a result */
     wider: (runs: number, plain: number, table: number, corrected: number) =>
-      `The same three ways were also run against all eleven moments, ${runs} times each. Those`
-      + ` wider runs came out at ${plain}, ${table} and ${corrected} of ${runs}. They are left`
-      + " out of the result above, because the checks for the other six moments were written"
-      + " after those runs and not before them. They are reported here to describe what happened,"
-      + " and nothing is concluded from them.",
+      `The team ran each approach ${runs} times across all eleven decisions. Only 40 tries from`
+      + " the five planned decisions count toward the result above. The other 48 tries cover six"
+      + " additional decisions whose rules were written later, so they provide context only."
+      + ` Across all ${runs} tries, ${plain}, ${table}, and ${corrected} proposals passed every`
+      + " rule.",
     /** the heading over the closing pair: where this could be used, and the exact next run */
     useHead: "Where this could be useful, and what we test next",
   },
   /** step eight of the storytelling order: two or three real jobs this could be useful in */
   use:
-    "The same check asks whether a decision traces to what was known at the time and obeys the"
-    + " rules in force. That check belongs in emergency dispatch, in a hospital handover between"
-    + " shifts, and in any duty office acting on reports that are still incomplete.",
+    "This pattern could help people who send emergency crews, hand a hospital case to the next"
+    + " shift, or make any decision from incomplete reports. It keeps every claim linked to its"
+    + " source, tests the proposal against fixed rules, and tells the AI exactly what to fix.",
   /** the closing honesty line: one file, and how many events it holds */
   honesty: (events: number) =>
     `Every number here came from one recorded file of ${events} events. Each line in that file`
@@ -1307,10 +1258,10 @@ export const INCIDENT = {
     text:
       "At 16:27 on 28 July 2026 a magnitude 7.1 earthquake struck Kumamoto Prefecture in Japan."
       + " For the next three days, fire crews, town halls, prefectural offices and national"
-      + " agencies had to decide who to send where, using only what was known at each minute."
-      + " The question this replay asks is a simple one: what did they actually know, and when"
-      + " did they know it? You are about to watch the first three days over the real ground,"
-      + " with the recorded moments standing where they happened.",
+      + " agencies had to decide who to send where while information was incomplete. This replay"
+      + " asks a narrower question the public record can answer: what information was public when"
+      + " each decision was due? You are about to watch those three days unfold over the real"
+      + " ground.",
     honesty:
       "The ground, the earthquake, the aftershocks, the roads that closed and the official updates"
       + " are real public records. The choices shown at each moment of decision were made"
@@ -1322,13 +1273,13 @@ export const INCIDENT = {
    */
   /** the standing limitation, visible wherever a grade is shown */
   limitation:
-    "These checks measure traceability and rule-following inside the exercise. They do not grade"
-    + " the real responders or prove that an agent's judgment was better.",
+    "The displayed rules check only what the AI proposed during this exercise. They do not grade"
+    + " real responders or show whether a different action would have saved more lives.",
   nextExperiment:
-    "The next step is to score reach as well as rule-following. The same moments would be run"
-    + " again against a model of what happens after each choice, built out of the recorded events"
-    + " themselves. Each way of deciding could then also be measured by how many people it would"
-    + " have got to.",
+    "This build does not measure what happened after an AI proposal. A future test must run each"
+    + " proposal inside a separate model of disaster outcomes. Experts must validate that model"
+    + " with evidence beyond this one recorded response before anyone compares how many people"
+    + " different proposals might reach.",
   /**
    * The decision rail, for the run that replays the whole incident. The record holds no claim
    * cards and no dispatch cards, so the rail lists the moments of decision themselves and says
@@ -1336,21 +1287,19 @@ export const INCIDENT = {
    */
   rail: {
     lead: (total: number) =>
-      `${total} moments in these three days were moments when a named person had to decide`
-      + " something with the information they had at that minute. Each is listed below with the"
-      + " time it was due.",
+      `${total} urgent response decisions appear in this three-day record. Each one shows its`
+      + " deadline and the exact rescue action later proposed by the AI.",
     /** chrome, four words */
     passed: "already passed",
     /** chrome, three words */
     next: "coming next",
     /** chrome, four words */
     ahead: "still ahead",
-    decider: (decider: string) => `The record names ${decider} as the one who had to make it.`,
+    decider: (decider: string) => `Responsible office: ${decider}.`,
     ways: (ways: string) =>
-      `${sentenceCase(ways)} recorded ways of deciding were run against this decision.`,
-    note: "Open any decision above to see what the agents knew, what each desk proposed and what"
-      + " the real responders did. Press r for the registered experiment and the exact wording of"
-      + " its findings.",
+      `${sentenceCase(ways)} AI approaches also answered this decision for comparison.`,
+    note: "Open a decision to see the situation, the AI's proposed action, its evidence and"
+      + " unknowns, and what responders did that day. Press R for the scored test results.",
   },
   /** the story card that hangs over the place a recorded moment happened */
   card: {
@@ -1358,9 +1307,8 @@ export const INCIDENT = {
     stamp: (clock: string) => `Recorded at ${clock}`,
     /** what a card says about a moment when somebody had to decide something */
     decision: (decider: string, clock: string, ways: string) =>
-      `This decision was due at ${clock}, and the record names ${decider} as the one who had to`
-      + ` make it. ${sentenceCase(ways)} recorded ways of deciding were run against it`
-      + " afterwards.",
+      `Decision deadline: ${clock}. Responsible office: ${decider}. ${sentenceCase(ways)} AI`
+      + " approaches answered the same decision later.",
     /** what a card says about one of the weather service's updates on the first earthquake */
     bulletin: (clock: string) =>
       `Japan's national weather service published an update at ${clock} on that first earthquake.`,
@@ -1383,9 +1331,9 @@ export const INCIDENT = {
  */
 export const TRACE = {
   /** the surface's own name, in the help list and across its head. Chrome, five words. */
-  title: "How one decision was made",
+  title: "How an AI built a rescue proposal",
   /** the control that opens it from a moment of decision. Chrome, six words. */
-  open: "See how this decision was made",
+  open: "Open this AI rescue proposal",
   /** chrome, one to three words each */
   close: "close — esc",
   next: "next card",
@@ -1398,48 +1346,56 @@ export const TRACE = {
    * The two framing labels. One says a card holds the public record of what was done; the other
    * says a card holds what a software agent wrote afterwards. Chrome, six words each.
    */
-  frameReal: "this comes from the public record",
-  frameModel: "a software agent wrote this later",
+  frameReal: "public response recorded that day",
+  frameSituation: "This card shows the disaster situation at the deadline.",
+  frameModel: "This AI proposal was generated later.",
+  frameTest: "This card explains how one AI proposal was tested.",
   /** the one sentence that separates the two framings, on the card a reader opens on */
   realFraming:
-    "Everything on this card comes from the public record of what the responders did. The five"
-    + " cards after it were produced by computer models long afterwards, using only what had been"
-    + " written down by this same deadline.",
+    "This card shows what the public record says responders did—or says when no matching action"
+    + " was found. Every AI proposal in this story was generated later and was never carried"
+    + " out.",
   /** the heading over each of the six cards */
   head: {
-    real: "This is what the real responders did",
-    known: "What was known by the deadline",
-    plain: "What the desk with plain written notes proposed",
-    table: "What the desk with an evidence table wrote down",
-    check: "What the check caught, and the one message it sent back",
-    final: "The simulated action it finally chose",
+    situation: "What was happening at this deadline?",
+    real: "What does the public record say responders did?",
+    known: "Which reports were available, and what remained unknown?",
+    check: "Did this AI proposal follow the rules?",
+    final: "What rescue action did the AI finally propose?",
+    testing: "How this AI proposal was tested",
   },
   /** the kicker over a step card. Chrome, four words. */
   step: (n: number, of: number) => `Step ${n} of ${of}`,
   /** the kicker over the card that holds the record, which is read before the five. Chrome. */
-  realKicker: "Read this before the five steps",
+  realKicker: "Public-response context",
   /** the line at the foot of the frame while there is more of this card below the window */
   scrollCue: "Scroll down to read the rest of this card.",
   /** the moment's own deadline, written out in full under its title */
-  deadline: (words: string) => `The deadline for this decision was ${words}.`,
+  deadline: (words: string) => `Decision deadline: ${words}.`,
   /** who the record says had to make it */
-  decider: (decider: string) => `The record names ${decider} as the one who had to make it.`,
+  decider: (decider: string) => `Responsible office: ${decider}.`,
   /** which recorded run of this decision the walk-through follows */
   seedLine: (seed: number, of: number) =>
-    `This walk-through follows one recorded run of this decision, number ${seed}.`
-    + ` ${countWordCap(of)} runs of it were recorded in all, and the other runs chose differently`
-    + " in places.",
+    `This walkthrough follows recorded try ${seed}. It is one of ${of} tries for this decision;`
+    + " the other tries sometimes chose different details.",
   /** what the decision asked for, quoted from the exercise's own instruction */
-  taskLine: (task: string) => `The job here was this. ${task}`,
+  taskLine: (task: string) => `The AI was asked: ${task}`,
+  testingLead:
+    "The same decision was answered three ways so the team could measure which working habits"
+    + " made AI proposals easier to trace and more likely to follow the written rules.",
+  testingPlain: "First answer: plain notes",
+  testingTable: "Second answer: every claim linked to its source",
+  testingRevision: "Final answer: the AI changed its proposal after one exact rule message",
+  testingResult: (verdict: string) => `Result: ${verdict}`,
   /** the labels over the blocks inside a card. Chrome, a short phrase each. */
-  openLabel: "What the record does not say",
-  reportsLabel: "The reports that existed",
-  unknownsLabel: "What nobody knew yet",
-  weighedLabel: "How it weighed each report",
-  planLabel: "What it asked for",
-  finalLabel: "What it finally chose",
-  messageLabel: "What the check found",
-  changeLabel: "What the second answer changed",
+  openLabel: "Unanswered questions in the public record",
+  reportsLabel: "Reports available at the deadline",
+  unknownsLabel: "Required unknowns",
+  weighedLabel: "How the AI used each report",
+  planLabel: "The AI proposed these units and destinations.",
+  finalLabel: "The AI revised these units and destinations.",
+  messageLabel: "Rule violations found",
+  changeLabel: "What the AI changed after feedback",
   /**
    * The sentence under this label is the language model's own writing, saved word for word when
    * the run was recorded. The label has to say so, because nothing else on the card does. A
@@ -1447,7 +1403,7 @@ export const TRACE = {
    * the sentence for the page's own summary of the answer, so the label now says that the words
    * are the machine's and that they are quoted rather than retold.
    */
-  reasonLabel: "Quoted word for word from what this software wrote",
+  reasonLabel: "AI's recorded reason, quoted verbatim",
   /**
    * The two lines under that quotation.
    *
@@ -1462,41 +1418,34 @@ export const TRACE = {
    * brackets are.
    */
   reasonFrame:
-    "The sentence above is copied from the recorded answer without a word changed, mistakes"
-    + " included. The plan listed above it is what that answer actually asked for, naming each"
-    + " thing it chose and where each one goes. Where the two disagree, the plan is what the"
-    + " record holds.",
+    "The itemized list above shows what the AI proposed. The quoted paragraph below shows why the"
+    + " AI said it made those choices. If they disagree, use the itemized list.",
   reasonBrackets:
-    "Anything inside [square brackets] was added by this page to say what one of the answer's own"
-    + " terms means.",
-  compareLabel: "Set the record beside the simulated decision",
+    "[Brackets] expand terms used by the AI.",
+  compareLabel: "Compare the AI proposal with the public response.",
   /** the opening line of the card that lists what was known */
   knownLead: (facts: number, when: string) =>
-    `${countWordCap(facts)} ${facts === 1 ? "report had" : "reports had"} been written down by`
-    + ` ${when}. Nothing that arrived after that minute was allowed into this decision, for the`
-    + " agents or for the people who decided it at the time.",
+    `By ${when}, ${countWord(facts)} ${facts === 1 ? "report was" : "reports were"} available to`
+    + " the AI. Later reports were excluded.",
   /** the opening line where a decision's own file holds no report of its own */
   knownNone:
-    "The file for this decision holds no reports of its own, so the agents worked from the task"
-    + " and the unknowns below and from nothing else.",
+    "No reports were available to the AI for this decision. It received only its instructions"
+    + " and a list of facts it had to mark as unknown.",
   /** the opening line over the unknowns a decision required a decider to name */
   unknownsLead: (n: number) =>
-    `${countWordCap(n)} ${n === 1 ? "thing was" : "things were"} still unknown at that minute, and`
-    + " this decision required the decider to say so out loud.",
+    `At this deadline, ${countWord(n)} required ${n === 1 ? "fact was" : "facts were"} still`
+    + " unknown.",
   /** what each of the three desks is, said in ordinary words on its own card */
   desk: {
-    plain_summary: "The first desk passed plain written notes straight on, the way a person"
-      + " scribbles a summary before handing it on.",
-    evidence_table: "The second desk passed a table with every claim written beside the report"
-      + " that backs it, so a number could never travel without its source.",
-    evidence_feedback: "The third desk is the second desk again, after one short message naming"
-      + " the exact mistake it had just made.",
+    plain_summary: "This AI proposed an action from a plain-note summary.",
+    evidence_table: "This AI linked each claim to its source before proposing an action.",
+    evidence_feedback: "This AI received one rule-violation message, then revised its proposal.",
   } as Record<string, string>,
   /** the name a desk goes by across the walk-through. Chrome, a short sentence-less phrase. */
   deskName: {
-    plain_summary: "The desk that wrote plain notes",
-    evidence_table: "The desk that kept an evidence table",
-    evidence_feedback: "The same desk, after one message named its mistake",
+    plain_summary: "The AI used plain notes",
+    evidence_table: "The AI linked each claim to its source",
+    evidence_feedback: "The AI revised once after feedback.",
   } as Record<string, string>,
   /**
    * A plan, said one line at a time. A moment that hands out a divisible pool of units counts
@@ -1504,15 +1453,14 @@ export const TRACE = {
    * counts, and neither runs past a line a person can read in one breath.
    */
   planCount: (total: number, unit: string, places: string) =>
-    `It proposed ${total} ${unit} ${places}.`,
+    `The AI proposed ${total} ${unit} ${places}.`,
   planNamed: (units: number) =>
-    `It chose ${countWord(units)} of the units this decision offered, and named where each one`
-    + " goes.",
-  planNone: "It proposed nothing at all for this decision.",
+    `The AI proposed ${countWord(units)} named units and destinations.`,
+  planNone: "The AI proposed no action.",
   planPartCount: (quantity: number, unit: string, place: string) =>
-    `The plan names ${quantity} ${unit} for ${place}.`,
+    `Proposed: ${quantity} ${unit} to ${place}.`,
   planPartNamed: (unit: string, place: string) =>
-    `The plan names ${unit} for ${place}.`,
+    `Proposed: ${unit} to ${place}.`,
   /**
    * The same line where the answer wrote a name the exercise does not carry, in the machine form
    * an identifier takes. The name is shown as the answer's own wording rather than as a fact, so
@@ -1522,12 +1470,12 @@ export const TRACE = {
   // "which is the answer's own wording", left a reader guessing whether the phrase was invented
   // or merely quoted, so these say invented.
   planPartWroteUnit: (unit: string, place: string) =>
-    `The plan names ${unit} for ${place}. It made that name up; no such unit was on its list.`,
+    `The AI proposed ${unit} for ${place}, but this decision did not allow ${unit}.`,
   planPartWrotePlace: (unit: string, place: string) =>
-    `The plan names ${unit} for ${place}. It made that place up; no such place was on its list.`,
+    `The AI proposed ${unit} for ${place}, but ${place} was not an available destination.`,
   planPartWroteBoth: (unit: string, place: string) =>
-    `The plan names ${unit} for ${place}. It made both of those names up; neither was on its`
-    + " list.",
+    `The AI proposed ${unit} for ${place}, but this decision allowed neither what the AI chose`
+    + " nor where it sent it.",
   /** the same two forms, for the choice the public record holds */
   realCount: (total: number, unit: string, places: string) =>
     `The record names ${total} ${unit} ${places}.`,
@@ -1540,9 +1488,9 @@ export const TRACE = {
     `The record names ${unit} for ${place}.`,
   /** the same two forms again, for the answer the walk-through ends on */
   finalCount: (total: number, unit: string, places: string) =>
-    `The final simulated decision sends ${total} ${unit} ${places}.`,
+    `The corrected AI proposal includes ${total} ${unit} ${places}.`,
   finalNamed: (units: number) =>
-    `The final simulated decision names ${countWord(units)} units and where each one goes.`,
+    `The corrected AI proposal names ${countWord(units)} units and a destination for each.`,
   /** how many places a plan reaches, as a clause the count lines above end on. Chrome. */
   places: (n: number) =>
     (n === 1 ? "that all go to one place" : `that go to ${countWord(n)} places`),
@@ -1558,48 +1506,44 @@ export const TRACE = {
   unitFallback: { one: "unit", many: "units" },
   /** the totals under a plan, and the limit this decision set on them */
   totalLine: (total: number, unit: string) =>
-    `Those quantities add up to ${total} ${unit}.`,
-  limitLine: (limit: number) => `This decision allowed ${limit}.`,
+    `Total proposed: ${total} ${unit}.`,
+  limitLine: (limit: number) => `Maximum allowed: ${limit}.`,
   /** how each report was counted, said in ordinary words */
   factorLead: (n: number) =>
     (n === 1
-      // "It wrote down what the one report it had meant for its plan" garden-paths: the easier
-      // reading is a report that was intended for the plan. Splitting the clause removes it.
-      ? "It had one report, and it wrote down what that report meant for its plan."
-      : `It wrote down what each of the ${countWord(n)} reports meant for its plan.`),
+      ? "The AI used one report in forming this proposal."
+      : `The AI used ${countWord(n)} reports in forming this proposal.`),
   factorState: {
-    SUPPORTS: "It counted this one as supporting its plan.",
-    CONTRADICTS: "It counted this one as arguing against its plan.",
-    UNKNOWN: "It left this one unresolved.",
+    SUPPORTS: "The AI treated this report as support.",
+    CONTRADICTS: "The AI treated this report as evidence against the proposal.",
+    UNKNOWN: "The AI treated this report as unresolved.",
   } as Record<string, string>,
   /** which of the required unknowns a desk named */
   unknownsNamed: (named: number, of: number) =>
-    `It named ${countWord(named)} of the ${countWord(of)} unknowns this decision required.`,
+    `The AI acknowledged ${countWord(named)} of ${countWord(of)} required unknowns.`,
   unknownsNone: (of: number) =>
     (of === 1
-      ? "It did not name the one unknown this decision required."
+      ? "The AI omitted the required unknown."
       : of === 2
-        ? "It named neither of the two unknowns this decision required."
-        : `It named none of the ${countWord(of)} unknowns this decision required.`),
+        ? "The AI omitted both required unknowns."
+        : `The AI omitted all ${countWord(of)} required unknowns.`),
   unknownsAll: (of: number) =>
     (of === 1
-      ? "It named the one unknown this decision required."
+      ? "The AI acknowledged the required unknown."
       : of === 2
-        ? "It named both unknowns this decision required."
-        : `It named all ${countWord(of)} unknowns this decision required.`),
+        ? "The AI acknowledged both required unknowns."
+        : `The AI acknowledged all ${countWord(of)} required unknowns.`),
   /** an unknown a desk named that this decision never asked for */
   unknownsExtra: (n: number) =>
     (n === 1
-      ? "It also named one unknown of its own, which this decision had not asked for."
-      : `It also named ${countWord(n)} unknowns of its own, which this decision had not asked`
-        + " for."),
+      ? "The AI also named one unknown this decision did not require."
+      : `The AI also named ${countWord(n)} unknowns this decision did not require.`),
   /** how many of the names in a plan are outside this decision's own lists */
   unlisted: (n: number) =>
     (n === 1
-      ? "One of the names in that plan is not on the list of units and places this decision"
-        + " allowed."
-      : `${countWordCap(n)} of the names in that plan are not on the list of units and places`
-        + " this decision allowed."),
+      ? "The AI proposal names something to send or somewhere to send it that this decision did"
+        + " not allow."
+      : `The AI proposal names ${countWord(n)} unavailable units or destinations.`),
   /**
    * What the check found, one sentence per rule it named. The checker writes its findings as a
    * rule name and an identifier — `MISSING_REQUIRED_UNKNOWN: unknown-people-alive-by-time` — and
@@ -1608,64 +1552,56 @@ export const TRACE = {
    */
   said: {
     quantity: (total: number, limit: number) =>
-      `The quantities in that answer add up to ${total}, and this decision allowed ${limit}.`,
+      `The AI proposed ${total}; the limit was ${limit}.`,
     quantityFloor:
-      "One line of that answer asked for part of a single thing, and nothing on the list can be"
-      + " sent in parts.",
+      "The AI tried to send only part of a crew or response team, but this decision required"
+      + " every team to stay together.",
     capacity: (asked: number, held: number, pool: string) =>
-      `The answer asked for ${asked} of the ${pool}, and only ${held} were there.`,
+      `The AI requested ${asked} from ${pool}, but only ${held} were available.`,
     ineligibleTarget: (place: string) =>
-      `The answer named ${place}, which is not on the list of places this decision allowed.`,
+      `${place} was not an available destination.`,
     ineligibleResource: (unit: string) =>
-      `The answer named ${unit}, which is not on the list of units this decision allowed.`,
+      `${unit} was not one of the choices this decision allowed.`,
     missingUnknown: (text: string) =>
-      `The answer left out one thing this decision required it to say. ${text}`,
+      `The AI omitted a required unknown: ${text}`,
     missingUnknownPlain:
-      "The answer left out one thing this decision required it to say.",
+      "The AI omitted a required unknown.",
     unknownOutside:
-      "The answer named an unknown of its own instead of one this decision asked for.",
+      "The AI named an unknown this decision did not require.",
     // Every answer does two separate things with a report: it lists the report as one it read,
     // and it says what that report meant for its plan. The page used to call those two acts
     // "citing" and "weighing" without ever saying how they differ, and one whole finding is about
     // the difference. Both acts are now spelled out wherever either one is named.
     cutoffObservation: (text: string) =>
-      "The answer listed a report it had read that is not among the ones this decision made"
-      + ` available. ${text}`,
+      `The AI cited a report that was unavailable at the deadline. ${text}`,
     cutoffObservationPlain:
-      "The answer listed a report it had read that is not among the ones this decision made"
-      + " available.",
+      "The AI cited a report that was unavailable at the deadline.",
     cutoffFactor: (text: string) =>
-      "The answer said what a report meant for its plan, and that report is not among the ones"
-      + ` this decision made available. ${text}`,
+      `The AI used a report that was unavailable at the deadline. ${text}`,
     cutoffFactorPlain:
-      "The answer said what a report meant for its plan, and that report is not among the ones"
-      + " this decision made available.",
-    noSupport: "The answer named no report at all as backing its plan.",
+      "The AI used a report that was unavailable at the deadline.",
+    noSupport: "The AI cited no report supporting its proposal.",
     factorMismatch:
-      "The answer listed the reports it had read, and then said what a different set of reports"
-      + " meant for its plan. Those two lists have to hold the same reports, and they did not.",
-    reuse: "The answer used one pool of units twice, where this decision allowed it once.",
+      "The reports the AI said it read do not match the reports it used to justify the proposal.",
+    reuse: "The AI assigned the same limited group of resources twice.",
     assignmentCount: (lines: number) =>
-      `The answer named ${lines} places, and this decision did not allow that many.`,
-    assignmentCountPlain: "The answer named more or fewer places than this decision allowed.",
-    duplicateObservation: "The answer listed one report twice.",
-    duplicateFactor: "The answer said what one report meant for its plan twice over.",
-    duplicateUnknown: "The answer named one unknown twice.",
-    hindsight: "The answer used something that was only known after the deadline had passed.",
+      `The AI proposed ${lines} destinations; this decision allowed a different number.`,
+    assignmentCountPlain: "The AI proposed a different number of destinations than allowed.",
+    duplicateObservation: "The AI cited one report twice.",
+    duplicateFactor: "The AI evaluated one report twice.",
+    duplicateUnknown: "The AI named one unknown twice.",
+    hindsight: "The AI used information published after the deadline.",
     ungradable:
-      "The answer came back in a form the check could not read, so no rule could be tested"
-      + " against it.",
+      "The AI returned a proposal the rule checker could not read.",
     /** any rule this list has no sentence of its own for, said through its own plain wording */
-    other: (rule: string) => `The answer broke one rule: it ${rule}.`,
+    other: (rule: string) => `The AI proposal broke one rule: ${rule}.`,
   },
   /** what the check is, before its own findings are stated */
   checkWhat:
-    "The check is ordinary code with no model in it. It runs after an answer and tests that"
-    + " answer against the rules that were written down before anything was run.",
+    "A computer program used rules written before the run to check the AI proposal.",
   /** the check found nothing to correct */
   checkClean:
-    "The check found nothing to correct for this decision, so no message went back and the desk's"
-    + " first answer stood as its final one.",
+    "The rule check found no broken rule, so the AI kept its first proposal.",
   /** what the message means, in ordinary words */
   checkQuantity: (total: number, limit: number) =>
     `In plain words: the quantities in that answer add up to ${total}, and this decision allowed`
@@ -1676,71 +1612,65 @@ export const TRACE = {
       : `In plain words: the check named ${countWord(rules)} broken rules in that answer.`),
   /** the second answer, and the one rule it worked under */
   checkAgain:
-    "The desk answered once more with the same reports and no new information. It was allowed one"
-    + " more answer and nothing else.",
+    "The AI received one message naming the broken rule, then revised its proposal using the same"
+    + " reports.",
   /** one line of what the second answer moved */
   changeMoved: (place: string, from: number, to: number) =>
-    `${place} went from ${from} to ${to}.`,
-  changeAdded: (place: string, unit: string) => `${unit} was added for ${place}.`,
+    `The AI changed ${place} from ${from} to ${to} units.`,
+  changeAdded: (place: string, unit: string) => `The AI added ${unit} for ${place}.`,
   changeRelocated: (unit: string, from: string, to: string) =>
-    `${unit} moved from ${from} to ${to}.`,
-  changeDropped: (place: string, unit: string) => `${unit} was dropped from ${place}.`,
+    `The AI moved ${unit} from ${from} to ${to}.`,
+  changeDropped: (place: string, unit: string) => `The AI removed ${unit} from ${place}.`,
   changeTotals: (from: number, to: number, unit: string) =>
-    `The plan went from ${from} ${unit} to ${to} ${unit}.`,
-  changeNone: "The second answer came back with the same units in the same places.",
+    `The proposed total changed from ${from} ${unit} to ${to} ${unit}.`,
+  changeNone: "The revised proposal kept the same units and destinations.",
   /** what a second answer changed where it moved no unit at all */
   changeWeighed: (report: string, state: string) =>
-    `It changed how it counted one report. ${report} ${state}`,
+    `The AI changed how it used one report: ${report} ${state}`,
   changeNamedUnknown: (unknown: string) =>
-    `It named one more unknown this decision required: ${unknown}`,
+    `The AI acknowledged one more required unknown: ${unknown}`,
   changeDroppedUnknown: (unknown: string) =>
-    `It stopped naming one unknown: ${unknown}`,
+    `The AI stopped naming this unknown: ${unknown}`,
   /** the comparison at the foot of the last card: kind and scale, and nothing more */
   compareSame: (real: number, model: number, unit: string) =>
-    `The public record names ${real} ${unit}. This simulated decision comes to ${model} ${unit}.`,
+    `Responders sent ${real} ${unit}; the AI proposed ${model} ${unit}.`,
   compareNamed: (real: number, model: number) =>
-    `The public record names ${countWord(real)} units. This simulated decision names`
-    + ` ${countWord(model)}.`,
+    `The public record names ${countWord(real)} units. The AI proposed ${countWord(model)}.`,
   compareDifferent:
-    "The public record and this simulated decision name different kinds of action here, so"
-    + " nothing here compares their scale.",
+    "Responders and the AI chose different kinds of action, so their quantities are not"
+    + " comparable. This does not show which action was better.",
   compareNone:
     "The public record names no choice of units for this decision, so there is nothing here to set"
     + " the simulated decision beside.",
   compareClaim:
-    "That comparison is about the kind of action and its scale. It says nothing about which"
-    + " choice was better, and it is no evidence that either one was.",
+    "These two lines compare only what each side proposed and how much. They do not say which"
+    + " choice was better.",
   /** where every word on this surface came from */
   source: (events: number) =>
-    `Every sentence on these cards was read from two files. One is the recorded run, ${events}`
-    + " events long. The other sets out the decision moments themselves. The run took a"
-    + " fingerprint of that second file when it started, so anyone can check the file has not"
-    + " changed since.",
+    `Source: the recorded run's ${events} saved events and the file used to verify its AI`
+    + " decisions.",
   /** the plain sentence behind each rule the check can name */
   rule: {
-    CONSTRAINT_QUANTITY: "it sent more than this decision allowed",
-    CONSTRAINT_RESOURCE_CAPACITY: "it sent more units than one pool of units held",
-    CONSTRAINT_RESOURCE_REUSE: "it used one pool of units twice where that was not allowed",
-    CONSTRAINT_ASSIGNMENT_COUNT: "it named more or fewer places than this decision allowed",
-    INELIGIBLE_TARGET: "it named a place that is not on the list of places this decision allowed",
-    INELIGIBLE_RESOURCE:
-      "it named something that is not on the list of units this decision allowed",
-    CUTOFF_INVALID_OBSERVATION: "it listed a report that was not among the ones open to it",
-    CUTOFF_INVALID_FACTOR:
-      "it said what a report meant for its plan, and that report was not among the ones open"
-      + " to it",
-    MISSING_REQUIRED_UNKNOWN: "it left out an unknown this decision required it to name",
-    UNKNOWN_ID_OUTSIDE_SLOT: "it named an unknown of its own instead of one this decision asked for",
-    NO_SUPPORTING_OBSERVATION: "it named no report at all as backing its plan",
+    CONSTRAINT_QUANTITY: "sent more than allowed",
+    CONSTRAINT_RESOURCE_CAPACITY: "requested more units than were available",
+    CONSTRAINT_RESOURCE_REUSE: "asked to use the same limited supply twice",
+    CONSTRAINT_ASSIGNMENT_COUNT: "named the wrong number of destinations",
+    INELIGIBLE_TARGET: "named an unavailable destination",
+    INELIGIBLE_RESOURCE: "invented a resource that this decision did not allow",
+    CUTOFF_INVALID_OBSERVATION: "cited a report unavailable at the deadline",
+    CUTOFF_INVALID_FACTOR: "used a report unavailable at the deadline",
+    MISSING_REQUIRED_UNKNOWN: "did not name a required unknown",
+    UNKNOWN_ID_OUTSIDE_SLOT: "named an unknown this decision did not require",
+    NO_SUPPORTING_OBSERVATION: "cited no report supporting the proposal",
     FACTOR_SET_MISMATCH:
-      "the reports it listed as read and the reports it commented on were two different lists",
-    DUPLICATE_OBSERVATION: "it listed one report twice",
-    DUPLICATE_FACTOR: "it said what one report meant for its plan twice over",
-    DUPLICATE_UNKNOWN: "it named one unknown twice",
-    HINDSIGHT_OBSERVATION: "it listed something that was only known later",
-    HINDSIGHT_FACTOR: "it leaned on something that was only known later",
-    HINDSIGHT_FINGERPRINT: "its written answer repeated something that was only known later",
-    UNGRADABLE: "its answer came back in a form the check could not read",
+      "listed one set of reports but used a different set to justify the proposal",
+    DUPLICATE_OBSERVATION: "cited one report twice",
+    DUPLICATE_FACTOR: "evaluated one report twice",
+    DUPLICATE_UNKNOWN: "named one unknown twice",
+    HINDSIGHT_OBSERVATION: "used information published later",
+    HINDSIGHT_FACTOR: "relied on information published later",
+    HINDSIGHT_FINGERPRINT: "repeated information published later",
+    UNGRADABLE: "returned a proposal the checker could not read",
   } as Record<string, string>,
   /**
    * The same two rules where one answer broke them more than once. A badge reading "it named a
@@ -1750,9 +1680,9 @@ export const TRACE = {
    */
   ruleCounted: {
     INELIGIBLE_TARGET: (n: number) =>
-      `it named ${countWord(n)} places that are not on the list of places this decision allowed`,
+      `named ${countWord(n)} unavailable destinations`,
     INELIGIBLE_RESOURCE: (n: number) =>
-      `it named ${countWord(n)} units that are not on the list of units this decision allowed`,
+      `named ${countWord(n)} unavailable units`,
   } as Record<string, (n: number) => string>,
   /** a rule the check named that this list has no plain wording for */
   ruleUnnamed: "the check named a rule this page has no plain wording for",
@@ -1772,30 +1702,29 @@ export const TRACE = {
  */
 export const OUTCOMES = {
   /** the label over the eight cells beside a choice. Four words. */
-  stripLabel: "How the eight tries agreed",
+  stripLabel: "How did the eight AI proposals vary?",
   /**
    * The label a moment outside the frozen experiment wears over its own eight cells. The cells
    * there are empty, so a label promising a count of agreeing tries and a row of cells carrying
    * none say two different things at once. This says the same thing the cells do.
    */
-  stripLabelNone: "This decision carries no count of agreeing tries",
+  stripLabelNone: "No scored AI runs for this decision",
   /**
    * What the five cell states mean, written where the cells first appear and again in the ledger.
    * A reader is never asked to hover for it, because a person showing this in front of a room
    * never hovers. The two colours are named as colours, because that is what a viewer sees.
    */
   stripLegend:
-    "A filled cell is a try that chose what is shown here, and an outlined cell is a try that"
-    + " chose something else. Blue cells passed every prewritten check and orange cells did not."
-    + " Dim outlined cells mean this decision carries no counts.",
+    "Filled cells repeat the most common proposal; outlined cells differ. Blue met every rule;"
+    + " orange broke at least one. Dim outlines mark unscored decisions.",
   /**
    * What a grade is about, said next to the grade wherever the eight cells stand beside it. The
    * grade reads one answer and the cells read eight tries, and a reader who takes the grade as a
    * verdict on all eight has read the surface wrong.
    */
   badgeScope:
-    "This grade is about the one answer shown here. The eight cells beside it show how all eight"
-    + " recorded tries came out.",
+    "One badge states whether this AI proposal passed. Eight cells show what happened across all"
+    + " eight tries.",
   /**
    * The eight cells said in words, for a reader who cannot see them. The contract writes both
    * of these sentences itself, and this joins them in the order the cells are read.
@@ -1803,29 +1732,31 @@ export const OUTCOMES = {
   stripReading: (agreement: string, pass: string) => `${agreement} ${pass}`,
   /** the eight outlined cells a moment outside the frozen experiment carries instead */
   stripDescriptive:
-    "This decision was replayed to describe what happened, so it carries no count of agreeing"
-    + " tries.",
+    "This unscored AI replay has no eight-run comparison.",
   /**
    * What a reader should do where the eight tries scattered. The sentence states the count it
    * is about, so the advice and the number a reader can see are the same fact.
    */
   weakAgreement: (agreement: number, tries: number) =>
-    `Only ${agreement} of the ${tries} tries chose the same set of places here, so read the`
-    + " reports for this decision before you rely on it.",
+    `Only ${agreement} of ${tries} AI runs proposed the same plan. Inspect the deadline reports`
+    + " before treating it as representative.",
   /** the control that opens the itemized list under a grade. Four words. */
-  reasonOpen: "What the check found",
+  reasonOpen: "Show rule violations",
   /** the same control once the list is open. Three words. */
-  reasonClose: "Close this list",
+  reasonClose: "Hide the rules this proposal broke",
   /** the line where a check found nothing to name */
-  reasonNone: "The check named no broken rule on this answer.",
+  reasonNone: "This AI proposal broke no stated rule.",
   /**
    * The map telegraph. As a deadline comes up, every place the recorded answers proposed lights
    * on the ground before the moment resolves, so a viewer sees what is about to be decided
    * rather than only what was decided.
    */
   telegraph: {
+    underConsideration: "The AI considered sending help here before the deadline.",
+    chosen: "The AI proposed sending help here.",
+    notChosen: "The AI considered this place but did not include it in the proposal.",
     /** the label over the ghost stack. Four words. */
-    label: "Places these answers named",
+    label: "Where the AI proposed sending help",
     /** the deadline this telegraph is counting down to */
     due: (clock: string) => `This decision is due at ${clock}.`,
     /** one candidate place, with the count the answer put on it */
@@ -1834,9 +1765,9 @@ export const OUTCOMES = {
     /** a candidate place a recorded answer named without a quantity of its own */
     placePlain: (place: string) => place,
     /** which desk asked for this place, said in the desk's own name */
-    wanted: (desk: string) => `asked for by ${desk}`,
+    wanted: (desk: string) => `proposed by ${desk}`,
     /** where every shown answer named the same place */
-    agreed: "every recorded way of deciding named this place",
+    agreed: "All three AI approaches proposed this destination.",
     /**
      * Names an answer wrote that the record does not put anywhere on this map. The plain-notes
      * desk wrote place labels the exercise's own list does not carry, so those names have no
@@ -1874,8 +1805,8 @@ export const OUTCOMES = {
           + " screen, so they are left out. Open the walk-through to read every place in full."),
     /** what the ghost outlines are, stated once so a hollow mark is never read as a real unit */
     what:
-      "The hollow marks are places a recorded answer proposed sending to. They are proposals"
-      + " drawn before the deadline, and no team has moved to any of them.",
+      "Hollow marks show proposed destinations before the deadline. No real team moved because"
+      + " of these AI proposals.",
   },
   /**
    * The ledger the run closes on: all eleven moments of decision, each with what was chosen, how
@@ -1884,42 +1815,41 @@ export const OUTCOMES = {
    */
   ledger: {
     /** the surface's own name across its head. Eight words. */
-    title: "The decision ledger holds every moment of decision",
+    title: "AI agents proposed rescue actions at eleven points during the first 72 hours.",
     /** the control that opens it from the closing panel. Five words. */
-    open: "Open the decision ledger",
+    open: "Open every AI rescue decision",
     /** chrome, three words */
     close: "close — esc",
     /** the opening sentence, which says what the list is before any count appears */
     lead: (moments: number) =>
-      `These are all ${moments} moments in the three days when somebody had to decide something.`
-      + " Each row carries what the simulated desk finally chose, how far its eight recorded"
-      + " tries agreed, and what the prewritten checks made of it.",
+      `This page lists all ${moments} urgent response decisions. Each row starts with what the AI`
+      + " proposed and what responders did. Open the test details to compare repeated runs and"
+      + " the rules they met.",
     /** the sentence that says which rows carry counts and which do not */
     scope: (registered: number, descriptive: number) =>
-      `${countWordCap(registered)} of these moments belong to the frozen experiment and carry`
-      + ` counts out of eight tries. The other ${countWord(descriptive)} were replayed to`
-      + " describe what happened, so they carry no count.",
+      `${countWordCap(registered)} decisions have scored AI runs. The other`
+      + ` ${countWord(descriptive)} show one unscored AI proposal for context.`,
     /** the label over the two moments the contract singles out. Seven words. */
-    markedHead: "These moments stand out from the rest",
+    markedHead: "AI proposals that changed most",
     /** the label over the closing counts. Five words. */
-    countHead: "What the frozen experiment counted",
+    countHead: "Rule-check totals for scored AI proposals",
     /** the label on a row that carries a classification from the contract */
     marked: {
-      exceptional: "All 8 simulated answers passed every prewritten check",
-      perfect_repair: "One message made all 8 corrected answers pass every prewritten check",
-      persistent_problem: "This decision stayed wrong",
+      exceptional: "All eight AI proposals met every rule",
+      perfect_repair: "One error message led all eight revisions to pass",
+      persistent_problem: "Most revised AI proposals still broke a rule",
     } as Record<string, string>,
     /** the control on each row. Six words. */
-    row: "See how this decision was made",
+    row: "Open this AI decision story",
     /** the line at the foot while there is more of the ledger below the window */
-    scrollCue: "Scroll down to read the rest of the ledger.",
+    scrollCue: "Scroll down to read the remaining decisions.",
     /**
      * The ledger opens on a key at any hour, so the line across its head has to say which of the
      * two things is true. `OUTCOMES.ended` is kept for a run that has actually finished; this is
      * what a reader who opened it at hour two sees instead.
      */
     playing: (moments: number) =>
-      `The run is still playing. This ledger shows all ${countWord(moments)} moments of the`
+      `The run is still playing. This page shows all ${countWord(moments)} decisions in the`
       + " record, including the ones the run has not reached yet.",
     /**
      * A recorded run other than the one the highlight file was derived from. That file names the
@@ -1928,14 +1858,292 @@ export const OUTCOMES = {
      * all go, and this sentence stands in their place.
      */
     noHighlights:
-      "The counts in this ledger are worked out ahead of time and saved in a companion file, one"
-      + " file per recorded run. This run has no such file, so the ledger shows no counts of"
-      + " agreeing tries, no marked moments and no totals.",
+      "This recorded run has no verified score file. You can still read every decision, but"
+      + " the page cannot show how often the eight tries chose the same proposal or which"
+      + " decisions were scored.",
     /** where the ledger's own numbers came from */
     source: (file: string) =>
-      `Every count in this ledger was read from ${file}. One program works that file out from the`
-      + " recorded run, and checks it against the run again every time this page is rebuilt.",
+      `Score source: ${file}. The build regenerates and checks these counts against the recorded`
+      + " run.",
   },
   /** the run has reached its end and the ledger is waiting. Six words. */
-  ended: "The three days have finished playing.",
+  ended: "The 72-hour response replay is complete.",
+};
+
+// ------------------------------------------------------------------ 17. the decision tree
+/**
+ * The decision tree: every moment of decision in the record, on one line, one at a time.
+ *
+ * What the screen is. Eleven marks stand in a row, one for each moment in the record when
+ * somebody had to decide something, in the order they happened. Exactly one of them is chosen at
+ * any time, and that one says what the software agents chose to do at that minute: what they
+ * sent, how many, where it went, why, and what the prewritten check made of it. What the real
+ * responders were recorded doing stands under its own heading below it. At the five moments the
+ * frozen experiment graded, one deliberate press then shows how the three ways of working
+ * answered, one press more shows one of them as eight recorded tries, and one press more opens
+ * one of those tries.
+ *
+ * Why the action leads. An earlier build of this screen opened on the way of working — "the desk
+ * that wrote plain notes" — and a reader met laboratory vocabulary where the subject is an
+ * earthquake response. `docs/rescueworld/ACTION-FIRST-PRESENTATION-CONTRACT.md` fixes the order
+ * for every surface of this product: situation, action, reason, unknowns, check, public record,
+ * and the experiment's own machinery last and behind a deliberate press.
+ *
+ * Why it is built to open one level at a time. Two earlier builds of this screen put everything
+ * on screen at once — eleven cards, fifteen branches and the same counting sentence over and
+ * over — and could not be read. The contract that replaced them is
+ * `docs/rescueworld/DECISION-TREE-SPEC.md`, and it fixes both the order of disclosure and the
+ * number of words each part may spend.
+ *
+ * The one rule the whole surface exists under. Everything here is a recorded answer and the
+ * verdict checks written before the run gave it. Nothing here says what the world would have
+ * become if a different answer had been carried out, because nothing in this project ever
+ * simulated that. The closing sentence below says so on screen at all times.
+ */
+export const TREE = {
+  /** the surface's own name, across its head. Three words. */
+  title: "AI rescue decision map",
+  /** the control that closes it. Chrome, three words. */
+  close: "close \u2014 esc",
+  /** why the screen exists, in one sentence. The contract allows eighteen words; this is ten. */
+  purpose: "The map follows eleven decisions made during Kumamoto's first 72 hours.",
+  /** the standing qualifier, agreed with the other agent and kept in view the whole time */
+  qualifier:
+    "These are recorded AI rescue proposals, not actions taken or possible futures.",
+  /** how to read the two colours, said once at the top of the screen and nowhere else */
+  legend: "Blue passed every check. Orange missed one.",
+  /**
+   * What the row of marks is and is not. The marks are spaced evenly so the seven moments of the
+   * first evening do not collapse into one knot, and evenly spaced marks would otherwise be read
+   * as evenly spaced hours, so the screen says which it is.
+   */
+  spineNote: "Beacons follow decision order; each shows its actual deadline.",
+  /** the whole row, named for a reader using a screen reader. Chrome. */
+  spineLabel: "The page lists eleven decisions from the earthquake response in time order.",
+  /** one mark, named for a reader using a screen reader. Chrome. */
+  markLabel: (n: number, of: number, clock: string, locator: string, _registered: boolean) =>
+    `Decision ${n} of ${of}. ${clock}. ${locator}.`,
+  /** where the reader is standing, over the one moment that is open. Chrome, four words. */
+  place: (n: number, of: number) => `Decision ${n} of ${of}`,
+  /** the moment's own deadline, said as compactly as a deadline can be said. Chrome. */
+  when: (words: string) => `Deadline ${words}`,
+  /** the label over the sentence saying what the responders actually did. Three words. */
+  realLabel: "What does the public record say responders did?",
+  /** the label over the action the software agents proposed at this moment. Five words. */
+  actionLabel: "What rescue action did the AI finally propose?",
+  /**
+   * The one thing a reader has to know about that action before anything else: it was never
+   * carried out. The agents answered a frozen snapshot of this moment long after the earthquake,
+   * and no unit named here moved because of them.
+   */
+  actionFrame:
+    "This AI proposal was generated later and was never carried out.",
+  /** the label over the places one action reached */
+  spotLabel: "Proposed destinations",
+  /** how many went to one place, on a branch card. Chrome, two or three words. */
+  spot: (count: string) => count,
+  /** where a branch card's units went, on the card's second line */
+  spotTo: (place: string) => `to ${place}`,
+  /** what a branch card says where the answer chooses where to look first */
+  spotCheck: "The AI marked this place as a priority.",
+  /** the parts of an action past the four the row of cards holds */
+  moreUnits: (n: number) =>
+    (n === 1
+      ? "One more thing the AI proposed sending appears below."
+      : `${countWordCap(n)} more things the AI proposed sending appear below.`),
+  morePlaces: (n: number) =>
+    (n === 1
+      ? "The AI proposal names one more destination below."
+      : `The AI proposal names ${countWord(n)} more destinations below.`),
+  /** the control that names the places past the four the row of cards holds. Four words. */
+  rest: "Show every proposed destination",
+  restOpen: "Show fewer destinations",
+  /** the same control where each card is one thing sent rather than one place reached */
+  restUnits: "Show everything the AI proposed sending",
+  restUnitsOpen: "Show fewer proposed items",
+  /** the label over the reports one answer weighed before it chose */
+  whyLabel: "Which evidence supported this AI proposal?",
+  /** where the record holds no reason of any kind for the answer */
+  whyNone: "The AI gave no reason for this proposal.",
+  /** the control that opens the frozen experiment's evidence. Six words. */
+  tested: "Compare scored AI proposals",
+  testedOpen: "Hide scored AI proposals",
+  /** the divider the contract fixes, between the record and the later exercise */
+  divider: "Three AI approaches answered the same rescue decision.",
+  /** what a moment outside the frozen experiment says when it is the one open */
+  excluded:
+    "This AI proposal is context only. No scored eight-run comparison was recorded for this"
+    + " decision.",
+  /** one way of working, collapsed: the count of its eight tries. The contract fixes the wording. */
+  methodResult: (passes: number, tries: number) =>
+    `${passes} of ${tries} AI proposals met every stated rule`,
+
+  // ---------------------------------------------------------------- what an agent actually did
+  /**
+   * A branch card leads with the action, not with the machinery.
+   *
+   * The first build of these cards led with the way of working — "the desk that kept an evidence
+   * table" — and a reader met a piece of laboratory vocabulary where the thing they came for is
+   * an earthquake response. The card now opens on what that agent asked for at that minute: what
+   * it sent, how many, and where. Every part of that sentence is read off the recorded answer.
+   * The way of working shrinks to a two-or-three-word tag at the foot of the card.
+   */
+  /** the three ways of working, said as the plain difference between them */
+  methodTag: {
+    plain_summary: "notes alone",
+    evidence_table: "sources attached",
+    evidence_feedback: "corrected once",
+  } as Record<string, string>,
+  /**
+   * What a moment's units are called in one short sentence, keyed by the kind the record gives
+   * them. Each word here matches the record's own longer wording for those units — the pool the
+   * record calls a `LIAISON_PAIR` is written out in the walk-through as "a pair of roads-ministry
+   * officers sent into a town hall", and a card counting several of them says "pairs of
+   * officers". A plan that mixes kinds, or that names units this moment never offered, has no one
+   * word of its own and is counted in units.
+   */
+  actionUnit: {
+    COMMAND_SUPPORT: { one: "command team", many: "command teams" },
+    PREFECTURAL_FIRE_BATTALION: { one: "fire brigade", many: "fire brigades" },
+    AIR_UNIT: { one: "helicopter crew", many: "helicopter crews" },
+    GROUND_RESPONSE_GROUP: { one: "response team", many: "response teams" },
+    LIAISON_PAIR: { one: "officer pair", many: "officer pairs" },
+    DIVISIBLE_WATER_TRUCK_POOL: { one: "water truck", many: "water trucks" },
+  } as Record<string, { one: string; many: string }>,
+  /** the kind of answer that sends nothing anywhere: it names which place to look at first */
+  checkFirstKind: "INFORMATION_PRIORITY",
+  /**
+   * The kinds of answer that pick a course of action rather than send a unit anywhere: what level
+   * of national command to open, which armed service to ask for help, which job to protect first.
+   * Nothing is sent at those moments, so the sentence names what was chosen instead of counting
+   * units. The kinds themselves are the record's own, and the words each one is said in come from
+   * the plain-language table the walk-through already uses.
+   */
+  chooseKinds: [
+    "MODELED_POLICY_CHOICE", "MODELED_DECISION_CAPACITY", "DEFENSE_DISPATCH_REQUEST",
+  ] as string[],
+  /** the kind the record gives the whole earthquake area, as against one town or one site */
+  wholeAreaKind: "INCIDENT_AREA",
+  /** what the agents chose, where the choice is a course of action rather than a unit to send */
+  actionPicked: (items: string[]) => `The AI proposed: ${items.join("; ")}.`,
+  actionGrouped: (total: number, place: string, groups: string) =>
+    `The AI proposed sending ${countWord(total)} emergency-response groups to ${place}: ${groups}.`,
+  actionMoreUnits: (n: number) =>
+    `the AI also proposed ${countWord(n)} more ${n === 1 ? "resource" : "resources"}`,
+  actionMorePlaces: (n: number) =>
+    `the AI also named ${countWord(n)} more ${n === 1 ? "destination" : "destinations"}`,
+  /** one such choice, where it lands on one named place rather than on the whole area */
+  pickedAt: (choice: string, place: string) => `${choice}: ${place}`,
+  /**
+   * What the agents chose, said as a person says it: who chose, what they chose to do, how many
+   * and where. "Chose to send" rather than "sent", because no unit named here moved: these are
+   * answers to a frozen copy of the moment, given long after the day itself.
+   */
+  actionOne: (count: string, place: string) =>
+    `The AI proposed sending ${count} to ${place}.`,
+  /** the same, where two places each received the same number */
+  actionEach: (count: string, first: string, second: string) =>
+    `The AI proposed sending ${count} each to ${first} and ${second}.`,
+  /** the same, where two places received different numbers */
+  actionSplit: (first: string, firstPlace: string, second: string, secondPlace: string) =>
+    `The AI proposed sending ${first} to ${firstPlace} and ${second} to ${secondPlace}.`,
+  /** the same, across too many places to name in one sentence */
+  actionAcross: (count: string, places: number) =>
+    `The AI proposed sending ${count} across ${countWord(places)} destinations.`,
+  /** a moment whose answer chooses where to look first rather than what to send */
+  checkOne: (place: string) => `The AI proposed checking ${place} first.`,
+  checkTwo: (first: string, second: string) =>
+    `The AI proposed checking ${first} and ${second} first.`,
+  checkAcross: (places: number) =>
+    `The AI proposed checking ${countWord(places)} places first.`,
+  checkMany: (places: string) => `The AI proposed checking ${places} first.`,
+  checkManyMore: (places: string, more: number) =>
+    `The AI proposed checking ${places} first, plus ${countWord(more)} more`
+    + ` ${more === 1 ? "place" : "places"}.`,
+  /** an answer that asked for nothing at all */
+  actionNone: "The AI proposed no action.",
+  /** what the prewritten check made of that one answer, in the ledger's own fixed wording */
+  actionVerdict: (badge: string) => `Rule result: ${badge}.`,
+  /** the second count, said only where one way of working is open */
+  agreement: (most: number, tries: number) =>
+    `The most repeated proposal appeared in ${most} of ${tries} AI runs.`,
+  /** the label over the eight cells. Chrome, five words. */
+  seedsLabel: "These are eight AI rescue proposals.",
+  /** one cell, named for a reader using a screen reader. Chrome. */
+  seedLabel: (n: number, of: number, passed: boolean, agreed: boolean) =>
+    `AI proposal ${n} of ${of}. `
+    + (passed ? "Met every stated rule. " : "Broke at least one stated rule. ")
+    + (agreed ? "Repeats the most common proposal." : "Differs from it."),
+  /** what the fill of a cell means, said once beside the eight cells */
+  seedsNote:
+    "Filled cells repeat the most common proposal; outlined cells show another proposal.",
+  /** the head of the one try that is open. Chrome, four words. */
+  seedHead: (n: number, of: number) => `AI proposal ${n} of ${of}`,
+  /** whether that try passed, in the same words the ledger and the walk-through use */
+  seedPassed: "This AI proposal met every stated rule.",
+  seedFailed: (rule: string) => `This AI proposal broke a stated rule: ${rule}.`,
+  /** how many rules it broke, where it broke more than one */
+  seedRules: (n: number) => `This AI proposal broke ${countWord(n)} stated rules.`,
+  /** whether that try chose what most of the tries chose */
+  seedAgreed: "This proposal matches the most repeated proposal.",
+  seedApart: "This AI gave a different plan from the one repeated most often.",
+  /**
+   * The label over the unknowns one recorded try named. The walk-through's own label over this
+   * kind of sentence, "What nobody knew yet", heads the list of things the moment itself left
+   * open. This one heads what one answer said about them, which is a different fact.
+   */
+  unknownsLabel: "The AI acknowledged these unknowns.",
+  /**
+   * Reports one recorded try weighed that this moment's own list of reports does not hold. The
+   * try is shown the reports the moment made available, and an answer that weighs something else
+   * weighed something it was not given, which is a fact about that answer worth stating.
+   */
+  reportsOutside: (n: number) =>
+    (n === 1
+      ? "The AI weighed one report that was unavailable at this deadline."
+      : `The AI weighed ${countWord(n)} reports that were unavailable at this deadline.`),
+  /** which of the eight tries the six-card walk-through follows */
+  seedWalk: "The six-card story follows this AI proposal.",
+  seedOther: (n: number) =>
+    `The six-card story follows AI proposal ${n} instead.`,
+  /** where the record holds nothing for one way of working */
+  notRecorded: "Not recorded.",
+  /** the cue at the foot of the panel while it holds more than the frame shows. Chrome. */
+  scrollCue: "Scroll for the rest of this panel",
+  /**
+   * The closing sentence. It is the boundary this whole screen is built inside, so it stands at
+   * the foot of the frame at every size and never scrolls away. Its wording is fixed.
+   */
+  footer:
+    "Branches show recorded AI rescue proposals. They do not show what would have happened if"
+    + " anyone acted on them.",
+  /** the control that reaches this screen from the closing ledger. Five words. */
+  open: "Open the decision tree",
+  /** the line the help list carries for the b key */
+  control:
+    "Press B to open all rescue decisions. Use Up or Down to choose, Right to open the AI"
+    + " proposal, Left to go back, and Enter to select.",
+};
+
+/**
+ * A short handle for each moment of decision, two to four words long, written for this screen.
+ *
+ * These are not titles. Each moment's own plain title is a whole sentence and lives in
+ * `gloss.ts`, and it is shown in full the moment that mark is opened. A row of eleven whole
+ * sentences cannot be read at a glance, and cutting a sentence off with three dots leaves a
+ * reader holding half a thought, so each mark carries a handle a person wrote instead. Every one
+ * of them names the same thing its own title names, in the title's own words where it can.
+ */
+export const TREE_LOCATOR: Record<string, string> = {
+  "slot-01-early-fire-mobilization": "First fire crews",
+  "slot-02-missing-telemetry-triage": "First towns to check",
+  "slot-03-defense-request-scope": "Asking the navy",
+  "slot-04-first-municipal-liaisons": "First officers sent",
+  "slot-05-escalation-minute": "Raising the alarm",
+  "slot-06-first-night-response-split": "Two collapsed buildings",
+  "slot-07-shelter-load-triage": "Crowded shelters",
+  "slot-08-degraded-dispatch-rescue": "The paper mill",
+  "slot-09-push-water-planning": "Water trucks early",
+  "slot-10-rescue-water-turn": "Rescue or water",
+  "slot-11-aftershock-reprioritization": "After the aftershock",
 };

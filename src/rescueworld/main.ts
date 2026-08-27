@@ -65,10 +65,13 @@ import {
   type DivergenceEpisode, type ReplayEvent,
 } from "./pairing";
 import {
-  buildTraces,
+  buildTraces, readSeedDesks,
   type AgentTrace, type RawContext, type RawDecisionEvent, type TraceCard, type TraceDesk,
 } from "./trace";
 import { loadHighlights, stripOf, type StripReading } from "./highlights";
+import {
+  actionOf, buildTree, drawTree, treeReport, windowSecondsOf, type TreeHandle, type TreeModel,
+} from "./tree";
 import { mountArtDirector } from "../rescueworld-art-director";
 import { recolorDamage, residueRgb } from "../rescueworld-art-director/burn";
 
@@ -1788,7 +1791,47 @@ async function boot() {
     sceneTex = null;
     resizePost(post, dw, dh);
   }
-  addEventListener("resize", resize);
+  /**
+   * Keep the story panel's own sentence inside the frame.
+   *
+   * The stylesheet anchors `#narrate` by its foot, above the decision rail, so a taller panel
+   * grows upward. The sentence it carries is the largest reading on the page, and a resolved
+   * action runs to two or three lines where a public beat ran to one: at 1280 by 720 that pushed
+   * the sentence's own first line above the top of the window.
+   *
+   * What gives way is decided by what the panel is for. The sentence saying what is happening at
+   * this minute is the reason the panel exists; the act's own standing line under it is context a
+   * reader has already met at the top of the act. So the act line goes first, and the panel is
+   * only lowered off the place the stylesheet gives it if dropping that line was not enough.
+   * At every size with room for the whole panel nothing changes at all.
+   */
+  const NARRATE_EDGE = 12;
+  /** whether the act's own line belongs on screen at all, which the act itself decides */
+  let narrateAbout = false;
+  /** whether this window is too short for it, which is decided by measuring, once per sentence */
+  let narrateTight = false;
+  function fitNarrate() {
+    const panel = document.getElementById("narrate");
+    const about = document.getElementById("roundAboutLabel");
+    const line = document.getElementById("roundLine");
+    if (!panel) return;
+    panel.style.bottom = "";
+    narrateTight = false;
+    const show = (on: boolean) => {
+      if (about) about.style.display = on ? "block" : "none";
+      if (line) line.style.display = on ? "block" : "none";
+    };
+    show(narrateAbout);
+    if (panel.getBoundingClientRect().height === 0) return;
+    if (panel.getBoundingClientRect().top >= NARRATE_EDGE) return;
+    narrateTight = true;
+    show(false);
+    const box = panel.getBoundingClientRect();
+    if (box.top >= NARRATE_EDGE) return;
+    const lift = NARRATE_EDGE - box.top;
+    panel.style.bottom = `${Math.max(0, Math.round(innerHeight - box.bottom - lift))}px`;
+  }
+  addEventListener("resize", () => { resize(); fitNarrate(); });
   resize();
 
   /**
@@ -2093,6 +2136,15 @@ async function boot() {
     { seed: TRACE_SEED, flagshipMomentId: TRACE_FLAGSHIP, eventCount: events.length },
   );
   const traceOf = new Map(traces.map((trace) => [trace.momentId, trace]));
+  /**
+   * The walk-through follows one of the eight recorded tries of each moment. This reads any of
+   * the other seven back out of the same sealed events, on the press that opens it, so the
+   * decision tree can show what each try actually asked for instead of only whether it passed.
+   */
+  const seedDeskAt = readSeedDesks(
+    events.filter((e) => e.type === "DECISION_PROPOSED") as unknown as RawDecisionEvent[],
+    log.decision_context,
+  );
   let traceOpen: AgentTrace | null = null;
   let traceCard = 0;
   /** true while the trace stands because the directed watch opened it rather than a reader */
@@ -2320,8 +2372,9 @@ async function boot() {
     el("traceWho").textContent = trace.deciderLine;
 
     const frame = el("traceCard");
-    frame.classList.toggle("record", card.step === 0);
-    frame.classList.toggle("model", card.step > 0);
+    const isPublicRecord = card.frame === COPY.TRACE.frameReal;
+    frame.classList.toggle("record", isPublicRecord);
+    frame.classList.toggle("model", !isPublicRecord);
     el("traceStep").textContent = card.kicker;
     el("traceFrame").textContent = card.frame;
     el("traceHeading").textContent = card.heading;
@@ -2359,12 +2412,18 @@ async function boot() {
     dots.textContent = "";
     trace.cards.forEach((row, i) => {
       const dot = document.createElement("i");
-      dot.className = `${row.step === 0 ? "record" : ""}${i === traceCard ? " on" : ""}`.trim();
+      dot.className = `${row.frame === COPY.TRACE.frameReal ? "record" : ""}`
+        + `${i === traceCard ? " on" : ""}`;
       dots.append(dot);
     });
     el("tracePlace").textContent = COPY.TRACE.place(traceCard + 1, trace.cards.length);
     el("traceHint").textContent = COPY.TRACE.hint;
-    el("traceSource").textContent = `${trace.seedLabel} ${trace.sourceLabel}`;
+    // Which recorded try this walk-through follows, and which files every sentence came from, are
+    // facts about the experiment. The action-first contract keeps that behind the last card, so
+    // the footer is written only on the card that is about how the action was tested. On the
+    // first five it says nothing rather than putting a seed number under a rescue action.
+    const tested = traceCard === trace.cards.length - 1;
+    el("traceSource").textContent = tested ? `${trace.seedLabel} ${trace.sourceLabel}` : "";
     (el("tracePrev") as HTMLButtonElement).textContent = COPY.TRACE.back;
     (el("traceNext") as HTMLButtonElement).textContent = COPY.TRACE.next;
     (el("tracePrev") as HTMLButtonElement).disabled = traceCard === 0;
@@ -2684,7 +2743,7 @@ async function boot() {
           text: "They are never drawn damaged and they are never a rescue site. The exercise's"
             + " four sites sit about 20 kilometres north of this block, and no invented outcome"
             + " is attached to any real building.",
-          source: "docs/rescueworld/SPEC.md section 6 · board message #482",
+          source: "docs/rescueworld/SPEC.md section 6",
           tone: "hot",
         }, {
           text: "Japan's city model measures height from a mathematical shape of the earth,"
@@ -3139,6 +3198,17 @@ async function boot() {
     registered: boolean;
     /** the one sentence saying what the simulated desk finally chose here */
     chose: string;
+    /**
+     * The one operational reason under that action: the first report the recorded answer weighed,
+     * in the record's own plain words. Empty where that answer weighed no report this moment's
+     * own list holds.
+     */
+    reason: string;
+    /**
+     * The leading fact nobody had by this deadline, which is the seventh of the seven questions
+     * the action-first contract says a viewer must be able to answer without opening anything.
+     */
+    unknown: string;
     /** the grade that answer earned, in the story template's own words */
     verdict: string;
     /** what the check found on that answer, already translated into plain words */
@@ -3157,6 +3227,33 @@ async function boot() {
     const held = highlights?.method(slotId, method) ?? null;
     return held ? stripOf(held) : null;
   };
+  /**
+   * The one reason line that stands under an action, read off the same recorded answer the
+   * action came from.
+   *
+   * `docs/rescueworld/ACTION-FIRST-PRESENTATION-CONTRACT.md` puts the operational reason directly
+   * after the action. The reason is the first report that answer wrote a weighing for, said in
+   * the record's own plain words with the weighing it gave it. Where the answer weighed nothing
+   * this moment's own list of reports holds, there is no reason line and the unknown below it
+   * stands alone.
+   *
+   * Nothing here writes a sentence. It is a sentence `trace.ts` already built out of the sealed
+   * record, so the rail, the map and the story cards can never describe one answer three ways.
+   */
+  function reasonLineOf(desk: TraceDesk | null): string {
+    const first = desk?.factors.find((factor) => factor.known);
+    return first ? `${first.sentence} ${first.state}` : "";
+  }
+  /**
+   * The leading fact nobody had by this deadline, in the record's own plain words.
+   *
+   * It is the seventh of the seven questions the contract's cold-reader test asks, and the
+   * contract puts it directly under the reason. The moment's own required unknowns are read in
+   * the record's order, so the same moment always shows the same one.
+   */
+  function unknownLineOf(trace: AgentTrace | null): string {
+    return trace?.known.unknowns[0]?.sentence ?? "";
+  }
   const decisionRows: DecisionRow[] = !walkActs ? [] : events
     .filter((e) => e.type === "DECISION_PROPOSED")
     .map((e) => {
@@ -3187,7 +3284,13 @@ async function boot() {
         ways: COPY.countWord(graphs.size),
         id,
         at: at && onMap(at) ? at : null,
-        chose: final?.finalLead ?? "",
+        // The row leads with what the agents chose to do, composed by the same `actionOf` the
+        // decision tree and the ledger already read this answer through. It used to lead with
+        // `finalLead`, which counts units without naming one place — the sentence the joint
+        // audit named as the product's central failure.
+        chose: final ? actionOf(final) : "",
+        reason: reasonLineOf(final),
+        unknown: unknownLineOf(trace),
         verdict: final?.badge ?? "",
         findings: findingsOf(final),
         passed: final?.passed === true,
@@ -3195,9 +3298,38 @@ async function boot() {
       };
     });
 
+  /**
+   * How long a resolved decision holds the largest sentence on the page, in ticks.
+   *
+   * It is the same window the map keeps the decision's own picture for, so the sentence and the
+   * picture arrive and leave together and a reader never reads one against the other.
+   */
+  const DECISION_FOREGROUND = 34;
+  /**
+   * The decision this tick has just resolved, or nothing where none has.
+   *
+   * The rows are already in recorded time order, so the last one whose deadline has passed
+   * inside the window is the one the story panel leads with. It is a pure function of the tick,
+   * so seeking to the same tick always produces the same sentence.
+   */
+  function resolvedDecisionAt(tick: number): DecisionRow | null {
+    let held: DecisionRow | null = null;
+    for (const row of decisionRows) {
+      if (row.tick <= tick && tick - row.tick <= DECISION_FOREGROUND) held = row;
+    }
+    return held;
+  }
+  /**
+   * Which rows have opened the block that says how their action was tested.
+   *
+   * The rail is rewritten whenever the run passes another deadline, so what a reader opened has
+   * to outlive the rows themselves. It is keyed by the moment rather than by the row's position,
+   * because the rows are rebuilt from the record every time.
+   */
+  const railTested = new Set<string>();
   function drawIncidentRail(tick: number) {
     const passed = decisionRows.filter((row) => row.tick <= tick).length;
-    const key = `incident:${passed}:${selected ? 1 : 0}`;
+    const key = `incident:${passed}:${selected ? 1 : 0}:${[...railTested].sort().join(",")}`;
     if (key === railDrawn) return;
     railDrawn = key;
     // the rows are being replaced, so any reason list standing open inside one goes with them
@@ -3207,18 +3339,15 @@ async function boot() {
     lead.className = "raillead";
     lead.textContent = COPY.INCIDENT.rail.lead(decisionRows.length);
     railBody.append(lead);
-    // The eight cells first appear here, so what their five states mean is said here, once,
-    // above every row that carries them.
-    railBody.append(stripLegendNote());
     decisionRows.forEach((row, i) => {
       const gone = i < passed;
       const next = i === passed;
       const box = document.createElement("div");
-      // The row is keyed by a bar down its left edge in one of the two colours this page already
-      // uses, so the moments that went right and the moments that went wrong separate from
-      // across a room without anyone reading a word.
-      const tone = !row.verdict ? "plainrow" : row.passed ? "good" : "bad";
-      box.className = `${next ? "dispatch" : "claim"} ${tone}`;
+      // The row wears no verdict colour at rest. A bar down the left edge in the pass or fail
+      // colour made a grade the first thing a reader met, before the action it is a grade of, and
+      // the action-first contract keeps the result behind the action. The verdict is still on the
+      // face of the row as its own badge, which carries text and shape as well as colour.
+      box.className = next ? "dispatch" : "claim";
       const head = document.createElement("div");
       head.className = "cl";
       const line = document.createElement("p");
@@ -3235,29 +3364,65 @@ async function boot() {
       where.textContent = gone ? COPY.INCIDENT.rail.passed
         : next ? COPY.INCIDENT.rail.next : COPY.INCIDENT.rail.ahead;
       box.append(head, why, where);
-      // What the simulated desk finally chose here, in one sentence, with no reader asked to
-      // open anything to see it.
+      // ---- the action. It is the reason this row exists, so it stands directly under the
+      // situation and above everything the experiment recorded about it.
       if (row.chose) {
         const chose = document.createElement("p");
         chose.className = "chose";
         chose.textContent = row.chose;
         box.append(chose);
       }
+      // ---- the one reason under that action, then the leading fact nobody had by the deadline.
+      // Those are the fourth and fifth things the contract asks for, and together they are the
+      // last two of the seven questions a cold reader must be able to answer here.
+      for (const line of [row.reason, row.unknown]) {
+        if (!line) continue;
+        const said = document.createElement("div");
+        said.className = "why";
+        said.textContent = line;
+        box.append(said);
+      }
+      // ---- the one verdict. The grade itself stays on the face of the row; everything that
+      // counts tries moves behind the press below it.
+      if (row.verdict) box.append(verdictBadge(row.verdict, row.findings));
+      // ---- how that action was tested. The eight recorded tries, what the five cell states
+      // mean, and what a grade is about all live here, behind one deliberate press, because the
+      // action-first contract keeps method identity, seed counts and `N of 8` results out of the
+      // default reading. The block is written into the row either way and hidden while it is
+      // shut, so a gate counting cells reads the same eleven rows a reader can open.
+      const shown = railTested.has(row.id);
+      const tested = document.createElement("button");
+      tested.type = "button";
+      // the same control style the row's walk-through button already wears, so the row carries
+      // one kind of control rather than two
+      tested.className = "traceopen";
+      tested.textContent = shown ? COPY.TREE.testedOpen : COPY.TREE.tested;
+      tested.setAttribute("aria-expanded", shown ? "true" : "false");
+      tested.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (shown) railTested.delete(row.id); else railTested.add(row.id);
+        railDrawn = "";
+        drawIncidentRail(tick);
+      });
+      const evidence = document.createElement("div");
+      evidence.className = "railtested";
+      evidence.style.display = shown ? "block" : "none";
       // The eight recorded tries, drawn beside the grade and never merged into it. A moment
       // outside the frozen experiment gets outlined cells and no count at all.
-      box.append(stripNode(row.registered ? row.strip : null));
-      if (row.verdict) {
-        box.append(verdictBadge(row.verdict, row.findings));
-        box.append(badgeScopeNote());
-      }
+      evidence.append(stripNode(row.registered ? row.strip : null));
+      // What the five cell states mean, said once on this surface, beside the first row that
+      // carries them rather than over a screen that has none of them open.
+      if (i === 0) evidence.append(stripLegendNote());
+      if (row.verdict) evidence.append(badgeScopeNote());
       // a moment outside the registered experiment says so on its own face, so its numbers are
       // never read as part of the registered result
       if (!row.registered) {
         const badge = document.createElement("div");
         badge.className = "route";
         badge.textContent = COPY.INCIDENT.badge.descriptive;
-        box.append(badge, descriptiveNote());
+        evidence.append(badge, descriptiveNote());
       }
+      box.append(tested, evidence);
       if (row.at) {
         box.style.cursor = "pointer";
         box.addEventListener("click", () => {
@@ -4360,7 +4525,7 @@ async function boot() {
    * "Kashima Town 1, Kōsa Town 1", and a reader had no way to tell whether those 1s were counts,
    * ranks or positions on a list. Said this way each number points back at the things just named.
    *
-   * `planWords` in `app/scripts/audit-plain-text.mjs` builds the same two lines so the audit
+   * The source-repository copy audit builds the same two lines so the audit
    * judges what the screen shows. The two have to move together.
    */
   function planWords(
@@ -5096,12 +5261,19 @@ async function boot() {
   const ledgerBox = el("ledger"), ledgerCloseBtn = el("ledgerClose");
   const ledgerMore = el("ledgerMore");
   let ledgerDrawn = false;
+  /** which rows, and whether the closing counts, have opened their own testing block */
+  const ledgerTested = new Set<string>();
+  let ledgerTotalsShown = false;
+  /** the one control and the one block the closing counts live behind, built once and reused */
+  let ledgerClosingBox: HTMLElement | null = null;
+  let ledgerClosingBtn: HTMLButtonElement | null = null;
 
   /** one moment of decision as a row of the ledger */
   function ledgerRow(trace: AgentTrace, row: DecisionRow | null): HTMLElement {
     const card = document.createElement("article");
-    const tone = !trace.final ? "plainrow" : trace.final.passed ? "good" : "bad";
-    card.className = `ledrow ${tone}`;
+    // no verdict colour at rest, for the same reason the rail rows carry none: a coloured edge
+    // makes the grade the first thing read, ahead of the action it grades
+    card.className = "ledrow";
 
     const head = document.createElement("div");
     head.className = "lhead";
@@ -5116,29 +5288,58 @@ async function boot() {
     who.textContent = trace.deciderLine;
     card.append(head, who);
 
+    // ---- the action, then one reason under it, then the leading fact nobody had. Same three
+    // lines the rail carries, read from the same walk-through.
     if (trace.final) {
       const chose = document.createElement("p");
       chose.className = "lchose";
-      chose.textContent = trace.final.finalLead;
+      chose.textContent = actionOf(trace.final);
       card.append(chose);
     }
-    card.append(stripNode(trace.registered ? stripFor(trace.momentId, FINAL_METHOD) : null));
-    if (trace.final) {
-      card.append(verdictBadge(trace.final.badge, findingsOf(trace.final)));
-      card.append(badgeScopeNote());
+    for (const line of [reasonLineOf(trace.final), unknownLineOf(trace)]) {
+      if (!line) continue;
+      const because = document.createElement("div");
+      because.className = "lwho";
+      because.textContent = line;
+      card.append(because);
     }
-    if (trace.descriptiveBadge) {
-      const badge = document.createElement("div");
-      badge.className = "lwho";
-      badge.textContent = trace.descriptiveBadge;
-      card.append(badge);
-    }
-    // the public record set beside the simulated decision, by kind and scale and nothing else
+    // ---- the one verdict
+    if (trace.final) card.append(verdictBadge(trace.final.badge, findingsOf(trace.final)));
+    // ---- what the responders were recorded doing, set beside the simulated proposal at rest and
+    // named as the public record, because the ledger's own opening line promises both.
     const said = document.createElement("p");
     said.className = "lsaid";
     said.textContent = trace.real.comparison;
     card.append(said);
 
+    // ---- how that action was tested. The eight cells, what a grade is about, the moment's own
+    // classification and the public-record comparison all live behind one press, so the resting
+    // row is an action, a reason, an unknown and a verdict and nothing else.
+    const shown = ledgerTested.has(trace.momentId);
+    const tested = document.createElement("button");
+    tested.type = "button";
+    // the same control style the rail's own testing block wears; `lopen` stays the one control
+    // that opens a moment's walk-through, which is how a gate finds it
+    tested.className = "traceopen";
+    tested.textContent = shown ? COPY.TREE.testedOpen : COPY.TREE.tested;
+    tested.setAttribute("aria-expanded", shown ? "true" : "false");
+    tested.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (shown) ledgerTested.delete(trace.momentId); else ledgerTested.add(trace.momentId);
+      ledgerDrawn = false;
+      drawLedger();
+    });
+    const evidence = document.createElement("div");
+    evidence.className = "ledtested";
+    evidence.style.display = shown ? "block" : "none";
+    evidence.append(stripNode(trace.registered ? stripFor(trace.momentId, FINAL_METHOD) : null));
+    if (trace.final) evidence.append(badgeScopeNote());
+    if (trace.descriptiveBadge) {
+      const badge = document.createElement("div");
+      badge.className = "lwho";
+      badge.textContent = trace.descriptiveBadge;
+      evidence.append(badge);
+    }
     // the contract's own classifications, named on the moment they belong to
     for (const mark of highlights?.classificationsFor(trace.momentId) ?? []) {
       const tag = document.createElement("div");
@@ -5147,8 +5348,9 @@ async function boot() {
       const say = document.createElement("p");
       say.className = "lmarksay";
       say.textContent = mark.caption;
-      card.append(tag, say);
+      evidence.append(tag, say);
     }
+    card.append(tested, evidence);
 
     const open = document.createElement("button");
     open.type = "button";
@@ -5199,9 +5401,15 @@ async function boot() {
     el("ledgerNoHighlights").style.display = highlights ? "none" : "block";
     el("ledgerDefinition").textContent = COPY.INCIDENT.definition;
     el("ledgerDefinition").style.display = highlights ? "block" : "none";
-    // the same legend the rail carries, because the ledger is where a reader meets the eight
-    // cells a second time and the two surfaces must not explain them differently
-    el("ledgerScope").after(stripLegendNote());
+    // The one visible control that reaches the decision tree. The ledger reads the same eleven
+    // moments back as a list, so it is where a reader who wants to see them as one picture is
+    // standing when they want it.
+    if (treeAvailable && !el("ledgerTree").dataset.wired) {
+      el("ledgerTree").dataset.wired = "yes";
+      el("ledgerTree").textContent = COPY.TREE.open;
+      el("ledgerTree").addEventListener("click", () => { showLedger(false); showTree(true); });
+    }
+    el("ledgerTree").style.display = treeAvailable ? "" : "none";
 
     // the moments the contract singles out, each named in the contract's own sentence
     const marked = el("ledgerMarked");
@@ -5245,6 +5453,48 @@ async function boot() {
     el("ledgerLimit").style.display = highlights ? "block" : "none";
     el("ledgerSource").textContent = COPY.OUTCOMES.ledger.source(HIGHLIGHTS_URL);
     el("ledgerSource").style.display = highlights ? "block" : "none";
+
+    // ---- everything the ledger says about the experiment rather than about the disaster, put
+    // behind one press.
+    //
+    // Which rows carry counts, the moments the contract singles out, what a passing check means,
+    // the three closing totals and the file they were read from are all statements about the
+    // frozen experiment. Standing above the eleven action rows they were the first thing a
+    // reader met, which is the hierarchy the action-first contract overturns. They keep their own
+    // markup and their own identifiers — a gate reads them by name — and are moved into one
+    // block that opens on a press. The standing limitation stays outside it, because the story
+    // template requires it wherever a grade is on screen and the rows carry grades at rest.
+    //
+    // The control and its block are built once and reused. An earlier version made a fresh pair
+    // on every toggle and left the old pair standing, so pressing it twice put two controls and
+    // two blocks in the frame.
+    if (!ledgerClosingBox) {
+      const box = document.createElement("div");
+      box.className = "ledtested";
+      for (const id of ["ledgerScope", "ledgerNoHighlights", "ledgerMarkedHead", "ledgerMarked",
+        "ledgerDefinition", "ledgerCountHead", "ledgerTally", "ledgerSource"]) {
+        box.append(el(id));
+      }
+      // the same legend the rail carries, because the ledger is where a reader meets the eight
+      // cells a second time and the two surfaces must not explain them differently
+      box.append(stripLegendNote());
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "traceopen";
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        ledgerTotalsShown = !ledgerTotalsShown;
+        ledgerDrawn = false;
+        drawLedger();
+      });
+      el("ledgerLimit").before(button, box);
+      ledgerClosingBox = box;
+      ledgerClosingBtn = button;
+    }
+    ledgerClosingBtn!.textContent =
+      ledgerTotalsShown ? COPY.TREE.testedOpen : COPY.TREE.tested;
+    ledgerClosingBtn!.setAttribute("aria-expanded", ledgerTotalsShown ? "true" : "false");
+    ledgerClosingBox.style.display = ledgerTotalsShown ? "block" : "none";
   }
 
   function drawLedgerMore() {
@@ -5304,6 +5554,100 @@ async function boot() {
     showDebrief(false);
     showLedger(true);
   });
+
+  // ------------------------------------------------------------------ the decision tree
+  /**
+   * The whole record on one screen, one key away.
+   *
+   * The ledger reads the eleven moments back as a list. This reads the same eleven moments as
+   * one picture: a line for the seventy-two hours, a mark on it at the hour each moment really
+   * happened, and at the five moments the frozen experiment graded, three short branches
+   * carrying the three recorded answers and the check's verdict on each one.
+   *
+   * It adds no reading of its own. Where a mark sits comes from that moment's recorded second;
+   * what a branch says comes from the walk-through `trace.ts` already built and from the frozen
+   * experiment's own file; and clicking a branch opens that same walk-through at the card the
+   * answer lives on, so there is one walk-through on this page and not two.
+   *
+   * The one boundary the surface exists inside is written across the foot of the frame at every
+   * size: a branch is a recorded answer and a recorded verdict, and nothing here says what the
+   * world would have become after a different choice, because nothing ever simulated that.
+   */
+  const treeBox = el("tree"), treeCloseBtn = el("treeClose"), treeFoot = el("treeFoot");
+  const decisionSeconds = new Map<string, number>();
+  for (const e of events) {
+    if (e.type !== "DECISION_PROPOSED") continue;
+    const slot = e.payload?.decision_slot as { decision_slot_id?: string } | undefined;
+    decisionSeconds.set(str(slot?.decision_slot_id, e.event_id), e.sim_time_s);
+  }
+  // how long the line is: the record's own last recorded second, carried up to a whole twelve
+  // hours so the scale under the line ends on a mark. Nothing here invents a length.
+  let lastRecordedSecond = 0;
+  for (const e of events) lastRecordedSecond = Math.max(lastRecordedSecond, e.sim_time_s);
+  const treeModel: TreeModel = buildTree(
+    traces, decisionSeconds, highlights, windowSecondsOf(lastRecordedSecond),
+  );
+  /** the playback tick each moment of decision falls on, for opening on the one just reached */
+  const treeTickOf = new Map(decisionRows.map((row) => [row.id, row.tick]));
+  /** a record that holds no moment of decision draws no tree, so its key does nothing */
+  const treeAvailable = treeModel.junctions.length > 0;
+  let treeHandle: TreeHandle | null = null;
+  function drawTreeOnce() {
+    if (treeHandle) return;
+    el("treeFootText").textContent = COPY.TREE.footer;
+    treeCloseBtn.textContent = COPY.TREE.close;
+    treeHandle = drawTree(
+      el("treeBody"), treeModel,
+      (momentId, card) => { showTree(false); openTraceFor(momentId, card); },
+      // the tree opens its panels with this page's own container opening rather than one of
+      // its own, so every surface here opens the same way
+      openBox,
+      // one recorded try, read out of the same sealed events the walk-through reads, on the
+      // press that opens it. Nothing is read until a reader asks for that try.
+      seedDeskAt,
+    );
+  }
+  function showTree(on: boolean) {
+    if (on && !treeAvailable) return;
+    if (on === treeBox.classList.contains("on")) return;
+    if (on) {
+      drawTreeOnce();
+      setPlay(false);
+      // the moment the run has reached is the one the instrument opens on, so a viewer lands
+      // where they were watching rather than back at the start
+      const reached = Math.min(TICKS, Math.floor(P.tick));
+      treeHandle?.selectAt((momentId) => (treeTickOf.get(momentId) ?? 0) <= reached);
+      treeBox.classList.remove("closing");
+      treeBox.classList.add("on");
+      // the world's own working chrome steps out while the instrument is up
+      document.body.classList.add("treeon");
+      requestAnimationFrame(() => {
+        treeBox.classList.add("opening");
+        // the frame has a size now, so the branches can be measured against it
+        treeHandle?.shown();
+        // The row of beacons takes the keyboard as the instrument opens. Without this the frame
+        // opens with nothing focused, and the first press of the down key reaches the page rather
+        // than the row, so a reader has to find the row with the tab key before it answers.
+        treeHandle?.focusSelected();
+      });
+    } else {
+      treeBox.classList.remove("opening");
+      treeBox.classList.add("closing");
+      document.body.classList.remove("treeon");
+      setTimeout(() => treeBox.classList.remove("on", "closing"), 220);
+    }
+    treeCloseBtn.style.display = on ? "block" : "none";
+    treeFoot.classList.toggle("on", on);
+    rig.keysEnabled = !on;
+  }
+  const treeIsOpen = () => treeBox.classList.contains("on");
+  treeCloseBtn.addEventListener("click", () => showTree(false));
+  // The control list names the b key only on a record that has a tree to draw.
+  if (treeAvailable) {
+    const row = document.createElement("li");
+    row.textContent = COPY.TREE.control;
+    el("helpControls").append(row);
+  }
 
   // ------------------------------------------------------------------ the ghost echo
   /**
@@ -5465,8 +5809,12 @@ async function boot() {
     marks: GhostMark[];
     node: HTMLElement;
     cells: HTMLElement[];
+    /** the state line inside each cell, rewritten as the deadline passes */
+    states: HTMLElement[];
     alpha: THREE.BufferAttribute;
     route: { setFade(fade: number): void } | null;
+    /** true where the chosen action sends to at least one place standing at this point */
+    chosen: boolean;
   }
   interface Telegraph {
     momentId: string;
@@ -5474,6 +5822,14 @@ async function boot() {
     tick: number;
     stacks: TelegraphStack[];
     unplaced: number;
+    /**
+     * How the chosen action's own destinations came out against acceptance gate 6 of
+     * `docs/rescueworld/ACTION-FIRST-PRESENTATION-CONTRACT.md`: a destination the sealed record
+     * places gets a mark at that recorded position, and a destination it places nowhere stays
+     * written in the panel and never gains a point.
+     */
+    chosenPlaced: number;
+    chosenUnplaced: number;
   }
 
   const telegraphBox = el("telegraph");
@@ -5482,7 +5838,9 @@ async function boot() {
    * carry the place, the count and the count noun; nothing here is computed beyond adding up the
    * recorded quantities a single answer gave one place.
    */
-  function ghostMarks(trace: AgentTrace): { marks: GhostMark[]; unplaced: number } {
+  function ghostMarks(trace: AgentTrace): {
+    marks: GhostMark[]; unplaced: number; chosenPlaced: number; chosenUnplaced: number;
+  } {
     // The count noun follows the count on that one line rather than the plan's own total, so a
     // place that takes one truck reads "1 water truck" and never "1 water trucks".
     const gather = (desk: TraceDesk | null) => {
@@ -5493,26 +5851,48 @@ async function boot() {
         if (held) held.quantity += row.quantity;
         else by.set(row.targetId, { place: row.targetLabel, quantity: row.quantity, unit: "" });
       }
+      // The count noun is the one the action sentence itself uses, read from the same table
+      // `actionOf` reads, so a panel cannot call the same thing an officer pair on one line and
+      // a unit on the next. `desk.unitWords` is the walk-through's own shorter table and names
+      // only the divisible pools, which is why it used to say "unit" under "one officer pair".
+      const words = COPY.TREE.actionUnit[desk.kind] ?? COPY.TRACE.unitFallback;
       for (const held of by.values()) {
-        held.unit = held.quantity === 1 ? desk.unitWords.one : desk.unitWords.many;
+        held.unit = held.quantity === 1 ? words.one : words.many;
       }
       return by;
     };
     const plain = gather(trace.plain);
     const table = gather(trace.table);
-    const taken = new Set((trace.final?.assignments ?? []).map((row) => row.targetId));
+    // The chosen action is read first and its own quantities are the ones a cell states, because
+    // the chosen action is what this panel is about. Acceptance gate 6 of the action-first
+    // contract asks that every destination the record places for that action carries a mark on
+    // the ground, so its destinations lead the order rather than being folded in afterwards.
+    const chosen = gather(trace.final);
+    const taken = new Set(chosen.keys());
     const order: string[] = [];
+    for (const id of chosen.keys()) if (!order.includes(id)) order.push(id);
     for (const id of table.keys()) if (!order.includes(id)) order.push(id);
     for (const id of plain.keys()) if (!order.includes(id)) order.push(id);
 
     const marks: GhostMark[] = [];
     let unplaced = 0;
+    let chosenPlaced = 0;
+    let chosenUnplaced = 0;
     for (const id of order) {
       const site = siteOf.get(id) ?? -1;
+      const fromChosen = chosen.get(id) ?? null;
       const fromTable = table.get(id) ?? null;
       const fromPlain = plain.get(id) ?? null;
-      const held = fromTable ?? fromPlain!;
-      if (site < 0 || !onMap(targetPos({ kind: "site", i: site }))) { unplaced++; continue; }
+      const held = fromChosen ?? fromTable ?? fromPlain!;
+      // A destination the record puts nowhere on this ground gets no mark, ever. It is counted
+      // here and named in the panel's own sentence instead, because a mark at a position this
+      // page made up would be an invention.
+      if (site < 0 || !onMap(targetPos({ kind: "site", i: site }))) {
+        unplaced++;
+        if (fromChosen) chosenUnplaced++;
+        continue;
+      }
+      if (fromChosen) chosenPlaced++;
       const agreed = !!fromTable && !!fromPlain && fromTable.quantity === fromPlain.quantity;
       const burn = !fromTable;
       marks.push({
@@ -5520,8 +5900,11 @@ async function boot() {
         place: held.place,
         quantity: held.quantity,
         unit: held.unit,
+        // Which way of working asked for this place is a fact about the experiment, not about
+        // the disaster, so it is carried but drawn only where the two ways disagreed. The
+        // action-first contract makes method disagreement a secondary mode of this panel.
         who: agreed
-          ? COPY.OUTCOMES.telegraph.agreed
+          ? ""
           : COPY.OUTCOMES.telegraph.wanted(
             COPY.TRACE.deskName[burn ? PLAIN_METHOD : TABLE_METHOD] ?? ""),
         agreed,
@@ -5530,15 +5913,20 @@ async function boot() {
         site,
       });
     }
-    return { marks, unplaced };
+    return { marks, unplaced, chosenPlaced, chosenUnplaced };
   }
 
   /** the one telegraph a moment carries, or nothing where the record places none of its places */
   function buildTelegraph(row: DecisionRow): Telegraph | null {
     const trace = traceOf.get(row.id) ?? null;
     if (!trace) return null;
-    const { marks, unplaced } = ghostMarks(trace);
+    const { marks, unplaced, chosenPlaced, chosenUnplaced } = ghostMarks(trace);
     if (marks.length === 0) return null;
+    // the three sentences the panel leads with once the deadline passes: what the agents chose to
+    // do, the one report that answer weighed behind it, and the leading fact nobody had
+    const action = trace.final ? actionOf(trace.final) : "";
+    const because = [reasonLineOf(trace.final), unknownLineOf(trace)]
+      .filter(Boolean).join(" ");
 
     // several proposed places stand at one recorded point, so they form one ordered stack there
     const bySite = new Map<number, GhostMark[]>();
@@ -5559,20 +5947,33 @@ async function boot() {
       due.className = "tgdue";
       due.textContent = COPY.OUTCOMES.telegraph.due(row.clock);
       node.append(label, due);
+      // ---- what the agents chose to do, and the one report behind it. Both stand above the
+      // destinations rather than under them, and both are written by `drawTelegraph` once the
+      // deadline has passed, because before the deadline nothing has been chosen yet and a
+      // panel that announced the answer early would be telling the viewer something untrue.
+      const said = document.createElement("p");
+      said.className = "tgsaid";
+      const why = document.createElement("p");
+      why.className = "tgnote tgwhy";
+      node.append(said, why);
       // The stack draws at most four places. Which four is the record's own order, and the rest
       // are counted in one sentence rather than drawn smaller.
       const shown = own.slice(0, TELEGRAPH_CELLS);
       const cells: HTMLElement[] = [];
+      const states: HTMLElement[] = [];
       for (const mark of shown) {
         const cell = document.createElement("div");
         cell.className = `ghostcell${mark.burn ? " burn" : ""}`;
+        // one destination, said as the decision tree already says one piece of an action: how
+        // many of what, and where it goes
         const words = document.createElement("b");
-        words.textContent = COPY.OUTCOMES.telegraph.place(mark.place, mark.quantity, mark.unit);
-        const who = document.createElement("u");
-        who.textContent = mark.who;
-        cell.append(words, who);
+        words.textContent = `${COPY.TREE.spot(
+          `${COPY.countWord(mark.quantity)} ${mark.unit}`)} ${COPY.TREE.spotTo(mark.place)}`;
+        const state = document.createElement("u");
+        cell.append(words, state);
         node.append(cell);
         cells.push(cell);
+        states.push(state);
       }
       if (own.length > shown.length) {
         const more = document.createElement("p");
@@ -5580,9 +5981,17 @@ async function boot() {
         more.textContent = COPY.OUTCOMES.telegraph.more(own.length - shown.length);
         node.append(more);
       }
-      const said = document.createElement("p");
-      said.className = "tgsaid";
-      node.append(said);
+      // Which way of working asked for a place is the experiment's business, so it is said once
+      // at the foot of the panel and only where the two ways named different places. It never
+      // captions a destination and it never stands above the action.
+      const split = shown.filter((mark) => mark.who);
+      if (split.length > 0) {
+        const note = document.createElement("p");
+        note.className = "tgnote";
+        note.textContent = split
+          .map((mark) => `${mark.place}: ${mark.who}`).join(". ");
+        node.append(note);
+      }
       // the count of proposed places the record puts nowhere on this ground, stated once
       if (unplaced > 0 && stacks.length === 0) {
         const note = document.createElement("p");
@@ -5628,11 +6037,18 @@ async function boot() {
         route = built;
       }
       stacks.push({
-        site, marks: shown, node, cells, route,
+        site, marks: shown, node, cells, states, route,
         alpha: geo.getAttribute("aAlpha") as THREE.BufferAttribute,
+        chosen: goes,
       });
+      // the two sentences this stack shows once its deadline passes, held on the nodes so the
+      // per-tick draw writes them without reading the record again
+      said.dataset.action = action;
+      why.dataset.reason = because;
     }
-    return { momentId: row.id, tick: row.tick, stacks, unplaced };
+    return {
+      momentId: row.id, tick: row.tick, stacks, unplaced, chosenPlaced, chosenUnplaced,
+    };
   }
 
   const telegraphs: Telegraph[] = !walkActs ? []
@@ -5791,7 +6207,12 @@ async function boot() {
       const fade = standing?.fade ?? 0;
       const past = standing?.past ?? false;
       for (const stack of held.stacks) {
-        stack.alpha.setX(0, fade * (past ? 0.62 : 0.34));
+        // Acceptance gate 6 of the action-first contract: once the deadline has passed, the
+        // ground under a place the chosen action sends to carries the strongest mark on the
+        // world, and a point the record never placed is not drawn at all. Before the deadline
+        // every place under consideration is drawn at the same quiet strength, because none of
+        // them has been chosen yet.
+        stack.alpha.setX(0, fade * (past ? (stack.chosen ? 0.86 : 0.24) : 0.34));
         stack.alpha.needsUpdate = true;
         stack.route?.setFade(past ? fade * 0.80 : 0);
         if (fade <= 0.04) { stack.node.style.opacity = "0"; continue; }
@@ -5803,11 +6224,25 @@ async function boot() {
           const mark = stack.marks[i];
           cell.classList.toggle("taken", past && mark.taken);
           cell.classList.toggle("faded", past && !mark.taken);
+          const state = stack.states[i];
+          if (state) {
+            state.textContent = !past
+              ? COPY.OUTCOMES.telegraph.underConsideration
+              : mark.taken
+                ? COPY.OUTCOMES.telegraph.chosen
+                : COPY.OUTCOMES.telegraph.notChosen;
+          }
         });
+        // What the agents chose to do leads the panel the moment the deadline passes, with the
+        // one report behind it directly under. Before the deadline both are empty, because the
+        // answer this panel is about had not been given yet.
         const said = stack.node.querySelector(".tgsaid");
         if (said instanceof HTMLElement) {
-          const trace = traceOf.get(held.momentId) ?? null;
-          said.textContent = past && trace?.final ? trace.final.finalLead : "";
+          said.textContent = past ? said.dataset.action ?? "" : "";
+        }
+        const why = stack.node.querySelector(".tgwhy");
+        if (why instanceof HTMLElement) {
+          why.textContent = past ? why.dataset.reason ?? "" : "";
         }
         const what = stack.node.querySelector(".tgwhat");
         if (what instanceof HTMLElement) what.style.display = past ? "none" : "block";
@@ -5914,6 +6349,18 @@ async function boot() {
     if (row.beat.kind === "decision") {
       const slot = payload.decision_slot as
         { decider?: string; cutoff_at?: string; decision_slot_id?: string } | undefined;
+      // The card over a decision says what the agents chose to do there and the one report
+      // behind it. It used to count the ways of deciding that were run against the moment
+      // afterwards, which is a fact about the experiment standing where the disaster action
+      // belongs. The two sentences are the same ones the rail and the map carry, read through
+      // the same walk-through, so one moment never reads three ways.
+      const trace = traceOf.get(str(slot?.decision_slot_id)) ?? null;
+      const action = trace?.final ? actionOf(trace.final) : "";
+      if (action) {
+        const because = [reasonLineOf(trace?.final ?? null), unknownLineOf(trace)]
+          .filter(Boolean).join(" ");
+        return { heading, sentence: because ? `${action} ${because}` : action };
+      }
       const ways = new Set<string>();
       const demo = payload.full_incident_demonstration as
         { choices?: { graph_id?: string }[] } | undefined;
@@ -6159,6 +6606,12 @@ async function boot() {
   addEventListener("click", (e) => {
     if (e.detail <= 0 || !(e.target instanceof HTMLElement)) return;
     const control = e.target.closest("button");
+    // The decision tree hands its own controls their own keys: the arrows walk its row of
+    // moments, the left and right keys open and close one level, and the number keys open one of
+    // the eight recorded tries. Handing the page back the keyboard there would take the row's
+    // keys away the moment a reader touched anything with a pointer, so a control inside that
+    // one screen keeps the focus it was just given.
+    if (control?.closest("#tree")) return;
     if (control instanceof HTMLButtonElement) control.blur();
   }, true);
 
@@ -6190,6 +6643,10 @@ async function boot() {
       if (openReasons.size > 0) { closeAllReasons(); return; }
       if (helpBox.classList.contains("on")) showHelp(false);
       else if (ledgerBox.classList.contains("on")) showLedger(false);
+      // the decision tree holds the frame the way the ledger does. A mark or a stub standing
+      // selected inside it is the innermost thing on the page, so the first escape lets go of
+      // that and the next one closes the screen.
+      else if (treeIsOpen()) { if (!treeHandle?.collapse()) showTree(false); }
       else if (realBox.classList.contains("on")) showReal(false);
       else if (traceIsOpen()) showTrace(null);
       // the incident tally is a surface like the others, so the same key
@@ -6201,6 +6658,11 @@ async function boot() {
     // the ledger holds the frame the way the help does: one key closes it
     if (ledgerBox.classList.contains("on")) {
       if (k.toLowerCase() === "l") showLedger(false);
+      return;
+    }
+    // the decision tree holds the frame the same way: b shuts it, and nothing else gets past
+    if (treeIsOpen()) {
+      if (k.toLowerCase() === "b") showTree(false);
       return;
     }
     // the agent trace holds the frame the way the help does: the arrows walk it and one key shuts
@@ -6257,6 +6719,8 @@ async function boot() {
     if (low === "o") { showOutcome(!outcomeShown); return; }
     if (low === "d") { showDebrief(true); return; }
     if (low === "l") { showLedger(true); return; }
+    // b, because t already opens one moment's walk-through and l already opens the ledger
+    if (low === "b") { showTree(true); return; }
     if (k === "0") { P.tick = 0; stepIndex = -1; directedJump(); return; }
     if (k === ",") { stepEvent(-1); e.preventDefault(); return; }
     if (k === ".") { stepEvent(1); e.preventDefault(); return; }
@@ -6413,21 +6877,37 @@ async function boot() {
     // about. The sentence is the primary reading on the page, so it never falls back to an
     // empty line: before the first beat of a run opens, the act's own line stands in its place.
     const beatNow = walkActs ? beatAt(ti) : null;
-    const nowLine = beatNow ? `${beatWords(beatNow).replace(/[.\s]+$/, "")}.` : "";
+    const beatLine = beatNow ? `${beatWords(beatNow).replace(/[.\s]+$/, "")}.` : "";
+    const wasNow = el("roundNow").textContent;
+    // A decision that has just resolved takes the largest sentence on the page for as long as
+    // its own picture stands on the map. The action-first contract asks for exactly this: at a
+    // decision beat the resolved action is the foreground story, and the public bulletins that
+    // happen to fall in the same minute stay in the background where the cards and the feed
+    // already carry them. Outside that window the panel goes back to the record's own beat.
+    const resolved = walkActs ? resolvedDecisionAt(ti) : null;
+    const nowLine = resolved?.chose ? resolved.chose : beatLine;
     if (walkActs) {
       el("roundKicker").textContent = COPY.INCIDENT.narrate.kicker(ri + 1, rs.length, rs[ri].name);
       el("roundNow").textContent = nowLine || rs[ri].headline;
       el("roundAboutLabel").textContent = COPY.INCIDENT.narrate.aboutLabel;
       el("roundLine").textContent = rs[ri].headline;
       const sameAct = !nowLine || rs[ri].headline === el("roundNow").textContent;
-      el("roundAboutLabel").style.display = sameAct ? "none" : "block";
-      el("roundLine").style.display = sameAct ? "none" : "block";
+      narrateAbout = !sameAct;
+      const showAbout = narrateAbout && !narrateTight;
+      el("roundAboutLabel").style.display = showAbout ? "block" : "none";
+      el("roundLine").style.display = showAbout ? "block" : "none";
     } else {
       el("roundKicker").textContent = rs[ri].name;
       el("roundNow").textContent = rs[ri].headline;
       el("roundAboutLabel").style.display = "none";
       el("roundLine").style.display = "none";
     }
+    // A resolved action runs to two lines where a public beat ran to one, and the stylesheet
+    // anchors this panel by its foot, so the taller panel grew upward and at 1280 by 720 the
+    // first line of the largest sentence on the page ran off the top of the frame. The panel is
+    // lowered only as far as it has to be, and only when the sentence changes, so the measuring
+    // never happens inside a still frame.
+    if (el("roundNow").textContent !== wasNow) fitNarrate();
     // the hold's countdown, in small type beside the headline it gives the reader time to read
     if (directed && dPhase === "dwell") {
       dwellNum.textContent = COPY.DIRECTED.hold(Math.max(1, Math.ceil(dwellLeft)));
@@ -6704,6 +7184,8 @@ async function boot() {
       decider: row.decider,
       registered: row.registered,
       chose: row.chose,
+      reason: row.reason,
+      unknown: row.unknown,
       verdict: row.verdict,
       passed: row.passed,
       findings: row.findings,
@@ -6724,9 +7206,15 @@ async function boot() {
       tick: moment.tick,
       lead: +(telegraphLeadOf.get(moment.momentId) ?? 0).toFixed(3),
       unplaced: moment.unplaced,
+      // acceptance gate 6: every destination of the chosen action that the record places gets a
+      // mark, and every destination it places nowhere gets none
+      chosenPlaced: moment.chosenPlaced,
+      chosenUnplaced: moment.chosenUnplaced,
+      chosenStacks: moment.stacks.filter((stack) => stack.chosen).length,
       stacks: moment.stacks.map((stack) => ({
         site: stack.site,
         route: stack.route !== null,
+        chosen: stack.chosen,
         marks: stack.marks.map((mark) => ({
           place: mark.place, quantity: mark.quantity, unit: mark.unit,
           agreed: mark.agreed, burn: mark.burn, taken: mark.taken,
@@ -6743,6 +7231,18 @@ async function boot() {
         method: total.method, passes: total.passes, tries: total.tries,
       })),
       limitation: el("ledgerLimit").textContent ?? "",
+    }),
+    /**
+     * The decision tree, and the one control that opens it. `treeState` is a pure read of the
+     * picture the record produced, so asking for it opens nothing and moves nothing.
+     */
+    tree(on: boolean) { showTree(on); },
+    treeState: () => ({
+      open: treeIsOpen(),
+      available: treeAvailable,
+      footer: el("treeFootText").textContent ?? "",
+      ...treeReport(treeModel),
+      ...(treeHandle ? treeHandle.state() : {}),
     }),
     /** how many reason lists stand open, which is how a gate proves one opened and closed */
     reasonsOpen: () => openReasons.size,

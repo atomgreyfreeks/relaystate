@@ -23,7 +23,7 @@
  *
  * Why the check's message is quoted rather than reconstructed. The experiment's own checker
  * returns its feedback as one line per broken rule, written `CODE: detail`
- * (`experiments/kumamoto-real-response/runner/kumamoto_real_response/scoring.py`, function
+ * (`experiment/runner/kumamoto_real_response/scoring.py`, function
  * `feedback_messages`). The rules it broke are recorded on the evidence-table answer inside the
  * sealed event, so the same lines are rebuilt here from sealed data and match the message the
  * desk actually received in all one hundred and twenty-eight recorded runs.
@@ -111,6 +111,10 @@ export interface TraceFactor {
 export interface TraceAssignment {
   quantity: number; targetId: string; targetLabel: string;
   resourceId: string; resourceLabel: string;
+  /** the capability this thing supplies, used to group a long plan into a readable summary */
+  resourceKind: string;
+  /** the kind the record gives the place, which says whether it is one town or the whole area */
+  targetKind: string;
   /** true where the answer wrote a name in machine form that the exercise does not carry */
   targetIsCode: boolean; resourceIsCode: boolean;
 }
@@ -125,6 +129,12 @@ export interface TraceDesk {
   assignments: TraceAssignment[];
   /** true where this plan divides a pool of interchangeable units and counts them */
   pool: boolean;
+  /**
+   * The one recorded kind every unit in this plan shares, or an empty string where the plan mixes
+   * kinds or names units this moment never offered. It is what lets a caller say "water trucks"
+   * or "pairs of officers" instead of "units", and it is read off the record rather than guessed.
+   */
+  kind: string;
   /** the count noun a pooled plan is counted in, in the form this plan's own total takes */
   unit: string;
   /** the same count noun in both its forms, for a caller counting one line of the plan */
@@ -177,7 +187,7 @@ export interface TraceLine {
 }
 export interface TraceCard {
   id: string;
-  /** 0 for the real choice, then 1 to 5 for the five steps */
+  /** one through six in the action-first walk-through */
   step: number;
   kicker: string;
   heading: string;
@@ -313,6 +323,8 @@ function readAssignments(
         GLOSS.plainTarget(targetId, str(target?.label, targetId)), str(target?.kind)),
       resourceId,
       resourceLabel: GLOSS.plainResource(resourceId, str(resource?.label, resourceId)),
+      resourceKind: str(resource?.kind),
+      targetKind: str(target?.kind),
       targetIsCode: !target && looksLikeCode(targetId),
       resourceIsCode: !resource && looksLikeCode(resourceId),
     };
@@ -333,14 +345,16 @@ function isPool(assignments: TraceAssignment[]): boolean {
   return assignments.some((row) => row.quantity !== 1) || pools.size !== assignments.length;
 }
 
-function unitWords(assignments: TraceAssignment[], context: RawContext) {
+/** the one recorded kind a plan's units share, or nothing where it mixes kinds or invents them */
+function kindOf(assignments: TraceAssignment[], context: RawContext): string {
   const resources = context.resource_labels ?? {};
   const kinds = new Set(assignments.map((row) => str(resources[row.resourceId]?.kind)));
-  if (kinds.size === 1) {
-    const word = COPY.TRACE.unit[[...kinds][0]];
-    if (word) return word;
-  }
-  return COPY.TRACE.unitFallback;
+  return kinds.size === 1 ? [...kinds][0] : "";
+}
+
+function unitWords(assignments: TraceAssignment[], context: RawContext) {
+  const word = COPY.TRACE.unit[kindOf(assignments, context)];
+  return word ?? COPY.TRACE.unitFallback;
 }
 /** the count noun for one quantity: "1 water truck", "4 water trucks" */
 const unitFor = (words: { one: string; many: string }, quantity: number) =>
@@ -393,7 +407,8 @@ const checkerMessages = (violations: RawViolation[]): string[] =>
  * kosa-town) quantity 0 must be at least 1"; a ceiling breach reads "quantities sum to 24,
  * exceeding maximum 22". This is a pattern matched against the record's own text and never a
  * sentence anyone reads, so it is written as a pattern. As a bare string literal it was collected
- * by `app/scripts/audit-plain-text.mjs` and put in front of a judge as the fragment "must be at
+ * by the plain-language audit described in `docs/rescueworld/PLAIN-TEXT-METHODS.md` and put in
+ * front of a judge as the fragment "must be at
  * least", which has no reading and names nothing a viewer can meet.
  */
 const QUANTITY_FLOOR = /must be at least/;
@@ -486,6 +501,27 @@ const unlistedCount = (violations: RawViolation[]): number =>
     str(violation.code) === "INELIGIBLE_TARGET"
     || str(violation.code) === "INELIGIBLE_RESOURCE").length;
 
+/**
+ * The reports one moment's own list holds, in the record's plain words. A report the record gives
+ * no wording for is left out rather than shown as the identifier standing for it.
+ */
+function slotFacts(slotContext: RawContextSlot): TraceFact[] {
+  return (slotContext.known_observations ?? []).map((row) => ({
+    id: str(row.observation_id),
+    sentence: GLOSS.plainObservation(str(row.observation_id), str(row.plain_text)),
+    caveat: row.caveat
+      ? GLOSS.plainObservationCaveat(str(row.observation_id), str(row.caveat)) : "",
+  })).filter((fact) => fact.sentence !== "");
+}
+
+/** the things one moment required an answer to say nobody knew, in the record's plain words */
+function slotUnknowns(slotContext: RawContextSlot): TraceUnknown[] {
+  return (slotContext.required_unknowns ?? []).map((row) => ({
+    id: str(row.unknown_id),
+    sentence: GLOSS.plainUnknown(str(row.unknown_id), str(row.plain_text)),
+  })).filter((unknown) => unknown.sentence !== "");
+}
+
 function buildDesk(
   choice: RawChoice | undefined,
   context: RawContext,
@@ -573,6 +609,7 @@ function buildDesk(
     what: str(COPY.TRACE.desk[graphId]),
     assignments,
     pool,
+    kind: kindOf(assignments, context),
     unit,
     unitWords: words,
     total,
@@ -670,8 +707,6 @@ function changeSentences(before: TraceDesk | null, after: TraceDesk | null): str
 
 // ------------------------------------------------------------------ the six cards
 
-const cap = (sentence: string) => `${COPY.sentenceCase(sentence)}.`;
-
 function realCard(trace: AgentTrace): TraceCard {
   const lines: TraceLine[] = [{ kind: "lead", text: trace.real.summary }];
   if (trace.real.lead && trace.real.planLines.length !== 1) {
@@ -685,8 +720,8 @@ function realCard(trace: AgentTrace): TraceCard {
   lines.push({ kind: "note", text: COPY.TRACE.realFraming });
   return {
     id: `${trace.momentId}:real`,
-    step: 0,
-    kicker: COPY.TRACE.realKicker,
+    step: 4,
+    kicker: COPY.TRACE.step(4, 6),
     heading: COPY.TRACE.head.real,
     frame: COPY.TRACE.frameReal,
     badges: [],
@@ -716,8 +751,8 @@ function knownCard(trace: AgentTrace): TraceCard {
   }
   return {
     id: `${trace.momentId}:known`,
-    step: 1,
-    kicker: COPY.TRACE.step(1, 5),
+    step: 3,
+    kicker: COPY.TRACE.step(3, 6),
     heading: COPY.TRACE.head.known,
     frame: COPY.TRACE.frameModel,
     badges: [],
@@ -725,86 +760,85 @@ function knownCard(trace: AgentTrace): TraceCard {
   };
 }
 
-/**
- * One desk's card. The order puts the answer and its size at the top, so a reader who never
- * scrolls still learns what this desk proposed and whether it stayed inside the moment's limit.
- * The working — how it weighed each report, where every unit went, and its own written reason —
- * follows underneath.
- */
-function deskCard(
-  trace: AgentTrace, desk: TraceDesk, step: number, heading: string, id: string,
-): TraceCard {
-  // The opening sentence of a plan already carries its total, so the total is not said twice.
-  // What it does not carry is the limit this moment set, and that is the line that decides
-  // whether the answer holds, so it stands directly under it.
-  const lines: TraceLine[] = [{ kind: "lead", text: desk.what }];
-  lines.push({ kind: "fact", text: desk.lead });
-  if (desk.limitLine) lines.push({ kind: "fact", text: desk.limitLine });
-  // Where a plan is the right size and still did not hold, the reason stands here rather than
-  // far below the working. A reader who sees "It proposed 22 water trucks" over "This moment
-  // allowed 22" and then a failing badge otherwise has to guess why 22 was not 22.
-  if (desk.unlisted > 0) lines.push({ kind: "fact", text: COPY.TRACE.unlisted(desk.unlisted) });
-  if (step === 3 && desk.factors.length > 0) {
-    lines.push({ kind: "label", text: COPY.TRACE.weighedLabel });
-    lines.push({ kind: "caveat", text: COPY.TRACE.factorLead(desk.factors.length) });
-    for (const factor of desk.factors) {
-      lines.push({ kind: "fact", text: factor.sentence });
-      lines.push({ kind: "caveat", text: factor.state });
-    }
-  }
-  if (desk.planLines.length > 0) {
-    lines.push({ kind: "label", text: COPY.TRACE.planLabel });
-    for (const line of desk.planLines) lines.push({ kind: "fact", text: line });
-  }
-  if (desk.unknownsLine) lines.push({ kind: "fact", text: desk.unknownsLine });
-  if (desk.extraUnknownCount > 0) {
-    lines.push({ kind: "fact", text: COPY.TRACE.unknownsExtra(desk.extraUnknownCount) });
-  }
-  if (desk.reason) {
-    // The quotation carries the record's own bytes. `plainQuoted` adds nothing but square
-    // brackets. `COPY.TRACE.reasonFrame` under it says the words are the record's and points
-    // back at the plan lines above, which are the one place a reader can read what this answer
-    // actually asked for when the answer's own sentence miscounts its crews.
-    // `COPY.TRACE.reasonBrackets` says the brackets are this page's. Where this answer used none
-    // of the jargon that table covers, no bracket is added and the line explaining brackets would
-    // point at nothing, so it is only printed where one exists.
-    const quoted = GLOSS.plainQuoted(desk.reason);
-    lines.push({ kind: "label", text: COPY.TRACE.reasonLabel });
-    lines.push({ kind: "quote", text: quoted });
-    lines.push({ kind: "caveat", text: COPY.TRACE.reasonFrame });
-    if (quoted !== desk.reason) lines.push({ kind: "caveat", text: COPY.TRACE.reasonBrackets });
-  }
-  for (const failure of desk.restated) lines.push({ kind: "caveat", text: cap(failure) });
+function checkCard(trace: AgentTrace): TraceCard {
+  const final = trace.final;
+  const lines: TraceLine[] = [{
+    kind: "lead",
+    text: final?.badge ?? COPY.TRACE.checkClean,
+  }];
+  lines.push({ kind: "note", text: trace.limitation });
   return {
-    id: `${trace.momentId}:${id}`,
-    step,
-    kicker: COPY.TRACE.step(step, 5),
-    heading,
+    id: `${trace.momentId}:check`,
+    step: 5,
+    kicker: COPY.TRACE.step(5, 6),
+    heading: COPY.TRACE.head.check,
     frame: COPY.TRACE.frameModel,
-    badges: [desk.badge],
+    badges: [],
     lines,
   };
 }
 
-function checkCard(trace: AgentTrace): TraceCard {
-  const lines: TraceLine[] = [{ kind: "lead", text: COPY.TRACE.checkWhat }];
-  if (trace.check.called) {
-    lines.push({ kind: "label", text: COPY.TRACE.messageLabel });
-    for (const finding of trace.check.findings) {
-      lines.push({ kind: "message", text: finding });
+/**
+ * The only card that teaches the research mechanics. It deliberately follows the disaster
+ * situation, final AI action, reports, unknowns, public response and one-sentence rule result.
+ * All three recorded approaches remain available here, along with every plain-language checker
+ * finding and every recorded change, without forcing a reader to learn them before the action.
+ */
+function testingCard(trace: AgentTrace): TraceCard {
+  const lines: TraceLine[] = [{ kind: "lead", text: COPY.TRACE.testingLead }];
+  const addDesk = (label: string, desk: TraceDesk | null) => {
+    if (!desk) return;
+    lines.push({ kind: "label", text: label });
+    lines.push({ kind: "fact", text: desk.what });
+    lines.push({ kind: "fact", text: desk.lead });
+    for (const line of desk.planLines) lines.push({ kind: "fact", text: line });
+    if (desk.reason) {
+      const quoted = GLOSS.plainQuoted(desk.reason);
+      lines.push({ kind: "quote", text: quoted });
+      lines.push({ kind: "caveat", text: COPY.TRACE.reasonFrame });
+      if (quoted !== desk.reason) lines.push({ kind: "caveat", text: COPY.TRACE.reasonBrackets });
     }
-    lines.push({ kind: "fact", text: COPY.TRACE.checkAgain });
-    lines.push({ kind: "label", text: COPY.TRACE.changeLabel });
-    for (const change of trace.check.changes) lines.push({ kind: "fact", text: change });
+    lines.push({ kind: "note", text: COPY.TRACE.testingResult(desk.badge) });
+  };
+  addDesk(COPY.TRACE.testingPlain, trace.plain);
+  addDesk(COPY.TRACE.testingTable, trace.table);
+  addDesk(COPY.TRACE.testingRevision, trace.final);
+  lines.push({ kind: "label", text: COPY.TRACE.messageLabel });
+  if (trace.check.findings.length > 0) {
+    for (const finding of trace.check.findings) lines.push({ kind: "message", text: finding });
   } else {
     lines.push({ kind: "fact", text: COPY.TRACE.checkClean });
   }
+  if (trace.check.called) {
+    lines.push({ kind: "fact", text: COPY.TRACE.checkAgain });
+    lines.push({ kind: "label", text: COPY.TRACE.changeLabel });
+    for (const change of trace.check.changes) lines.push({ kind: "fact", text: change });
+  }
   return {
-    id: `${trace.momentId}:check`,
-    step: 4,
-    kicker: COPY.TRACE.step(4, 5),
-    heading: COPY.TRACE.head.check,
-    frame: COPY.TRACE.frameModel,
+    id: `${trace.momentId}:testing`,
+    step: 6,
+    kicker: COPY.TRACE.step(6, 6),
+    heading: COPY.TRACE.head.testing,
+    frame: COPY.TRACE.frameTest,
+    badges: trace.descriptiveBadge ? [trace.descriptiveBadge] : [],
+    lines,
+  };
+}
+
+/** The first card: the operational problem before any proposal or experiment result appears. */
+function situationCard(trace: AgentTrace): TraceCard {
+  const lines: TraceLine[] = [
+    { kind: "lead", text: trace.title },
+    { kind: "fact", text: COPY.TRACE.deadline(trace.cutoffWords) },
+    { kind: "fact", text: trace.deciderLine },
+  ];
+  if (trace.known.task) lines.push({ kind: "note", text: COPY.TRACE.taskLine(trace.known.task) });
+  return {
+    id: `${trace.momentId}:situation`,
+    step: 1,
+    kicker: COPY.TRACE.step(1, 6),
+    heading: COPY.TRACE.head.situation,
+    frame: COPY.TRACE.frameSituation,
     badges: [],
     lines,
   };
@@ -818,27 +852,19 @@ function checkCard(trace: AgentTrace): TraceCard {
 function finalCard(trace: AgentTrace, desk: TraceDesk): TraceCard {
   const lines: TraceLine[] = [];
   lines.push({ kind: "lead", text: desk.finalLead });
-  if (desk.limitLine) lines.push({ kind: "fact", text: desk.limitLine });
-  if (desk.unknownsLine) lines.push({ kind: "fact", text: desk.unknownsLine });
-  for (const failure of desk.restated) lines.push({ kind: "caveat", text: cap(failure) });
-  lines.push({ kind: "caveat", text: COPY.INCIDENT.definition });
-  lines.push({ kind: "label", text: COPY.TRACE.compareLabel });
-  lines.push({ kind: "fact", text: trace.real.summary });
-  lines.push({ kind: "fact", text: trace.real.comparison });
-  lines.push({ kind: "caveat", text: COPY.TRACE.compareClaim });
-  if (desk.planLines.length > 1) {
+  if (desk.planLines.length > 0) {
     lines.push({ kind: "label", text: COPY.TRACE.finalLabel });
     for (const line of desk.planLines) lines.push({ kind: "fact", text: line });
   }
-  const badges = [desk.badge];
-  if (trace.descriptiveBadge) badges.push(trace.descriptiveBadge);
+  if (desk.limitLine) lines.push({ kind: "fact", text: desk.limitLine });
+  if (desk.unknownsLine) lines.push({ kind: "fact", text: desk.unknownsLine });
   return {
     id: `${trace.momentId}:final`,
-    step: 5,
-    kicker: COPY.TRACE.step(5, 5),
+    step: 2,
+    kicker: COPY.TRACE.step(2, 6),
     heading: COPY.TRACE.head.final,
     frame: COPY.TRACE.frameModel,
-    badges,
+    badges: [],
     lines,
   };
 }
@@ -889,16 +915,8 @@ export function buildTraces(
     // Every sentence below is read through `gloss.ts`, which holds the plain English shown in
     // place of the recording's own words. The recording is never edited; the lookup falls back to
     // its wording whenever the table has no entry for an identifier.
-    const facts: TraceFact[] = (slotContext.known_observations ?? []).map((row) => ({
-      id: str(row.observation_id),
-      sentence: GLOSS.plainObservation(str(row.observation_id), str(row.plain_text)),
-      caveat: row.caveat
-        ? GLOSS.plainObservationCaveat(str(row.observation_id), str(row.caveat)) : "",
-    })).filter((fact) => fact.sentence !== "");
-    const unknowns: TraceUnknown[] = (slotContext.required_unknowns ?? []).map((row) => ({
-      id: str(row.unknown_id),
-      sentence: GLOSS.plainUnknown(str(row.unknown_id), str(row.plain_text)),
-    })).filter((unknown) => unknown.sentence !== "");
+    const facts: TraceFact[] = slotFacts(slotContext);
+    const unknowns: TraceUnknown[] = slotUnknowns(slotContext);
 
     const plain = buildDesk(pick(PLAIN), ctx, slotContext, facts, unknowns);
     const table = buildDesk(pick(TABLE), ctx, slotContext, facts, unknowns);
@@ -996,15 +1014,70 @@ export function buildTraces(
       cards: [],
     };
 
-    trace.cards.push(realCard(trace));
-    trace.cards.push(knownCard(trace));
-    if (plain) trace.cards.push(deskCard(trace, plain, 2, COPY.TRACE.head.plain, "plain"));
-    if (table) trace.cards.push(deskCard(trace, table, 3, COPY.TRACE.head.table, "table"));
-    trace.cards.push(checkCard(trace));
+    // The six-card contract is operational before it is experimental: situation, action,
+    // evidence and unknowns, public response, the one-sentence rule result, then all testing
+    // mechanics in one secondary card.
+    trace.cards.push(situationCard(trace));
     if (final) trace.cards.push(finalCard(trace, final));
+    trace.cards.push(knownCard(trace));
+    trace.cards.push(realCard(trace));
+    trace.cards.push(checkCard(trace));
+    trace.cards.push(testingCard(trace));
 
     traces.push(trace);
     index++;
   }
   return traces;
+}
+
+/**
+ * Any one of the recorded tries, read back on demand.
+ *
+ * A walk-through follows one recorded try of each moment, and the record holds eight of them for
+ * every way of working. This opens the other seven the same way it opens the one the walk-through
+ * follows: the recorded answer for that exact try is read out of the sealed event and put through
+ * the same `buildDesk` the walk-through uses, so a try opened here and the same try inside the
+ * walk-through can never say two different things.
+ *
+ * Nothing is computed twice. The returned reader keeps what it has already read, and it reads
+ * only the try it is asked for, so opening one try costs one answer's worth of work and the
+ * screen never builds one hundred and twenty answers it will not show.
+ *
+ * Determinism: the reader is a pure function of the record. The same try always reads back the
+ * same answer, and keeping the answer changes nothing about what the next read returns.
+ */
+export function readSeedDesks(
+  events: RawDecisionEvent[],
+  context: RawContext | null | undefined,
+): (momentId: string, graphId: string, seed: number) => TraceDesk | null {
+  const ctx: RawContext = context ?? {};
+  const slots = ctx.slots ?? {};
+  const byMoment = new Map<string, { slotContext: RawContextSlot; choices: RawChoice[] }>();
+  for (const event of events) {
+    const payload = event.payload ?? {};
+    const slot = payload.decision_slot;
+    if (!slot) continue;
+    const momentId = str(slot.decision_slot_id, str(event.event_id));
+    // the same block `buildTraces` reads: the frozen registered experiment where the moment
+    // belongs to it, and the replayed demonstration where it does not
+    const registeredBlock = payload.registered_five_slot_experiment;
+    const block = registeredBlock && (registeredBlock.choices ?? []).length > 0
+      ? registeredBlock : payload.full_incident_demonstration;
+    byMoment.set(momentId, { slotContext: slots[momentId] ?? {}, choices: block?.choices ?? [] });
+  }
+  const held = new Map<string, TraceDesk | null>();
+  return (momentId, graphId, seed) => {
+    const key = `${momentId} ${graphId} ${seed}`;
+    const already = held.get(key);
+    if (already !== undefined) return already;
+    const moment = byMoment.get(momentId);
+    const choice = moment?.choices.find(
+      (row) => str(row.graph_id) === graphId && num(row.seed, -1) === seed);
+    const desk = moment && choice
+      ? buildDesk(choice, ctx, moment.slotContext,
+        slotFacts(moment.slotContext), slotUnknowns(moment.slotContext))
+      : null;
+    held.set(key, desk);
+    return desk;
+  };
 }

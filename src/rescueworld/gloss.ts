@@ -28,7 +28,7 @@
  *   record is what the run actually held.
  *
  * The method, the detectors and the ranked findings this file answers are written up in
- * `docs/rescueworld/PLAIN-TEXT-METHODS.md`. `node app/scripts/audit-plain-text.mjs` reads this
+ * `docs/rescueworld/PLAIN-TEXT-METHODS.md`. The source-repository copy audit reads this
  * file, so a string glossed here is judged on the words a viewer actually reads.
  */
 
@@ -62,35 +62,27 @@ export function glossedItem(
  */
 export const SLOT_TITLE: GlossTable = {
   "slot-01-early-fire-mobilization":
-    "Decide which fire crews from other prefectures to send, before anyone has announced"
-    + " anything in public.",
+    "Outside fire crews must move before public announcements begin.",
   "slot-02-missing-telemetry-triage":
-    "Two towns never reported how hard the ground shook. Decide which one to check first.",
+    "Kashima and Kōsa have no shaking readings.",
   "slot-03-defense-request-scope":
-    "The governor is asking the army for help. Decide whether to ask the navy separately as"
-    + " well.",
+    "The Governor must decide whether to ask the navy for help.",
   "slot-04-first-municipal-liaisons":
-    "Send the first two pairs of government officers into two town halls, using everything"
-    + " known at 18:10.",
+    "Two officer pairs must be sent to town halls.",
   "slot-05-escalation-minute":
-    "Decide how serious to call this nationally, and whether to ask for fire crews or order"
-    + " them, before any injury count exists.",
+    "Japan must choose its national emergency level and how to call in fire crews.",
   "slot-06-first-night-response-split":
-    "Divide your rescue crews between two collapsed buildings with people trapped inside"
-    + " tonight.",
+    "Five rescue units must be split between two collapsed buildings.",
   "slot-07-shelter-load-triage":
-    "Thousands are sleeping in shelters and you have only prefecture-wide totals. Choose two"
-    + " actions covering the whole prefecture.",
+    "Only region-wide shelter totals are available.",
   "slot-08-degraded-dispatch-rescue":
-    "Yatsushiro's system for sending crews is coming back after failing. Decide which crews"
-    + " to send to a collapsed paper mill.",
+    "Yatsushiro must send crews after its emergency-call system fails.",
   "slot-09-push-water-planning":
-    "Send more drinking-water trucks to towns before those towns formally ask for them.",
+    "Extra water trucks must be allocated before towns ask.",
   "slot-10-rescue-water-turn":
-    "Keep the rescues going while most of the region turns to delivering drinking water.",
+    "Rescue work must continue while forces shift to water delivery.",
   "slot-11-aftershock-reprioritization":
-    "A strong aftershock hits on the second night. Choose the two places to check for safety"
-    + " first.",
+    "After a strong aftershock, officials must choose two places to check.",
 };
 
 /**
@@ -102,8 +94,8 @@ export const SLOT_TITLE: GlossTable = {
 export const DECIDER: GlossTable = {
   "slot-01-early-fire-mobilization": "the head of Japan's national fire and disaster agency",
   "slot-02-missing-telemetry-triage":
-    "a stand-in prefecture desk that sorts incoming reports, invented for this exercise"
-    + " because the public record names no real one",
+    "a simulated prefecture team that sorts incoming reports; the public record does not"
+    + " identify a real team for this decision",
   "slot-03-defense-request-scope": "the Governor of Kumamoto",
   "slot-04-first-municipal-liaisons":
     "a national government office that looks after roads and rivers across Kyushu, the"
@@ -114,7 +106,7 @@ export const DECIDER: GlossTable = {
     "Kumamoto Prefecture's disaster office, advised by the national team that directs fire"
     + " crews sent in from other prefectures",
   "slot-07-shelter-load-triage":
-    "a stand-in prefecture desk that runs the shelters, invented for this exercise",
+    "a simulated team choosing shelter priorities for this exercise",
   "slot-08-degraded-dispatch-rescue":
     "Yatsushiro's own fire office, advised by the national team that directs crews sent in"
     + " from other prefectures",
@@ -123,8 +115,7 @@ export const DECIDER: GlossTable = {
     + " roads and with Japan's armed forces",
   "slot-10-rescue-water-turn": "the army's 8th Division, working with Kumamoto Prefecture",
   "slot-11-aftershock-reprioritization":
-    "a stand-in prefecture desk that decides what gets checked first, invented for this"
-    + " exercise",
+    "a simulated team choosing safety priorities for this exercise",
 };
 
 /**
@@ -133,54 +124,47 @@ export const DECIDER: GlossTable = {
  */
 export const SLOT_TASK: GlossTable = {
   "slot-01-early-fire-mobilization":
-    "Choose up to eight fire units to move into Kumamoto right away. Say which missing facts"
-    + " stop you from choosing perfectly. Do not use anything reported later about"
-    + " announcements, injuries, or crews sent.",
+    "Send up to eight fire units to Kumamoto now. State what is still unknown about whether"
+    + " crews are ready and how long they would take to arrive. Ignore information published"
+    + " after 16:27.",
   "slot-02-missing-telemetry-triage":
-    "Choose two places to check first and second. Treat a missing shaking reading as unknown,"
-    + " never as zero. No real checking team appears in the public record, so this choice is a"
-    + " practice test.",
+    "Rank Kashima and Kōsa for checking. Treat each missing reading as unknown, not zero. This is"
+    + " a simulated priority; the public record names no checking team.",
   "slot-03-defense-request-scope":
-    "Choose the army, the navy, or both, for the first night. Use only what was known by"
-    + " 21:00. Say out loud that the record never explains why the navy was asked, which places"
-    + " came first, or how many people went.",
+    "Choose the army, the navy, or both for tonight using only facts public by 21:00. State that"
+    + " nobody has said why the navy is needed, where it would go, or how many people would be"
+    + " sent.",
   "slot-04-first-municipal-liaisons":
-    "Use exactly two pairs, one pair for each town. Weigh the shaking readings, the towns"
-    + " that sent none, and what Japan's transport and infrastructure ministry reported about"
-    + " roads and railways. Do not treat a stopped train service as proven damage.",
+    "Send exactly one officer pair to each of two towns. Use the 18:10 shaking, road, railway, and"
+    + " water reports. Treat missing readings as unknown, and do not treat stopped trains as"
+    + " confirmed damage.",
   "slot-05-escalation-minute":
-    "Choose exactly one national headquarters level and exactly one way to bring in fire"
-    + " crews. Use what was known at 18:20 about roads, what pilots saw from the air, and which"
-    + " town halls were still working. Do not use injury counts or rescue results that came"
-    + " later.",
+    "Choose one national headquarters level and either request or order outside fire crews. Use"
+    + " only facts public by 18:20; exclude later casualty and rescue totals.",
   "slot-06-first-night-response-split":
     "Split four incoming fire brigades from other prefectures and a response team from the"
     + " army's 8th Division between two collapsed buildings. Use the reports from each site and"
     + " the facts you have about each crew. Do not use death counts or rescue totals that came"
     + " later.",
   "slot-07-shelter-load-triage":
-    "You have exactly two actions, and both must cover the whole prefecture. The totals moved"
-    + " from 506 shelters holding 9,186 people to 419 shelters holding 7,547 people. Do not give"
-    + " people, space or opening times to any single town or shelter.",
+    "Choose exactly two prefecture-wide actions. Shelters changed from 506 sites with 9,186"
+    + " people to 419 with 7,547. Do not invent town-level counts, capacity, or opening times.",
   "slot-08-degraded-dispatch-rescue":
-    "You may send one or two fire brigades from other prefectures, and no more. Say out loud"
-    + " what nobody knows. The record never says when the phones in Yatsushiro began to fail, or"
-    + " how the desk worked while they were down. It never says how many people were hurt, or"
-    + " which crews were ready.",
+    "Send one or two outside fire brigades to the mill. State that the record does not say when"
+    + " the outage began, how the city sent crews during it, how many people were hurt, or which"
+    + " crews were ready.",
   "slot-09-push-water-planning":
-    "Spread up to 22 more water trucks across the towns named here. A town that already asked"
-    + " shows real need, and a town that has not asked can still qualify. Your numbers must add"
-    + " up to 22 or fewer, and the 23 trucks already promised do not count again.",
+    "Allocate no more than 22 additional water trucks among the named towns. Treat earlier"
+    + " requests as evidence of need; trucks may also go to towns that did not ask. Do not count"
+    + " the 23 trucks already committed.",
   "slot-10-rescue-water-turn":
-    "Place exactly three priorities. They may go to the sites where rescues are still running"
-    + " and to the water work for the whole region. Keep the life-saving work going, and save"
-    + " some attention for a search deadline at seventy-two hours after the quake. Do not invent"
-    + " how many people go where.",
+    "Choose exactly three priorities across active rescue sites and region-wide water delivery."
+    + " Keep rescue work active and include the final search before the 72-hour mark. Do not"
+    + " invent staffing levels.",
   "slot-11-aftershock-reprioritization":
-    "You have exactly two safety checks to place, right after the 22:19 aftershock, which"
-    + " measured 5-lower on Japan's shaking scale. Use what is already known about rescues under"
-    + " way, villages cut off, shelters and drinking water. Do not assume anything about a site"
-    + " that nobody has reported.",
+    "After the 22:19 aftershock, prioritize exactly two safety checks. Use reports about active"
+    + " rescues, isolated villages, shelters, and water delivery. Treat every unreported site as"
+    + " unknown.",
 };
 
 /**
@@ -207,10 +191,9 @@ export const HISTORICAL_SUMMARY: GlossTable = {
     + " moving to Aeon Mall. The notes never say exactly how many crews or people went to each"
     + " place.",
   "slot-07-shelter-load-triage":
-    "The public record keeps only the totals for the whole prefecture. It also keeps one"
-    + " order from the first night. That order told towns to open shelters or move people"
-    + " further away when water would be slow to arrive. It never names a matching pair of"
-    + " actions for any one town.",
+    "The first-night order told towns to open shelters or move evacuees farther away when water"
+    + " delivery would be slow. Public reports give only prefecture-wide totals and no matching"
+    + " pair of town-level actions.",
   "slot-08-degraded-dispatch-rescue":
     "Yatsushiro's own fire headquarters worked the mill through the night with the crew sent"
     + " from Miyazaki. Crews from Kagoshima and Okayama appear at the mill in the next day's"
@@ -220,12 +203,11 @@ export const HISTORICAL_SUMMARY: GlossTable = {
     + " ready for the whole region, without waiting for towns to ask. It does not say how those"
     + " trucks were divided between towns.",
   "slot-10-rescue-water-turn":
-    "The plan on record kept the rescues running. It said the region would turn toward water"
-    + " once life-saving work ended. Crews searched Kashima Town thoroughly again later, with"
-    + " seventy-two hours running out.",
+    "The recorded plan kept rescue work active, then shifted most forces to water after the"
+    + " searches ended. Crews later searched Kashima once more before the 72-hour mark.",
   "slot-11-aftershock-reprioritization":
-    "The public record reports the aftershock and says the work carried on. It never names a"
-    + " matching choice of two places to check.",
+    "Work continued after the aftershock, but the public record does not name two sites checked"
+    + " first.",
   "slot-03-defense-request-scope":
     "Kumamoto's Governor asked Japan's army for help at 17:30, and asked its navy at Sasebo"
     + " separately at 21:00.",
@@ -238,27 +220,30 @@ export const HISTORICAL_SUMMARY: GlossTable = {
  */
 export const HISTORICAL_UNKNOWN: GlossTable = {
   "slot-01-early-fire-mobilization#0":
-    "Under Japan's law on fires, one prefecture can call in crews from another. The report"
-    + " does not say which of the law's two clauses was used.",
+    "A Japanese law allows one prefecture to call fire crews from another. The public record"
+    + " does not identify which of two clauses in that law authorized this request.",
   "slot-01-early-fire-mobilization#1":
-    "The public record does not say what the automatic warning showed, or which other crews"
-    + " could have gone instead.",
-  "slot-02-missing-telemetry-triage#0": "People may have acted without anyone writing it down.",
+    "The public record does not show what the automatic warning said or identify any other"
+    + " crews that were available at 16:27.",
+  "slot-02-missing-telemetry-triage#0":
+    "The public records we reviewed identify no action taken specifically because the two"
+    + " shaking readings were missing. Someone may still have acted without recording it.",
   "slot-02-missing-telemetry-triage#1":
     "The live bulletins for the earthquake never carried a shaking level for Kashima or Kōsa.",
   "slot-04-first-municipal-liaisons#0":
-    "The record does not say what Japan's ministry of land and transport looked at beyond"
-    + " shaking levels when it chose the two towns.",
+    "The public record does not identify what Japan's land and transport ministry considered"
+    + " besides shaking levels when it chose Uki and Hikawa.",
   "slot-05-escalation-minute#0":
     "The public record does not list everything Japan's leaders saw in private, or what crews"
     + " on the road had radioed in.",
   "slot-06-first-night-response-split#0":
     "The minutes do not say where each remaining crew went, or how many people went to each"
     + " site.",
-  "slot-06-first-night-response-split#1": "Nobody had a full count of the dead and injured yet.",
+  "slot-06-first-night-response-split#1":
+    "At 20:00, responders did not yet have a complete count of the dead and injured.",
   "slot-08-degraded-dispatch-rescue#0":
-    "The public record does not say when Yatsushiro's emergency call system broke, how the"
-    + " city worked while it was down, or how many people went where.",
+    "The public record does not say when Yatsushiro's emergency call system failed, how the"
+    + " city handled calls during the outage, or how many responders went to each place.",
   "slot-03-defense-request-scope#0":
     "The public record does not say what prompted the 21:00 call to Japan's navy, or what"
     + " jobs it was asked to do.",
@@ -267,10 +252,12 @@ export const HISTORICAL_UNKNOWN: GlossTable = {
     + " towns.",
   "slot-09-push-water-planning#1": "A town that never asked for water may still have needed it.",
   "slot-07-shelter-load-triage#0":
-    "Nobody published how many people were in each town's shelters, or in any single shelter."
-    + " Clock times on those reports cannot be trusted.",
+    "The public reports give only prefecture-wide shelter totals, not counts for each town or"
+    + " shelter. Their clock times also refer to different things and cannot show when each"
+    + " shelter actually opened.",
   "slot-11-aftershock-reprioritization#0":
-    "Nobody published whether each active site was checked right after the aftershock.",
+    "The public record does not say which active sites were checked immediately after the"
+    + " aftershock.",
   "slot-10-rescue-water-turn#0":
     "The public record does not say how many people worked each job, or whether they could"
     + " switch between rescue and water work.",
@@ -283,48 +270,46 @@ export const HISTORICAL_UNKNOWN: GlossTable = {
  */
 export const ASSUMPTION: GlossTable = {
   "slot-01-early-fire-mobilization#0":
-    "This exercise only let the models choose from crews the record shows were actually sent"
-    + " by 21:45.",
+    "For this exercise, the AI could choose only from crews that the public record shows were"
+    + " sent by 21:45.",
   "slot-01-early-fire-mobilization#1":
-    "The list of other crews that could have been chosen here was invented for this exercise."
-    + " The public record does not say which were ready at 16:27.",
+    "For this exercise, the AI could choose from a fixed list of crews. The public record does not"
+    + " identify which of those crews were ready at 16:27.",
   "slot-01-early-fire-mobilization#2":
-    "The models were never shown how long each crew would take to move, or any notes about"
-    + " it.",
+    "The AI was not told which crews were ready or how long they would take to arrive.",
   "slot-02-missing-telemetry-triage#0":
-    "The two checks this desk can order were invented for the exercise. Each one marks a town as"
-    + " somewhere to look at first, and names no real team to go and look.",
+    "For this exercise, the AI ranked two towns for checking. The ranking does not assign a real"
+    + " team.",
   "slot-04-first-municipal-liaisons#0":
     "Each real posting of two officers to a town counts here as one pair that cannot be"
     + " split.",
   "slot-05-escalation-minute#0":
-    "The four choices here stand for real legal decisions about how the response was"
-    + " arranged. None of them is a crew you can send.",
+    "The four choices represent legal ways to organize the national response. They do not"
+    + " represent crews or equipment.",
   "slot-06-first-night-response-split#0":
-    "Each visiting fire brigade counts as one whole thing, and so does the army's 8th"
-    + " Division team. This exercise does not invent how many people are inside them.",
+    "For this exercise, each fire brigade and the army team must stay together. The exercise"
+    + " gives no headcount for any team.",
   "slot-08-degraded-dispatch-rescue#0":
-    "Each visiting fire brigade counts as one whole thing. This exercise does not invent how"
-    + " many people are inside it.",
+    "Each fire brigade must stay together. The exercise does not say how many people are in a"
+    + " brigade.",
   "slot-03-defense-request-scope#0":
-    "Each real request for military help counts as one whole thing. This exercise does not"
-    + " say how many crews or people it brought.",
+    "The exercise counts each request for military help as one choice. It does not invent the"
+    + " number of crews or people that each request brought.",
   "slot-09-push-water-planning#0":
     "The report says about 22 trucks. In this exercise they count as 22 separate trucks,"
     + " handed out one at a time.",
   "slot-09-push-water-planning#1":
-    "The models had to choose which towns came first, even though the 12:00 record never says"
+    "The AI had to choose which towns came first, even though the 12:00 record does not say"
     + " how the trucks were split.",
   "slot-07-shelter-load-triage#0":
-    "The three actions this desk can pick were invented for the exercise, and stand for ways"
-    + " the region could work together. The shelter counts are region-wide totals, and they are"
-    + " never broken down to a town.",
+    "For this exercise, the AI chose from three region-wide shelter actions. Public reports"
+    + " give only prefecture-wide shelter totals, not town-level counts.",
   "slot-11-aftershock-reprioritization#0":
-    "The two safety checks this desk can order were invented for the exercise. Each one marks a"
-    + " site as somewhere to look at first, and names no real team to go and look.",
+    "For this exercise, the AI ranked two places for checking. The ranking does not assign a"
+    + " real team.",
   "slot-10-rescue-water-turn#0":
-    "The three priorities here were invented for the exercise. Each one stands for a limited"
-    + " promise of effort, and never for people or trucks.",
+    "For this exercise, the AI ranked three jobs. A ranking does not assign responders or"
+    + " trucks.",
 };
 
 /**
@@ -333,23 +318,23 @@ export const ASSUMPTION: GlossTable = {
  */
 export const REQUIRED_UNKNOWN: GlossTable = {
   "unknown-1627-internal-payload":
-    "No public record says what the automatic warning system showed the head of Japan's"
-    + " national fire and disaster agency at 16:27.",
+    "At 16:27, the available public records did not show what the automatic warning told the"
+    + " head of Japan's national fire and disaster agency.",
   "unknown-1627-unit-readiness":
-    "Nobody published which of the crews sent later were ready at 16:27, or how long each one"
-    + " needed to reach Kumamoto.",
+    "At 16:27, the available public records did not say which outside crews were ready or how long"
+    + " they would take to reach Kumamoto.",
   "unknown-missing-intensity-true-values":
     "No shaking level for Kashima Town or Kōsa Town arrived in the live bulletins after the"
     + " earthquake.",
   "unknown-blank-response-actions":
-    "No public record we checked shows anyone acting because those two shaking levels were"
-    + " missing.",
+    "The public records we reviewed identify no action taken specifically because the two"
+    + " shaking readings were missing.",
   "unknown-liaison-reasoning":
-    "The public record does not say what Japan's ministry of land and transport looked at"
-    + " beyond shaking levels when it chose two towns at 18:10.",
+    "The public record does not identify what Japan's land and transport ministry considered"
+    + " besides shaking levels when it chose Uki and Hikawa at 18:10.",
   "unknown-national-escalation-inputs":
-    "Nobody published everything Japan's leaders saw in private before the 18:20 decision to"
-    + " raise the national response.",
+    "Public records do not show everything Japan's leaders knew before they raised the national"
+    + " response at 18:20.",
   "unknown-moving-fire-unit-reports":
     "The public record does not say what crews already driving toward Kumamoto had reported"
     + " by 18:20.",
@@ -357,17 +342,17 @@ export const REQUIRED_UNKNOWN: GlossTable = {
     "Yatsushiro's system for sending crews to emergency calls broke. The public record does"
     + " not say when it broke, or how the city worked without it.",
   "unknown-first-night-casualty-count":
-    "Nobody had a full count of the dead and injured when the crews were split at 20:00.",
+    "At 20:00, responders did not yet have a complete count of the dead and injured.",
   "unknown-fire-unit-destination-split":
     "The meeting minutes do not say how many crews or people went to each site that first"
     + " night.",
   "unknown-people-alive-by-time":
-    "Death counts published later never say how or when each person died. Nobody can tell who"
-    + " was still alive when each choice was made.",
+    "The later death counts do not say when each person died. The available records therefore"
+    + " cannot show who was still alive when each decision was made.",
   "unknown-shelter-timestamp-meaning":
-    "Clock times on shelter reports mean different things: when a shelter was meant to open,"
-    + " when it did open, or when the report went out. So those times will not show how fast a"
-    + " town acted.",
+    "Shelter reports may record when officials planned an opening, when a shelter actually"
+    + " opened, or when someone published the report. A timestamp alone cannot show how quickly"
+    + " a town acted.",
   "unknown-defense-geographic-priority":
     "The Governor made two requests for military help. Neither one says which areas came"
     + " first, or how many people went where.",
@@ -388,8 +373,8 @@ export const REQUIRED_UNKNOWN: GlossTable = {
     "The public record does not say whether anyone checked each active site right after the"
     + " aftershock.",
   "unknown-response-personnel-interchangeability":
-    "The public record does not show that every worker on the response could switch between"
-    + " rescue work and water work.",
+    "The public record does not say which responders could switch between rescue work and water"
+    + " delivery.",
 };
 
 /**
@@ -509,8 +494,8 @@ export const OBSERVATION: GlossTable = {
     + " around 21:00.",
   "obs-2000-power-outage": "About 47,000 households in Kumamoto had no power at 20:00.",
   "obs-1820-misato-town-hall-degraded":
-    "Misato Town hall was running on emergency power. Staff could not get inside, so nobody"
-    + " could confirm what was happening there.",
+    "Misato Town Hall was running on emergency power. Staff could not enter the building, so"
+    + " they could not confirm conditions inside.",
   "obs-2000-no-published-casualty-count":
     "No full national count of the dead and hurt was public for this decision about where to"
     + " send crews.",
@@ -539,10 +524,11 @@ export const OBSERVATION_CAVEAT: GlossTable = {
   // as a statement about the record, it says the same thing to the person actually reading it.
   "obs-2000-no-published-casualty-count":
     "Each town published its own count of the dead later on. Those counts belong to a time after"
-    + " this decision, so they are not used here in place of the count nobody had yet.",
+    + " this decision, so they are not used in place of the count that was still unknown.",
   "obs-1627-internal-trigger-assumed":
-    "This is worked out, and no archived copy has been seen. It is the least that alert must"
-    + " have carried for crews to be sent in the same minute.",
+    "No archived copy of the alert was found. For this exercise only, the AI is told that"
+    + " Kumamoto's fire agency received an internal alert. The added alert contains only enough"
+    + " detail to explain why crews were sent at 16:27.",
   "obs-163528-missing-repeat":
     "This shows the gap in readings was still there. It does not say how hard those towns"
     + " actually shook.",
@@ -646,7 +632,7 @@ export const RESOURCE_LABEL: GlossTable = {
  * `kosa-town` are proper names, and a proper name is left exactly as the record wrote it.
  */
 export const TARGET_LABEL: GlossTable = {
-  "kumamoto-incident-area": "area the earthquake hit in Kumamoto",
+  "kumamoto-incident-area": "area around Kumamoto hit by the earthquake",
   "aeon-mall-kumamoto": "Aeon Mall in Kumamoto",
   "nippon-paper-yatsushiro": "Nippon Paper's mill in Yatsushiro",
 };
@@ -665,9 +651,11 @@ export const ROUND_LABEL: GlossTable = {
   "round-05-local-network-forms": "Nearby fire departments start working as one",
   "continuous-first-night": "The first night: reports keep arriving from across the region",
   "round-06-outside-help": "Kumamoto asks other prefectures for help",
-  "round-07-infrastructure-picture": "Damage to roads and water decides where help goes first",
+  "round-07-infrastructure-picture":
+    "Road closures and water outages change which towns receive help first",
   "round-08-escalation": "The government switches to stronger emergency powers",
-  "round-09-first-night-posture": "The response settles into the pattern it will hold all night",
+  "round-09-first-night-posture":
+    "Agencies assign overnight rescue, shelter and water duties",
   "round-10-two-rescue-fronts": "Rescue crews work two collapsed buildings at once",
   "round-11-second-defense-request": "Kumamoto asks the armed forces for help a second time",
   "round-12-night-coordination": "Through the night, the agencies agree who does what",
@@ -678,17 +666,16 @@ export const ROUND_LABEL: GlossTable = {
   "continuous-day-two": "Day two: reports keep arriving as drinking water runs short",
   "round-16-rescue-counts": "The first counts of people rescued arrive",
   "round-17-water-without-requests": "Water trucks set out before towns ask for them",
-  "round-18-response-reassigned": "Crews are moved to different jobs",
+  "round-18-response-reassigned": "Officials move crews to new jobs",
   "round-19-heat-and-water": "Hot weather makes it harder to keep people supplied with water",
-  "round-20-day-two-close": "Day two closes",
-  "round-21-the-peak": "Rescue work reaches its largest size",
-  "continuous-the-turn": "The turn: reports keep arriving as the effort moves to water",
+  "round-20-day-two-close": "Day two ends with rescue work and water delivery still active",
+  "round-21-the-peak": "Rescue forces reach their highest recorded staffing level",
+  "continuous-the-turn": "Reports keep arriving as crews shift from rescue to water delivery",
   "round-22-centre-of-gravity": "Most of the effort shifts from rescue to water",
   "round-23-on-site-headquarters": "National officials set up an office in Kumamoto",
-  "round-24-water-network-expands": "More towns join the water-delivery run",
-  "round-25-seventy-two-hour-day":
-    "Seventy-two hours pass, and the best chance of finding people alive ends",
-  "round-26-final-search": "One last search runs as seventy-two hours pass",
+  "round-24-water-network-expands": "Water trucks begin serving more towns",
+  "round-25-seventy-two-hour-day": "Crews make one final search before the 72-hour mark",
+  "round-26-final-search": "Before 72 hours pass, crews search Kashima once more",
   "round-27-the-turn": "Most of the effort has moved to delivering water",
 };
 
@@ -700,7 +687,7 @@ export const ACT_LABEL: GlossTable = {
   "act-1-hour-one": "Hour one",
   "act-2-first-night": "The first night begins",
   "act-3-day-two": "Day two brings a water crisis",
-  "act-4-the-turn": "The effort turns toward water",
+  "act-4-the-turn": "Most crews shift from rescue to water delivery",
 };
 
 /**
@@ -709,7 +696,8 @@ export const ACT_LABEL: GlossTable = {
 export const ACT_STORY: GlossTable = {
   "act-1-hour-one":
     "An automatic alert covering the whole region arrives before anyone knows what was"
-    + " destroyed. Two towns report nothing, and that silence becomes evidence too.",
+    + " destroyed. No shaking readings arrive from two towns, so planners must treat their"
+    + " conditions as unknown.",
   "act-2-first-night":
     "Fire crews, the armed forces and government officers each work from different reports."
     + " Two collapsed buildings and a failed system for taking emergency calls shape the night.",
@@ -717,8 +705,8 @@ export const ACT_STORY: GlossTable = {
     "Damage figures covering the whole region arrive. Crews are moved, shelters fill, and"
     + " water trucks start going out before towns ask for them.",
   "act-4-the-turn":
-    "Rescues carry on while most of the effort shifts to delivering drinking water, and one"
-    + " last search runs up against seventy-two hours.",
+    "Rescue work continues while most effort shifts to drinking-water delivery. Crews search"
+    + " once more before the 72-hour mark.",
 };
 
 /**
@@ -730,7 +718,7 @@ export const MILESTONE_HEADLINE: GlossTable = {
     "Five town and prefecture governments opened emergency headquarters in the same minute as"
     + " the earthquake.",
   "shelter-stamps-1627":
-    "Eighteen shelters are recorded as opening in the same minute as the earthquake.",
+    "At 16:27, the records add eighteen shelters; they do not reveal when each one opened.",
   "national-offices-1628":
     "Four national response offices opened while shaking readings still covered only whole"
     + " regions.",
@@ -740,10 +728,12 @@ export const MILESTONE_HEADLINE: GlossTable = {
   "prime-minister-instruction-1629":
     "Japan's Prime Minister orders three things: find the damage, save lives, tell people"
     + " quickly.",
-  "support-email-1632": "Kumamoto is told to ask for help without waiting.",
+  "support-email-1632":
+    "Japan's Ministry of Internal Affairs, which supports local governments, tells Kumamoto to request help"
+    + " immediately.",
   "kashima-kosa-intensity-gap-163528":
-    "Kashima and Kōsa still have no shaking reading when the last bulletin for towns goes"
-    + " out.",
+    "Japan's final bulletin for individual towns still has no shaking reading for Kashima or"
+    + " Kōsa.",
   "police-video-1643":
     "A police helicopter sends the first live video into Japan's national crisis centre.",
   "defense-recon-1644":
@@ -762,15 +752,16 @@ export const MILESTONE_HEADLINE: GlossTable = {
   "national-route-3-hikawa-close-1745":
     "National Route 3 closes at Hikawa where the quake left steps in the road.",
   "mlit-report-and-liaisons-1810":
-    "Japan's first report on roads and railways sends officers into Uki and Hikawa town"
-    + " halls.",
+    "Japan sends officer pairs to Uki and Hikawa after reviewing its first roads-and-railways"
+    + " report.",
   "national-escalation-1820":
     "Japan sets up its top national disaster headquarters and turns fire requests into"
     + " orders.",
   "prefecture-helicopter-1825":
     "Kumamoto sends its own disaster helicopter to look at the damage.",
   "road-closure-batch-1900":
-    "Thirteen closures of roads all enter the record at the same minute.",
+    "At 19:00, the record says travel was limited on thirteen roads. Not all of those limits"
+    + " began at that time.",
   "disaster-relief-act-1900":
     "Kumamoto applies Japan's Disaster Relief Act to twenty-one towns and cities.",
   "national-hq-meeting-1945":
@@ -793,16 +784,17 @@ export const MILESTONE_HEADLINE: GlossTable = {
   "yatsushiro-liaison-added-2150": "Yatsushiro also gets officers posted into its town hall.",
   "prime-minister-governor-call-2200":
     "Japan's Prime Minister and Kumamoto's Governor confirm they are working together.",
-  "shelter-day-one-aggregate": "502 shelters are recorded as opening on the first day.",
+  "shelter-day-one-aggregate":
+    "Records list 502 shelters opening on day one; timestamps are filing times, not exact"
+    + " opening times.",
   "patient-transfer-0207": "An army helicopter carries eight civilians to hospital overnight.",
-  "road-snapshot-0500":
-    "Data on road closures is frozen at 05:00, two hours before it is published.",
+  "road-snapshot-0500": "The 05:00 road snapshot is published two hours later.",
   "dmat-0600": "Thirty teams of disaster doctors are now working in Kumamoto.",
   "shelter-aggregate-0620": "Shelters reach their highest count: 506 sites holding 9,186 people.",
   "cabinet-report-1-0700":
     "The first national count shows three deaths and three rescues still under way.",
   "first-visible-rescue-assignments-0700":
-    "Three rescue sites are each paired with an outside fire crew.",
+    "Officials assign one outside fire crew to each of three rescue sites.",
   "government-survey-1150": "A national survey team reaches Kashima to see the damage.",
   "shelter-aggregate-1310": "Shelter numbers fall to 419 sites and 7,547 people.",
   "national-hq-meeting-2-1330":
@@ -824,12 +816,13 @@ export const MILESTONE_HEADLINE: GlossTable = {
   "fdma-fire-mobilization-1627":
     "Fire crews from other prefectures start moving before anything is announced in public.",
   "municipal-function-check-1820":
-    "Nobody can go inside one town hall, and another town has lost its phone and data links.",
+    "Staff cannot enter Misato Town Hall, and Kōsa Town has lost its phone and data links.",
   "water-supply-begins-0630":
-    "Japan's army starts handing out water at the city hall in Yatsushiro.",
-  "water-push-1200": "Twenty-two more water trucks are made ready to go out across the region.",
+    "Japan's army starts handing out water at Yatsushiro City Hall.",
+  "water-push-1200":
+    "Water utilities across Japan prepare 22 additional trucks for Kumamoto.",
   "routes-3-57-access-secured":
-    "Two main roads, National Routes 3 and 57, are confirmed passable again.",
+    "Officials confirm National Routes 3 and 57 are passable again.",
   "shelter-occupant-peak-0630":
     "The number of people sleeping in shelters reaches its highest recorded figure, 9,931.",
   "rescue-tally-1200": "Crews have now pulled 98 people out and carried 620 more to safety.",
@@ -851,8 +844,8 @@ export const MILESTONE_DETAIL: GlossTable = {
     + " aircraft.",
   "shelter-stamps-1627":
     "Thirteen of them are in Yatsushiro and the rest are other community buildings. The"
-    + " shared 16:27 stamp is a filing time, and nobody measured the exact minute each door"
-    + " opened.",
+    + " shared 16:27 stamp is a filing time. The records do not give the exact minute each"
+    + " shelter opened.",
   "national-offices-1628":
     "Japan's Prime Minister's office, its national police, its Cabinet Office and its digital"
     + " agency all opened response teams in the same minute.",
@@ -877,13 +870,13 @@ export const MILESTONE_DETAIL: GlossTable = {
     "Japan's national defense ministry starts flying over the damage. That is forty-six"
     + " minutes before Kumamoto formally asks for the army.",
   "kashima-shelter-stamp-1650":
-    "This stamp is a filing time. The record holds different kinds of clock, so nobody can"
-    + " say the mayor decided at 16:50.",
+    "The 16:50 stamp records when the entry was filed, not when the shelter opened. It cannot"
+    + " show when the mayor made the decision.",
   "local-headquarters-and-shelters-1700":
     "Misato, Nagomi, Ōzu and Mashiki open headquarters. Kumamoto City, Tamana and Misato open"
     + " their first shelters.",
   "saga-fire-request-1708":
-    "The crews come from Saga's prefectural fire brigade. An aftershock in the same minute"
+    "Saga's prefectural fire brigade sends the crews. An aftershock in the same minute"
     + " reaches level five lower across the south of the region.",
   "power-outage-peak-1709":
     "No later reading has more homes cut off. It comes forty-two minutes after the"
@@ -921,9 +914,10 @@ export const MILESTONE_DETAIL: GlossTable = {
     "The meeting agrees an eight-point plan of action and counts about 3,600 troops on the"
     + " ground.",
   "prefecture-hq-meeting-1-2000":
-    "Some of 149 units and 535 people go to the shopping centre at Kashima. Fire crews from"
-    + " Ōita and Miyazaki go to Yatsushiro. The army also moves toward Kashima. The record does"
-    + " not say how many went to each place.",
+    "Officials mobilized 149 teams with 535 responders in total. The record does not say how"
+    + " many went to Kashima shopping centre. Fire brigades from Ōita and Miyazaki went to"
+    + " Yatsushiro, and army forces moved toward Kashima. The record gives no headcount for each"
+    + " site.",
   "yatsushiro-dispatch-restored-2000":
     "The public record does not say when the system failed, or how crews worked while it was"
     + " down. The replay does not invent a length for the outage.",
@@ -940,8 +934,8 @@ export const MILESTONE_DETAIL: GlossTable = {
     "They agree that the national government and Kumamoto will keep working closely together.",
   "shelter-day-one-aggregate":
     "Of those, 19 are stamped in the 16:00 hour, 146 in the 17:00 hour, 200 in the 18:00"
-    + " hour, 96 in the 19:00 hour and 41 later. These are filing times, and nobody checked when"
-    + " each mayor actually decided.",
+    + " hour, 96 in the 19:00 hour and 41 later. These stamps record filing times, not when each"
+    + " mayor decided to open a shelter.",
   "prefecture-hq-meeting-2-0000":
     "The prefecture's second meeting notes that rescue is under way. It gives a first order"
     + " for the night: where water stays off, move people to shelters or further away.",
@@ -962,7 +956,8 @@ export const MILESTONE_DETAIL: GlossTable = {
   "prefecture-hq-meeting-3-0930":
     "This meeting is the first to count rescues site by site. Work goes on at Hikawa and"
     + " Yatsushiro.",
-  "government-survey-1150": "It then reaches the headquarters of Kumamoto Prefecture at 13:00.",
+  "government-survey-1150":
+    "A national survey team reaches Kumamoto Prefecture headquarters at 13:00.",
   "water-push-1200":
     "Five ministry trucks and eighteen from water companies are already promised to towns"
     + " that asked. The twenty-two new trucks are told to go without waiting to be asked.",
@@ -970,7 +965,7 @@ export const MILESTONE_DETAIL: GlossTable = {
     "At midday the figure is for the whole prefecture. The record does not say how many"
     + " people were at each shelter.",
   "national-hq-meeting-2-1330":
-    "The second national meeting also brings forward a regular payment of national money to"
+    "The second national meeting also advances a scheduled transfer of national funds to"
     + " local councils.",
   "air-conditioners-1520":
     "A military plane brings them to Kumamoto Airport. They go on to Uki and Misato,"
@@ -994,7 +989,7 @@ export const MILESTONE_DETAIL: GlossTable = {
     "Japan's national fire and disaster agency starts warning people through social media and"
     + " leaflets.",
   "on-site-hq-decision-1330":
-    "That national headquarters opens inside the offices of Kumamoto Prefecture 30 minutes"
+    "The new national field headquarters opens in Kumamoto Prefecture's offices 30 minutes"
     + " later.",
   "prefecture-hq-meeting-6-1600":
     "The last rescue at Yatsushiro needs heavy machines that cannot reach the spot. Japan's"
@@ -1009,8 +1004,8 @@ export const MILESTONE_DETAIL: GlossTable = {
     "Soldiers, police and firefighters work through the site during the day. The source gives"
     + " no clock, so noon is only where the replay puts it on screen.",
   "water-sites-41":
-    "On the same day, water support grows and the last search at Kashima runs. The public"
-    + " record never gives a full count of who worked where.",
+    "Water support expands to 41 sites while crews conduct the final Kashima search. The"
+    + " public record does not give a complete staffing breakdown.",
   "joint-headquarters-1600":
     "This is the first meeting for the national team and the eighth for the prefecture. From"
     + " now on they meet together.",
@@ -1020,11 +1015,11 @@ export const MILESTONE_DETAIL: GlossTable = {
   "disaster-relief-act-1900":
     "Kumamoto Prefecture applies that law to ten cities, ten towns and one village.",
   "rescue-tally-1200":
-    "Local fire headquarters and fire crews sent from other prefectures reach that total"
-    + " across the whole region since the earthquake.",
+    "Local fire departments and outside fire crews report 98 people rescued and 620 moved to"
+    + " safety across the region since the earthquake.",
   "water-supply-begins-0630":
-    "About ten soldiers with three water trailers start at the first named place, and seven"
-    + " town-run points follow through the day.",
+    "About ten soldiers begin distributing water at Yatsushiro City Hall with three trailers."
+    + " Later that day, the town opens seven more places where people can collect water.",
   "prefecture-hq-meeting-7-0930":
     "This is the last morning meeting Kumamoto Prefecture holds on its own, before the"
     + " national team joins it.",
@@ -1053,15 +1048,15 @@ export const SUMMARY_HISTORICAL: GlossTable = {
     "The real 16:27 request named one lead command team, three more command teams, three fire"
     + " brigades and one helicopter crew.",
   "slot-02-missing-telemetry-triage":
-    "No public record found so far names anything anyone did because those two readings were"
-    + " missing. The gap was still there when the 16:35 update went out.",
+    "The reviewed public records name no action taken specifically because Kashima and Kōsa"
+    + " lacked shaking readings. The 16:35 update still left both readings blank.",
   "slot-04-first-municipal-liaisons":
     "The real choice sent two officers into Uki and two into Hikawa. Yatsushiro got its own"
     + " pair later.",
   "slot-06-first-night-response-split":
-    "The minutes sent the arriving crews toward Aeon Mall, sent the Ōita and Miyazaki"
-    + " brigades to Yatsushiro, and recorded the army's 8th Division moving to Aeon. They never"
-    + " say how many people went to each place.",
+    "Minutes from the meeting say incoming crews went to Aeon Mall. Fire brigades from Ōita and"
+    + " Miyazaki went to Yatsushiro, and the army's 8th Division went to Aeon Mall. The minutes"
+    + " do not state how many responders went to each site.",
   "slot-09-push-water-planning":
     "The real record says a national group of water utilities made about 22 additional trucks"
     + " ready and sent them without waiting for towns to ask. It never says how many went to"
@@ -1074,11 +1069,13 @@ export const SUMMARY_HISTORICAL: GlossTable = {
  */
 export const REEL_CAPTION: GlossTable = {
   "exceptional":
-    "The desk that keeps an evidence table and corrects itself once passed every prewritten"
-    + " check in all 8 tries here.",
+    "AI using a source table and one message naming its mistake passed every prewritten check"
+    + " in all 8 tries here.",
   "perfect_repair":
-    "All 8 first answers missed a check here, and one message sent back put all 8 right.",
-  "persistent_problem": "Even the strongest way of working failed most of the 8 tries here.",
+    "All 8 first answers missed at least one rule. One exact checker message led all 8 revised"
+    + " answers to pass.",
+  "persistent_problem":
+    "Even after using sources and revising once, the AI failed most of its 8 tries here.",
 };
 
 /**
@@ -1118,17 +1115,17 @@ export const SUMMARY_LABEL: GlossTable = {
   // sentence on the real-decision surface reads "to the area the earthquake hit"; the trace
   // surface reads the same name out of `TARGET_LABEL`, where `placeWords` supplies the article
   // from the target's own recorded kind and the entry therefore carries none.
-  "Kumamoto incident area": "the area the earthquake hit in Kumamoto",
+  "Kumamoto incident area": "the area around Kumamoto that the earthquake hit",
   "MLIT municipal liaison pair 1": "First pair of roads-ministry officers sent into a town hall",
   "MLIT municipal liaison pair 2": "Second pair of roads-ministry officers sent into a town hall",
   "Miyazaki prefectural battalion": "A fire brigade sent from Miyazaki Prefecture",
   "Nippon Paper Yatsushiro mill": "Nippon Paper's mill in Yatsushiro",
   "Okayama City command support unit": "A command team sent from Okayama City",
   "Saga prefectural battalion": "A fire brigade sent from Saga Prefecture",
-  "The evidence desk": "The desk that keeps an evidence table",
+  "The evidence desk": "AI using a source table",
   "The evidence desk with one correction":
-    "The desk that keeps an evidence table and corrects itself once",
-  "The plain desk": "The desk that keeps plain written notes",
+    "AI using a source table, then revising after one error message",
+  "The plain desk": "AI using plain notes",
   "Unit fukuoka city air unit": "A helicopter crew sent from Fukuoka City",
   "Unit fukuoka city command": "A command team sent from Fukuoka City",
   "Unit fukuoka prefectural fire battalion": "A fire brigade sent from Fukuoka Prefecture",
@@ -1198,13 +1195,15 @@ export const QUOTED_JARGON: GlossTable = {
   "modeled-shelter-water-priority-action": "give the shelters first call on drinking water",
   "modeled-wide-area-evacuation-action": "move evacuated people out across a wider area",
   "unknown-aftershock-field-condition":
-    "nobody knows whether each active site was checked right after the aftershock",
-  "unknown-people-alive-by-time": "nobody knows who was still alive when the choice was made",
+    "the record does not show whether each active site was checked after the aftershock",
+  "unknown-people-alive-by-time":
+    "the available records do not show who was still alive when the choice was made",
   // The same two identifiers again, written by an answer that dropped the hyphens. Without these
   // entries "unknown people alive by time" reaches the screen as a phrase that does not parse as
   // English, while the hyphenated form two quotations later carries its plain words.
-  "unknown people alive by time": "nobody knows who was still alive when the choice was made",
-  "unknown field condition": "nobody knows what shape the site was in",
+  "unknown people alive by time":
+    "the available records do not show who was still alive when the choice was made",
+  "unknown field condition": "the record does not show the site's condition",
   "one token": "one of the three markers this moment hands out",
 
   // The alert nobody has published, and the readings that never came in.
@@ -1214,7 +1213,7 @@ export const QUOTED_JARGON: GlossTable = {
   "internal automatic trigger": "the alert the warning system raised by itself",
   "reconstructed automatic trigger":
     "the alert this exercise worked out the warning system must have raised",
-  "reconstructed assumption": "what this exercise worked out the desk must have assumed",
+  "reconstructed assumption": "an assumption created for this exercise",
   "observed real units": "the crews the record shows were really sent",
   "telemetry gaps": "readings that never arrived",
   "telemetry gap": "a reading that never arrived",
@@ -1295,7 +1294,7 @@ const MARK = "␟";
  * occurrence is parked as it is matched, so the fourth "GSDF" in a paragraph is not explained a
  * fourth time and no bracket is ever nested inside another.
  *
- * The same pass runs in `app/scripts/audit-plain-text.mjs`, which reads this table out of this
+ * The same source-repository copy audit reads this table out of this
  * file, so the audit judges the words a viewer reads and not the record's own.
  */
 export function plainQuoted(raw: string): string {

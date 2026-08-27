@@ -796,6 +796,9 @@
     line-height:1.45;display:block;margin-top:7px;font-style:normal}
   #ledgerLimit{margin:16px 0 0;font-size:13.5px;line-height:1.58;opacity:.92;max-width:74ch}
   #ledgerSource{margin:16px 0 0;font-size:10px;line-height:1.55;opacity:.42;max-width:78ch}
+  #ledgerTree{margin:16px 0 0;font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    padding:9px 15px 10px;min-height:38px;border-color:rgba(125,249,255,.46);color:#7df9ff}
+  #ledgerTree:hover{border-color:#7df9ff;background:rgba(125,249,255,.10)}
   #ledgerClose{position:fixed;right:64px;top:22px;font-size:9px;letter-spacing:.16em;
     text-transform:uppercase;padding:4px 10px 5px;z-index:10;display:none}
   #ledgerMore{position:fixed;left:0;right:11px;bottom:0;height:96px;display:none;z-index:10;
@@ -809,13 +812,249 @@
   #debriefLedger{margin-top:18px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;
     padding:6px 13px 7px}
 
+  /* ---- the decision tree: an instrument of this world, not a document over it.
+         Contracts: docs/rescueworld/DECISION-TREE-SPEC.md fixes what appears when, and
+         docs/rescueworld/DEATH-STRANDING-REFERENCE.md fixes how it looks. The world keeps
+         running behind it under a gradient scrim; one luminous line lies across the lower part
+         of the frame with eleven beacons standing on it; the moment that is open explains
+         itself in one black-glass panel on the right, and nothing below it is on screen until
+         somebody asks for it. Panels here are corners, a section break is a row of dots, and
+         only the selected path glows. */
+  #tree{inset:0;display:none;z-index:9;pointer-events:none;opacity:0;overflow:hidden;
+    transition:opacity .34s cubic-bezier(.16,1,.3,1)}
+  #tree.on{display:block;pointer-events:auto}
+  #tree.opening{opacity:1}
+  #tree.closing{opacity:0;transition:opacity .16s cubic-bezier(.65,0,.35,1)}
+  /* the world recedes rather than disappearing: a gradient over the lower half only, so the
+     ground, the marks on it and the run all stay readable above the instrument */
+  #tree .tscrim{position:absolute;left:0;right:0;bottom:0;height:52%;pointer-events:none;
+    background:linear-gradient(to top,rgba(0,0,0,.93) 0%,rgba(0,0,0,.80) 34%,
+      rgba(0,0,0,.40) 68%,rgba(0,0,0,0) 100%)}
+  /* the registration marks this register puts along a frame edge: they belong to nothing and
+     say the image is an instrument's output */
+  #tree .tregs{position:absolute;left:0;right:0;bottom:0;height:100%;pointer-events:none;
+    opacity:.30}
+  #tree .tregs i{position:absolute;background:rgba(233,237,242,.75)}
+
+  /* the orientation block, low and left, over the scrim rather than on a plate */
+  /* the orientation stands high on the left, under the masthead, so the branches that bloom up
+     from a beacon on the line always have clear air to rise into */
+  #tree .thead{position:absolute;left:2.4%;top:15.5%;max-width:min(46ch,34vw);
+    text-shadow:0 1px 5px rgba(0,0,0,.96)}
+  #tree .tkicker{font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+    color:#e9edf2;margin-bottom:9px}
+  #tree .tpurpose{margin:0;font-size:18px;line-height:1.5;color:#e9edf2}
+  #tree .tqual{margin:9px 0 0;font-size:18px;line-height:1.55;color:#c9d0d8;
+    border-left:1px solid rgba(125,249,255,.55);padding-left:11px}
+  #tree .tkey{display:flex;align-items:center;gap:7px;margin-top:10px}
+  #tree .tkeydot{width:8px;height:8px;border-radius:50%;flex:0 0 8px}
+  #tree .tkeydot.pass{background:#7df9ff;box-shadow:0 0 8px rgba(125,249,255,.85)}
+  #tree .tkeydot.fail{background:#ff9d5c;box-shadow:0 0 8px rgba(255,157,92,.75)}
+  #tree .tkeysay{font-size:16px;line-height:1.5;color:#b9c1cb}
+
+  /* the line itself: one luminous ribbon across the lower quarter, with a slow sweep along it
+     and a small terminal tick at each end, and eleven beacons standing on it */
+  #tree .tspinewrap{position:absolute;left:2.4%;right:2.4%;bottom:11%;height:17%;
+    min-height:104px;display:flex;flex-direction:column;justify-content:flex-end}
+  #tree .tribbon{position:relative;height:2px;margin-bottom:0;
+    background:linear-gradient(to right,rgba(125,249,255,.16),rgba(125,249,255,.72) 12%,
+      rgba(125,249,255,.72) 88%,rgba(125,249,255,.16));
+    box-shadow:0 0 14px rgba(125,249,255,.34),0 0 40px rgba(125,249,255,.14)}
+  #tree .tsweep{position:absolute;top:-1px;left:0;width:22%;height:4px;pointer-events:none;
+    background:linear-gradient(to right,rgba(125,249,255,0),rgba(160,220,255,.92),
+      rgba(125,249,255,0));
+    filter:blur(1px);animation:tsweep 9s cubic-bezier(.45,0,.55,1) infinite}
+  @keyframes tsweep{0%{transform:translateX(-24%);opacity:0}
+    12%{opacity:1}88%{opacity:1}100%{transform:translateX(354%);opacity:0}}
+  #tree .tcap{position:absolute;top:-5px;width:1px;height:12px;background:rgba(125,249,255,.80)}
+  #tree .tcap.left{left:0}
+  #tree .tcap.right{right:0}
+  #tree .tspine{display:flex;align-items:flex-start;margin-top:0}
+  #tree .tcell{position:relative;flex:1 1 0;min-width:0;display:flex;justify-content:center}
+
+  /* one beacon: the same species of mark the map already draws. Quiet until it is the one open,
+     and then it alone carries the light. */
+  #tree .tnode{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;
+    min-width:44px;max-width:100%;min-height:52px;padding:0 4px 4px;background:none;border:0;
+    cursor:pointer;
+    color:#e9edf2;text-shadow:0 1px 5px rgba(0,0,0,.96)}
+  #tree .tneye{display:block;width:11px;height:11px;margin-top:-6px;border-radius:50%;
+    border:1px solid rgba(233,237,242,.72);background:rgba(0,0,0,.86);
+    animation:tbreathe 4.4s ease-in-out infinite}
+  @keyframes tbreathe{0%,100%{opacity:.62;transform:scale(.92)}50%{opacity:1;transform:scale(1)}}
+  #tree .tnode.reg .tneye{border-color:#7df9ff;background:#7df9ff;
+    box-shadow:0 0 9px rgba(125,249,255,.60)}
+  #tree .tnclock{font-size:12px;line-height:1.5;letter-spacing:.06em;
+    font-variant-numeric:tabular-nums;color:#8b95a1;margin-top:4px;white-space:nowrap}
+  #tree .tnloc{font-size:14px;line-height:1.35;color:#b9c1cb;text-align:center;max-width:100%;
+    overflow-wrap:break-word}
+  #tree .tnode:hover .tnloc,#tree .tnode:focus .tnloc{color:#e9edf2}
+  /* Where the keyboard is, drawn differently from what is chosen: a dashed ring around the whole
+     beacon, against the white light and bracket the chosen beacon carries. The ring is on `:focus`
+     rather than `:focus-visible` because the screen puts the keyboard on the open beacon as it
+     opens, and a ring that only answers to a key press would leave that move invisible. */
+  #tree .tnode:focus{outline:1px dashed rgba(233,237,242,.85);outline-offset:2px}
+  /* selection is a light passing across the beacon's baseline, the way this register marks the
+     one thing that is chosen — never a filled bar and never a box */
+  #tree .tstreak{position:absolute;left:50%;top:-3px;width:190px;height:22px;margin-left:-95px;
+    pointer-events:none;opacity:0;
+    background:radial-gradient(closest-side,rgba(125,249,255,.42),rgba(125,249,255,0));
+    transition:opacity .30s cubic-bezier(.16,1,.3,1)}
+  #tree .tnode.sel .tstreak{opacity:1}
+  #tree .tnode.sel .tneye{border-color:#fff;background:#fff;
+    box-shadow:0 0 12px rgba(255,255,255,.85),0 0 26px rgba(125,249,255,.45);animation:none;
+    transform:scale(1.14)}
+  #tree .tnode.sel .tnloc{color:#fff}
+  #tree .tnode.sel .tnclock{color:#b9c1cb}
+
+  /* the three branches, which bloom from the one selected registered beacon and from no other.
+     They draw once and stop; nothing here ever grows into the next decision. */
+  /* Three cards side by side, the way the three wires under them already fan out, so a card can
+     lead with a whole sentence about what was sent without the stack growing up over the
+     orientation block. */
+  #tree .tbloom{position:absolute;bottom:calc(100% + 4px);width:min(792px,74vw);z-index:3;
+    display:flex;flex-direction:row;align-items:stretch;gap:6px;pointer-events:auto}
+  #tree .tbloomline{position:absolute;inset:0;width:100%;height:100%;overflow:visible;
+    pointer-events:none}
+  #tree .tbloomline path{fill:none;stroke:rgba(125,249,255,.62);stroke-width:1;
+    vector-effect:non-scaling-stroke;stroke-dasharray:220;stroke-dashoffset:220;
+    animation:tdraw .30s cubic-bezier(.16,1,.3,1) forwards}
+  @keyframes tdraw{to{stroke-dashoffset:0}}
+  #tree .tbranch{flex:1 1 0;min-width:0;text-align:left;padding:8px 10px 9px;
+    background:rgba(0,0,0,.90);border:1px solid rgba(255,255,255,.18);color:#e9edf2;
+    cursor:pointer;opacity:0;transform:translateY(5px);
+    animation:trise .30s cubic-bezier(.16,1,.3,1) forwards;
+    transition:border-color .18s ease,background .18s ease}
+  @keyframes trise{to{opacity:1;transform:none}}
+  #tree .tbranch:hover,#tree .tbranch:focus{border-color:rgba(255,255,255,.72);
+    background:rgba(0,0,0,.90)}
+  #tree .tbranch.sel{border-color:#fff;background:rgba(255,255,255,.10)}
+  /* One way of working, inside the panel's own evidence view and nowhere else. It leads with
+     what that answer asked for, then the check's verdict on it, and the way of working itself
+     is the quiet tag at the foot. */
+  #tree .tmethods{margin-top:12px}
+  #tree .tmethod{display:block;width:100%;text-align:left;padding:8px 10px 9px;margin-bottom:6px;
+    background:rgba(0,0,0,.62);border:1px solid rgba(255,255,255,.18);color:#e9edf2;
+    cursor:pointer;transition:border-color .18s ease,background .18s ease}
+  #tree .tmethod:hover,#tree .tmethod:focus{border-color:rgba(255,255,255,.72)}
+  #tree .tmethod.sel{border-color:#fff;background:rgba(255,255,255,.10)}
+  #tree .tbact{display:block;font-size:14px;line-height:1.35;color:#e9edf2}
+  /* where one branch card's piece of the action went, on the card's second line */
+  #tree .tbwhere{display:block;font-size:12px;line-height:1.35;margin-top:3px;color:#b9c1cb}
+  #tree .tbverdict{display:block;font-size:12px;line-height:1.35;margin-top:4px;color:#c9d0d8}
+  #tree .tbtag{display:block;font-size:12px;line-height:1.35;margin-top:6px;letter-spacing:.16em;
+    text-transform:uppercase;color:#8b95a1}
+  /* The count under the tag is a tally across eight separate tries. Seven of eight passing is
+     neither a pass nor a failure, so it is set in the same bone the rest of the chronology uses;
+     blue and orange stay on the eight cells, where each one carries one try's own verdict. */
+  #tree .tbcount{display:block;font-size:12px;line-height:1.35;margin-top:2px;color:#b9c1cb}
+
+  #tree .tspinenote{position:absolute;left:2.4%;bottom:3.2%;margin:0;font-size:12px;
+    line-height:1.5;color:#8b95a1;text-shadow:0 1px 5px rgba(0,0,0,.96)}
+
+  /* the one instrument panel: black glass, corners rather than a frame, on the right rail the
+     rest of this page already uses. It never runs wider than the contract allows. */
+  #tree .tsel{position:absolute;box-sizing:border-box;right:1.8%;top:7%;
+    width:min(420px,32vw);max-height:64vh;display:flex;flex-direction:column;
+    padding:15px 17px 15px;background:rgba(0,0,0,.66);
+    border:1px solid rgba(255,255,255,.13);backdrop-filter:blur(9px) saturate(.85);
+    -webkit-backdrop-filter:blur(9px) saturate(.85)}
+  #tree .tsel>.rvbody{flex:1 1 auto;min-height:0;overflow-y:auto;
+    scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.38) rgba(255,255,255,.06)}
+  #tree .tsel>.rvbody::-webkit-scrollbar{width:9px}
+  #tree .tsel>.rvbody::-webkit-scrollbar-track{background:rgba(255,255,255,.06)}
+  #tree .tsel>.rvbody::-webkit-scrollbar-thumb{background:rgba(255,255,255,.38)}
+  /* the cue that says the panel holds more than the frame shows */
+  #tree .tmore{display:none;margin-top:9px;padding-top:8px;font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:#8b95a1;border-top:1px solid rgba(255,255,255,.12)}
+  #tree .tsel.more .tmore{display:block}
+  #tree .tselhead{position:sticky;top:0;z-index:2;padding-bottom:7px;
+    background:linear-gradient(to bottom,rgba(0,0,0,.96) 76%,rgba(0,0,0,0))}
+  #tree .tlab{font-size:12px;letter-spacing:.20em;text-transform:uppercase;color:#8b95a1;
+    margin:0 0 6px}
+  #tree .twhen{font-size:12px;letter-spacing:.06em;color:#8b95a1;margin-bottom:9px}
+  #tree .tseltitle{margin:0;font-size:18px;line-height:1.5;font-weight:400;color:#e9edf2;
+    max-width:60ch}
+  #tree .tdots{height:1px;margin:13px 0;background-image:radial-gradient(circle,
+    rgba(233,237,242,.55) 0.5px,rgba(0,0,0,0) 0.5px);background-size:5px 1px;
+    background-repeat:repeat-x}
+  #tree .tsay{margin:0 0 9px;font-size:18px;line-height:1.55;color:#c9d0d8;max-width:60ch}
+  #tree .tsay.pass{color:#7df9ff}
+  #tree .tsay.fail{color:#ff9d5c}
+  #tree .tnote{margin:9px 0 0;font-size:16px;line-height:1.55;color:#a8b2bd;max-width:60ch}
+  /* the answer's own written words, set apart so nobody takes them for this page's summary */
+  #tree .tquote{margin:0 0 9px;font-size:16px;line-height:1.55;color:#e9edf2;max-width:60ch;
+    border-left:1px solid rgba(125,249,255,.55);padding-left:11px}
+  /* the units one branch card covers, listed under it when that card is opened */
+  #tree .tspot{margin-top:12px;padding-left:11px;border-left:1px solid rgba(255,255,255,.20)}
+  #tree .tdisclose,#tree .tgo{margin-top:12px;min-height:44px;font-size:12px;
+    letter-spacing:.16em;text-transform:uppercase;padding:9px 14px 10px;
+    background:rgba(0,0,0,.62);border:1px solid rgba(125,249,255,.46);color:#7df9ff}
+  #tree .tdisclose:hover,#tree .tgo:hover{border-color:#7df9ff;background:rgba(125,249,255,.10)}
+  #tree .tdivider{margin-top:12px;font-size:12px;letter-spacing:.20em;text-transform:uppercase;
+    color:#7df9ff}
+
+  /* the eight recorded tries of the one way of working that is open, in the same panel */
+  #tree .tseeds{margin-top:14px}
+  /* Eight cells at the 44-pixel target size do not fit across a panel the contract holds to
+     min(420px,32vw), so they stand four across and two down. Every cell keeps its recorded
+     number, and the block is read the same way in either shape. */
+  #tree .tseedrow{display:grid;grid-template-columns:repeat(4,44px);gap:6px;margin-bottom:9px;
+    justify-content:start}
+  #tree .tseed{box-sizing:border-box;width:44px;height:44px;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(0,0,0,.55);border:1px solid rgba(233,237,242,.34);cursor:pointer;
+    color:#e9edf2;font-size:12px;font-variant-numeric:tabular-nums;padding:0;
+    transition:transform .16s cubic-bezier(.16,1,.3,1),border-color .16s ease}
+  #tree .tseed.pass{border-color:#7df9ff;color:#7df9ff}
+  #tree .tseed.fail{border-color:#ff9d5c;color:#ff9d5c}
+  #tree .tseed.pass.agreed{background:rgba(125,249,255,.30);color:#001318}
+  #tree .tseed.fail.agreed{background:rgba(255,157,92,.34);color:#1a0c04}
+  #tree .tseed.sel{outline:1px solid #fff;outline-offset:2px;transform:translateY(-2px)}
+  #tree .tdrawer{position:relative;margin-top:12px;padding:12px 13px 13px;
+    background:rgba(0,0,0,.70);border:1px solid rgba(255,255,255,.13)}
+  #tree .rise{animation:trise .28s cubic-bezier(.16,1,.3,1) forwards;opacity:0;
+    transform:translateY(5px)}
+
+  /* the one control that closes the instrument, held at the 44-pixel primary target size */
+  #treeClose{position:fixed;right:calc(1.8% + 52px);top:3.4%;font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;box-sizing:border-box;padding:8px 16px 9px;min-height:44px;
+    min-width:44px;z-index:10;display:none;background:rgba(0,0,0,.78)}
+  /* the boundary this whole screen stands inside, kept at the foot of the frame at every size */
+  #treeFoot{position:fixed;left:34%;right:3%;bottom:3.2%;z-index:10;display:none;
+    pointer-events:none;text-align:right}
+  #treeFoot.on{display:block}
+  #treeFoot span{display:inline-block;max-width:78ch;font-size:14px;line-height:1.5;
+    color:#8b95a1;text-shadow:0 1px 5px rgba(0,0,0,.96)}
+
+  /* While the instrument is open the world's own working chrome steps out of the frame, so what
+     is on screen is the ground, the line and the one panel. The masthead and the meter stay. */
+  body.treeon #rail,body.treeon #feed,body.treeon #beats,body.treeon #narrate,
+  body.treeon #caption,body.treeon #mini,body.treeon #bar,body.treeon #telegraph,
+  body.treeon #actcard,body.treeon #quakestrip,body.treeon #deskToast,body.treeon #camctl,
+  body.treeon #watch,body.treeon #desk,body.treeon #outcome,body.treeon #chip,
+  body.treeon #tag,body.treeon #ghost,body.treeon #rwArtChip,
+  body.treeon #meter{opacity:0;pointer-events:none;
+    transition:opacity .30s cubic-bezier(.16,1,.3,1)}
+
+  @media (max-width:1280px){
+    #tree .tpurpose{font-size:16px}
+    #tree .tqual{font-size:16px}
+    #tree .tkeysay{font-size:14px}
+    #tree .tseltitle{font-size:16px}
+    #tree .tsay{font-size:16px}
+    #tree .tnote{font-size:15px}
+    /* A beacon's own label holds at the contract's 14-pixel floor at every width. It was set to
+       13 here and that is the one size on the screen that may not shrink, so the row loses a
+       little air instead. */
+    #tree .thead{top:19.5%;max-width:min(46ch,46vw)}
+    #tree .tsel{top:7%;max-height:70vh}
+  }
   /* ---- the debrief: what rises when the run ends. The world dims behind it, the outcome is
          stated as a sentence before it is stated as a number, and the one moment where the two
          desks chose differently is told as three beats you can fly back to. */
-  /* Layer 9, which is the layer the help, the ledger and the real-decision surface stand on.
-     At layer 8 it shared a layer with the run-preparation chip, and the chip, being added to the
-     page later, printed over the debrief's opening sentence. A surface that holds the whole
-     frame stands above every floating control. */
+  /* Layer 9, which is the layer the help, the ledger and the real-decision surface stand on. A
+     surface that holds the whole frame stands above every floating control. */
   #debrief{inset:0;z-index:9;background:rgba(0,0,0,.94);display:none;
     align-items:center;justify-content:center;pointer-events:auto;opacity:0;
     transition:opacity .45s cubic-bezier(.16,1,.3,1)}
@@ -1101,7 +1340,7 @@
 
 <div class="hud" id="mini">
   <canvas id="minicv" width="132" height="198"></canvas>
-  <div class="k" id="minilab">the camera holds the whole ground</div>
+  <div class="k" id="minilab">full-map view</div>
 </div>
 
 <div class="hud on" id="bar">
@@ -1118,8 +1357,8 @@
        straight away. It is only on screen while the run is holding. -->
   <div id="dwell"><b>&mdash;</b><u>]</u></div>
   <div id="steps">
-    <div><u>,</u><u>.</u>step one recorded event</div>
-    <div><u>[</u><u>]</u>skip to the next stretch of the story</div>
+    <div><u>,</u><u>.</u>previous or next recorded event</div>
+    <div><u>[</u><u>]</u>move to the previous or next story section</div>
   </div>
   <div id="spacer"></div>
   <!-- the full-incident context layers: three switches for real open data laid over the same
@@ -1132,9 +1371,9 @@
     <button id="layerPop" type="button" aria-pressed="false"
       title="How many people lived in each 500 metre square in 2020, counted by Japan's national statistics office. These are 2020 figures. They do not say how many people were here in 2026, or who was here during the earthquake."><b>who lives here</b><i>counted in 2020</i></button>
     <button id="layerShelter" type="button" aria-pressed="false"
-      title="Japan's national mapping agency lists 92 places at 56 sites that towns had named as shelters before the earthquake. Being named says nothing about whether a place opened, was safe, had staff or supplies, could be reached, or had room after the earthquake."><b>official shelters</b><i>nobody says if they opened</i></button>
+      title="The official list names shelters but does not report whether each one opened, remained safe, had staff or supplies, or stayed reachable."><b>official shelters</b><i>records do not say if they opened</i></button>
     <button id="layerOccupancy" type="button" aria-pressed="false"
-      title="Japan's Cabinet Office published two totals for the whole prefecture. At the worst point 9,931 people were sleeping in shelters, and at the worst point 506 shelters stood open. This map spreads those totals over its own shelters, and gives more to the ones with more people living nearby. No agency ever published how many people slept in any single shelter, so no ring here is a measured number."><b>how full shelters got</b><i>worked out, not measured</i></button>
+      title="Japan's Cabinet Office published only prefecture-wide totals: 9,931 people at one peak and 506 open shelters at a different peak. This display estimates each ring from how many people lived nearby in 2020. No ring is an observed shelter count."><b>modeled shelter use</b><i>each ring is modeled, not observed</i></button>
   </div>
   <input id="scrub" type="range" min="0" max="520" step="1" value="0" />
   <div class="num" id="meter">&mdash;</div>
@@ -1155,22 +1394,15 @@
     <p id="helpDesks">—</p>
     <p id="helpLichen">—</p>
     <h3>What is real and what is invented</h3>
-    <p>The ground is real. Japan's national mapping agency publishes the height of the land in
-      tiles, and this page reads them by the rule that agency states. The same agency read
-      aerial photographs flown between 29 July and 3 August 2026. It marked where the land had
-      slipped, and those marks are drawn here. Japan's ministry for roads and railways published
-      a list of which roads could still be driven at noon on 29 July 2026. Every closure on this
-      map comes from that list. The shelters are places towns had named as shelters before the
-      earthquake. Being named says nothing about whether any of them opened, was safe, had
-      staff, or could be reached afterwards. The buildings come from Japan's open model of Uki
-      City. They stand where that model says they stand, as they were before the
-      earthquake.</p>
-    <p>Everything about people is invented. Every report, every count of people waiting, every
-      crew sent out and every outcome was made up for this exercise. The damage drawn on the
-      ground is invented too, and it shows what an earthquake like this one does. Nothing on this page
-      claims to show what really happened to any real building. No real building here is ever
-      drawn broken, and none is ever marked as a place where people were rescued.
-      <span id="helpPlaces">—</span></p>
+    <p>The earthquake, terrain, mapped landslides, road closures, shelter designations,
+      aftershocks, and public-response milestones come from public records. The shelter list
+      records official designations only; it does not show whether each shelter opened or
+      remained usable. The buildings show pre-earthquake context from Japan's open 3D city
+      model.</p>
+    <p>The AI rescue proposals were generated later for this exercise and were never carried
+      out. The glowing damage effects are also simulated. This viewer does not model what would
+      have happened after an AI proposal, and it does not claim that any proposal saved people
+      or improved the real response. <span id="helpPlaces">—</span></p>
     <p id="helpScale">—</p>
     <h3>How it is driven</h3>
     <!-- Both of these read their counts out of the log that is actually loaded. This page can
@@ -1205,8 +1437,8 @@
           <div id="traceStep">&mdash;</div>
           <div id="traceFrame">&mdash;</div>
           <h3 id="traceHeading">&mdash;</h3>
-          <div id="traceBadges"></div>
           <div id="traceLines"></div>
+          <div id="traceBadges"></div>
         </article>
       </div>
       <div id="traceMore"><span id="traceMoreText">&mdash;</span></div>
@@ -1370,11 +1602,14 @@
            have. It stands only on such a record and is hidden on the run the file was derived
            from. -->
       <p id="ledgerNoHighlights" style="display:none">&mdash;</p>
-      <p id="ledgerDefinition">&mdash;</p>
+      <!-- the one visible control that reaches the decision tree, which draws these same eleven
+           moments as one picture instead of a list -->
+      <button id="ledgerTree" type="button">&mdash;</button>
       <div class="ldhead" id="ledgerMarkedHead">&mdash;</div>
       <div id="ledgerMarked"></div>
       <div class="ldhead" id="ledgerRowsHead">&mdash;</div>
       <div id="ledgerRows"></div>
+      <p id="ledgerDefinition">&mdash;</p>
       <div class="ldhead" id="ledgerCountHead">&mdash;</div>
       <div class="tally" id="ledgerTally"></div>
       <p id="ledgerLimit">&mdash;</p>
@@ -1383,6 +1618,31 @@
   </div>
 </div>
 <div id="ledgerMore"><span id="ledgerMoreText">&mdash;</span></div>
+
+<!-- the decision tree: the whole record on one screen, opened with the b key. The line across
+     the middle is the seventy-two hours; the eleven marks on it are the moments when somebody
+     had to decide something; the short branches at five of them are the recorded answers three
+     ways of working produced afterwards. Everything inside is written by src/rescueworld/tree.ts
+     out of the same recorded file the ledger and the walk-through read. -->
+<button class="hud" id="treeClose" type="button" style="display:none">close &mdash; esc</button>
+<div class="hud" id="tree">
+  <div class="tscrim"></div>
+  <!-- the registration marks this register puts along a frame edge: they belong to nothing, and
+       they are what says the picture is an instrument's output rather than a document -->
+  <div class="tregs">
+    <i style="left:6%;bottom:0;width:1px;height:9px"></i>
+    <i style="left:17%;bottom:0;width:1px;height:5px"></i>
+    <i style="left:41%;bottom:0;width:1px;height:9px"></i>
+    <i style="left:63%;bottom:0;width:1px;height:5px"></i>
+    <i style="left:88%;bottom:0;width:1px;height:9px"></i>
+    <i style="left:0;bottom:12%;width:9px;height:1px"></i>
+    <i style="left:0;bottom:31%;width:5px;height:1px"></i>
+    <i style="right:0;bottom:22%;width:9px;height:1px"></i>
+    <i style="right:0;bottom:47%;width:5px;height:1px"></i>
+  </div>
+  <div id="treeBody"></div>
+</div>
+<div id="treeFoot"><span id="treeFootText">&mdash;</span></div>
 
 <!-- what is about to be decided, drawn over the ground before the deadline passes. The hollow
      hatched marks are proposals a recorded answer made; a team that actually moved is drawn

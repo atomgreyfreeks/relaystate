@@ -105,8 +105,6 @@
     .control{display:grid;grid-template-columns:94px 1fr;gap:16px;align-items:start;padding:13px 0;border-top:1px solid #dedbd3}
     .control p{margin:0;font-size:15px;line-height:1.42;color:#494843}
     .control .keys{display:flex;gap:5px;flex-wrap:wrap}
-    .run-note{grid-column:1/-1;background:#dfe2ff;border:1px solid #9aa2ff;padding:22px 26px}
-    .run-note h3{margin:0 0 8px;font-size:20px}.run-note p{margin:0;max-width:900px;font-size:15px}
     .present{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--ink);border:1px solid var(--ink)}
     .present article{background:var(--white);padding:22px 18px;min-height:230px}
     .time{font:800 12px/1 var(--mono);color:var(--blue)}
@@ -162,8 +160,8 @@
       </div>
       <div class="facts" aria-label="The scale of Rescue World">
         <div class="fact"><b>72 hours</b><span>Three days and nights after the earthquake.</span></div>
-        <div class="fact"><b>414</b><span>Events in the sealed viewer record.</span></div>
-        <div class="fact"><b>11</b><span>Moments when a named person had to decide something.</span></div>
+        <div class="fact"><b>414</b><span>Events in the sealed 72-hour viewer record.</span></div>
+        <div class="fact"><b>11</b><span>Urgent earthquake-response decisions.</span></div>
         <div class="fact"><b>5 × 8</b><span>Five scored decisions, each answered eight times per method.</span></div>
       </div>
     </div>
@@ -180,10 +178,10 @@
           <article><span class="step">1</span><h3>Open the viewer.</h3><p>Use the blue button above. The opening card explains the earthquake and separates real records from simulated choices.</p></article>
           <article><span class="step">2</span><h3>Press Begin.</h3><p>The run moves through four acts. It pauses at important moments so you have time to read.</p></article>
           <article><span class="step">3</span><h3>Read the right side.</h3><p>The upper panel tells you what is happening now. The decision rail below tells you what somebody had to decide.</p></article>
-          <article><span class="step">4</span><h3>Open one decision.</h3><p>Click “What the check found” for the exact rule. Click “Open the agent trace” to walk through the decision step by step.</p></article>
-          <article><span class="step">5</span><h3>Open the result.</h3><p>Press <kbd>R</kbd> for the full experiment story. Press <kbd>L</kbd> for a list of all eleven decision moments.</p></article>
+          <article><span class="step">4</span><h3>Open one decision.</h3><p>Read the AI's proposed action first: what help, how much, where, and why. Open the rule result only if you want the test details.</p></article>
+          <article><span class="step">5</span><h3>Compare the decisions.</h3><p>Press <kbd>B</kbd> for the visual decision map, <kbd>L</kbd> for the list, or <kbd>R</kbd> for the scored experiment story.</p></article>
         </div>
-        <p class="memory"><strong>If you remember one route:</strong> Begin → read the right side → open one reason → press <kbd>T</kbd> for its trace → press <kbd>R</kbd> for the result → press <kbd>L</kbd> for the full ledger.</p>
+        <p class="memory"><strong>If you remember one route:</strong> Begin → read the AI action on the right → press <kbd>T</kbd> for its story → press <kbd>B</kbd> for all eleven decisions → press <kbd>R</kbd> for the test result.</p>
       </div>
     </section>
 
@@ -205,8 +203,8 @@
           <figcaption class="interface-key">
             <div class="key-card"><b>1. The current story</b><p>This large panel tells you the event that just entered the record and what the current act is about.</p></div>
             <div class="key-card"><b>2. The 72-hour ribbon</b><p>Each mark is a recorded moment. Bright groups show busy periods. Shaded stretches show quiet clock time crossed quickly.</p></div>
-            <div class="key-card"><b>3. The living map</b><p>Events appear where they happened. Hollow boxes show places under consideration. Filled boxes show the final simulated choice.</p></div>
-            <div class="key-card"><b>4. The decision rail</b><p>Each row says who decided, what the simulated answer chose, how eight tries agreed, and whether the shown answer passed.</p></div>
+            <div class="key-card"><b>3. The living map</b><p>Events appear where they happened. Hollow boxes show destinations the AI considered. Filled boxes show its later proposal; neither marks an action responders took.</p></div>
+            <div class="key-card"><b>4. The decision rail</b><p>Each row leads with the exact AI rescue proposal and the public response. Test scores stay behind the action.</p></div>
             <div class="key-card"><b>5. The transport bar</b><p>Pause, change speed, move one event or one act, and turn the camera layers on or off from the bottom edge.</p></div>
           </figcaption>
         </figure>
@@ -217,16 +215,16 @@
       <div class="wrap">
         <div class="section-head">
           <div class="section-no">03 / Read one decision</div>
-          <div><h2>The water decision shows the whole technique in one example.</h2><p class="intro">On day two, an agent had to plan extra water support before every town had finished reporting its need.</p></div>
+          <div><h2>The water decision shows the whole technique in one example.</h2><p class="intro">On day two, three AI approaches independently planned extra water support before every town had reported its need.</p></div>
         </div>
         <div class="decision-grid">
           <article class="story-box">
-            <h3>The answer moved from 22, to 24, and back to a valid 22.</h3>
+            <h3>Three approaches exposed three different problems in the water plan.</h3>
             <ol>
               <li><div><b>Plain written notes proposed 22 trucks.</b><span>The quantity fit. The answer still failed because some place names were not allowed and required unknowns were missing.</span></div></li>
               <li><div><b>The evidence table made every claim traceable.</b><span>The answer named its sources and unknowns. It then proposed 24 trucks even though only 22 were available.</span></div></li>
               <li><div><b>Ordinary code named the exact mistake.</b><span>The checker contained no AI model. It reported that the answer asked for two trucks more than the exercise allowed.</span></div></li>
-              <li><div><b>One correction produced a valid plan for 22 trucks.</b><span>The agent used the same reports. It received no new facts and changed only the part that broke the rule.</span></div></li>
+              <li><div><b>One correction produced a 22-truck proposal that passed every written rule.</b><span>The agent used the same reports. It received no new facts and changed only the part that broke the rule.</span></div></li>
             </ol>
           </article>
           <aside class="legend">
@@ -236,7 +234,7 @@
             <div class="legend-row"><i class="cell outline"></i><div><b>Outlined blue</b><span>The try made a different choice and passed every check.</span></div></div>
             <div class="legend-row"><i class="cell bad"></i><div><b>Filled orange</b><span>The try made the shown choice and broke at least one check.</span></div></div>
             <div class="legend-row"><i class="cell bad outline"></i><div><b>Outlined orange</b><span>The try made a different choice and broke at least one check.</span></div></div>
-            <div class="legend-row"><i class="cell dim"></i><div><b>Dim outline</b><span>This moment is descriptive. It carries no count in the registered result.</span></div></div>
+            <div class="legend-row"><i class="cell dim"></i><div><b>Dim outline</b><span>This decision provides context but was not one of the five scored decisions.</span></div></div>
           </aside>
         </div>
       </div>
@@ -246,7 +244,7 @@
       <div class="wrap">
         <div class="section-head">
           <div class="section-no">04 / Understand the result</div>
-          <div><h2>The experiment measured rule-following and traceability.</h2><p class="intro">One try was one software agent answering one scored decision once. Each method answered five decisions eight times, for 40 tries per method.</p></div>
+          <div><h2>The experiment measured rule-following and traceability.</h2><p class="intro">One try was one AI answering one decision once. Each approach answered five decisions eight times, for 40 tries. Two decisions used clearly labeled exercise assumptions because public records did not reveal everything the real offices knew.</p></div>
         </div>
         <div class="score-grid">
           <article class="score"><strong>0/40</strong><h3>Plain written notes</h3><p>No answer passed every check. Most plans fit the resource limit. They failed the written requirements for sources, allowed identifiers, or named unknowns.</p></article>
@@ -255,7 +253,7 @@
         </div>
         <div class="checks">
           <article><h3>There are no mystery points.</h3><p>A pass required one answer to clear every check written before the run:</p><ul><li>Use only allowed units and places.</li><li>Stay inside the resource limit.</li><li>Use information available by the deadline.</li><li>Name required unknowns.</li><li>Use nothing learned later.</li></ul></article>
-          <article class="warning"><h3>The result has a firm boundary.</h3><p>The checks do not grade the real responders. They do not prove that an agent showed better judgment or would have reached more people. The next experiment must add a recorded outcome model and measure reach.</p></article>
+          <article class="warning"><h3>The planned result was mixed.</h3><p>The evidence-table claim failed: resource-limit passes fell from 37 of 40 to 33 of 40, a drop of 10 percentage points when the prewritten limit allowed 5. The one-error-message claim passed all five of its tests. These rules grade only AI proposals; they do not show whether a proposal would improve the real response. Measuring effects would require a separate, expert-validated outcome simulation; this build does not contain one.</p></article>
         </div>
       </div>
     </section>
@@ -264,15 +262,16 @@
       <div class="wrap">
         <div class="section-head">
           <div class="section-no">05 / Use the controls</div>
-          <div><h2>Seven keys handle almost every presentation.</h2><p class="intro">Press <kbd>Esc</kbd> whenever you want to close the surface on top and return to the world.</p></div>
+          <div><h2>Eight keys handle almost every presentation.</h2><p class="intro">Press <kbd>Esc</kbd> whenever you want to close the surface on top and return to the world.</p></div>
         </div>
         <div class="control-grid">
           <article class="control-group">
             <h3>The presenter’s keys</h3>
             <div class="control"><div class="keys"><kbd>Space</kbd></div><p>Play or pause the 72-hour record.</p></div>
             <div class="control"><div class="keys"><kbd>R</kbd></div><p>Open the full experiment story, including the 22 → 24 → 22 water example and the exact 0/40, 17/40 and 34/40 result.</p></div>
-            <div class="control"><div class="keys"><kbd>T</kbd></div><p>Open the six-card agent trace for the decision the run has reached. Use the arrow keys to move through it.</p></div>
-            <div class="control"><div class="keys"><kbd>L</kbd></div><p>Open the decision ledger. It lists all eleven decisions and separates the five scored moments from the six descriptive moments.</p></div>
+            <div class="control"><div class="keys"><kbd>T</kbd></div><p>Open the six-step story for the current AI proposal. It begins with the action, then shows its information, public context, alternative proposals, and correction.</p></div>
+            <div class="control"><div class="keys"><kbd>B</kbd></div><p>Open the visual map of all eleven rescue decisions. Choose a beacon to inspect its AI action.</p></div>
+            <div class="control"><div class="keys"><kbd>L</kbd></div><p>Open all eleven decisions as a list. Five include scored AI runs; six provide unscored context.</p></div>
             <div class="control"><div class="keys"><kbd>D</kbd></div><p>Open the closing debrief again after the run.</p></div>
             <div class="control"><div class="keys"><kbd>?</kbd></div><p>Open the complete help page inside Rescue World.</p></div>
             <div class="control"><div class="keys"><kbd>Esc</kbd></div><p>Close the top surface, an open explanation, or a selection.</p></div>
@@ -300,8 +299,8 @@
         <div class="present">
           <article><span class="time">0:00</span><h3>Name the human problem.</h3><p>Read the opening card. People had to send help while reports were incomplete and still changing.</p></article>
           <article><span class="time">0:45</span><h3>Begin the replay.</h3><p>Point out the real ground, the 72-hour ribbon and the right-side story panel.</p></article>
-          <article><span class="time">1:45</span><h3>Pause at a decision.</h3><p>Read who had to decide, what the simulated agent chose and the eight agreement cells.</p></article>
-          <article><span class="time">2:45</span><h3>Open the evidence.</h3><p>Click the grade for the exact rule. Open the trace and walk from the public record to the corrected choice.</p></article>
+          <article><span class="time">1:45</span><h3>Pause at a decision.</h3><p>Read the situation and the AI proposal: what help, how much, where, and why.</p></article>
+          <article><span class="time">2:45</span><h3>Open the evidence.</h3><p>Open the trace. It starts with the final recorded AI proposal, then reveals its reports, unknowns, public context, and rule feedback.</p></article>
           <article><span class="time">4:00</span><h3>Press R for the result.</h3><p>Tell the water example before reading 0/40, 17/40 and 34/40.</p></article>
           <article><span class="time">5:30</span><h3>End on the boundary.</h3><p>The test measured traceability and rule-following. The next test must measure who the plan would reach.</p></article>
         </div>
@@ -317,7 +316,7 @@
         </div>
         <div class="honesty-grid">
           <article class="honesty-card"><h3>These parts come from real public records.</h3><ul><li>The terrain and mapped landslide areas.</li><li>The earthquake and recorded aftershocks.</li><li>The road restrictions and designated shelters.</li><li>The official agency updates and real decision deadlines.</li></ul></article>
-          <article class="honesty-card sim"><h3>These parts are simulated exercise data.</h3><ul><li>Every AI-generated choice and dispatch.</li><li>Every count of agreement across agent tries.</li><li>The damage drawn across the ground.</li><li>The grades produced by the prewritten exercise checks.</li></ul></article>
+          <article class="honesty-card sim"><h3>These parts are simulated exercise data.</h3><ul><li>Every AI-generated rescue proposal.</li><li>Every count of agreement across AI runs.</li><li>The glowing damage effects across the ground.</li><li>The grades produced by the exercise rules.</li></ul></article>
         </div>
       </div>
     </section>
@@ -330,11 +329,11 @@
         </div>
         <div class="faq">
           <details><summary>A panel is covering the world.</summary><p>Press <kbd>Esc</kbd>. It closes the top surface and returns you to the replay.</p></details>
-          <details><summary>A keyboard shortcut does nothing.</summary><p>Close the art-direction panel with <kbd>Esc</kbd>. Text fields inside that tool keep the keys you type.</p></details>
+          <details><summary>A keyboard shortcut does nothing.</summary><p>Close the picture-controls panel with <kbd>Esc</kbd>. Text fields inside that tool keep the keys you type.</p></details>
           <details><summary>The camera is somewhere confusing.</summary><p>Press <kbd>H</kbd> for the whole-ground home view. Press <kbd>P</kbd> if you want the automatic camera tour.</p></details>
           <details><summary>You want the result immediately.</summary><p>Press <kbd>R</kbd>. The result page gives the complete scenario, the concrete water example, every count, the limitation and the next experiment.</p></details>
           <details><summary>You want to inspect every decision.</summary><p>Press <kbd>L</kbd>. Click any row’s trace control to open its evidence walk-through without moving the replay clock.</p></details>
-          <details><summary>Another computer cannot open the page.</summary><p>Both computers must be on the same local network, and the host computer must keep the viewer server running. Use the host computer's LAN address with port <code>5184</code>, as explained in <code>README.md</code>.</p></details>
+          <details><summary>Another computer cannot open the page.</summary><p>Both computers must be on the same local network, and the host computer must keep the viewer server running. Use the host computer's LAN address with port 5184, as explained in README.md.</p></details>
         </div>
       </div>
     </section>

@@ -194,19 +194,19 @@
     <div class="rv"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
     <div class="body">
       <div class="eyebrow"><span class="num">01</span><span>What this is</span><span class="of">Finishing Rescue World before we submit</span></div>
-      <h1>We rebuilt a real earthquake response, and software agents worked through eleven moments of decision.</h1>
+      <h1>We rebuilt three days of a real earthquake response, then asked AI agents what help they would send.</h1>
       <div class="g2u">
         <div>
-          <p>On 28 July 2026 a magnitude 7.1 earthquake struck Kumamoto Prefecture in southern Japan. Rescue World replays 414 events in a sealed viewer record covering the seventy-two hours that followed, over the real ground where they happened.</p>
-          <p>Eleven of those events are points where somebody had to decide something. At each one, software agents answered the same question the real responders faced, holding only the information that was public by that reconstructed deadline. Two scored moments also used explicit exercise assumptions where the public record did not reveal what a real desk knew.</p>
-          <p>Rules written before the runs graded every answer by machine. The choice the real responders actually made is always shown first, and no screen ranks an agent against a person.</p>
-          <p class="dim">One earthquake is replayed over the real ground of Kumamoto. A fleet of artificial-intelligence agents reads the reports, decides, and sends crews out. The evidence table those agents keep is grown the way a lichen grows. Claims sit on one side and sources on the other, so that neither one can spoil the other.</p>
+          <p>On 28 July 2026 a magnitude 7.1 earthquake struck Kumamoto Prefecture in southern Japan. Rescue World replays 414 saved events from the seventy-two hours that followed, over the real ground where they happened.</p>
+          <p>The viewer reconstructs eleven urgent decision moments from public records. AI agents later proposed what help to send using information public by each deadline. Five decisions formed the planned test; two of those also used clearly labeled exercise assumptions. Six more decisions provide unscored context.</p>
+          <p>Fixed code graded every AI proposal against rules written before the test. The viewer always labels the public response and the later AI proposal separately. No AI proposal shown here moved a real crew.</p>
+          <p class="dim">The orchestration idea is simple: keep every claim beside the report it came from, preserve what remains unknown, and return one exact error when a proposal breaks a rule. Rescue World makes that process visible inside a concrete disaster-response story.</p>
         </div>
         <div class="measured">
           <span class="tag m">Measured</span>
           <h3>What a judge should leave believing</h3>
-          <p style="font-size:16.5px">Two small habits in how a decision is handed to the next person changed the measured quality of the work. This build shows exactly how much they changed it, and says plainly what was never measured at all.</p>
-          <p class="src">Recording: 414 events, 72 hours and 11 decision moments — docs/rescueworld/STORY-TEMPLATE.md. Incident sources and transformations — product/disaster-replay/DATA-SOURCES.md.</p>
+          <p style="font-size:16.5px">Two small changes to agent orchestration made proposals far more likely to follow their sources and rules. This build shows the gain, the failure beside it, and exactly what the test never measured.</p>
+          <p class="src">Recording and incident facts: docs/rescueworld/STORY-TEMPLATE.md and product/disaster-replay/DATA-SOURCES.md.</p>
         </div>
       </div>
     </div>
@@ -219,8 +219,8 @@
     <div class="rv"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
     <div class="body">
       <div class="eyebrow"><span class="num">02</span><span>The frame</span><span class="of">Model, move, mesh</span></div>
-      <h2>Three plain questions hold everything we built and everything we measured.</h2>
-      <p class="lede">Randy asked an artificial-intelligence system that knows nothing about this build to think about disaster-response behavior from scratch. Its write-up is outside thinking, and we credit it as such. It arrived at three questions, and at three foundations we had already built.</p>
+      <h2>Three plain questions show what the build proves—and what it still cannot answer.</h2>
+      <p class="lede">A useful disaster system must keep its picture of events honest, turn that picture into a feasible action, and carry the evidence cleanly between agents.</p>
       <div class="g3" style="margin-top:26px">
         <div class="plainbox">
           <h3 style="color:var(--cyan)">Model</h3>
@@ -239,14 +239,15 @@
         </div>
       </div>
       <div class="measured" style="margin-top:24px">
-        <span class="tag m">Already built</span>
-        <h3>The outside write-up asked for three things this build already does.</h3>
+        <span class="tag m">What exists now</span>
+        <h3>Rescue World tests a narrow part of each question.</h3>
         <ul class="wide">
-          <li>It asks for two timelines, so that what was really happening stays separate from what each person believed at that moment. Our deadline rule does this: a decision is graded only on the information public at its own deadline.</li>
-          <li>It asks for decision episodes that explain why a timeline went a different way. Our trace does this in six steps: the real recorded choice first, what was known, what each way of working proposed, what the check caught, the correction, and the final action.</li>
-          <li>It asks that a stand-in decision-maker be given the same imperfect information the real one had. Our recorded answers do this: the agents answered each moment eight separate times, holding only the reports that were public when that moment's deadline passed.</li>
+          <li><b>Model:</b> each decision receives only information public by its deadline, plus any exercise assumption shown on screen.</li>
+          <li><b>Move:</b> each AI rescue proposal is checked against fixed limits on units, destinations, deadlines, sources and unknowns.</li>
+          <li><b>Mesh:</b> an evidence table keeps every claim beside its source when work passes between steps.</li>
+          <li><b>Not built yet:</b> the viewer does not reconstruct anyone's private beliefs or simulate what would happen after an AI proposal.</li>
         </ul>
-        <p class="src">Source: an external clarification supplied by the project lead, not included in this partner package. Claims about this build can be checked in docs/rescueworld/STORY-TEMPLATE.md.</p>
+        <p class="src">Sources: docs/rescueworld/ACTION-FIRST-PRESENTATION-CONTRACT.md and docs/rescueworld/STORY-TEMPLATE.md.</p>
       </div>
     </div>
   </div>
@@ -262,7 +263,7 @@
       <p class="lede" style="margin-bottom:16px">Forty means five decision moments, each answered eight separate times, by one model working three different ways. Code did the grading, by rules written down before any run started.</p>
       <div class="g2">
         <div class="measured">
-          <span class="tag m">Measured</span>
+          <span class="tag p">Registered claim: failed — four of five tests passed</span>
           <h3>Habit one: bind every claim to its source before you hand it on.</h3>
           <p style="font-size:15px">Every claim travels with the source it came from and with the things still unknown. This answers the mesh question: a group stays coherent only when each handoff carries its own sources.</p>
           <div class="move">
@@ -270,17 +271,17 @@
             <span class="arrow">&rarr;</span>
             <span class="fig now">17</span><span class="unit">of 40</span>
           </div>
-          <p class="meaning">The figures count answers that passed every prewritten check, out of forty tries. The one change was the desk keeping that evidence table.</p>
+          <p class="meaning">The figures count AI proposals that passed every rule, out of forty tries. The only change was keeping each claim beside its source and naming what remained unknown.</p>
           <ul style="margin-top:14px">
             <li>Answers that broke at least one rule about sources, unknowns or allowed choices fell from 40 of 40 to 19 of 40.</li>
             <li>Of the unknowns each moment required an answer to name out loud, plain notes named none. The evidence table named 97 in every 100.</li>
           </ul>
-          <p class="src">Source: the frozen results at experiment/PRODUCTION-RESULTS.md, in the table of registered outcomes.</p>
+          <p class="src">Source: experiment/PRODUCTION-RESULTS.md, planned-test results.</p>
         </div>
         <div class="measured">
-          <span class="tag m">Measured</span>
+          <span class="tag m">Registered claim: passed — five of five tests passed</span>
           <h3>Habit two: name the mistake, fix it once, then check again.</h3>
-          <p style="font-size:15px">One exact mistake goes back to the desk, one bounded correction comes forward, and the answer is checked again. This answers the model question, because it is how a wrong reading of reality gets repaired.</p>
+          <p style="font-size:15px">Fixed code returns one exact rule error. The same AI revises once using the same reports, then the code checks the proposal again.</p>
           <div class="move">
             <span class="fig was">17</span><span class="unit">of 40</span>
             <span class="arrow">&rarr;</span>
@@ -291,10 +292,10 @@
             <li>It repaired 17 of the 23 answers that came back broken, and it broke none of the answers that already worked.</li>
             <li>It used at most one extra message per answer, and the length of the work grew 1.435 times against a ceiling of 1.5 set before the runs.</li>
           </ul>
-          <p class="src">Source: the frozen results at experiment/PRODUCTION-RESULTS.md, in the table for the one-correction claim.</p>
+          <p class="src">Source: experiment/PRODUCTION-RESULTS.md, one-error-message result.</p>
         </div>
       </div>
-      <p class="dim" style="font-size:13.5px;margin-top:14px">The deadline rule covered both habits: across all forty registered tries, the checker found zero answers that used a report which arrived later.</p>
+      <p class="dim" style="font-size:13.5px;margin-top:14px">Across all three approaches, the checker found no scored proposal that used a report published after its deadline.</p>
     </div>
   </div>
 </section>
@@ -314,19 +315,19 @@
           <p style="font-size:15px">Each of the three figures you just saw counts answers written by software agents. No figure on any of these sections counts a change in how a person behaves. A viewer practises judging a choice by its deadline while watching, and we have never tested whether a person carries that habit out of the room.</p>
         </div>
         <div class="plainbox">
-          <h3>One of the two registered claims failed its own rule.</h3>
-          <p style="font-size:15px">Answers that stayed inside the exercise's hard resource limits fell from 37 of 40 with plain notes to 33 of 40 with the evidence table. The rule written before the runs allowed a drop of five points and the drop was ten, so that claim fails. Most of the failure sits in one decision about sending extra water trucks. We report it at the same size as the claim that passed.</p>
+          <h3>One prediction written before the runs failed.</h3>
+          <p style="font-size:15px">Answers that stayed inside the exercise's hard resource limits fell from 37 of 40 with plain notes to 33 of 40 with the evidence table. The rule written before the runs allowed a drop of five percentage points and the drop was ten, so that claim fails. Most of the failure sits in one decision about sending extra water trucks.</p>
         </div>
         <div class="plainbox">
-          <h3>The recording holds no count of people reached.</h3>
-          <p style="font-size:15px">Nothing in this build claims that anyone was helped, or that one way of working would have helped more people than another. Whatever a decision changes, it changes inside the simulation only, and the screen says so wherever that shows.</p>
+          <h3>The experiment did not simulate who an AI proposal would reach.</h3>
+          <p style="font-size:15px">The public record includes outcomes reported by real responders. The experiment did not simulate the later effects of any AI proposal, so it cannot say that one proposal would have helped more people than another.</p>
         </div>
         <div class="plainbox">
           <h3>The exercise is narrow on purpose.</h3>
-          <p style="font-size:15px">One open model answered five decision moments rebuilt from the public record, eight separate times each. Two of those moments carry assumptions written for the exercise, because the public record does not show what the real desks held. This is one small sealed test, and a whole disaster holds far more decisions than five.</p>
+          <p style="font-size:15px">One open-weight language model answered five decisions eight times each. Two decisions also used explicit exercise assumptions because public records did not reveal what the real offices knew. This is one small test, and a real disaster contains far more decisions.</p>
         </div>
       </div>
-      <p class="src">Sources: the frozen results at experiment/PRODUCTION-RESULTS.md, both in the registered outcomes and in the limits written at the end; docs/rescueworld/SPACE-DATA-STORIES.md, story four.</p>
+      <p class="src">Sources: experiment/PRODUCTION-RESULTS.md and docs/rescueworld/SPACE-DATA-STORIES.md, story four.</p>
     </div>
   </div>
 </section>
@@ -339,35 +340,35 @@
       <div class="eyebrow"><span class="num">05</span><span>The finished route</span><span class="of">What a first-time viewer receives</span></div>
       <h2>We put one route through the build ahead of everything else.</h2>
       <span class="tag m">Landed and browser-verified</span>
-      <p style="max-width:82ch">A first-time viewer is carried along one route without having to decode the rest of the system. One decision is told all the way through in six steps, and the real recorded choice always comes before the software answers.</p>
+      <p style="max-width:82ch">A first-time viewer learns the disaster situation and the AI rescue action before seeing any research machinery.</p>
       <div class="route">
-        <div class="step"><b>01</b><span>What the real responders did, copied from the public record.</span></div>
-        <div class="step"><b>02</b><span>Everything that was public when the decision deadline passed.</span></div>
-        <div class="step"><b>03</b><span>What each of the three software workflows proposed.</span></div>
-        <div class="step"><b>04</b><span>The exact prewritten rule the checker found broken.</span></div>
-        <div class="step"><b>05</b><span>The same answer after one bounded correction message.</span></div>
-        <div class="step"><b>06</b><span>The final software action and whether it passed every check.</span></div>
+        <div class="step"><b>01</b><span>The situation, deadline and responsible office.</span></div>
+        <div class="step"><b>02</b><span>The final AI rescue proposal: what, how much and where.</span></div>
+        <div class="step"><b>03</b><span>The reports and unanswered questions behind it.</span></div>
+        <div class="step"><b>04</b><span>What the public record says responders did—or says was not found.</span></div>
+        <div class="step"><b>05</b><span>The proposal's one-sentence rule result.</span></div>
+        <div class="step"><b>06</b><span>How it was tested: all three approaches, the checker and any revision.</span></div>
       </div>
       <div class="g2u" style="margin-top:26px">
         <div class="measured">
-          <span class="tag m">Measured plain-language audit</span>
-          <h3>The finished viewer has zero strings that fail the mechanical plain-language checks.</h3>
+          <span class="tag m">Action-first clarity pass</span>
+          <h3>The viewer now explains the rescue proposal before it explains the experiment.</h3>
           <ul>
-            <li>The second cold reading found 1,191 clear sentences, 34 vague ones and 3 unreadable ones. All 37 remaining problems were repaired.</li>
-            <li>The finished audit lists 1,227 visible strings and finds zero failures. It separately explains 196 unusual but valid strings and excludes 25 codes or style names that never reach a screen.</li>
-            <li>Recorded quotations remain byte-for-byte unchanged, mistakes included. Plain explanations are added in brackets beside internal terms, and the sealed recording keeps its original fingerprint.</li>
+            <li>Every default decision view leads with the situation and a complete action sentence: who or what, how many, where and why.</li>
+            <li>Method names, repeated-run scores and rule mechanics stay behind deliberate controls instead of competing with the disaster story.</li>
+            <li>Recorded AI quotations remain unchanged, mistakes included. Plain-language explanations appear around them, and the sealed recording keeps its original fingerprint.</li>
           </ul>
-          <p class="src">Source: docs/rescueworld/PLAIN-TEXT-METHODS.md, parts two and four. The recorded audit output is preserved there; the internal audit utility is not included in this handoff.</p>
+          <p class="src">Sources: docs/rescueworld/ACTION-FIRST-PRESENTATION-CONTRACT.md and docs/rescueworld/PLAIN-TEXT-METHODS.md.</p>
         </div>
         <div>
           <div class="plainbox">
             <span class="tag m">Landed</span>
             <h3>The building tools leave the route and keep one closing beat.</h3>
-            <p style="font-size:15px;margin:0">Art controls and the new-run console stay off the main route. They return only when a viewer asks for them, and every console state must be backed by a file on disk.</p>
+            <p style="font-size:15px;margin:0">Art controls stay off the main route. They appear only when a viewer asks for them and change only the presentation.</p>
           </div>
           <div class="proposed" style="margin-top:20px">
             <span class="tag p">Proposed. This has not been measured.</span>
-            <p style="font-size:15px;margin:0">The next readability check is a third independent cold reading of the finished 1,227-string build. We do not report that check as passed until another reader has actually done it.</p>
+            <p style="font-size:15px;margin:0">The final readability check is an independent cold reading at desktop and laptop sizes. A new reader must be able to retell the action without seeing the source files.</p>
           </div>
         </div>
       </div>
@@ -386,32 +387,32 @@
         <span class="tag p">Proposed. Nothing here has been built or measured yet.</span>
         <div class="g2u" style="margin-top:6px">
           <div>
-            <p style="font-size:15.5px">The current build can prove that a software answer followed its sources and rules. It cannot yet prove that the answer would have improved the disaster response. The safest next experiment is therefore a post-run debrief: let the run finish, then explain one decision using only facts the record and a controlled replay can verify.</p>
+            <p style="font-size:15.5px">The current build measures whether an AI proposal followed its sources and rules. The next test needs a separate, expert-validated replay to measure what an allowed proposal changes.</p>
             <ul>
-              <li class="p"><b>Evidence:</b> what was actually known by the deadline.</li>
-              <li class="p"><b>Comparison:</b> the prewritten rule or normal plan the choice is compared with.</li>
-              <li class="p"><b>Gap:</b> the specific mismatch the check found.</li>
-              <li class="p"><b>Feasible option:</b> one alternative the available crews, roads and time really allowed.</li>
-              <li class="p"><b>Window:</b> when that alternative could still have been chosen.</li>
-              <li class="p"><b>Tested effect:</b> what changed when only that choice was altered in a controlled replay.</li>
+              <li class="p"><b>Evidence:</b> public information by the deadline, plus any labeled exercise assumption.</li>
+              <li class="p"><b>Comparison:</b> the written rule or normal plan.</li>
+              <li class="p"><b>Gap:</b> the exact mismatch.</li>
+              <li class="p"><b>Feasible option:</b> an allowed alternative.</li>
+              <li class="p"><b>Window:</b> when it could still be chosen.</li>
+              <li class="p"><b>Tested effect:</b> what changed when only that choice changed.</li>
             </ul>
-            <p style="font-size:15.5px;margin-top:14px">We would first run this after the event, where no live operator can be steered by an explanation that later turns out to be wrong. Only after the debrief proves high precision, no knowledge from the future, and trustworthy controlled replays would we test a live decision card.</p>
+            <p style="font-size:15.5px;margin-top:14px">We test this first as a post-run debrief. A live decision card waits until those explanations prove accurate and free of future information.</p>
           </div>
           <div class="plainbox" style="border-color:rgba(232,168,127,.35)">
-            <h3 style="color:var(--burn)">The finished product supplies the starting evidence, not the final causal claim.</h3>
-            <p style="font-size:14.5px">Four pieces already exist and make the next test possible.</p>
+            <h3 style="color:var(--burn)">The current product supplies the starting evidence, not the outcome.</h3>
+            <p style="font-size:14.5px">Three pieces already exist:</p>
             <ul>
-              <li class="p">The set of reports each moment held, cut off at that moment's deadline.</li>
-              <li class="p">The real recorded choice shown first, beside twenty-four already graded software answers.</li>
-              <li class="p">The checkers, which grade an answer in code by rules fixed in advance.</li>
+              <li class="p">Reports cut off at each deadline.</li>
+              <li class="p">The public-response record beside graded AI proposals.</li>
+              <li class="p">Code that checks rules fixed before the runs.</li>
             </ul>
-            <p style="font-size:14.5px">What still has to be built is the controlled replay that changes one admissible choice while holding everything else fixed. Until that exists, the product may explain rule-following but may not claim that a different choice caused a better outcome.</p>
-            <p class="src">Source: the external Disaster Simulation Clarification briefing supplied by the project lead, not included in this partner package.</p>
+            <p style="font-size:14.5px">Still missing: a controlled replay that changes one allowed choice, holds everything else fixed and produces an expert-validated outcome.</p>
+            <p class="src">Sources: docs/rescueworld/STORY-TEMPLATE.md and docs/rescueworld/ACTION-FIRST-PRESENTATION-CONTRACT.md.</p>
           </div>
         </div>
         <div style="border-top:1px dashed rgba(232,168,127,.4); margin-top:20px; padding-top:16px">
           <h3>The first success test is narrow and falsifiable.</h3>
-          <p style="font-size:15px;max-width:92ch;margin:0">For the same five registered decision moments, the debrief must name the right evidence, find the right gap, propose only an option the record allowed, use nothing learned after the deadline, and predict an effect that survives the controlled replay. We measure those five things separately. A beautiful explanation that misses any one of them does not pass.</p>
+          <p style="font-size:15px;max-width:92ch;margin:0">For the same five scored decisions, an explanation must use the right evidence, find the right gap, propose an allowed option, avoid future information and predict an effect the controlled replay reproduces.</p>
         </div>
       </div>
     </div>
@@ -430,9 +431,9 @@
         <div class="measured">
           <span class="tag m">What ships</span>
           <ul>
-            <li>The seventy-two-hour replay, all eleven decision moments, the measured gain and the registered failure beside it.</li>
-            <li>A one-button front door and one six-step route from the real record to the final graded software action.</li>
-            <li>A 1,227-string viewer with zero mechanical language failures, two cold readings behind the repairs, unchanged quotations and independent browser gates.</li>
+            <li>The seventy-two-hour replay, all eleven decisions, the measured gain and the failed prediction beside it.</li>
+            <li>A one-button front door and one six-step route from a disaster situation to the AI proposal, evidence, public context, rule result and testing details.</li>
+            <li>An action-first viewer with unchanged recorded quotations, plain-language framing and independent browser gates.</li>
           </ul>
         </div>
         <div class="proposed">
@@ -446,7 +447,7 @@
       </div>
       <div class="plainbox" style="margin-top:18px">
         <span class="tag g">One item still waits on Randy</span>
-        <p style="font-size:14.5px;margin:0">The three-minute film is not recorded until Randy approves its script. The film must show the registered gain, the registered failure and the standing limitation at the same size.</p>
+        <p style="font-size:14.5px;margin:0">The three-minute film is not recorded until Randy approves its script. The film must show the measured gain, the failed prediction and the standing limitation at the same size.</p>
       </div>
       <p style="margin-top:24px;font-size:16.5px;max-width:80ch">What we submit stands on one honest sentence. Making software agents carry checked evidence raised answers that passed every prewritten rule from none of forty to seventeen; allowing one bounded correction raised it again to thirty-four. Rescue World lets a judge follow the real record, the software answers, the failed rule and the repair without pretending those scores prove that more people were saved.</p>
     </div>
