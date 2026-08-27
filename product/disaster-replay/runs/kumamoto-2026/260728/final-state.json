@@ -1,0 +1,216 @@
+{
+  "PLAIN_GRAPH": {
+    "claims": {
+      "gsi-2026-kumamoto-landslide-001:people_waiting:60": {
+        "claim_version_id": "gsi-2026-kumamoto-landslide-001:people_waiting:60",
+        "target_feature_id": "gsi-2026-kumamoto-landslide-001",
+        "value": 60,
+        "unit": "simulated_people",
+        "verdict": "NOT_EVALUATED",
+        "comparison_verdict": "REJECTED",
+        "supporting_observation_ids": [
+          "exercise-report-001"
+        ]
+      },
+      "gsi-2026-kumamoto-landslide-002:people_waiting:42": {
+        "claim_version_id": "gsi-2026-kumamoto-landslide-002:people_waiting:42",
+        "target_feature_id": "gsi-2026-kumamoto-landslide-002",
+        "value": 42,
+        "unit": "simulated_people",
+        "verdict": "NOT_EVALUATED",
+        "comparison_verdict": "SUPPORTED",
+        "supporting_observation_ids": [
+          "exercise-report-004"
+        ]
+      },
+      "gsi-2026-kumamoto-landslide-003:people_waiting:35": {
+        "claim_version_id": "gsi-2026-kumamoto-landslide-003:people_waiting:35",
+        "target_feature_id": "gsi-2026-kumamoto-landslide-003",
+        "value": 35,
+        "unit": "simulated_people",
+        "verdict": "NOT_EVALUATED",
+        "comparison_verdict": "SUPPORTED",
+        "supporting_observation_ids": [
+          "exercise-report-006"
+        ]
+      },
+      "gsi-2026-kumamoto-landslide-004:people_waiting:28": {
+        "claim_version_id": "gsi-2026-kumamoto-landslide-004:people_waiting:28",
+        "target_feature_id": "gsi-2026-kumamoto-landslide-004",
+        "value": 28,
+        "unit": "simulated_people",
+        "verdict": "NOT_EVALUATED",
+        "comparison_verdict": "UNRESOLVED",
+        "supporting_observation_ids": [
+          "exercise-report-008"
+        ]
+      }
+    },
+    "graph": {
+      "node_id": "OBSERVE",
+      "transitions": 5
+    },
+    "decisions": [
+      {
+        "decision_id": "plain_graph:dispatch-decision",
+        "decision_slot_id": "initial-assessment-allocation",
+        "selected_targets": [
+          "gsi-2026-kumamoto-landslide-001",
+          "gsi-2026-kumamoto-landslide-002"
+        ],
+        "claimed_people": [
+          60,
+          42
+        ],
+        "resource_limit": 2
+      }
+    ],
+    "dispatches": [
+      {
+        "dispatch_id": "plain_graph:dispatch-1",
+        "resource_id": "assessment-team-01",
+        "target_feature_id": "gsi-2026-kumamoto-landslide-001",
+        "authorizing_claim_version_id": "gsi-2026-kumamoto-landslide-001:people_waiting:60",
+        "idempotency_key": "kumamoto-2026-evidence-routing-exercise:PLAIN_GRAPH:assessment-team-01"
+      },
+      {
+        "dispatch_id": "plain_graph:dispatch-2",
+        "resource_id": "assessment-team-02",
+        "target_feature_id": "gsi-2026-kumamoto-landslide-002",
+        "authorizing_claim_version_id": "gsi-2026-kumamoto-landslide-002:people_waiting:42",
+        "idempotency_key": "kumamoto-2026-evidence-routing-exercise:PLAIN_GRAPH:assessment-team-02"
+      }
+    ],
+    "outcomes": [
+      {
+        "target_feature_id": "gsi-2026-kumamoto-landslide-001",
+        "exercise_people_reached": 18,
+        "unit": "simulated_people"
+      },
+      {
+        "target_feature_id": "gsi-2026-kumamoto-landslide-002",
+        "exercise_people_reached": 42,
+        "unit": "simulated_people"
+      }
+    ],
+    "metrics": {
+      "exercise_people_reached": 60,
+      "dispatches_on_rejected_claim_versions": 1,
+      "decision_source_coverage": 0.5
+    }
+  },
+  "EVIDENCE_GRAPH": {
+    "claims": {
+      "gsi-2026-kumamoto-landslide-001:people_waiting:18": {
+        "claim_version_id": "gsi-2026-kumamoto-landslide-001:people_waiting:18",
+        "target_feature_id": "gsi-2026-kumamoto-landslide-001",
+        "value": 18,
+        "unit": "simulated_people",
+        "verdict": "SUPPORTED",
+        "comparison_verdict": "SUPPORTED",
+        "supporting_observation_ids": [
+          "exercise-report-002",
+          "exercise-report-003"
+        ]
+      },
+      "gsi-2026-kumamoto-landslide-001:people_waiting:60": {
+        "claim_version_id": "gsi-2026-kumamoto-landslide-001:people_waiting:60",
+        "target_feature_id": "gsi-2026-kumamoto-landslide-001",
+        "value": 60,
+        "unit": "simulated_people",
+        "verdict": "REJECTED",
+        "comparison_verdict": "REJECTED",
+        "supporting_observation_ids": [
+          "exercise-report-001"
+        ]
+      },
+      "gsi-2026-kumamoto-landslide-002:people_waiting:42": {
+        "claim_version_id": "gsi-2026-kumamoto-landslide-002:people_waiting:42",
+        "target_feature_id": "gsi-2026-kumamoto-landslide-002",
+        "value": 42,
+        "unit": "simulated_people",
+        "verdict": "SUPPORTED",
+        "comparison_verdict": "SUPPORTED",
+        "supporting_observation_ids": [
+          "exercise-report-004",
+          "exercise-report-005"
+        ]
+      },
+      "gsi-2026-kumamoto-landslide-003:people_waiting:35": {
+        "claim_version_id": "gsi-2026-kumamoto-landslide-003:people_waiting:35",
+        "target_feature_id": "gsi-2026-kumamoto-landslide-003",
+        "value": 35,
+        "unit": "simulated_people",
+        "verdict": "SUPPORTED",
+        "comparison_verdict": "SUPPORTED",
+        "supporting_observation_ids": [
+          "exercise-report-006",
+          "exercise-report-007"
+        ]
+      },
+      "gsi-2026-kumamoto-landslide-004:people_waiting:28": {
+        "claim_version_id": "gsi-2026-kumamoto-landslide-004:people_waiting:28",
+        "target_feature_id": "gsi-2026-kumamoto-landslide-004",
+        "value": 28,
+        "unit": "simulated_people",
+        "verdict": "UNRESOLVED",
+        "comparison_verdict": "UNRESOLVED",
+        "supporting_observation_ids": [
+          "exercise-report-008"
+        ]
+      }
+    },
+    "graph": {
+      "node_id": "UPDATE",
+      "transitions": 7
+    },
+    "decisions": [
+      {
+        "decision_id": "evidence_graph:dispatch-decision",
+        "decision_slot_id": "initial-assessment-allocation",
+        "selected_targets": [
+          "gsi-2026-kumamoto-landslide-002",
+          "gsi-2026-kumamoto-landslide-003"
+        ],
+        "claimed_people": [
+          42,
+          35
+        ],
+        "resource_limit": 2
+      }
+    ],
+    "dispatches": [
+      {
+        "dispatch_id": "evidence_graph:dispatch-1",
+        "resource_id": "assessment-team-01",
+        "target_feature_id": "gsi-2026-kumamoto-landslide-002",
+        "authorizing_claim_version_id": "gsi-2026-kumamoto-landslide-002:people_waiting:42",
+        "idempotency_key": "kumamoto-2026-evidence-routing-exercise:EVIDENCE_GRAPH:assessment-team-01"
+      },
+      {
+        "dispatch_id": "evidence_graph:dispatch-2",
+        "resource_id": "assessment-team-02",
+        "target_feature_id": "gsi-2026-kumamoto-landslide-003",
+        "authorizing_claim_version_id": "gsi-2026-kumamoto-landslide-003:people_waiting:35",
+        "idempotency_key": "kumamoto-2026-evidence-routing-exercise:EVIDENCE_GRAPH:assessment-team-02"
+      }
+    ],
+    "outcomes": [
+      {
+        "target_feature_id": "gsi-2026-kumamoto-landslide-002",
+        "exercise_people_reached": 42,
+        "unit": "simulated_people"
+      },
+      {
+        "target_feature_id": "gsi-2026-kumamoto-landslide-003",
+        "exercise_people_reached": 35,
+        "unit": "simulated_people"
+      }
+    ],
+    "metrics": {
+      "exercise_people_reached": 77,
+      "dispatches_on_rejected_claim_versions": 0,
+      "decision_source_coverage": 1
+    }
+  }
+}

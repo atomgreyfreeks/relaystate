@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "real-response-scenario.schema.json",
+  "title": "Historical disaster decision replay scenario",
+  "description": "A source-bounded set of real decision moments for matched orchestration runs. Later outcomes are context, never scoring truth for earlier choices.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "scenario_id",
+    "title",
+    "disclosure",
+    "incident",
+    "sources",
+    "observations",
+    "unknowns",
+    "targets",
+    "resources",
+    "decision_slots",
+    "graph_methods",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": { "const": "disaster-decision.real-response-scenario.v1" },
+    "scenario_id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "disclosure": { "type": "string", "minLength": 1 },
+    "incident": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["occurred_at", "timezone", "event_source_id"],
+      "properties": {
+        "occurred_at": { "type": "string", "format": "date-time" },
+        "timezone": { "const": "Asia/Tokyo" },
+        "event_source_id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_id", "title", "provider", "url", "source_role"],
+        "properties": {
+          "source_id": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "provider": { "type": "string", "minLength": 1 },
+          "url": { "type": "string", "format": "uri" },
+          "source_role": { "enum": ["TIME_AVAILABLE_INPUT", "HISTORICAL_CHOICE_RECORD", "LATER_OUTCOME_CONTEXT"] },
+          "sha256": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "observations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "observation_id",
+          "classification",
+          "available_at",
+          "availability_basis",
+          "source_ids",
+          "signal_family",
+          "fact_code",
+          "subjects",
+          "plain_text"
+        ],
+        "properties": {
+          "observation_id": { "type": "string", "minLength": 1 },
+          "classification": { "enum": ["OBSERVED_PUBLIC", "OBSERVED_ABSENCE", "RECONSTRUCTED_ASSUMPTION", "LATER_OUTCOME"] },
+          "available_at": { "type": "string", "format": "date-time" },
+          "availability_basis": { "enum": ["PUBLISHED_AT_TIME", "CONTEMPORANEOUS_MEETING_RECORD", "RECONSTRUCTED_ASSUMPTION", "LATER_REPORT"] },
+          "source_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "signal_family": { "type": "string", "minLength": 1 },
+          "fact_code": { "type": "string", "minLength": 1 },
+          "subjects": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "plain_text": { "type": "string", "minLength": 1 },
+          "value": {},
+          "unit": { "type": ["string", "null"] },
+          "caveat": { "type": "string" }
+        }
+      }
+    },
+    "unknowns": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["unknown_id", "plain_text"],
+        "properties": {
+          "unknown_id": { "type": "string", "minLength": 1 },
+          "plain_text": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["target_id", "label", "kind"],
+        "properties": {
+          "target_id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["INCIDENT_AREA", "MUNICIPALITY", "INCIDENT_SITE"] }
+        }
+      }
+    },
+    "resources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["resource_id", "label", "kind", "classification", "capacity", "availability_note"],
+        "properties": {
+          "resource_id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string", "minLength": 1 },
+          "kind": { "type": "string", "minLength": 1 },
+          "classification": { "enum": ["OBSERVED_REAL", "MODELED_DECISION_CAPACITY"] },
+          "capacity": { "type": "integer", "minimum": 1 },
+          "observed_mobilized_at": { "type": ["string", "null"], "format": "date-time" },
+          "availability_note": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "decision_slots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "decision_slot_id",
+          "reconstruction_slot_number",
+          "title",
+          "decider",
+          "cutoff_at",
+          "decision_kind",
+          "task",
+          "visible_observation_ids",
+          "eligible_resource_ids",
+          "eligible_target_ids",
+          "action_contract",
+          "historical_choice",
+          "required_unknown_ids",
+          "forbidden_hindsight_observation_ids",
+          "assumptions",
+          "scoring_boundary"
+        ],
+        "properties": {
+          "decision_slot_id": { "type": "string", "minLength": 1 },
+          "reconstruction_slot_number": { "type": "integer", "minimum": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "decider": { "type": "string", "minLength": 1 },
+          "cutoff_at": { "type": "string", "format": "date-time" },
+          "decision_kind": { "enum": ["RESOURCE_MOBILIZATION", "INFORMATION_ESCALATION", "LIAISON_ALLOCATION", "RESPONSE_ALLOCATION", "SUPPLY_ALLOCATION"] },
+          "task": { "type": "string", "minLength": 1 },
+          "visible_observation_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "eligible_resource_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "eligible_target_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "action_contract": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["minimum_assignments", "maximum_assignments", "allow_resource_reuse", "maximum_total_quantity"],
+            "properties": {
+              "minimum_assignments": { "type": "integer", "minimum": 0 },
+              "maximum_assignments": { "type": "integer", "minimum": 1 },
+              "allow_resource_reuse": { "type": "boolean" },
+              "maximum_total_quantity": { "type": "integer", "minimum": 1 }
+            }
+          },
+          "historical_choice": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["summary", "assignments", "source_ids", "unknowns"],
+            "properties": {
+              "summary": { "type": "string", "minLength": 1 },
+              "assignments": { "type": "array", "items": { "$ref": "#/$defs/assignment" } },
+              "source_ids": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+              "unknowns": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+            }
+          },
+          "required_unknown_ids": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+          "forbidden_hindsight_observation_ids": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+          "assumptions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "scoring_boundary": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "graph_methods": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["method_id", "label", "nodes", "edges", "handoff", "feedback_policy", "model_call_budget"],
+        "properties": {
+          "method_id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string", "minLength": 1 },
+          "nodes": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+          "edges": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "handoff": { "type": "string", "minLength": 1 },
+          "feedback_policy": { "type": "string", "minLength": 1 },
+          "model_call_budget": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "limitations": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+  },
+  "$defs": {
+    "assignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["resource_id", "target_id", "quantity"],
+      "properties": {
+        "resource_id": { "type": "string", "minLength": 1 },
+        "target_id": { "type": "string", "minLength": 1 },
+        "quantity": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

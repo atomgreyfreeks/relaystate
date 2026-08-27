@@ -1,0 +1,343 @@
+{
+  "schema_version": "kumamoto-full-incident.replay-scenario.v1",
+  "scenario_id": "kumamoto-2026-full-incident",
+  "title": "Kumamoto 2026: the first seventy-two hours as one regional event stream",
+  "incident": {
+    "occurred_at": "2026-07-28T16:27:15.200+09:00",
+    "ends_at": "2026-07-31T16:27:15.200+09:00",
+    "latitude": 32.625,
+    "longitude": 130.67833333333334,
+    "magnitude": 7.1,
+    "maximum_intensity": "JMA 7"
+  },
+  "acts": [
+    {
+      "act_id": "act-1-hour-one",
+      "label": "Hour one",
+      "starts_at": "2026-07-28T16:27:15.200+09:00",
+      "ends_at": "2026-07-28T17:27:15.200+09:00",
+      "story": "The regional signal arrives before the damage picture, and missing towns become part of the evidence."
+    },
+    {
+      "act_id": "act-2-first-night",
+      "label": "The first night",
+      "starts_at": "2026-07-28T17:27:15.200+09:00",
+      "ends_at": "2026-07-29T06:30:00+09:00",
+      "story": "Fire, defense and liaison chains follow different signals while two collapse sites and a failed dispatch system define the night."
+    },
+    {
+      "act_id": "act-3-day-two",
+      "label": "Day two: the water crisis",
+      "starts_at": "2026-07-29T06:30:00+09:00",
+      "ends_at": "2026-07-30T06:30:00+09:00",
+      "story": "The aggregate picture arrives, rescue assignments move, shelters pulse and water support changes from requests to regional push."
+    },
+    {
+      "act_id": "act-4-the-turn",
+      "label": "The turn",
+      "starts_at": "2026-07-30T06:30:00+09:00",
+      "ends_at": "2026-07-31T16:27:15.200+09:00",
+      "story": "Active rescues continue as the centre of gravity turns toward water and one final search meets the seventy-two-hour boundary."
+    }
+  ],
+  "source_catalog": [
+    {
+      "source_id": "source-cabinet-hq-meeting-1",
+      "publisher": "Cabinet Office, Government of Japan",
+      "title": "First Extreme Disaster Management Headquarters meeting materials",
+      "url": "https://www.bousai.go.jp/updates/r8kumamoto_jishin/pdf/r8kumamoto_dai1kai_giji.pdf",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-cabinet-hq-meeting-2",
+      "publisher": "Cabinet Office, Government of Japan",
+      "title": "Second Extreme Disaster Management Headquarters meeting materials",
+      "url": "https://www.bousai.go.jp/updates/r8kumamoto_jishin/pdf/r8kumamoto_dai2kai_giji.pdf",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-cabinet-report-0729-0700",
+      "title": "Cabinet Office situation report, 2026-07-29 07:00 JST",
+      "provider": "Cabinet Office, Government of Japan",
+      "url": "https://www.bousai.go.jp/updates/r8kumamoto_jishin/status/pdf/r8kumamoto_jishin_20260729.pdf",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "First aggregated national damage, rescue, evacuation and shelter picture.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-cabinet-report-0729-1400",
+      "title": "Cabinet Office situation report, 2026-07-29 14:00 JST",
+      "provider": "Cabinet Office, Government of Japan",
+      "url": "https://www.bousai.go.jp/updates/r8kumamoto_jishin/status/pdf/r8kumamoto_jishin_20260729-1400.pdf",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "Carries the changed rescue assignments, one isolated community and the daytime shelter aggregate.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-cabinet-report-0730",
+      "title": "Cabinet Office situation report, 2026-07-30 06:30 JST",
+      "provider": "Cabinet Office of Japan",
+      "url": "https://www.bousai.go.jp/updates/r8kumamoto_jishin/status/pdf/r8kumamoto_jishin_20260730.pdf",
+      "source_role": "LATER_OUTCOME_CONTEXT",
+      "sha256": null,
+      "note": "Used only as later context; its approximately 108,100-household water figure is forbidden at the 2026-07-29 12:00 slot.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-cabinet-report-0731-0730",
+      "title": "Cabinet Office situation report, 2026-07-31 07:30 JST",
+      "provider": "Cabinet Office, Government of Japan",
+      "url": "https://www.bousai.go.jp/updates/r8kumamoto_jishin/status/pdf/r8kumamoto_jishin_20260731.pdf",
+      "source_role": "LATER_OUTCOME_CONTEXT",
+      "sha256": null,
+      "note": "Carries the seventy-two-hour shelter, evacuation, fire and medical posture.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-cabinet-report-0823",
+      "publisher": "Cabinet Office, Government of Japan",
+      "title": "Kumamoto earthquake situation report current through 2026-08-23",
+      "url": "https://www.bousai.go.jp/updates/r8kumamoto_jishin/status/pdf/r8kumamoto_jishin_20260823.pdf",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-fdma-report-60",
+      "title": "FDMA Kumamoto earthquake response report 60",
+      "provider": "Fire and Disaster Management Agency",
+      "url": "https://www.fdma.go.jp/disaster/info/items/20260728kumamotojishin60.pdf",
+      "source_role": "HISTORICAL_CHOICE_RECORD",
+      "sha256": null,
+      "note": "A cumulative later report used to reconstruct real mobilization choices and later outcomes; it is never exposed as a contemporaneous first-night input.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-gsi-landslides",
+      "publisher": "Geospatial Information Authority of Japan",
+      "title": "2026 Kumamoto earthquake landslide interpretation layer",
+      "url": "https://www.gsi.go.jp/BOUSAI/20260728_kumamoto_earthquake.html",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-jma-mainshock-sequence",
+      "title": "JMA main-shock bulletin sequence, normalized with all seven revisions preserved",
+      "provider": "Japan Meteorological Agency",
+      "url": "https://www.jma.go.jp/bosai/quake/data/list.json",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": "7f5aabb83b021bec9d5b6019684ffb68bc327925e71a204a7a841101b3d82377",
+      "note": "The 16:31:48 and 16:35:28 municipality bulletins are the time-bounded input; the 20:30 depth revision is later and forbidden before its time.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-kantei-crisis-log",
+      "title": "Prime Minister's Office crisis log for the 2026 Kumamoto earthquake",
+      "provider": "Prime Minister's Office of Japan",
+      "url": "https://www.kantei.go.jp/jp/kikikanri/earthquake20260728.html",
+      "source_role": "HISTORICAL_CHOICE_RECORD",
+      "sha256": null,
+      "note": "Used only for statements with an explicit time in the public crisis log.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-mlit-report-1-1810",
+      "title": "MLIT situation report 1, 2026-07-28 18:10 JST",
+      "provider": "Ministry of Land, Infrastructure, Transport and Tourism",
+      "url": "https://www.mlit.go.jp/common/002014075.pdf",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "Carries the first liaison table and the infrastructure picture available at 18:10.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-mlit-report-2-2150",
+      "title": "MLIT situation report 2, 2026-07-28 21:50 JST",
+      "provider": "Ministry of Land, Infrastructure, Transport and Tourism",
+      "url": "https://www.mlit.go.jp/common/002014121.pdf",
+      "source_role": "LATER_OUTCOME_CONTEXT",
+      "sha256": null,
+      "note": "Carries the later addition of a municipal liaison pair for Yatsushiro; forbidden at the 18:10 slot.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-mlit-report-6-0730-0630",
+      "title": "MLIT situation report 6, 2026-07-30 06:30 JST",
+      "provider": "Ministry of Land, Infrastructure, Transport and Tourism",
+      "url": "https://www.mlit.go.jp/saigai/saigai_260728.html",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "Records secured access on National Routes 3 and 57 and the wide-detour request without a route-level reopening clock.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-mlit-road-snapshot-0729-0500",
+      "title": "MLIT Passable Map road-restriction snapshot, 2026-07-29 05:00 JST",
+      "provider": "Ministry of Land, Infrastructure, Transport and Tourism",
+      "url": "https://www.mlit.go.jp/road/content/002014124.html",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "Carries 29 observed restriction geometries; 23 have a reported start minute and six are snapshot-only.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-mlit-water-1200",
+      "title": "MLIT emergency water-supply posture, 2026-07-29 12:00 JST",
+      "provider": "Ministry of Land, Infrastructure, Transport and Tourism",
+      "url": "https://www.mlit.go.jp/common/002014163.pdf",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "Carries the then-current approximately 84,000-household outage picture, existing requests and truck commitments, and the real push-support choice.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-prefecture-headquarters-feed",
+      "publisher": "Kumamoto Prefecture",
+      "title": "Disaster headquarters archive feed",
+      "url": "https://portal.bousai.pref.kumamoto.jp/data/headquarter/headquarter.json",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-prefecture-headquarters-index",
+      "title": "Kumamoto Prefecture disaster headquarters meeting index",
+      "provider": "Kumamoto Prefecture",
+      "url": "https://www.pref.kumamoto.jp/soshiki/222/274487.html",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "Records the eight prefectural meeting clocks inside the seventy-two-hour window.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-prefecture-meeting-1",
+      "title": "Kumamoto Prefecture disaster headquarters meeting 1 minutes, 2026-07-28 20:00 JST",
+      "provider": "Kumamoto Prefecture",
+      "url": "https://www.pref.kumamoto.jp/uploaded/attachment/315985.pdf",
+      "source_role": "HISTORICAL_CHOICE_RECORD",
+      "sha256": null,
+      "note": "Later-published minutes of a contemporaneous meeting; only facts stated in the meeting are treated as available at 20:00.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-prefecture-meeting-2",
+      "title": "Kumamoto Prefecture disaster headquarters meeting 2 minutes, 2026-07-29 00:00 JST",
+      "provider": "Kumamoto Prefecture",
+      "url": "https://www.pref.kumamoto.jp/uploaded/attachment/315986.pdf",
+      "source_role": "HISTORICAL_CHOICE_RECORD",
+      "sha256": null,
+      "note": "Carries the first-night rescue, water and coordination picture.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-prefecture-meeting-3",
+      "title": "Kumamoto Prefecture disaster headquarters meeting 3 minutes, 2026-07-29 09:30 JST",
+      "provider": "Kumamoto Prefecture",
+      "url": "https://www.pref.kumamoto.jp/uploaded/attachment/315988.pdf",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "Carries the first recorded site rescue counts.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-prefecture-meeting-4",
+      "title": "Kumamoto Prefecture disaster headquarters meeting 4 minutes and materials, 2026-07-29 16:00 JST",
+      "provider": "Kumamoto Prefecture",
+      "url": "https://www.pref.kumamoto.jp/uploaded/attachment/315989.pdf",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "Carries the detailed two-site rescue picture and eight-municipality water allocation.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-prefecture-meeting-5",
+      "title": "Kumamoto Prefecture disaster headquarters meeting 5 minutes, 2026-07-30 09:30 JST",
+      "provider": "Kumamoto Prefecture",
+      "url": "https://www.pref.kumamoto.jp/uploaded/attachment/315990.pdf",
+      "source_role": "HISTORICAL_CHOICE_RECORD",
+      "sha256": null,
+      "note": "Carries the recorded turn from life-saving activity toward water support.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-prefecture-meeting-6",
+      "title": "Kumamoto Prefecture disaster headquarters meeting 6 minutes, 2026-07-30 16:00 JST",
+      "provider": "Kumamoto Prefecture",
+      "url": "https://www.pref.kumamoto.jp/uploaded/attachment/315992.pdf",
+      "source_role": "LATER_OUTCOME_CONTEXT",
+      "sha256": null,
+      "note": "Carries later rescue status and the on-site national headquarters arrival.",
+      "classification": "OBSERVED_PUBLIC"
+    },
+    {
+      "source_id": "source-prefecture-shelter-feed",
+      "title": "Kumamoto Prefecture event shelter feed",
+      "provider": "Kumamoto Prefecture",
+      "url": "https://portal.bousai.pref.kumamoto.jp/data/shelter/shelter.json",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "The feed mixes nominal, opening and publication timestamps; only aggregate counts are used.",
+      "classification": "OBSERVED_PUBLIC"
+    }
+  ],
+  "world_features": {
+    "earthquake_sequence": "data/full-incident/jma-2026-kumamoto-earthquake-sequence.json",
+    "official_mainshock_updates": "data/jma-2026-kumamoto-official-updates.json",
+    "road_restrictions": "data/mlit-2026-kumamoto-road-restrictions.geojson",
+    "landslide_interpretation": "data/gsi-2026-kumamoto-landslides.geojson",
+    "terrain_dem_png": "data/full-incident/gsi-dem10b-z11-full-incident.png",
+    "terrain_dem_metadata": "data/full-incident/gsi-dem10b-z11-full-incident.meta.json"
+  },
+  "decisions": {
+    "slot_count": 11,
+    "registered_five_slot_manifest_hash": "d033786d42717b6aa4bcbaabc139cd813563959f57deccdc52df0d63ae8c0160",
+    "full_incident_demonstration_manifest_hash": "7b9dfc853877add3469e78630dc9897ecb04f301574fcdb7f91087a5ac7cf91f",
+    "model": {
+      "id": "Qwen/Qwen3-32B-AWQ",
+      "revision": "0499c3ac83fdef8810b907a23894ba91e95eddd8",
+      "temperature": 0.2,
+      "top_p": 0.95
+    },
+    "graphs": [
+      "plain_summary",
+      "evidence_table",
+      "evidence_feedback"
+    ],
+    "full_incident_claim_boundary": "DESCRIPTIVE_ONLY_NO_REGISTERED_CLAIMS",
+    "registered_results_path": "experiments/kumamoto-real-response/results/production-v1.1",
+    "full_incident_demonstration_results_path": "experiments/kumamoto-full-incident-campaign/results/demonstration-v1"
+  },
+  "disclosure": "A sourced historical stream with recorded model counterfactuals. The demonstration creates no registered claim and historical overlap is not success.",
+  "limitations": [
+    "The public record cannot reconstruct every message a real decider saw; each slot lists the exact bounded information set used.",
+    "Slot 1 includes a minimum reconstructed automatic trigger and an assumed candidate pool because the exact internal payload and unit readiness are not public.",
+    "Slot 2 uses modeled attention capacity because no real verification-team resource is named in the public record.",
+    "Historical-choice agreement is descriptive, never the primary score and never proof that one decision was better.",
+    "Later deaths, rescues, damage totals, corrected depth, liaison additions and the later water-outage peak are forbidden before their publication times.",
+    "No result may say that a simulated allocation saved lives or that real responders were wrong.",
+    "This is a demonstration campaign outside the registered five-slot experiment. Its metrics are descriptive and cannot create or repair a registered claim.",
+    "Shelter events remain prefecture aggregates; municipal or individual shelter occupancy is never inferred.",
+    "Road closure minutes come from a later snapshot and the access-secured record has day precision only; no route-level reopening time is invented.",
+    "Modeled decision-capacity resources are labeled in every slot and do not represent real teams, personnel or vehicles."
+  ],
+  "source_data_sha256_by_path": {
+    "product/disaster-replay/scenarios/kumamoto-2026-full-incident/scenario.json": "fceefa4ec5a340c617b4a65595b2f58f9827fe75264914655deed88650a32191",
+    "product/disaster-replay/scenarios/kumamoto-2026-full-incident/timeline-inputs.json": "b997467da1dd509cd0bd86ae15da680ed24a3be440b902bd33be6fab8d082b2f",
+    "product/disaster-replay/data/full-incident/jma-2026-kumamoto-earthquake-sequence.json": "7f5aabb83b021bec9d5b6019684ffb68bc327925e71a204a7a841101b3d82377",
+    "product/disaster-replay/data/jma-2026-kumamoto-official-updates.json": "a3c342a47ff8b0eb8ccc1239b43101e3ad05b922849e7f361d874a7acade20e2",
+    "product/disaster-replay/data/mlit-2026-kumamoto-road-restrictions.geojson": "96c8a30fa6818e1eb1ac34d59186c3f8dd13e3a0cc49ac95c015daa0f45ab0db",
+    "product/disaster-replay/data/gsi-2026-kumamoto-landslides.geojson": "91a08d04b3a76486373e9795fecc2347a552e76b78d023b98beca42a74160364",
+    "product/disaster-replay/data/full-incident/gsi-dem10b-z11-full-incident.png": "d865552503f797864824854cd2065abce91756ca1a8bb8d6b6c161c654691c07",
+    "product/disaster-replay/data/full-incident/gsi-dem10b-z11-full-incident.meta.json": "fbcd8220610a3e67d925a44d7f7c096441238f77e861dc1a348503d576139125",
+    "experiments/kumamoto-real-response/validation/freeze-manifest.json": "3e14c3071a7bac34af25e1464887349a3d89ecbb6c100cd00fc49eec4811687b",
+    "experiments/kumamoto-real-response/results/production-v1.1/production-analysis.json": "65553826ffa128907ab396515d8308464a6597cd0037a3fead50592a680b032a",
+    "experiments/kumamoto-full-incident-campaign/validation/freeze-manifest.json": "5490216b1d98f51b61defb6d20d221c0804d04a560fef2a8e0c3d6fcf8aae14f",
+    "experiments/kumamoto-full-incident-campaign/results/demonstration-v1/demonstration-analysis.json": "df8089a50ba6f67dc9b83329fb7b3a011716487406aa6cb64c73757c1ca91201",
+    "experiments/kumamoto-full-incident-campaign/results/demonstration-v1/campaign-certificate.json": "48025fb5753d4d7f1873533c1dd957df88f3498771a77614092612545c6e5f92"
+  },
+  "source_data_sha256_by_id": {
+    "earthquake_sequence": "7f5aabb83b021bec9d5b6019684ffb68bc327925e71a204a7a841101b3d82377",
+    "official_mainshock_updates": "a3c342a47ff8b0eb8ccc1239b43101e3ad05b922849e7f361d874a7acade20e2",
+    "road_restrictions": "96c8a30fa6818e1eb1ac34d59186c3f8dd13e3a0cc49ac95c015daa0f45ab0db",
+    "landslide_interpretation": "91a08d04b3a76486373e9795fecc2347a552e76b78d023b98beca42a74160364",
+    "terrain_dem_png": "d865552503f797864824854cd2065abce91756ca1a8bb8d6b6c161c654691c07",
+    "terrain_dem_metadata": "fbcd8220610a3e67d925a44d7f7c096441238f77e861dc1a348503d576139125"
+  }
+}

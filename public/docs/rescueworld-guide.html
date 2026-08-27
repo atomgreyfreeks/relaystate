@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>How to use Rescue World</title>
+  <style>
+    :root{
+      --ink:#111218;--paper:#f2efe7;--white:#fffdfa;--line:#c8c5bd;
+      --blue:#1f2eff;--cyan:#007c87;--orange:#b84b22;--muted:#66645e;
+      --sans:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.58}
+    a{color:inherit}
+    a:focus-visible,button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+    .skip{position:absolute;left:-9999px;top:8px;background:var(--white);padding:10px;z-index:20}
+    .skip:focus{left:8px}
+    .topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:13px max(22px,calc((100vw - 1180px)/2));background:rgba(17,18,24,.97);color:#fff;border-bottom:1px solid #393a42}
+    .brand{font-weight:800;letter-spacing:.1em;text-transform:uppercase;font-size:13px;white-space:nowrap}
+    .topbar nav{display:flex;gap:20px;overflow-x:auto;white-space:nowrap;font-size:13px}
+    .topbar nav a{text-decoration:none;color:#d7d7dc}
+    .topbar nav a:hover{color:#fff}
+    .open{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;background:var(--blue);color:#fff;padding:10px 16px;font-size:13px;font-weight:800;letter-spacing:.03em;white-space:nowrap}
+    .hero{position:relative;overflow:hidden;background:#111218;color:#fff;padding:86px 24px 68px;border-bottom:8px solid var(--blue)}
+    .hero::before{content:"";position:absolute;inset:-40%;background:
+      radial-gradient(circle at 74% 38%,rgba(31,46,255,.72),transparent 18%),
+      radial-gradient(circle at 78% 40%,rgba(0,201,221,.24),transparent 30%),
+      repeating-radial-gradient(ellipse at 75% 46%,transparent 0 30px,rgba(255,255,255,.07) 31px 32px);transform:rotate(-8deg)}
+    .wrap{position:relative;width:min(1180px,100%);margin:auto}
+    .eyebrow{margin:0 0 16px;color:#84f5ff;font:700 12px/1.2 var(--mono);letter-spacing:.16em;text-transform:uppercase}
+    h1{max-width:820px;margin:0;font-size:clamp(48px,7vw,88px);line-height:.96;letter-spacing:-.055em}
+    .hero .lede{max-width:760px;margin:28px 0 0;font-size:clamp(20px,2.3vw,28px);line-height:1.38;color:#ededf1}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
+    .hero-actions .open{padding:14px 20px}
+    .secondary{display:inline-flex;align-items:center;text-decoration:none;color:#fff;border:1px solid #666975;padding:13px 19px;font-weight:700;font-size:14px}
+    .facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:52px;background:#4b4c54;border:1px solid #4b4c54}
+    .fact{background:#171820;padding:18px 20px}
+    .fact b{display:block;font-size:30px;line-height:1;color:#fff}
+    .fact span{display:block;margin-top:7px;color:#bdbdc4;font-size:12px;line-height:1.35}
+    main{display:block}
+    section{padding:84px 24px;border-bottom:1px solid var(--line)}
+    .section-head{display:grid;grid-template-columns:240px minmax(0,760px);gap:48px;align-items:start;margin-bottom:38px}
+    .section-no{font:700 12px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase;color:var(--blue)}
+    h2{margin:0;font-size:clamp(34px,5vw,58px);line-height:1.03;letter-spacing:-.045em}
+    .intro{margin:18px 0 0;max-width:720px;font-size:21px;line-height:1.5;color:#34343a}
+    .quick{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--ink);background:var(--ink);gap:1px}
+    .quick article{background:var(--white);padding:24px 20px;min-height:250px}
+    .step{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--blue);color:#fff;font:800 15px/1 var(--mono)}
+    .quick h3{margin:34px 0 10px;font-size:21px;line-height:1.15}
+    .quick p{margin:0;color:#4b4a46;font-size:15px;line-height:1.5}
+    .memory{margin:20px 0 0;padding:20px 24px;background:#dfe2ff;border-left:5px solid var(--blue);font-size:18px}
+    kbd{display:inline-grid;place-items:center;min-width:30px;min-height:28px;padding:3px 8px;border:1px solid #8e8c84;border-bottom-width:3px;border-radius:4px;background:#fff;font:700 13px/1 var(--mono);box-shadow:0 1px 0 #fff}
+    .screen{position:relative;aspect-ratio:16/8.6;overflow:hidden;background:#05070b;color:#fff;border:10px solid #191a20;box-shadow:0 24px 60px rgba(0,0,0,.22)}
+    .screen::before{content:"";position:absolute;inset:0;background:
+      radial-gradient(circle at 43% 50%,rgba(31,46,255,.78),transparent 18%),
+      repeating-radial-gradient(ellipse at 42% 56%,transparent 0 20px,rgba(120,241,255,.11) 21px 22px),
+      linear-gradient(118deg,transparent 0 40%,rgba(125,249,255,.15) 41%,transparent 42%)}
+    .mock-mast,.mock-story,.mock-rail,.mock-timeline,.mock-controls,.mock-card{position:absolute;border:1px solid rgba(255,255,255,.38);background:rgba(0,0,0,.88)}
+    .mock-mast{left:2%;top:3%;width:25%;height:9%}
+    .mock-timeline{left:31%;top:10%;width:39%;height:5%;background:repeating-linear-gradient(90deg,#7df9ff 0 2px,transparent 2px 10px)}
+    .mock-story{right:2%;top:5%;width:24%;height:20%;padding:12px}
+    .mock-story b,.mock-card b{font-size:clamp(7px,1vw,13px);line-height:1.3}
+    .mock-story i,.mock-card i{display:block;height:4px;margin-top:8px;background:#86878e;opacity:.62}
+    .mock-rail{right:2%;top:30%;bottom:12%;width:24%;padding:10px}
+    .mock-row{height:22%;border-left:2px solid #7df9ff;border-bottom:1px solid #34363e;margin-bottom:6px;background:linear-gradient(90deg,rgba(125,249,255,.12),transparent)}
+    .mock-card{left:29%;top:35%;width:40%;height:24%;padding:16px;text-align:center}
+    .mock-controls{left:2%;right:2%;bottom:3%;height:6%;background:linear-gradient(90deg,#111 0 20%,#20212a 20% 21%,#111 21%)}
+    .pin{position:absolute;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#fff;color:var(--blue);font:900 14px/1 var(--mono);box-shadow:0 0 0 5px rgba(31,46,255,.4)}
+    .p1{right:24%;top:4%}.p2{left:52%;top:8%}.p3{left:47%;top:55%}.p4{right:23%;top:45%}.p5{left:44%;bottom:2%}
+    .interface-key{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:18px}
+    .key-card{padding:18px;border-top:4px solid var(--blue);background:var(--white)}
+    .key-card b{font-size:17px}.key-card p{margin:8px 0 0;font-size:14px;line-height:1.48;color:#4d4c48}
+    .decision-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:28px}
+    .story-box{padding:34px;background:#111218;color:#fff}
+    .story-box h3{margin:0 0 22px;font-size:28px;line-height:1.15}
+    .story-box ol{margin:0;padding:0;list-style:none;counter-reset:story}
+    .story-box li{counter-increment:story;display:grid;grid-template-columns:42px 1fr;gap:15px;padding:17px 0;border-top:1px solid #3b3c44}
+    .story-box li::before{content:counter(story);display:grid;place-items:center;width:30px;height:30px;background:var(--blue);color:#fff;font:800 12px/1 var(--mono)}
+    .story-box li b{display:block;color:#fff}.story-box li span{display:block;margin-top:4px;color:#c9c9cf;font-size:15px;line-height:1.48}
+    .legend{background:var(--white);border:1px solid var(--line);padding:28px}
+    .legend h3{margin:0 0 8px;font-size:25px}.legend>p{margin:0 0 20px;color:var(--muted);font-size:15px}
+    .legend-row{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:center;padding:13px 0;border-top:1px solid #dedbd3}
+    .cell{display:block;width:30px;height:22px;border:3px solid var(--cyan);background:var(--cyan)}
+    .cell.outline{background:transparent}.cell.bad{border-color:var(--orange);background:var(--orange)}.cell.bad.outline{background:transparent}.cell.dim{border-color:#aaa;background:transparent;opacity:.5}
+    .legend-row b{display:block;font-size:15px}.legend-row span{display:block;color:#5b5954;font-size:13px;line-height:1.4}
+    .results{background:#101117;color:#fff}
+    .results .section-no{color:#88f7ff}.results .intro{color:#d5d5da}
+    .score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .score{min-height:260px;padding:28px;border:1px solid #454650;background:#171820}
+    .score strong{display:block;font-size:clamp(54px,7vw,88px);line-height:.9;letter-spacing:-.06em;color:#fff}
+    .score h3{margin:22px 0 8px;font-size:20px}.score p{margin:0;color:#c4c4ca;font-size:15px;line-height:1.5}
+    .score.winner{border-color:#7df9ff;box-shadow:inset 0 5px #7df9ff}.score.winner strong{color:#7df9ff}
+    .checks{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:26px}
+    .checks article{padding:25px;background:#fff;color:var(--ink)}
+    .checks h3{margin:0 0 10px;font-size:21px}.checks p{margin:0;color:#4b4944;font-size:15px}
+    .checks ul{margin:14px 0 0;padding-left:22px;font-size:15px}.checks li{margin:6px 0}
+    .warning{border-left:6px solid var(--orange)}
+    .control-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .control-group{background:var(--white);border:1px solid var(--line);padding:26px}
+    .control-group h3{margin:0 0 18px;font-size:24px}
+    .control{display:grid;grid-template-columns:94px 1fr;gap:16px;align-items:start;padding:13px 0;border-top:1px solid #dedbd3}
+    .control p{margin:0;font-size:15px;line-height:1.42;color:#494843}
+    .control .keys{display:flex;gap:5px;flex-wrap:wrap}
+    .run-note{grid-column:1/-1;background:#dfe2ff;border:1px solid #9aa2ff;padding:22px 26px}
+    .run-note h3{margin:0 0 8px;font-size:20px}.run-note p{margin:0;max-width:900px;font-size:15px}
+    .present{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--ink);border:1px solid var(--ink)}
+    .present article{background:var(--white);padding:22px 18px;min-height:230px}
+    .time{font:800 12px/1 var(--mono);color:var(--blue)}
+    .present h3{margin:32px 0 8px;font-size:18px;line-height:1.2}.present p{margin:0;color:#4f4d48;font-size:14px;line-height:1.5}
+    .say{margin-top:24px;padding:30px;border:1px solid var(--ink);background:#fff;font-size:19px;line-height:1.55}
+    .say::before{content:"A clear 45-second explanation";display:block;margin-bottom:14px;color:var(--blue);font:800 11px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase}
+    .honesty-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .honesty-card{padding:30px;background:#fff;border-top:6px solid var(--cyan)}
+    .honesty-card.sim{border-color:var(--blue)}
+    .honesty-card h3{margin:0 0 12px;font-size:27px}.honesty-card p{margin:0;color:#484741}
+    .honesty-card ul{padding-left:21px;margin:18px 0 0}.honesty-card li{margin:8px 0}
+    .faq{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    details{background:#fff;border:1px solid var(--line);padding:20px 22px}
+    summary{cursor:pointer;font-weight:800}.faq p{margin:13px 0 0;color:#4b4944;font-size:15px}
+    footer{padding:50px 24px;background:#111218;color:#c5c5cb}
+    footer .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px}
+    footer p{margin:0;max-width:720px;font-size:14px}.footer-links{display:flex;gap:12px;flex-wrap:wrap}
+    @media(max-width:900px){
+      .topbar nav{display:none}.facts{grid-template-columns:repeat(2,1fr)}
+      .section-head{grid-template-columns:1fr;gap:12px}.quick{grid-template-columns:1fr 1fr}.quick article{min-height:210px}
+      .interface-key{grid-template-columns:1fr 1fr}.decision-grid,.checks,.honesty-grid,.faq{grid-template-columns:1fr}
+      .score-grid{grid-template-columns:1fr}.control-grid{grid-template-columns:1fr}.present{grid-template-columns:1fr 1fr 1fr}
+    }
+    @media(max-width:600px){
+      body{font-size:16px}.topbar{padding:10px 14px}.brand{font-size:11px}.topbar .open{padding:9px 11px}
+      .hero{padding:58px 18px 46px}.hero .lede{font-size:19px}.facts{grid-template-columns:1fr 1fr;margin-top:34px}.fact{padding:15px}.fact b{font-size:24px}
+      section{padding:60px 18px}.quick,.interface-key,.present{grid-template-columns:1fr}.quick article,.present article{min-height:auto}
+      .screen{aspect-ratio:10/9}.mock-mast{width:31%}.mock-timeline{left:34%;width:35%}.mock-story{width:29%}.mock-rail{width:29%}.mock-card{left:24%;width:43%}
+      .control{grid-template-columns:82px 1fr}.say{font-size:17px;padding:22px}footer .wrap{align-items:flex-start;flex-direction:column}
+    }
+    @media print{.topbar,.hero-actions{display:none}.hero{padding:42px 20px;background:#fff;color:#000;border-bottom:3px solid #000}.hero::before{display:none}.hero .lede{color:#222}section{padding:36px 0}.wrap{width:100%}.screen{break-inside:avoid}.results{background:#fff;color:#000}.results .intro{color:#222}.score{background:#fff;color:#000}.score strong,.score p{color:#000}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to the guide</a>
+  <header class="topbar">
+    <div class="brand">Rescue World / Guide</div>
+    <nav aria-label="Guide sections">
+      <a href="#start">Start</a><a href="#screen">The screen</a><a href="#decision">A decision</a>
+      <a href="#results">Results</a><a href="#controls">Controls</a><a href="#present">Present it</a>
+    </nav>
+    <a class="open" href="./rescueworld.html" target="_blank" rel="noopener">Open Rescue World ↗</a>
+  </header>
+
+  <div class="hero">
+    <div class="wrap">
+      <p class="eyebrow">A plain-English field guide</p>
+      <h1>Follow three days of decisions without getting lost.</h1>
+      <p class="lede">Rescue World replays the first 72 hours after the July 2026 Kumamoto earthquake. This guide shows you where to look, what every result means, and which keys matter.</p>
+      <div class="hero-actions">
+        <a class="open" href="./rescueworld.html" target="_blank" rel="noopener">Open the viewer ↗</a>
+        <a class="secondary" href="#start">Read the 90-second quick start ↓</a>
+      </div>
+      <div class="facts" aria-label="The scale of Rescue World">
+        <div class="fact"><b>72 hours</b><span>Three days and nights after the earthquake.</span></div>
+        <div class="fact"><b>414</b><span>Recorded moments in the public-response timeline.</span></div>
+        <div class="fact"><b>11</b><span>Moments when a named person had to decide something.</span></div>
+        <div class="fact"><b>5 × 8</b><span>Five scored decisions, each answered eight times per method.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <main id="main">
+    <section id="start">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-no">01 / Start here</div>
+          <div><h2>You can understand the viewer in five moves.</h2><p class="intro">Let the story play first. Open the deeper evidence only when a decision makes you curious.</p></div>
+        </div>
+        <div class="quick">
+          <article><span class="step">1</span><h3>Open the viewer.</h3><p>Use the blue button above. The opening card explains the earthquake and separates real records from simulated choices.</p></article>
+          <article><span class="step">2</span><h3>Press Begin.</h3><p>The run moves through four acts. It pauses at important moments so you have time to read.</p></article>
+          <article><span class="step">3</span><h3>Read the right side.</h3><p>The upper panel tells you what is happening now. The decision rail below tells you what somebody had to decide.</p></article>
+          <article><span class="step">4</span><h3>Open one decision.</h3><p>Click “What the check found” for the exact rule. Click “Open the agent trace” to walk through the decision step by step.</p></article>
+          <article><span class="step">5</span><h3>Open the result.</h3><p>Press <kbd>R</kbd> for the full experiment story. Press <kbd>L</kbd> for a list of all eleven decision moments.</p></article>
+        </div>
+        <p class="memory"><strong>If you remember one route:</strong> Begin → read the right side → open one reason → press <kbd>T</kbd> for its trace → press <kbd>R</kbd> for the result → press <kbd>L</kbd> for the full ledger.</p>
+      </div>
+    </section>
+
+    <section id="screen">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-no">02 / Read the screen</div>
+          <div><h2>Every part of the screen answers a different question.</h2><p class="intro">The map gives you place. The ribbon gives you time. The panels give you the story and the reason behind each choice.</p></div>
+        </div>
+        <figure style="margin:0">
+          <div class="screen" role="img" aria-label="A simplified map of the Rescue World interface">
+            <div class="mock-mast"></div><div class="mock-timeline"></div>
+            <div class="mock-story"><b>What is happening now.</b><i></i><i></i></div>
+            <div class="mock-rail"><div class="mock-row"></div><div class="mock-row"></div><div class="mock-row"></div></div>
+            <div class="mock-card"><b>A story card stands over the place where its event happened.</b><i></i><i></i></div>
+            <div class="mock-controls"></div>
+            <span class="pin p1">1</span><span class="pin p2">2</span><span class="pin p3">3</span><span class="pin p4">4</span><span class="pin p5">5</span>
+          </div>
+          <figcaption class="interface-key">
+            <div class="key-card"><b>1. The current story</b><p>This large panel tells you the event that just entered the record and what the current act is about.</p></div>
+            <div class="key-card"><b>2. The 72-hour ribbon</b><p>Each mark is a recorded moment. Bright groups show busy periods. Shaded stretches show quiet clock time crossed quickly.</p></div>
+            <div class="key-card"><b>3. The living map</b><p>Events appear where they happened. Hollow boxes show places under consideration. Filled boxes show the final simulated choice.</p></div>
+            <div class="key-card"><b>4. The decision rail</b><p>Each row says who decided, what the simulated answer chose, how eight tries agreed, and whether the shown answer passed.</p></div>
+            <div class="key-card"><b>5. The transport bar</b><p>Pause, change speed, move one event or one act, and turn the camera layers on or off from the bottom edge.</p></div>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="decision">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-no">03 / Read one decision</div>
+          <div><h2>The water decision shows the whole technique in one example.</h2><p class="intro">On day two, an agent had to plan extra water support before every town had finished reporting its need.</p></div>
+        </div>
+        <div class="decision-grid">
+          <article class="story-box">
+            <h3>The answer moved from 22, to 24, and back to a valid 22.</h3>
+            <ol>
+              <li><div><b>Plain written notes proposed 22 trucks.</b><span>The quantity fit. The answer still failed because some place names were not allowed and required unknowns were missing.</span></div></li>
+              <li><div><b>The evidence table made every claim traceable.</b><span>The answer named its sources and unknowns. It then proposed 24 trucks even though only 22 were available.</span></div></li>
+              <li><div><b>Ordinary code named the exact mistake.</b><span>The checker contained no AI model. It reported that the answer asked for two trucks more than the exercise allowed.</span></div></li>
+              <li><div><b>One correction produced a valid plan for 22 trucks.</b><span>The agent used the same reports. It received no new facts and changed only the part that broke the rule.</span></div></li>
+            </ol>
+          </article>
+          <aside class="legend">
+            <h3>The eight small cells carry two readings.</h3>
+            <p>Fill shows whether a try made the same choice as the answer on screen. Color shows whether that try passed every written check.</p>
+            <div class="legend-row"><i class="cell"></i><div><b>Filled blue</b><span>The try made the shown choice and passed every check.</span></div></div>
+            <div class="legend-row"><i class="cell outline"></i><div><b>Outlined blue</b><span>The try made a different choice and passed every check.</span></div></div>
+            <div class="legend-row"><i class="cell bad"></i><div><b>Filled orange</b><span>The try made the shown choice and broke at least one check.</span></div></div>
+            <div class="legend-row"><i class="cell bad outline"></i><div><b>Outlined orange</b><span>The try made a different choice and broke at least one check.</span></div></div>
+            <div class="legend-row"><i class="cell dim"></i><div><b>Dim outline</b><span>This moment is descriptive. It carries no count in the registered result.</span></div></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="results" id="results">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-no">04 / Understand the result</div>
+          <div><h2>The experiment measured rule-following and traceability.</h2><p class="intro">One try was one software agent answering one scored decision once. Each method answered five decisions eight times, for 40 tries per method.</p></div>
+        </div>
+        <div class="score-grid">
+          <article class="score"><strong>0/40</strong><h3>Plain written notes</h3><p>No answer passed every check. Most plans fit the resource limit. They failed the written requirements for sources, allowed identifiers, or named unknowns.</p></article>
+          <article class="score"><strong>17/40</strong><h3>An evidence table</h3><p>Seventeen answers passed every check. Every claim stood beside its source, and unresolved facts stayed visible instead of becoming guesses.</p></article>
+          <article class="score winner"><strong>34/40</strong><h3>Table and one correction</h3><p>Thirty-four answers passed every check. The one bounded message repaired 17 of the table’s 23 broken answers without breaking an answer that already passed.</p></article>
+        </div>
+        <div class="checks">
+          <article><h3>There are no mystery points.</h3><p>A pass required one answer to clear every check written before the run:</p><ul><li>Use only allowed units and places.</li><li>Stay inside the resource limit.</li><li>Use information available by the deadline.</li><li>Name required unknowns.</li><li>Use nothing learned later.</li></ul></article>
+          <article class="warning"><h3>The result has a firm boundary.</h3><p>The checks do not grade the real responders. They do not prove that an agent showed better judgment or would have reached more people. The next experiment must add a recorded outcome model and measure reach.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="controls">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-no">05 / Use the controls</div>
+          <div><h2>Seven keys handle almost every presentation.</h2><p class="intro">Press <kbd>Esc</kbd> whenever you want to close the surface on top and return to the world.</p></div>
+        </div>
+        <div class="control-grid">
+          <article class="control-group">
+            <h3>The presenter’s keys</h3>
+            <div class="control"><div class="keys"><kbd>Space</kbd></div><p>Play or pause the 72-hour record.</p></div>
+            <div class="control"><div class="keys"><kbd>R</kbd></div><p>Open the full experiment story, including the 22 → 24 → 22 water example and the exact 0/40, 17/40 and 34/40 result.</p></div>
+            <div class="control"><div class="keys"><kbd>T</kbd></div><p>Open the six-card agent trace for the decision the run has reached. Use the arrow keys to move through it.</p></div>
+            <div class="control"><div class="keys"><kbd>L</kbd></div><p>Open the decision ledger. It lists all eleven decisions and separates the five scored moments from the six descriptive moments.</p></div>
+            <div class="control"><div class="keys"><kbd>D</kbd></div><p>Open the closing debrief again after the run.</p></div>
+            <div class="control"><div class="keys"><kbd>?</kbd></div><p>Open the complete help page inside Rescue World.</p></div>
+            <div class="control"><div class="keys"><kbd>Esc</kbd></div><p>Close the top surface, an open explanation, or a selection.</p></div>
+          </article>
+          <article class="control-group">
+            <h3>Movement and building tools</h3>
+            <div class="control"><div class="keys"><kbd>P</kbd></div><p>Start or stop the automatic camera tour.</p></div>
+            <div class="control"><div class="keys"><kbd>H</kbd></div><p>Return the camera to the home view.</p></div>
+            <div class="control"><div class="keys"><kbd>0</kbd></div><p>Return to the first recorded moment.</p></div>
+            <div class="control"><div class="keys"><kbd>,</kbd><kbd>.</kbd></div><p>Step backward or forward by one recorded event.</p></div>
+            <div class="control"><div class="keys"><kbd>[</kbd><kbd>]</kbd></div><p>Step backward or forward by one act.</p></div>
+            <div class="control"><div class="keys"><kbd>G</kbd></div><p>Open art direction. Change the grade, glow, grain, vignette and blue burn color. These settings change only the picture.</p></div>
+            <div class="control"><div class="keys"><kbd>WASD</kbd><kbd>Q</kbd><kbd>E</kbd></div><p>Fly across the ground and change height. Drag to orbit, scroll to zoom, and shift-drag to slide.</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="present">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-no">06 / Present it</div>
+          <div><h2>A clear classroom walkthrough takes about six minutes.</h2><p class="intro">Tell the human story first. Show the graph technique only after the audience understands the decision it is trying to improve.</p></div>
+        </div>
+        <div class="present">
+          <article><span class="time">0:00</span><h3>Name the human problem.</h3><p>Read the opening card. People had to send help while reports were incomplete and still changing.</p></article>
+          <article><span class="time">0:45</span><h3>Begin the replay.</h3><p>Point out the real ground, the 72-hour ribbon and the right-side story panel.</p></article>
+          <article><span class="time">1:45</span><h3>Pause at a decision.</h3><p>Read who had to decide, what the simulated agent chose and the eight agreement cells.</p></article>
+          <article><span class="time">2:45</span><h3>Open the evidence.</h3><p>Click the grade for the exact rule. Open the trace and walk from the public record to the corrected choice.</p></article>
+          <article><span class="time">4:00</span><h3>Press R for the result.</h3><p>Tell the water example before reading 0/40, 17/40 and 34/40.</p></article>
+          <article><span class="time">5:30</span><h3>End on the boundary.</h3><p>The test measured traceability and rule-following. The next test must measure who the plan would reach.</p></article>
+        </div>
+        <blockquote class="say">On 28 July 2026, an earthquake struck Kumamoto and responders had to make decisions while information was incomplete. We replayed eleven of those decision moments and scored five of them as an AI experiment. Plain notes passed every prewritten check in 0 of 40 tries. A table that kept claims beside their sources passed 17 of 40. One exact correction message raised that to 34 of 40. The technique made simulated decisions easier to trace and more likely to follow the rules. It has not yet shown that those decisions would help more people.</blockquote>
+      </div>
+    </section>
+
+    <section id="honesty">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-no">07 / Keep the boundary clear</div>
+          <div><h2>The real record and the simulation share one screen.</h2><p class="intro">Rescue World labels their boundary because a convincing picture can make simulated events feel historical.</p></div>
+        </div>
+        <div class="honesty-grid">
+          <article class="honesty-card"><h3>These parts come from real public records.</h3><ul><li>The terrain and mapped landslide areas.</li><li>The earthquake and recorded aftershocks.</li><li>The road restrictions and designated shelters.</li><li>The official agency updates and real decision deadlines.</li></ul></article>
+          <article class="honesty-card sim"><h3>These parts are simulated exercise data.</h3><ul><li>Every AI-generated choice and dispatch.</li><li>Every count of agreement across agent tries.</li><li>The damage drawn across the ground.</li><li>The grades produced by the prewritten exercise checks.</li></ul></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="trouble">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="section-no">08 / Fix common problems</div>
+          <div><h2>Most problems have a one-key answer.</h2></div>
+        </div>
+        <div class="faq">
+          <details><summary>A panel is covering the world.</summary><p>Press <kbd>Esc</kbd>. It closes the top surface and returns you to the replay.</p></details>
+          <details><summary>A keyboard shortcut does nothing.</summary><p>Close the art-direction panel with <kbd>Esc</kbd>. Text fields inside that tool keep the keys you type.</p></details>
+          <details><summary>The camera is somewhere confusing.</summary><p>Press <kbd>H</kbd> for the whole-ground home view. Press <kbd>P</kbd> if you want the automatic camera tour.</p></details>
+          <details><summary>You want the result immediately.</summary><p>Press <kbd>R</kbd>. The result page gives the complete scenario, the concrete water example, every count, the limitation and the next experiment.</p></details>
+          <details><summary>You want to inspect every decision.</summary><p>Press <kbd>L</kbd>. Click any row’s trace control to open its evidence walk-through without moving the replay clock.</p></details>
+          <details><summary>Another computer cannot open the page.</summary><p>Both computers must be on the same local network, and the host computer must keep the viewer server running. The current network address is <code>http://192.168.1.2:5185/rescueworld.html</code>.</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>Rescue World is a decision-making information tool. It helps a person inspect what a decision rested on, what was unknown at the deadline, and which written rules the simulated answer followed.</p>
+      <div class="footer-links"><a class="open" href="./rescueworld.html" target="_blank" rel="noopener">Open Rescue World ↗</a><a class="secondary" href="#start">Back to the start ↑</a></div>
+    </div>
+  </footer>
+</body>
+</html>

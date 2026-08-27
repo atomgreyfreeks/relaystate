@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Rescue World — partner hub</title>
+  <link rel="icon" href="/favicon.svg">
+  <style>
+    :root{--ground:#050607;--panel:#0b0e10;--bone:#f3f5f6;--body:#bac2c8;--dim:#727c84;--line:#222a30;--sig:#7df9ff;--warn:#e8a87f}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;background:var(--ground)}
+    body{margin:0;background:var(--ground);color:var(--body);font:16px/1.65 "Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+    a{color:inherit}a:focus-visible{outline:2px solid var(--sig);outline-offset:4px}
+    .top{position:sticky;top:0;z-index:8;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px max(24px,calc((100vw - 1180px)/2));background:rgba(5,6,7,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+    .brand{color:var(--bone);font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+    .status{display:flex;align-items:center;gap:9px;color:var(--dim);font-size:12px;letter-spacing:.1em;text-transform:uppercase}.status i{width:7px;height:7px;border-radius:50%;background:var(--sig);box-shadow:0 0 18px var(--sig)}
+    .hero{min-height:76vh;display:flex;align-items:center;padding:90px 24px 72px;border-bottom:1px solid var(--line);background:radial-gradient(circle at 78% 38%,rgba(125,249,255,.10),transparent 24%),linear-gradient(140deg,#050607 0%,#080b0d 58%,#050607 100%)}
+    .wrap{width:min(1180px,100%);margin:auto}
+    .kicker{margin:0 0 18px;color:var(--sig);font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase}
+    h1{max-width:920px;margin:0;color:var(--bone);font-size:clamp(48px,7vw,88px);font-weight:600;letter-spacing:-.055em;line-height:.96}
+    .lead{max-width:820px;margin:28px 0 0;color:#d8dde0;font-size:clamp(20px,2.2vw,27px);line-height:1.45}
+    .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}.button{display:inline-flex;align-items:center;justify-content:center;padding:14px 19px;border:1px solid var(--sig);color:#031013;background:var(--sig);font-size:13px;font-weight:700;letter-spacing:.04em;text-decoration:none}.button.secondary{background:transparent;color:var(--bone);border-color:#49545c}
+    .facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:56px;border:1px solid var(--line);background:var(--line)}
+    .fact{min-height:120px;padding:21px;background:rgba(5,6,7,.92)}.fact b{display:block;color:var(--bone);font-size:32px;line-height:1}.fact span{display:block;margin-top:11px;color:var(--dim);font-size:13px;line-height:1.5}
+    section{padding:78px 24px;border-bottom:1px solid var(--line)}
+    .head{display:grid;grid-template-columns:190px minmax(0,760px);gap:36px;margin-bottom:34px}.number{color:var(--sig);font-size:11px;font-weight:700;letter-spacing:.19em;text-transform:uppercase}
+    h2{margin:0;color:var(--bone);font-size:clamp(34px,4.8vw,58px);font-weight:600;letter-spacing:-.045em;line-height:1.04}.intro{max-width:740px;margin:17px 0 0;font-size:19px;color:var(--body)}
+    .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.card{position:relative;min-height:245px;padding:28px;border:1px solid var(--line);background:var(--panel);text-decoration:none;transition:border-color .2s ease,transform .2s ease}.card:hover{border-color:#53636d;transform:translateY(-2px)}.card small{color:var(--sig);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}.card h3{margin:35px 0 12px;color:var(--bone);font-size:25px;line-height:1.18}.card p{margin:0;color:var(--dim);font-size:15px}.card .go{position:absolute;right:22px;bottom:18px;color:var(--sig);font-size:18px}
+    .route{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;border:1px solid var(--line);background:var(--line)}.step{padding:22px 18px;background:var(--panel)}.step b{display:grid;place-items:center;width:32px;height:32px;border:1px solid var(--sig);color:var(--sig);font-size:12px}.step h3{margin:26px 0 8px;color:var(--bone);font-size:18px;line-height:1.2}.step p{margin:0;color:var(--dim);font-size:13px;line-height:1.5}kbd{display:inline-block;min-width:27px;padding:3px 7px;border:1px solid #5b666d;border-bottom-width:2px;color:var(--bone);background:#080a0c;font:700 12px/1.2 ui-monospace,monospace;text-align:center}
+    .result{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:start}.counts{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}.count{padding:25px 20px;background:var(--panel)}.count strong{display:block;color:var(--sig);font-size:clamp(42px,5vw,64px);line-height:.9;letter-spacing:-.05em}.count b{display:block;margin-top:18px;color:var(--bone);font-size:15px}.count span{display:block;margin-top:7px;color:var(--dim);font-size:12px;line-height:1.45}.limits{padding:28px;border-left:2px solid var(--warn);background:#0b0d0e}.limits h3{margin:0 0 12px;color:var(--bone);font-size:20px}.limits p{margin:0;color:var(--body);font-size:15px}.limits p+p{margin-top:12px;color:var(--dim)}
+    .harness{display:grid;grid-template-columns:.8fr 1.2fr;gap:26px}.terminal{padding:25px;background:#000;border:1px solid var(--line);color:#cbd4da;font:14px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace}.terminal b{color:var(--sig);font-weight:400}.ai{padding:27px;border:1px solid var(--line);background:var(--panel)}.ai h3{margin:0 0 14px;color:var(--bone);font-size:23px}.ai ol{margin:0;padding-left:22px}.ai li{margin:10px 0;color:var(--body)}.ai a{color:var(--sig)}
+    footer{padding:48px 24px;color:var(--dim)}footer .wrap{display:flex;justify-content:space-between;gap:30px;align-items:flex-start}footer p{max-width:760px;margin:0;font-size:13px}.private{color:var(--sig);font-size:11px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+    @media(max-width:900px){.facts{grid-template-columns:1fr 1fr}.head{grid-template-columns:1fr;gap:9px}.route{grid-template-columns:1fr 1fr}.result,.harness{grid-template-columns:1fr}}
+    @media(max-width:620px){.top{padding:12px 16px}.status{display:none}.hero{min-height:auto;padding:62px 18px 50px}.facts,.cards,.route,.counts{grid-template-columns:1fr}.fact{min-height:auto}section{padding:58px 18px}.card{min-height:220px}footer .wrap{flex-direction:column}.private{white-space:normal}}
+  </style>
+</head>
+<body>
+  <header class="top"><div class="brand">Rescue World / partner hub</div><div class="status"><i></i>Current handoff · private package</div></header>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <p class="kicker">A working disaster replay and agent-decision instrument</p>
+        <h1>See what happened, what the agents knew, and why a decision passed.</h1>
+        <p class="lead">Rescue World replays the first 72 hours after the July 2026 Kumamoto earthquake. It keeps real public records separate from simulated agent decisions, then lets you inspect every source, handoff, check, and correction.</p>
+        <div class="actions"><a class="button" href="/rescueworld.html">Open Rescue World →</a><a class="button secondary" href="#review">Follow the five-minute route ↓</a></div>
+        <div class="facts" aria-label="Package facts"><div class="fact"><b>72 hours</b><span>The first three days after the earthquake.</span></div><div class="fact"><b>414</b><span>Events in the sealed viewer record.</span></div><div class="fact"><b>11</b><span>Recorded moments when somebody had to decide.</span></div><div class="fact"><b>120</b><span>Registered simulated decisions across three methods.</span></div></div>
+      </div>
+    </section>
+
+    <section id="what"><div class="wrap"><div class="head"><div class="number">01 / What was built</div><div><h2>One viewer, two briefings, and the evidence needed to check every claim.</h2><p class="intro">Start with the live simulation. The presentations explain how the project grew, what the experiment measured, and what still has to be tested.</p></div></div>
+      <div class="cards">
+        <a class="card" href="/rescueworld.html"><small>Working software</small><h3>Rescue World</h3><p>Play the 72-hour record, open all eleven decision moments, and walk through the simulated agent traces.</p><span class="go">→</span></a>
+        <a class="card" href="/docs/emergence-presentation.html"><small>Overview presentation</small><h3>How this project grew</h3><p>The emergence story: how earlier experiments converged into the current Rescue World build.</p><span class="go">→</span></a>
+        <a class="card" href="/docs/submission-presentation.html"><small>Current submission briefing</small><h3>What is finished, measured, and next</h3><p>The current frame, registered result, open work, and honest submission boundary.</p><span class="go">→</span></a>
+        <a class="card" href="/docs/rescueworld-guide.html"><small>Complete controls</small><h3>How to use the viewer</h3><p>A plain-language field guide to the screen, decisions, keyboard controls, result, and limitations.</p><span class="go">→</span></a>
+      </div>
+    </div></section>
+
+    <section id="review"><div class="wrap"><div class="head"><div class="number">02 / Five-minute route</div><div><h2>You do not need to watch all three days to understand it.</h2><p class="intro">The viewer pauses at important moments. These five moves reveal the story, the agent work, and the measured result.</p></div></div>
+      <div class="route"><article class="step"><b>1</b><h3>Choose Begin.</h3><p>Read the earthquake in plain language before the record starts.</p></article><article class="step"><b>2</b><h3>Read the right side.</h3><p>The top panel says what is happening. The rail lists decisions.</p></article><article class="step"><b>3</b><h3>Press <kbd>L</kbd>.</h3><p>Open all eleven moments and choose one of the five graded decisions.</p></article><article class="step"><b>4</b><h3>Press <kbd>T</kbd>.</h3><p>Walk from the deadline and known facts to the final simulated action.</p></article><article class="step"><b>5</b><h3>Press <kbd>R</kbd>.</h3><p>Read the experiment, result, and limitation in complete sentences.</p></article></div>
+    </div></section>
+
+    <section id="result"><div class="wrap"><div class="head"><div class="number">03 / Registered finding</div><div><h2>Keeping evidence through handoffs helped. One bounded correction helped more.</h2><p class="intro">Five reconstructed decision moments were answered eight times with each method. Every answer was graded against rules written before the run.</p></div></div>
+      <div class="result"><div class="counts"><div class="count"><strong>0/40</strong><b>Plain written notes</b><span>No answer passed every prewritten check.</span></div><div class="count"><strong>17/40</strong><b>Evidence table</b><span>Claims stayed beside sources and unknowns.</span></div><div class="count"><strong>34/40</strong><b>Table + one correction</b><span>One exact message named the broken rule.</span></div></div><aside class="limits"><h3>The honest verdict</h3><p>The evidence-table claim failed one registered constraint rule. The bounded-feedback claim passed its narrower rules.</p><p>This measures communication, traceability, and rule-following in the exercise. It does not prove better real-world judgment or lives saved.</p></aside></div>
+    </div></section>
+
+    <section id="harness"><div class="wrap"><div class="head"><div class="number">04 / Continue the work</div><div><h2>An AI harness can orient itself and verify the package without private infrastructure.</h2><p class="intro">The package contains no VPN or GPU credentials, no remote launcher, and no old six-candidate gallery.</p></div></div>
+      <div class="harness"><div class="terminal"><b>$</b> npm ci<br><b>$</b> npm run verify<br><b>$</b> npm run dev<br><br>open http://localhost:5184</div><div class="ai"><h3>Tell the harness to do this first</h3><ol><li>Read <code>AGENTS.md</code> and <code>README.md</code> in the repository root.</li><li>Run the package verification before editing.</li><li>Keep real records, simulated decisions, and later analysis separate.</li><li>After a visible change, run the browser test and inspect both screenshots.</li></ol></div></div>
+    </div></section>
+  </main>
+  <footer><div class="wrap"><p>Official source details, hashes, transformations, and attribution are in <code>product/disaster-replay/DATA-SOURCES.md</code>. The frozen experimental verdict and limits are in <code>experiment/PRODUCTION-RESULTS.md</code>.</p><div class="private">Private partner handoff</div></div></footer>
+</body>
+</html>

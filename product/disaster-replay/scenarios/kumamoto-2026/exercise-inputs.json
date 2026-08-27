@@ -1,0 +1,77 @@
+{
+  "schema_version": "disaster-replay.exercise-inputs.v1",
+  "exercise_id": "kumamoto-2026-four-site-triage",
+  "disclosure": "All people counts, reports, source identities, and dispatch outcomes in this file are synthetic exercise data. Feature geometry comes from the cited GSI observed-landslide layer.",
+  "truth_by_target": {
+    "gsi-2026-kumamoto-landslide-001": 18,
+    "gsi-2026-kumamoto-landslide-002": 42,
+    "gsi-2026-kumamoto-landslide-003": 35,
+    "gsi-2026-kumamoto-landslide-004": 28
+  },
+  "observations": [
+    {
+      "observation_id": "exercise-report-001",
+      "step": 1,
+      "source_type": "SOCIAL",
+      "source_label": "simulated public post A",
+      "target_feature_id": "gsi-2026-kumamoto-landslide-001",
+      "claim": { "predicate": "people_waiting_for_assessment", "value": 60, "unit": "simulated_people", "urgency": "URGENT" }
+    },
+    {
+      "observation_id": "exercise-report-002",
+      "step": 2,
+      "source_type": "FIELD_REPORT",
+      "source_label": "simulated field team A",
+      "target_feature_id": "gsi-2026-kumamoto-landslide-001",
+      "claim": { "predicate": "people_waiting_for_assessment", "value": 18, "unit": "simulated_people", "urgency": "URGENT" }
+    },
+    {
+      "observation_id": "exercise-report-003",
+      "step": 3,
+      "source_type": "SIMULATED_SENSOR",
+      "source_label": "simulated aerial count A",
+      "target_feature_id": "gsi-2026-kumamoto-landslide-001",
+      "claim": { "predicate": "people_waiting_for_assessment", "value": 18, "unit": "simulated_people", "urgency": "URGENT" }
+    },
+    {
+      "observation_id": "exercise-report-004",
+      "step": 4,
+      "source_type": "PHONE",
+      "source_label": "simulated municipal call B",
+      "target_feature_id": "gsi-2026-kumamoto-landslide-002",
+      "claim": { "predicate": "people_waiting_for_assessment", "value": 42, "unit": "simulated_people", "urgency": "URGENT" }
+    },
+    {
+      "observation_id": "exercise-report-005",
+      "step": 5,
+      "source_type": "FIELD_REPORT",
+      "source_label": "simulated field team B",
+      "target_feature_id": "gsi-2026-kumamoto-landslide-002",
+      "claim": { "predicate": "people_waiting_for_assessment", "value": 42, "unit": "simulated_people", "urgency": "URGENT" }
+    },
+    {
+      "observation_id": "exercise-report-006",
+      "step": 6,
+      "source_type": "SOCIAL",
+      "source_label": "simulated public post C",
+      "target_feature_id": "gsi-2026-kumamoto-landslide-003",
+      "claim": { "predicate": "people_waiting_for_assessment", "value": 35, "unit": "simulated_people", "urgency": "URGENT" }
+    },
+    {
+      "observation_id": "exercise-report-007",
+      "step": 7,
+      "source_type": "SIMULATED_SENSOR",
+      "source_label": "simulated aerial count C",
+      "target_feature_id": "gsi-2026-kumamoto-landslide-003",
+      "claim": { "predicate": "people_waiting_for_assessment", "value": 35, "unit": "simulated_people", "urgency": "URGENT" }
+    },
+    {
+      "observation_id": "exercise-report-008",
+      "step": 8,
+      "source_type": "WEB",
+      "source_label": "simulated situation page D",
+      "target_feature_id": "gsi-2026-kumamoto-landslide-004",
+      "claim": { "predicate": "people_waiting_for_assessment", "value": 28, "unit": "simulated_people", "urgency": "ELEVATED" }
+    }
+  ]
+}

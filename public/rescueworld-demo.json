@@ -1,0 +1,613 @@
+{
+  "schema_version": "disaster-replay.baked-run.v1",
+  "scenario": "skeleton-demo",
+  "scenario_id": "skeleton-demo",
+  "title": "Two rescue desks, three reports, one team to send",
+  "seed": 260728,
+  "synthetic": true,
+  "screen_label": "SYNTHETIC EXERCISE DATA — demonstration log",
+  "disclosure": "Every report, every people count, every dispatch and every outcome in this file was written by hand as a demonstration. Nothing here was measured. The epicenter coordinate is the value the Japan Meteorological Agency records for the earthquake of 2026-07-28 in Kumamoto Prefecture, and the map window is the same window the real run uses, so a real baked run can replace this file without any change to the page that reads it.",
+  "hash_rule": "event_sha256 is the SHA-256 of the event object with the event_sha256 field removed, serialized as JSON with sorted keys and no spaces. previous_event_sha256 is the previous line's event_sha256, and the first line uses sixty-four zeros.",
+  "clock": {
+    "basis": "SIMULATION_STEP",
+    "start_at": "2026-07-28T16:27:15.200+09:00",
+    "step_seconds": 60
+  },
+  "viewport": {
+    "center": [130.6783333333, 32.625],
+    "bounds": [[130.48, 32.3], [130.9, 32.83]]
+  },
+  "arms": [
+    {
+      "id": "PLAIN_GRAPH",
+      "name": "The plain desk",
+      "gloss": "This desk sends its one team to whichever report claims the most people. It keeps no record of which reports were checked, so a single unchecked post can decide where the team goes."
+    },
+    {
+      "id": "EVIDENCE_GRAPH",
+      "name": "The evidence desk",
+      "gloss": "This desk gives every claim a written verdict first. A claim needs a second, independent source agreeing within a factor of two before it may send the team, so an unchecked post cannot decide where the team goes."
+    }
+  ],
+  "events": [
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 0,
+      "sim_time_s": 0,
+      "type": "WORLD_INITIALIZED",
+      "arm": "SHARED",
+      "actor": { "id": "skeleton-demo-world", "kind": "WORLD", "role": "demonstration world" },
+      "event_id": "skeleton-demo:e0000",
+      "caused_by": [],
+      "entity_refs": ["skeleton-demo"],
+      "geometry": { "type": "Point", "coordinates": [130.6783333333, 32.625] },
+      "graph": null,
+      "payload": {
+        "detail": "An earthquake has struck. Two rescue desks open with the same map, the same reports and one team each to send.",
+        "incident": {
+          "kind": "EARTHQUAKE",
+          "occurred_at": "2026-07-28T16:27:15.200+09:00",
+          "latitude": 32.625,
+          "longitude": 130.6783333333,
+          "magnitude": 7.1,
+          "maximum_intensity": "JMA 7",
+          "source_id": "jma-kumamoto-2026-event"
+        },
+        "disclosure": "This is a hand-written demonstration. The reports, the people counts and the outcomes are invented."
+      },
+      "provenance": {
+        "classification": "SYNTHETIC_EXERCISE",
+        "explanation": "Hand-written demonstration event. The epicenter coordinate is the Japan Meteorological Agency value; the exercise around it is invented.",
+        "source_ids": ["skeleton-demo"]
+      },
+      "previous_event_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "event_sha256": "9eee288c34d520d1cb58476836521169d42900edffda2ce28ebed77273375d14"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 1,
+      "sim_time_s": 60,
+      "type": "SOURCE_INGESTED",
+      "arm": "SHARED",
+      "actor": { "id": "demo-report-001", "kind": "SOURCE", "role": "invented public post" },
+      "event_id": "skeleton-demo:e0001",
+      "caused_by": ["skeleton-demo:e0000"],
+      "entity_refs": ["demo-site-north"],
+      "geometry": { "type": "Point", "coordinates": [130.6642490853, 32.8019955544] },
+      "graph": null,
+      "payload": {
+        "detail": "One public post says sixty people are waiting at the north ridge village. No other source has said anything about that village.",
+        "observation_id": "demo-report-001",
+        "source_type": "SOCIAL",
+        "source_label": "invented public post A",
+        "target_feature_id": "demo-site-north",
+        "step": 1,
+        "claim": {
+          "predicate": "people_waiting_for_assessment",
+          "value": 60,
+          "unit": "simulated_people",
+          "urgency": "URGENT"
+        }
+      },
+      "provenance": {
+        "classification": "SYNTHETIC_EXERCISE",
+        "explanation": "The report and its people count are invented for this demonstration.",
+        "source_ids": ["demo-report-001"]
+      },
+      "previous_event_sha256": "9eee288c34d520d1cb58476836521169d42900edffda2ce28ebed77273375d14",
+      "event_sha256": "c8a31550db1d5754b6f4c9bfd6e68404424275053e7a2165571c12b224308154"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 2,
+      "sim_time_s": 120,
+      "type": "SOURCE_INGESTED",
+      "arm": "SHARED",
+      "actor": { "id": "demo-report-002", "kind": "SOURCE", "role": "invented satellite estimate" },
+      "event_id": "skeleton-demo:e0002",
+      "caused_by": ["skeleton-demo:e0000"],
+      "entity_refs": ["demo-site-river"],
+      "geometry": { "type": "Point", "coordinates": [130.742, 32.611] },
+      "graph": null,
+      "payload": {
+        "detail": "A satellite estimate says twenty-four people are waiting at the river village.",
+        "observation_id": "demo-report-002",
+        "source_type": "SATELLITE",
+        "source_label": "invented satellite estimate B",
+        "target_feature_id": "demo-site-river",
+        "step": 2,
+        "claim": {
+          "predicate": "people_waiting_for_assessment",
+          "value": 24,
+          "unit": "simulated_people",
+          "urgency": "URGENT"
+        }
+      },
+      "provenance": {
+        "classification": "SYNTHETIC_EXERCISE",
+        "explanation": "The estimate and its people count are invented for this demonstration.",
+        "source_ids": ["demo-report-002"]
+      },
+      "previous_event_sha256": "c8a31550db1d5754b6f4c9bfd6e68404424275053e7a2165571c12b224308154",
+      "event_sha256": "43cbaf845830622fd77bac9e2691e673d26599a8687ae67ec7261c2bd98229f2"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 3,
+      "sim_time_s": 180,
+      "type": "SOURCE_INGESTED",
+      "arm": "SHARED",
+      "actor": { "id": "demo-report-003", "kind": "SOURCE", "role": "invented radio call" },
+      "event_id": "skeleton-demo:e0003",
+      "caused_by": ["skeleton-demo:e0000"],
+      "entity_refs": ["demo-site-river"],
+      "geometry": { "type": "Point", "coordinates": [130.742, 32.611] },
+      "graph": null,
+      "payload": {
+        "detail": "A radio call from a road crew also reports about twenty-two people waiting at the river village. Two separate sources now describe the same place.",
+        "observation_id": "demo-report-003",
+        "source_type": "FIELD_RADIO",
+        "source_label": "invented road crew call C",
+        "target_feature_id": "demo-site-river",
+        "step": 3,
+        "claim": {
+          "predicate": "people_waiting_for_assessment",
+          "value": 22,
+          "unit": "simulated_people",
+          "urgency": "URGENT"
+        }
+      },
+      "provenance": {
+        "classification": "SYNTHETIC_EXERCISE",
+        "explanation": "The call and its people count are invented for this demonstration.",
+        "source_ids": ["demo-report-003"]
+      },
+      "previous_event_sha256": "43cbaf845830622fd77bac9e2691e673d26599a8687ae67ec7261c2bd98229f2",
+      "event_sha256": "2e4ccf5db5bae07d37901c20dde90bd96fc760e78722a2f4e2c9a90fcd588a5a"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 4,
+      "sim_time_s": 240,
+      "type": "GRAPH_TRANSITION",
+      "arm": "PLAIN_GRAPH",
+      "actor": { "id": "intake-01", "kind": "AGENT", "role": "report intake" },
+      "event_id": "skeleton-demo:e0004",
+      "caused_by": ["skeleton-demo:e0001", "skeleton-demo:e0002", "skeleton-demo:e0003"],
+      "entity_refs": ["demo-site-north", "demo-site-river"],
+      "geometry": null,
+      "graph": { "graph_id": "demo-plain-graph-v1", "node_id": "INGEST", "edge_id": null },
+      "payload": {
+        "detail": "The plain desk has taken in all three reports and starts reading them.",
+        "node_id": "INGEST",
+        "prior_node_id": null
+      },
+      "provenance": {
+        "classification": "DERIVED_DETERMINISTIC",
+        "explanation": "Both desks receive the same three reports.",
+        "source_ids": ["demo-report-001", "demo-report-002", "demo-report-003"]
+      },
+      "previous_event_sha256": "2e4ccf5db5bae07d37901c20dde90bd96fc760e78722a2f4e2c9a90fcd588a5a",
+      "event_sha256": "7b292197ca24173beca82ad9618142b9a4fa8f26aa140e4f2c9ae7675446fb5e"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 5,
+      "sim_time_s": 240,
+      "type": "GRAPH_TRANSITION",
+      "arm": "EVIDENCE_GRAPH",
+      "actor": { "id": "intake-01", "kind": "AGENT", "role": "report intake" },
+      "event_id": "skeleton-demo:e0005",
+      "caused_by": ["skeleton-demo:e0001", "skeleton-demo:e0002", "skeleton-demo:e0003"],
+      "entity_refs": ["demo-site-north", "demo-site-river"],
+      "geometry": null,
+      "graph": { "graph_id": "demo-evidence-graph-v1", "node_id": "INGEST", "edge_id": null },
+      "payload": {
+        "detail": "The evidence desk has taken in the same three reports and starts reading them.",
+        "node_id": "INGEST",
+        "prior_node_id": null
+      },
+      "provenance": {
+        "classification": "DERIVED_DETERMINISTIC",
+        "explanation": "Both desks receive the same three reports.",
+        "source_ids": ["demo-report-001", "demo-report-002", "demo-report-003"]
+      },
+      "previous_event_sha256": "7b292197ca24173beca82ad9618142b9a4fa8f26aa140e4f2c9ae7675446fb5e",
+      "event_sha256": "7eb79bc1d1c9fa0c0b21406eed3561140279fde69b93055f7c1cc69cb00e9406"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 6,
+      "sim_time_s": 300,
+      "type": "CLAIM_STATE_CHANGED",
+      "arm": "PLAIN_GRAPH",
+      "actor": { "id": "summarizer-01", "kind": "AGENT", "role": "report summary" },
+      "event_id": "skeleton-demo:e0006",
+      "caused_by": ["skeleton-demo:e0001"],
+      "entity_refs": ["demo-site-north"],
+      "geometry": { "type": "Point", "coordinates": [130.6642490853, 32.8019955544] },
+      "graph": { "graph_id": "demo-plain-graph-v1", "node_id": "SUMMARIZE", "edge_id": null },
+      "payload": {
+        "detail": "The plain desk records sixty people at the north ridge village. It writes down no verdict, because it has no rule about sources.",
+        "claim_version_id": "demo-site-north:people_waiting:60",
+        "target_feature_id": "demo-site-north",
+        "value": 60,
+        "unit": "simulated_people",
+        "verdict": "NOT_EVALUATED",
+        "comparison_verdict": "UNRESOLVED",
+        "supporting_observation_ids": ["demo-report-001"]
+      },
+      "provenance": {
+        "classification": "DERIVED_DETERMINISTIC",
+        "explanation": "The plain desk keeps the largest reported number and records no verdict. The comparison verdict is computed only so both desks can be scored the same way.",
+        "source_ids": ["demo-report-001"]
+      },
+      "previous_event_sha256": "7eb79bc1d1c9fa0c0b21406eed3561140279fde69b93055f7c1cc69cb00e9406",
+      "event_sha256": "bb9aa63361804aeff082d8b54c3407fe7d4643569f425a4531b2b992ac69d0a1"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 7,
+      "sim_time_s": 300,
+      "type": "CLAIM_STATE_CHANGED",
+      "arm": "EVIDENCE_GRAPH",
+      "actor": { "id": "evidence-compiler-01", "kind": "AGENT", "role": "claim versioning and evidence comparison" },
+      "event_id": "skeleton-demo:e0007",
+      "caused_by": ["skeleton-demo:e0001"],
+      "entity_refs": ["demo-site-north"],
+      "geometry": { "type": "Point", "coordinates": [130.6642490853, 32.8019955544] },
+      "graph": { "graph_id": "demo-evidence-graph-v1", "node_id": "COMPARE", "edge_id": null },
+      "payload": {
+        "detail": "The evidence desk marks the north ridge village unresolved. One post claims sixty people and no second source has spoken about that village.",
+        "claim_version_id": "demo-site-north:people_waiting:60",
+        "target_feature_id": "demo-site-north",
+        "value": 60,
+        "unit": "simulated_people",
+        "verdict": "UNRESOLVED",
+        "comparison_verdict": "UNRESOLVED",
+        "supporting_observation_ids": ["demo-report-001"]
+      },
+      "provenance": {
+        "classification": "DERIVED_DETERMINISTIC",
+        "explanation": "A single source cannot support a claim under this desk's rule, so the claim is written down as unresolved.",
+        "source_ids": ["demo-report-001"]
+      },
+      "previous_event_sha256": "bb9aa63361804aeff082d8b54c3407fe7d4643569f425a4531b2b992ac69d0a1",
+      "event_sha256": "706d47e60d6ba9a449872838e35f1ef7e9cf64422734e22d5233ca60b92b87b4"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 8,
+      "sim_time_s": 360,
+      "type": "CLAIM_STATE_CHANGED",
+      "arm": "PLAIN_GRAPH",
+      "actor": { "id": "summarizer-01", "kind": "AGENT", "role": "report summary" },
+      "event_id": "skeleton-demo:e0008",
+      "caused_by": ["skeleton-demo:e0002", "skeleton-demo:e0003"],
+      "entity_refs": ["demo-site-river"],
+      "geometry": { "type": "Point", "coordinates": [130.742, 32.611] },
+      "graph": { "graph_id": "demo-plain-graph-v1", "node_id": "SUMMARIZE", "edge_id": null },
+      "payload": {
+        "detail": "The plain desk records twenty-four people at the river village, the larger of the two numbers it read.",
+        "claim_version_id": "demo-site-river:people_waiting:24",
+        "target_feature_id": "demo-site-river",
+        "value": 24,
+        "unit": "simulated_people",
+        "verdict": "NOT_EVALUATED",
+        "comparison_verdict": "SUPPORTED",
+        "supporting_observation_ids": ["demo-report-002", "demo-report-003"]
+      },
+      "provenance": {
+        "classification": "DERIVED_DETERMINISTIC",
+        "explanation": "The plain desk keeps the largest reported number and records no verdict. The comparison verdict is computed only so both desks can be scored the same way.",
+        "source_ids": ["demo-report-002", "demo-report-003"]
+      },
+      "previous_event_sha256": "706d47e60d6ba9a449872838e35f1ef7e9cf64422734e22d5233ca60b92b87b4",
+      "event_sha256": "a145973de1a6231ff12abba46eef57001c258402fc20bd38779ac4a978df62ed"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 9,
+      "sim_time_s": 360,
+      "type": "CLAIM_STATE_CHANGED",
+      "arm": "EVIDENCE_GRAPH",
+      "actor": { "id": "evidence-compiler-01", "kind": "AGENT", "role": "claim versioning and evidence comparison" },
+      "event_id": "skeleton-demo:e0009",
+      "caused_by": ["skeleton-demo:e0002", "skeleton-demo:e0003"],
+      "entity_refs": ["demo-site-river"],
+      "geometry": { "type": "Point", "coordinates": [130.742, 32.611] },
+      "graph": { "graph_id": "demo-evidence-graph-v1", "node_id": "COMPARE", "edge_id": null },
+      "payload": {
+        "detail": "The evidence desk marks the river village supported. A satellite estimate of twenty-four and a radio call of twenty-two agree well inside the factor of two this rule allows.",
+        "claim_version_id": "demo-site-river:people_waiting:24",
+        "target_feature_id": "demo-site-river",
+        "value": 24,
+        "unit": "simulated_people",
+        "verdict": "SUPPORTED",
+        "comparison_verdict": "SUPPORTED",
+        "supporting_observation_ids": ["demo-report-002", "demo-report-003"]
+      },
+      "provenance": {
+        "classification": "DERIVED_DETERMINISTIC",
+        "explanation": "Two independent sources agree within a factor of two, which is what this desk's rule requires before a claim may authorize a dispatch.",
+        "source_ids": ["demo-report-002", "demo-report-003"]
+      },
+      "previous_event_sha256": "a145973de1a6231ff12abba46eef57001c258402fc20bd38779ac4a978df62ed",
+      "event_sha256": "c6746f9829b4e49213e109198bcaba2aa4694ca39ed244647af956afd0b0eeaa"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 10,
+      "sim_time_s": 420,
+      "type": "DECISION_PROPOSED",
+      "arm": "PLAIN_GRAPH",
+      "actor": { "id": "allocator-01", "kind": "AGENT", "role": "scarce-resource allocation" },
+      "event_id": "skeleton-demo:e0010",
+      "caused_by": ["skeleton-demo:e0006", "skeleton-demo:e0008"],
+      "entity_refs": ["demo-site-north", "demo-site-river"],
+      "geometry": null,
+      "graph": { "graph_id": "demo-plain-graph-v1", "node_id": "RANK", "edge_id": null },
+      "payload": {
+        "detail": "The plain desk proposes sending its one team to the north ridge village, because sixty is the biggest number it read.",
+        "decision_id": "plain_graph:dispatch-decision",
+        "selected_targets": ["demo-site-north"],
+        "claimed_people": [60],
+        "resource_limit": 1
+      },
+      "provenance": {
+        "classification": "DERIVED_DETERMINISTIC",
+        "explanation": "Targets are ranked by claimed people, largest first, under a one-team limit.",
+        "source_ids": ["demo-report-001", "demo-report-002", "demo-report-003"]
+      },
+      "previous_event_sha256": "c6746f9829b4e49213e109198bcaba2aa4694ca39ed244647af956afd0b0eeaa",
+      "event_sha256": "e0cfdca6b769d86d06008b16e16675882beb867ba0aa7c543c85989a0b026f4d"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 11,
+      "sim_time_s": 420,
+      "type": "DECISION_PROPOSED",
+      "arm": "EVIDENCE_GRAPH",
+      "actor": { "id": "allocator-01", "kind": "AGENT", "role": "scarce-resource allocation" },
+      "event_id": "skeleton-demo:e0011",
+      "caused_by": ["skeleton-demo:e0007", "skeleton-demo:e0009"],
+      "entity_refs": ["demo-site-north", "demo-site-river"],
+      "geometry": null,
+      "graph": { "graph_id": "demo-evidence-graph-v1", "node_id": "RANK", "edge_id": null },
+      "payload": {
+        "detail": "The evidence desk proposes sending its one team to the river village, the only place whose claim carries a supported verdict.",
+        "decision_id": "evidence_graph:dispatch-decision",
+        "selected_targets": ["demo-site-river"],
+        "claimed_people": [24],
+        "resource_limit": 1
+      },
+      "provenance": {
+        "classification": "DERIVED_DETERMINISTIC",
+        "explanation": "Targets are ranked by claimed people among claims that hold a supported verdict, under a one-team limit.",
+        "source_ids": ["demo-report-002", "demo-report-003"]
+      },
+      "previous_event_sha256": "e0cfdca6b769d86d06008b16e16675882beb867ba0aa7c543c85989a0b026f4d",
+      "event_sha256": "6f6963720f015b497b9b19786ead982eee04d44e24ee878e9277e491dd06e23f"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 12,
+      "sim_time_s": 480,
+      "type": "POLICY_EVALUATED",
+      "arm": "PLAIN_GRAPH",
+      "actor": { "id": "demo-plain-no-gate-v1", "kind": "POLICY", "role": "dispatch eligibility" },
+      "event_id": "skeleton-demo:e0012",
+      "caused_by": ["skeleton-demo:e0010"],
+      "entity_refs": ["demo-site-north"],
+      "geometry": null,
+      "graph": { "graph_id": "demo-plain-graph-v1", "node_id": "RANK", "edge_id": null },
+      "payload": {
+        "detail": "The plain desk has no rule to apply, so the proposal passes as it stands.",
+        "policy_id": "demo-plain-no-gate-v1",
+        "disposition": "NO_GATE",
+        "supported_selections": 0,
+        "unsupported_selections": 1,
+        "blocked_selections": 0
+      },
+      "provenance": {
+        "classification": "DERIVED_DETERMINISTIC",
+        "explanation": "This desk has no evidence rule; the counts are recorded only so both desks can be scored the same way.",
+        "source_ids": ["demo-report-001"]
+      },
+      "previous_event_sha256": "6f6963720f015b497b9b19786ead982eee04d44e24ee878e9277e491dd06e23f",
+      "event_sha256": "26bd7e9924414cdd52fa425d91d1ce1846a5d356e7eafb90bb4af7d2c0bd2ae9"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 13,
+      "sim_time_s": 480,
+      "type": "POLICY_EVALUATED",
+      "arm": "EVIDENCE_GRAPH",
+      "actor": { "id": "demo-evidence-gate-v1", "kind": "POLICY", "role": "dispatch eligibility" },
+      "event_id": "skeleton-demo:e0013",
+      "caused_by": ["skeleton-demo:e0011"],
+      "entity_refs": ["demo-site-north", "demo-site-river"],
+      "geometry": null,
+      "graph": { "graph_id": "demo-evidence-graph-v1", "node_id": "GATE", "edge_id": null },
+      "payload": {
+        "detail": "The rule allows the river village and blocks the north ridge village, because an unresolved claim may not send a team.",
+        "policy_id": "demo-evidence-gate-v1",
+        "disposition": "ALLOWED",
+        "supported_selections": 1,
+        "unsupported_selections": 0,
+        "blocked_selections": 1
+      },
+      "provenance": {
+        "classification": "DERIVED_DETERMINISTIC",
+        "explanation": "Eligibility is decided from the written verdicts, and the block is recorded with the claim that failed.",
+        "source_ids": ["demo-report-001", "demo-report-002", "demo-report-003"]
+      },
+      "previous_event_sha256": "26bd7e9924414cdd52fa425d91d1ce1846a5d356e7eafb90bb4af7d2c0bd2ae9",
+      "event_sha256": "02e7f8564594ec7d52685ae262c5f3064a9962f546df4e8059e4505f89e92fc1"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 14,
+      "sim_time_s": 540,
+      "type": "RESOURCE_DISPATCHED",
+      "arm": "PLAIN_GRAPH",
+      "actor": { "id": "dispatcher-01", "kind": "AGENT", "role": "idempotent dispatch" },
+      "event_id": "skeleton-demo:e0014",
+      "caused_by": ["skeleton-demo:e0010", "skeleton-demo:e0012"],
+      "entity_refs": ["demo-site-north", "demo-team-01"],
+      "geometry": { "type": "Point", "coordinates": [130.6642490853, 32.8019955544] },
+      "graph": { "graph_id": "demo-plain-graph-v1", "node_id": "DISPATCH", "edge_id": null },
+      "payload": {
+        "detail": "The plain desk sends its only team to the north ridge village. That team cannot be sent anywhere else today.",
+        "dispatch_id": "plain_graph:dispatch-1",
+        "resource_id": "demo-team-01",
+        "target_feature_id": "demo-site-north",
+        "authorizing_claim_version_id": "demo-site-north:people_waiting:60",
+        "idempotency_key": "skeleton-demo:PLAIN_GRAPH:demo-team-01"
+      },
+      "provenance": {
+        "classification": "SYNTHETIC_EXERCISE",
+        "explanation": "The dispatch is invented for this demonstration; the target, the team and the authorizing claim are recorded exactly.",
+        "source_ids": ["demo-report-001"]
+      },
+      "previous_event_sha256": "02e7f8564594ec7d52685ae262c5f3064a9962f546df4e8059e4505f89e92fc1",
+      "event_sha256": "536a89602375577b27b3faab8be2c5236c933211ecd02ce5120927863a03fd06"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 15,
+      "sim_time_s": 540,
+      "type": "RESOURCE_DISPATCHED",
+      "arm": "EVIDENCE_GRAPH",
+      "actor": { "id": "dispatcher-01", "kind": "AGENT", "role": "idempotent dispatch" },
+      "event_id": "skeleton-demo:e0015",
+      "caused_by": ["skeleton-demo:e0011", "skeleton-demo:e0013"],
+      "entity_refs": ["demo-site-river", "demo-team-01"],
+      "geometry": { "type": "Point", "coordinates": [130.742, 32.611] },
+      "graph": { "graph_id": "demo-evidence-graph-v1", "node_id": "DISPATCH", "edge_id": null },
+      "payload": {
+        "detail": "The evidence desk sends its only team to the river village. That team cannot be sent anywhere else today.",
+        "dispatch_id": "evidence_graph:dispatch-1",
+        "resource_id": "demo-team-01",
+        "target_feature_id": "demo-site-river",
+        "authorizing_claim_version_id": "demo-site-river:people_waiting:24",
+        "idempotency_key": "skeleton-demo:EVIDENCE_GRAPH:demo-team-01"
+      },
+      "provenance": {
+        "classification": "SYNTHETIC_EXERCISE",
+        "explanation": "The dispatch is invented for this demonstration; the target, the team and the authorizing claim are recorded exactly.",
+        "source_ids": ["demo-report-002", "demo-report-003"]
+      },
+      "previous_event_sha256": "536a89602375577b27b3faab8be2c5236c933211ecd02ce5120927863a03fd06",
+      "event_sha256": "d125fbacfd04b1eb97ef8d8e94301573ee888008079999e32b4a08f1050fc605"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 16,
+      "sim_time_s": 660,
+      "type": "OUTCOME_OBSERVED",
+      "arm": "PLAIN_GRAPH",
+      "actor": { "id": "exercise-controller", "kind": "HUMAN", "role": "reveals the invented truth" },
+      "event_id": "skeleton-demo:e0016",
+      "caused_by": ["skeleton-demo:e0014"],
+      "entity_refs": ["demo-site-north", "demo-team-01"],
+      "geometry": { "type": "Point", "coordinates": [130.6642490853, 32.8019955544] },
+      "graph": { "graph_id": "demo-plain-graph-v1", "node_id": "OBSERVE", "edge_id": "DISPATCH_TO_OBSERVE" },
+      "payload": {
+        "detail": "The team reaches eighteen people at the north ridge village. The post that claimed sixty had counted a group that had already walked out.",
+        "target_feature_id": "demo-site-north",
+        "exercise_people_reached": 18,
+        "unit": "simulated_people",
+        "resource_id": "demo-team-01",
+        "resource_consumed": true
+      },
+      "provenance": {
+        "classification": "SYNTHETIC_EXERCISE",
+        "explanation": "The outcome is read from an invented truth written for this demonstration.",
+        "source_ids": ["skeleton-demo"]
+      },
+      "previous_event_sha256": "d125fbacfd04b1eb97ef8d8e94301573ee888008079999e32b4a08f1050fc605",
+      "event_sha256": "7c07811c7d7be5ec0ac2d3716ce461749f37121907f860fddcf487b8423f8c23"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 17,
+      "sim_time_s": 690,
+      "type": "OUTCOME_OBSERVED",
+      "arm": "EVIDENCE_GRAPH",
+      "actor": { "id": "exercise-controller", "kind": "HUMAN", "role": "reveals the invented truth" },
+      "event_id": "skeleton-demo:e0017",
+      "caused_by": ["skeleton-demo:e0015"],
+      "entity_refs": ["demo-site-river", "demo-team-01"],
+      "geometry": { "type": "Point", "coordinates": [130.742, 32.611] },
+      "graph": { "graph_id": "demo-evidence-graph-v1", "node_id": "OBSERVE", "edge_id": "DISPATCH_TO_OBSERVE" },
+      "payload": {
+        "detail": "The team reaches twenty-three people at the river village, close to what the two agreeing sources described.",
+        "target_feature_id": "demo-site-river",
+        "exercise_people_reached": 23,
+        "unit": "simulated_people",
+        "resource_id": "demo-team-01",
+        "resource_consumed": true
+      },
+      "provenance": {
+        "classification": "SYNTHETIC_EXERCISE",
+        "explanation": "The outcome is read from an invented truth written for this demonstration.",
+        "source_ids": ["skeleton-demo"]
+      },
+      "previous_event_sha256": "7c07811c7d7be5ec0ac2d3716ce461749f37121907f860fddcf487b8423f8c23",
+      "event_sha256": "39e7774df14a77be2fc81a29b50bc7dbb3def7ec3a6b6761a2371bcf45a0bd0b"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 18,
+      "sim_time_s": 780,
+      "type": "METRIC_UPDATED",
+      "arm": "PLAIN_GRAPH",
+      "actor": { "id": "disaster-replay-reducer.v1", "kind": "REDUCER", "role": "deterministic metrics and state" },
+      "event_id": "skeleton-demo:e0018",
+      "caused_by": ["skeleton-demo:e0016"],
+      "entity_refs": ["demo-site-north"],
+      "geometry": null,
+      "graph": { "graph_id": "demo-plain-graph-v1", "node_id": "OBSERVE", "edge_id": null },
+      "payload": {
+        "detail": "The plain desk finishes the day having reached eighteen people with its one team.",
+        "metric_id": "exercise_people_reached",
+        "value": 18,
+        "unit": "simulated_people"
+      },
+      "provenance": {
+        "classification": "DERIVED_DETERMINISTIC",
+        "explanation": "The number is counted from the recorded outcome of this desk's one dispatch.",
+        "source_ids": ["skeleton-demo"]
+      },
+      "previous_event_sha256": "39e7774df14a77be2fc81a29b50bc7dbb3def7ec3a6b6761a2371bcf45a0bd0b",
+      "event_sha256": "036725bb168f95208bf23a0d7448561567dfbbb60d657ccfd259d74bd3507061"
+    },
+    {
+      "schema_version": "disaster-replay.event.v1",
+      "sequence": 19,
+      "sim_time_s": 810,
+      "type": "METRIC_UPDATED",
+      "arm": "EVIDENCE_GRAPH",
+      "actor": { "id": "disaster-replay-reducer.v1", "kind": "REDUCER", "role": "deterministic metrics and state" },
+      "event_id": "skeleton-demo:e0019",
+      "caused_by": ["skeleton-demo:e0017"],
+      "entity_refs": ["demo-site-river"],
+      "geometry": null,
+      "graph": { "graph_id": "demo-evidence-graph-v1", "node_id": "OBSERVE", "edge_id": null },
+      "payload": {
+        "detail": "The evidence desk finishes the day having reached twenty-three people with its one team.",
+        "metric_id": "exercise_people_reached",
+        "value": 23,
+        "unit": "simulated_people"
+      },
+      "provenance": {
+        "classification": "DERIVED_DETERMINISTIC",
+        "explanation": "The number is counted from the recorded outcome of this desk's one dispatch.",
+        "source_ids": ["skeleton-demo"]
+      },
+      "previous_event_sha256": "036725bb168f95208bf23a0d7448561567dfbbb60d657ccfd259d74bd3507061",
+      "event_sha256": "0a15021e9e0a9d0d9c6f9a81180c0607c1241d041c5617d17ba0b7e93583148f"
+    }
+  ]
+}

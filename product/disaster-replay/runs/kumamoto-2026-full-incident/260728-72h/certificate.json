@@ -1,0 +1,41 @@
+{
+  "schema_version": "kumamoto-full-incident.replay-certificate.v1",
+  "scenario_id": "kumamoto-2026-full-incident",
+  "event_count": 414,
+  "scenario_sha256": "807bdbc14c43445cf4c8781c9d5c20328d1f020934a7cc88fd3ba925db6ade27",
+  "timeline_sha256": "7226ffe9ce0cb5d8d96ce480813f38e8324e68212a5f69c1ef8929a2d31623c5",
+  "terminal_event_sha256": "819b317f364e5e45843f29fa2c8074b722ac79266a7a65452122e9f1bcd2be02",
+  "final_state_sha256": "53d1a27dd5b82376bf2045acff76d3214307ed316cf0ae064830cb08d6fa2e65",
+  "source_data_sha256_by_path": {
+    "product/disaster-replay/scenarios/kumamoto-2026-full-incident/scenario.json": "fceefa4ec5a340c617b4a65595b2f58f9827fe75264914655deed88650a32191",
+    "product/disaster-replay/scenarios/kumamoto-2026-full-incident/timeline-inputs.json": "b997467da1dd509cd0bd86ae15da680ed24a3be440b902bd33be6fab8d082b2f",
+    "product/disaster-replay/data/full-incident/jma-2026-kumamoto-earthquake-sequence.json": "7f5aabb83b021bec9d5b6019684ffb68bc327925e71a204a7a841101b3d82377",
+    "product/disaster-replay/data/jma-2026-kumamoto-official-updates.json": "a3c342a47ff8b0eb8ccc1239b43101e3ad05b922849e7f361d874a7acade20e2",
+    "product/disaster-replay/data/mlit-2026-kumamoto-road-restrictions.geojson": "96c8a30fa6818e1eb1ac34d59186c3f8dd13e3a0cc49ac95c015daa0f45ab0db",
+    "product/disaster-replay/data/gsi-2026-kumamoto-landslides.geojson": "91a08d04b3a76486373e9795fecc2347a552e76b78d023b98beca42a74160364",
+    "product/disaster-replay/data/full-incident/gsi-dem10b-z11-full-incident.png": "d865552503f797864824854cd2065abce91756ca1a8bb8d6b6c161c654691c07",
+    "product/disaster-replay/data/full-incident/gsi-dem10b-z11-full-incident.meta.json": "fbcd8220610a3e67d925a44d7f7c096441238f77e861dc1a348503d576139125",
+    "experiments/kumamoto-real-response/validation/freeze-manifest.json": "3e14c3071a7bac34af25e1464887349a3d89ecbb6c100cd00fc49eec4811687b",
+    "experiments/kumamoto-real-response/results/production-v1.1/production-analysis.json": "65553826ffa128907ab396515d8308464a6597cd0037a3fead50592a680b032a",
+    "experiments/kumamoto-full-incident-campaign/validation/freeze-manifest.json": "5490216b1d98f51b61defb6d20d221c0804d04a560fef2a8e0c3d6fcf8aae14f",
+    "experiments/kumamoto-full-incident-campaign/results/demonstration-v1/demonstration-analysis.json": "df8089a50ba6f67dc9b83329fb7b3a011716487406aa6cb64c73757c1ca91201",
+    "experiments/kumamoto-full-incident-campaign/results/demonstration-v1/campaign-certificate.json": "48025fb5753d4d7f1873533c1dd957df88f3498771a77614092612545c6e5f92"
+  },
+  "source_data_sha256_by_id": {
+    "earthquake_sequence": "7f5aabb83b021bec9d5b6019684ffb68bc327925e71a204a7a841101b3d82377",
+    "official_mainshock_updates": "a3c342a47ff8b0eb8ccc1239b43101e3ad05b922849e7f361d874a7acade20e2",
+    "road_restrictions": "96c8a30fa6818e1eb1ac34d59186c3f8dd13e3a0cc49ac95c015daa0f45ab0db",
+    "landslide_interpretation": "91a08d04b3a76486373e9795fecc2347a552e76b78d023b98beca42a74160364",
+    "terrain_dem_png": "d865552503f797864824854cd2065abce91756ca1a8bb8d6b6c161c654691c07",
+    "terrain_dem_metadata": "fbcd8220610a3e67d925a44d7f7c096441238f77e861dc1a348503d576139125"
+  },
+  "registered_manifest_hash": "d033786d42717b6aa4bcbaabc139cd813563959f57deccdc52df0d63ae8c0160",
+  "demonstration_manifest_hash": "7b9dfc853877add3469e78630dc9897ecb04f301574fcdb7f91087a5ac7cf91f",
+  "demonstration_campaign_certificate_hash": "73da7662e3effc39bf7a8dd4f3301d961fa22ddcfd4377ea40c26ed293059697",
+  "demonstration_campaign_terminal_chain_sha256": "0b7d501278bafe5d037c4289ffa477f76489ed0c125fea613345ae2468399b7b",
+  "registered_cell_count": 40,
+  "demonstration_cell_count": 88,
+  "hash_rule": "SHA-256 of recursively key-sorted compact UTF-8 JSON; timeline is one canonical event plus newline per line.",
+  "rebuild_command": "node product/disaster-replay/scripts/build-full-incident-replay.mjs",
+  "certificate_hash": "6e967cc410264d099b5e45287392edbe19b8e2088307af1b84665e07a9a77027"
+}

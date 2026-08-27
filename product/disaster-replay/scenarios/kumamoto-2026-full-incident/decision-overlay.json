@@ -1,0 +1,581 @@
+{
+  "schema_version": "kumamoto-full-incident.decision-overlay.v1",
+  "scenario": {
+    "scenario_id": "kumamoto-2026-full-incident-demonstration-v1",
+    "title": "Kumamoto 2026: the full first seventy-two hours through eleven decision moments",
+    "disclosure": "This demonstration campaign extends the frozen five-slot reconstruction across the first seventy-two hours. The historical timeline and public observations remain source-bounded. Agent choices are simulated counterfactuals, use the same three graph methods and frozen model sampling settings, and support descriptive comparison only. They are not registered claims and do not show that a simulated choice was better, that responders were wrong, or that lives would have been saved."
+  },
+  "sources": [
+    {
+      "source_id": "source-prefecture-meeting-2",
+      "title": "Kumamoto Prefecture disaster headquarters meeting 2 minutes, 2026-07-29 00:00 JST",
+      "provider": "Kumamoto Prefecture",
+      "url": "https://www.pref.kumamoto.jp/uploaded/attachment/315986.pdf",
+      "source_role": "HISTORICAL_CHOICE_RECORD",
+      "sha256": null,
+      "note": "Carries the first-night rescue, water and coordination picture."
+    },
+    {
+      "source_id": "source-prefecture-meeting-3",
+      "title": "Kumamoto Prefecture disaster headquarters meeting 3 minutes, 2026-07-29 09:30 JST",
+      "provider": "Kumamoto Prefecture",
+      "url": "https://www.pref.kumamoto.jp/uploaded/attachment/315988.pdf",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "Carries the first recorded site rescue counts."
+    },
+    {
+      "source_id": "source-prefecture-meeting-4",
+      "title": "Kumamoto Prefecture disaster headquarters meeting 4 minutes and materials, 2026-07-29 16:00 JST",
+      "provider": "Kumamoto Prefecture",
+      "url": "https://www.pref.kumamoto.jp/uploaded/attachment/315989.pdf",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "Carries the detailed two-site rescue picture and eight-municipality water allocation."
+    },
+    {
+      "source_id": "source-prefecture-meeting-5",
+      "title": "Kumamoto Prefecture disaster headquarters meeting 5 minutes, 2026-07-30 09:30 JST",
+      "provider": "Kumamoto Prefecture",
+      "url": "https://www.pref.kumamoto.jp/uploaded/attachment/315990.pdf",
+      "source_role": "HISTORICAL_CHOICE_RECORD",
+      "sha256": null,
+      "note": "Carries the recorded turn from life-saving activity toward water support."
+    },
+    {
+      "source_id": "source-prefecture-meeting-6",
+      "title": "Kumamoto Prefecture disaster headquarters meeting 6 minutes, 2026-07-30 16:00 JST",
+      "provider": "Kumamoto Prefecture",
+      "url": "https://www.pref.kumamoto.jp/uploaded/attachment/315992.pdf",
+      "source_role": "LATER_OUTCOME_CONTEXT",
+      "sha256": null,
+      "note": "Carries later rescue status and the on-site national headquarters arrival."
+    },
+    {
+      "source_id": "source-prefecture-headquarters-index",
+      "title": "Kumamoto Prefecture disaster headquarters meeting index",
+      "provider": "Kumamoto Prefecture",
+      "url": "https://www.pref.kumamoto.jp/soshiki/222/274487.html",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "Records the eight prefectural meeting clocks inside the seventy-two-hour window."
+    },
+    {
+      "source_id": "source-prefecture-shelter-feed",
+      "title": "Kumamoto Prefecture event shelter feed",
+      "provider": "Kumamoto Prefecture",
+      "url": "https://portal.bousai.pref.kumamoto.jp/data/shelter/shelter.json",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "The feed mixes nominal, opening and publication timestamps; only aggregate counts are used."
+    },
+    {
+      "source_id": "source-cabinet-report-0729-0700",
+      "title": "Cabinet Office situation report, 2026-07-29 07:00 JST",
+      "provider": "Cabinet Office, Government of Japan",
+      "url": "https://www.bousai.go.jp/updates/r8kumamoto_jishin/status/pdf/r8kumamoto_jishin_20260729.pdf",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "First aggregated national damage, rescue, evacuation and shelter picture."
+    },
+    {
+      "source_id": "source-cabinet-report-0729-1400",
+      "title": "Cabinet Office situation report, 2026-07-29 14:00 JST",
+      "provider": "Cabinet Office, Government of Japan",
+      "url": "https://www.bousai.go.jp/updates/r8kumamoto_jishin/status/pdf/r8kumamoto_jishin_20260729-1400.pdf",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "Carries the changed rescue assignments, one isolated community and the daytime shelter aggregate."
+    },
+    {
+      "source_id": "source-cabinet-report-0731-0730",
+      "title": "Cabinet Office situation report, 2026-07-31 07:30 JST",
+      "provider": "Cabinet Office, Government of Japan",
+      "url": "https://www.bousai.go.jp/updates/r8kumamoto_jishin/status/pdf/r8kumamoto_jishin_20260731.pdf",
+      "source_role": "LATER_OUTCOME_CONTEXT",
+      "sha256": null,
+      "note": "Carries the seventy-two-hour shelter, evacuation, fire and medical posture."
+    },
+    {
+      "source_id": "source-mlit-road-snapshot-0729-0500",
+      "title": "MLIT Passable Map road-restriction snapshot, 2026-07-29 05:00 JST",
+      "provider": "Ministry of Land, Infrastructure, Transport and Tourism",
+      "url": "https://www.mlit.go.jp/road/content/002014124.html",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "Carries 29 observed restriction geometries; 23 have a reported start minute and six are snapshot-only."
+    },
+    {
+      "source_id": "source-mlit-report-6-0730-0630",
+      "title": "MLIT situation report 6, 2026-07-30 06:30 JST",
+      "provider": "Ministry of Land, Infrastructure, Transport and Tourism",
+      "url": "https://www.mlit.go.jp/saigai/saigai_260728.html",
+      "source_role": "TIME_AVAILABLE_INPUT",
+      "sha256": null,
+      "note": "Records secured access on National Routes 3 and 57 and the wide-detour request without a route-level reopening clock."
+    }
+  ],
+  "targets": [
+    {"target_id": "yamato-town", "label": "Yamato Town", "kind": "MUNICIPALITY"}
+  ],
+  "observations": [
+    {
+      "observation_id": "obs-1643-police-helicopter-feed",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-28T16:43:00+09:00",
+      "availability_basis": "PUBLISHED_AT_TIME",
+      "source_ids": ["source-cabinet-report-0729-0700"],
+      "signal_family": "aerial_reconnaissance",
+      "fact_code": "POLICE_HELICOPTER_VIDEO_AVAILABLE",
+      "subjects": ["kumamoto-incident-area"],
+      "plain_text": "The National Police Agency helicopter television feed from Kumamoto had begun and was available to national decision-makers.",
+      "value": true,
+      "unit": null
+    },
+    {
+      "observation_id": "obs-1730-ground-sdf-request",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-28T17:30:00+09:00",
+      "availability_basis": "PUBLISHED_AT_TIME",
+      "source_ids": ["source-fdma-report-60"],
+      "signal_family": "defense_dispatch",
+      "fact_code": "GSDF_DISPATCH_REQUEST_ACCEPTED",
+      "subjects": ["kumamoto-incident-area"],
+      "plain_text": "The Governor requested Ground Self-Defense Force disaster dispatch for information gathering, life-saving, supply transport and living support.",
+      "value": ["information gathering", "life-saving", "supply transport", "living support"],
+      "unit": null
+    },
+    {
+      "observation_id": "obs-1820-misato-town-hall-degraded",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-28T18:20:00+09:00",
+      "availability_basis": "PUBLISHED_AT_TIME",
+      "source_ids": ["source-cabinet-report-0729-0700"],
+      "signal_family": "municipal_function",
+      "fact_code": "TOWN_HALL_UNENTERABLE_EMERGENCY_POWER",
+      "subjects": ["misato-town"],
+      "plain_text": "Misato Town hall was on emergency power, staff could not enter and the situation could not be confirmed.",
+      "value": "DEGRADED_UNKNOWN",
+      "unit": null
+    },
+    {
+      "observation_id": "obs-1820-kosa-network-down",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-28T18:20:00+09:00",
+      "availability_basis": "PUBLISHED_AT_TIME",
+      "source_ids": ["source-cabinet-report-0729-0700"],
+      "signal_family": "municipal_function",
+      "fact_code": "MUNICIPAL_NETWORK_DOWN",
+      "subjects": ["kosa-town"],
+      "plain_text": "Kōsa Town's network was down in the national municipal-function check.",
+      "value": "NETWORK_DOWN",
+      "unit": null
+    },
+    {
+      "observation_id": "obs-1820-no-published-casualty-count",
+      "classification": "OBSERVED_ABSENCE",
+      "available_at": "2026-07-28T18:20:00+09:00",
+      "availability_basis": "PUBLISHED_AT_TIME",
+      "source_ids": ["source-kantei-crisis-log"],
+      "signal_family": "casualty_reporting",
+      "fact_code": "NO_PUBLISHED_CASUALTY_COUNT",
+      "subjects": ["kumamoto-incident-area"],
+      "plain_text": "No published casualty count was available when the national and fire headquarters escalated.",
+      "value": null,
+      "unit": "people"
+    },
+    {
+      "observation_id": "obs-1903-uki-aftershock",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-28T19:03:00+09:00",
+      "availability_basis": "PUBLISHED_AT_TIME",
+      "source_ids": ["source-fdma-report-60"],
+      "signal_family": "aftershock",
+      "fact_code": "AFTERSHOCK_INTENSITY_5_LOWER",
+      "subjects": ["uki-city"],
+      "plain_text": "A 19:03 aftershock reached JMA intensity 5-lower at Uki City.",
+      "value": "5-lower",
+      "unit": "JMA intensity"
+    },
+    {
+      "observation_id": "obs-2000-yatsushiro-dispatch-restored",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-28T20:00:00+09:00",
+      "availability_basis": "PUBLISHED_AT_TIME",
+      "source_ids": ["source-cabinet-report-0729-1400"],
+      "signal_family": "response_communications",
+      "fact_code": "DISPATCH_COMMAND_SYSTEM_RESTORED",
+      "subjects": ["yatsushiro-city"],
+      "plain_text": "Yatsushiro's dispatch command system was recorded restored at 20:00; the public record does not give the failure start time.",
+      "value": "RESTORED",
+      "unit": null,
+      "caveat": "Treating the earthquake minute as the failure start would be an inference."
+    },
+    {
+      "observation_id": "obs-2030-depth-revised",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-28T20:30:23+09:00",
+      "availability_basis": "PUBLISHED_AT_TIME",
+      "source_ids": ["source-jma-mainshock-sequence"],
+      "signal_family": "seismic_parameters",
+      "fact_code": "DEPTH_REVISED",
+      "subjects": ["kumamoto-incident-area"],
+      "plain_text": "JMA revised the main-shock depth from 10 to 16 kilometres.",
+      "value": 16,
+      "unit": "kilometres"
+    },
+    {
+      "observation_id": "obs-0729-0620-shelter-aggregate",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-29T06:20:00+09:00",
+      "availability_basis": "PUBLISHED_AT_TIME",
+      "source_ids": ["source-cabinet-report-0729-0700"],
+      "signal_family": "shelter_aggregate",
+      "fact_code": "PREFECTURE_SHELTER_AGGREGATE",
+      "subjects": ["kumamoto-incident-area"],
+      "plain_text": "The prefecture-wide aggregate reached 506 open shelters holding 9,186 people; it does not reveal individual shelter occupancy.",
+      "value": {"open_shelters": 506, "occupants": 9186},
+      "unit": "prefecture aggregate"
+    },
+    {
+      "observation_id": "obs-0729-0700-three-active-rescues",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-29T07:00:00+09:00",
+      "availability_basis": "PUBLISHED_AT_TIME",
+      "source_ids": ["source-cabinet-report-0729-0700"],
+      "signal_family": "rescue_operations",
+      "fact_code": "THREE_ACTIVE_RESCUE_INCIDENTS",
+      "subjects": ["nippon-paper-yatsushiro", "aeon-mall-kumamoto", "hikawa-town"],
+      "plain_text": "Three rescue incidents remained active: the Yatsushiro mill chimney, the Kashima shopping centre and two buckled houses in Hikawa.",
+      "value": 3,
+      "unit": "active rescue incidents"
+    },
+    {
+      "observation_id": "obs-0729-0930-site-rescue-counts",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-29T09:30:00+09:00",
+      "availability_basis": "CONTEMPORANEOUS_MEETING_RECORD",
+      "source_ids": ["source-prefecture-meeting-3"],
+      "signal_family": "rescue_operations",
+      "fact_code": "FIRST_SITE_RESCUE_COUNTS",
+      "subjects": ["nippon-paper-yatsushiro", "aeon-mall-kumamoto"],
+      "plain_text": "Eight people had been rescued at the Kashima shopping centre and four of eleven at the Yatsushiro paper mill; work continued in Hikawa and Yatsushiro.",
+      "value": {"aeon_rescued": 8, "paper_mill_rescued": 4, "paper_mill_reported_trapped": 11},
+      "unit": "people"
+    },
+    {
+      "observation_id": "obs-0729-1310-shelter-aggregate",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-29T13:10:00+09:00",
+      "availability_basis": "PUBLISHED_AT_TIME",
+      "source_ids": ["source-cabinet-report-0729-1400"],
+      "signal_family": "shelter_aggregate",
+      "fact_code": "PREFECTURE_SHELTER_AGGREGATE",
+      "subjects": ["kumamoto-incident-area"],
+      "plain_text": "The prefecture-wide aggregate fell to 419 open shelters holding 7,547 people; it does not reveal individual shelter occupancy.",
+      "value": {"open_shelters": 419, "occupants": 7547},
+      "unit": "prefecture aggregate"
+    },
+    {
+      "observation_id": "obs-0729-1400-rescue-reassignment",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-29T14:00:00+09:00",
+      "availability_basis": "PUBLISHED_AT_TIME",
+      "source_ids": ["source-cabinet-report-0729-1400"],
+      "signal_family": "rescue_operations",
+      "fact_code": "RESCUE_BATTALIONS_REASSIGNED",
+      "subjects": ["nippon-paper-yatsushiro", "aeon-mall-kumamoto"],
+      "plain_text": "Kagoshima and Okayama battalions were working Yatsushiro, while Fukuoka and Saga battalions were working Kashima.",
+      "value": {"yatsushiro": ["Kagoshima", "Okayama"], "kashima": ["Fukuoka", "Saga"]},
+      "unit": null
+    },
+    {
+      "observation_id": "obs-0729-1400-yamato-isolated",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-29T14:00:00+09:00",
+      "availability_basis": "PUBLISHED_AT_TIME",
+      "source_ids": ["source-cabinet-report-0729-1400"],
+      "signal_family": "isolated_community",
+      "fact_code": "ONE_ISOLATED_COMMUNITY",
+      "subjects": ["yamato-town"],
+      "plain_text": "Memaru district in Yamato Town was recorded isolated by slope failure: four households and six people, reachable on foot with utilities working.",
+      "value": {"households": 4, "people": 6, "reachable_on_foot": true, "utilities_working": true},
+      "unit": null
+    },
+    {
+      "observation_id": "obs-0729-1600-water-eight-municipalities",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-29T16:00:00+09:00",
+      "availability_basis": "CONTEMPORANEOUS_MEETING_RECORD",
+      "source_ids": ["source-prefecture-meeting-4"],
+      "signal_family": "water_supply",
+      "fact_code": "WATER_SUPPORT_EIGHT_MUNICIPALITIES",
+      "subjects": ["uki-city", "yatsushiro-city", "hikawa-town", "kashima-town", "uto-city", "nishihara-village", "mifune-town", "kamiamakusa-city"],
+      "plain_text": "Ground and Maritime Self-Defense Force and Coast Guard water support covered eight named municipalities: Uki, Yatsushiro, Hikawa, Kashima, Uto, Nishihara, Mifune and Kamiamakusa.",
+      "value": 8,
+      "unit": "municipalities"
+    },
+    {
+      "observation_id": "obs-0729-2219-aftershock",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-29T22:19:00+09:00",
+      "availability_basis": "PUBLISHED_AT_TIME",
+      "source_ids": ["source-fdma-report-60"],
+      "signal_family": "aftershock",
+      "fact_code": "AFTERSHOCK_INTENSITY_5_LOWER",
+      "subjects": ["uki-city", "kamiamakusa-city"],
+      "plain_text": "An aftershock reached JMA intensity 5-lower at Uki, Kamiamakusa and Amakusa while rescue, shelter and water operations continued.",
+      "value": "5-lower",
+      "unit": "JMA intensity"
+    },
+    {
+      "observation_id": "obs-0730-0630-shelter-occupant-peak",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-30T06:30:00+09:00",
+      "availability_basis": "PUBLISHED_AT_TIME",
+      "source_ids": ["source-cabinet-report-0730"],
+      "signal_family": "shelter_aggregate",
+      "fact_code": "PREFECTURE_SHELTER_OCCUPANT_PEAK",
+      "subjects": ["kumamoto-incident-area"],
+      "plain_text": "The prefecture-wide aggregate rose to its recorded occupant peak of 9,931 people across 419 shelters.",
+      "value": {"open_shelters": 419, "occupants": 9931},
+      "unit": "prefecture aggregate"
+    },
+    {
+      "observation_id": "obs-0730-0630-water-peak-available",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-30T06:30:00+09:00",
+      "availability_basis": "PUBLISHED_AT_TIME",
+      "source_ids": ["source-cabinet-report-0730"],
+      "signal_family": "water_outage",
+      "fact_code": "WATER_OUTAGE_REPORTED_PEAK",
+      "subjects": ["kumamoto-incident-area"],
+      "plain_text": "The reported water-outage picture had risen to about 108,100 households.",
+      "value": 108100,
+      "unit": "households"
+    },
+    {
+      "observation_id": "obs-0730-0930-fire-rescue-status",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-30T09:30:00+09:00",
+      "availability_basis": "CONTEMPORANEOUS_MEETING_RECORD",
+      "source_ids": ["source-prefecture-meeting-5"],
+      "signal_family": "rescue_operations",
+      "fact_code": "FIRE_RESCUE_22_THREE_ACTIVE",
+      "subjects": ["kumamoto-incident-area"],
+      "plain_text": "Emergency Fire Response Teams reported 22 people rescued and three rescues still running.",
+      "value": {"rescued": 22, "active_rescues": 3},
+      "unit": "people and incidents"
+    },
+    {
+      "observation_id": "obs-0730-0930-water-shift-stated",
+      "classification": "OBSERVED_PUBLIC",
+      "available_at": "2026-07-30T09:30:00+09:00",
+      "availability_basis": "CONTEMPORANEOUS_MEETING_RECORD",
+      "source_ids": ["source-prefecture-meeting-5"],
+      "signal_family": "mission_posture",
+      "fact_code": "SHIFT_AFTER_LIFE_SAVING_ENDS",
+      "subjects": ["kumamoto-incident-area"],
+      "plain_text": "The Ground Self-Defense Force stated that after life-saving operations ended, its centre of gravity would move to water supply and similar support.",
+      "value": "CONDITIONAL_SHIFT_TO_WATER",
+      "unit": null
+    },
+    {
+      "observation_id": "outcome-0731-final-search-and-water-sites",
+      "classification": "LATER_OUTCOME",
+      "available_at": "2026-07-31T16:00:00+09:00",
+      "availability_basis": "LATER_REPORT",
+      "source_ids": ["source-cabinet-report-0731-0730"],
+      "signal_family": "mission_posture",
+      "fact_code": "FINAL_SEARCH_AND_WATER_EXPANSION",
+      "subjects": ["aeon-mall-kumamoto", "kumamoto-incident-area"],
+      "plain_text": "The Self-Defense Forces later ran another thorough Kashima search against the seventy-two-hour mark while water support reached 41 sites with 49 vehicles.",
+      "value": {"water_sites": 41, "water_vehicles": 49, "final_search": true},
+      "unit": null
+    }
+  ],
+  "unknowns": [
+    {"unknown_id": "unknown-maritime-request-trigger", "plain_text": "The public record does not state the exact evidence or activity scope behind the 21:00 Maritime Self-Defense Force request."},
+    {"unknown_id": "unknown-defense-geographic-priority", "plain_text": "The two defense dispatch requests do not publish a complete geographic priority or personnel split."},
+    {"unknown_id": "unknown-national-escalation-inputs", "plain_text": "The complete private input to the 18:20 national tier decision is not public."},
+    {"unknown_id": "unknown-moving-fire-unit-reports", "plain_text": "The public record does not show which observations moving fire units had reported by 18:20."},
+    {"unknown_id": "unknown-shelter-municipal-load", "plain_text": "Official first-night reporting does not provide trustworthy occupancy by municipality or individual shelter."},
+    {"unknown_id": "unknown-shelter-timestamp-meaning", "plain_text": "Shelter feed timestamps mix nominal, opening and publication meanings and cannot score municipal timing."},
+    {"unknown_id": "unknown-dispatch-failure-start", "plain_text": "The Yatsushiro dispatch system failure start time and degraded operating details are not public."},
+    {"unknown_id": "unknown-aftershock-field-condition", "plain_text": "The public record does not provide immediate post-aftershock condition checks for every active site."},
+    {"unknown_id": "unknown-response-personnel-interchangeability", "plain_text": "The public record does not establish that all response personnel were interchangeable between rescue and water missions."},
+    {"unknown_id": "unknown-final-search-personnel-split", "plain_text": "The public record does not publish a complete personnel split for the final search and water-support expansion."}
+  ],
+  "resources": [
+    {"resource_id": "defense-request-gsdf-8th-division", "label": "Ground Self-Defense Force 8th Division request channel", "kind": "DEFENSE_DISPATCH_REQUEST", "classification": "OBSERVED_REAL", "capacity": 1, "observed_mobilized_at": "2026-07-28T17:30:00+09:00", "availability_note": "Observed accepted at 17:30 for information gathering, life-saving, supply transport and living support."},
+    {"resource_id": "defense-request-msdf-sasebo", "label": "Maritime Self-Defense Force Sasebo District request channel", "kind": "DEFENSE_DISPATCH_REQUEST", "classification": "OBSERVED_REAL", "capacity": 1, "observed_mobilized_at": "2026-07-28T21:00:00+09:00", "availability_note": "Observed in prefectural meeting materials at 21:00; the national dispatch table omitted it."},
+    {"resource_id": "modeled-national-extreme-hq-posture", "label": "Extreme Disaster Management Headquarters posture", "kind": "MODELED_POLICY_CHOICE", "classification": "MODELED_DECISION_CAPACITY", "capacity": 1, "observed_mobilized_at": null, "availability_note": "Modeled policy-choice token representing the real Article 24 tier selected at 18:20."},
+    {"resource_id": "modeled-national-emergency-hq-posture", "label": "Emergency Disaster Management Headquarters posture", "kind": "MODELED_POLICY_CHOICE", "classification": "MODELED_DECISION_CAPACITY", "capacity": 1, "observed_mobilized_at": null, "availability_note": "Modeled policy-choice token representing the unchosen higher tier; using it is a counterfactual, not a claim."},
+    {"resource_id": "modeled-fdma-request-posture", "label": "Continue fire mobilization by request", "kind": "MODELED_POLICY_CHOICE", "classification": "MODELED_DECISION_CAPACITY", "capacity": 1, "observed_mobilized_at": null, "availability_note": "Modeled order-mode token representing the pre-18:20 request posture."},
+    {"resource_id": "modeled-fdma-instruction-posture", "label": "Switch fire mobilization to instruction", "kind": "MODELED_POLICY_CHOICE", "classification": "MODELED_DECISION_CAPACITY", "capacity": 1, "observed_mobilized_at": null, "availability_note": "Modeled order-mode token representing the real instruction posture selected at 18:20."},
+    {"resource_id": "modeled-shelter-monitoring-action", "label": "Prefecture-wide shelter load monitoring action", "kind": "MODELED_DECISION_CAPACITY", "classification": "MODELED_DECISION_CAPACITY", "capacity": 1, "observed_mobilized_at": null, "availability_note": "Modeled action; official data supports prefecture aggregates only, not site allocation."},
+    {"resource_id": "modeled-wide-area-evacuation-action", "label": "Wide-area evacuation coordination action", "kind": "MODELED_DECISION_CAPACITY", "classification": "MODELED_DECISION_CAPACITY", "capacity": 1, "observed_mobilized_at": null, "availability_note": "Modeled action based on the first-night instruction; it does not assign people to a municipality."},
+    {"resource_id": "modeled-shelter-water-priority-action", "label": "Shelter water-priority coordination action", "kind": "MODELED_DECISION_CAPACITY", "classification": "MODELED_DECISION_CAPACITY", "capacity": 1, "observed_mobilized_at": null, "availability_note": "Modeled action; no individual shelter demand is invented."},
+    {"resource_id": "modeled-aftershock-priority-01", "label": "Aftershock safety verification priority 1", "kind": "MODELED_DECISION_CAPACITY", "classification": "MODELED_DECISION_CAPACITY", "capacity": 1, "observed_mobilized_at": null, "availability_note": "Modeled attention capacity for immediate post-aftershock checks."},
+    {"resource_id": "modeled-aftershock-priority-02", "label": "Aftershock safety verification priority 2", "kind": "MODELED_DECISION_CAPACITY", "classification": "MODELED_DECISION_CAPACITY", "capacity": 1, "observed_mobilized_at": null, "availability_note": "Modeled attention capacity for immediate post-aftershock checks."},
+    {"resource_id": "modeled-mission-priority-01", "label": "Mission priority token 1", "kind": "MODELED_DECISION_CAPACITY", "classification": "MODELED_DECISION_CAPACITY", "capacity": 1, "observed_mobilized_at": null, "availability_note": "Modeled mission-priority token; it does not represent a personnel count."},
+    {"resource_id": "modeled-mission-priority-02", "label": "Mission priority token 2", "kind": "MODELED_DECISION_CAPACITY", "classification": "MODELED_DECISION_CAPACITY", "capacity": 1, "observed_mobilized_at": null, "availability_note": "Modeled mission-priority token; it does not represent a personnel count."},
+    {"resource_id": "modeled-mission-priority-03", "label": "Mission priority token 3", "kind": "MODELED_DECISION_CAPACITY", "classification": "MODELED_DECISION_CAPACITY", "capacity": 1, "observed_mobilized_at": null, "availability_note": "Modeled mission-priority token; it does not represent a personnel count."}
+  ],
+  "decision_slots": [
+    {
+      "decision_slot_id": "slot-03-defense-request-scope",
+      "reconstruction_slot_number": 3,
+      "title": "Decide whether the first-night defense request needs a maritime second channel",
+      "decider": "Governor of Kumamoto",
+      "cutoff_at": "2026-07-28T21:00:00+09:00",
+      "decision_kind": "RESOURCE_MOBILIZATION",
+      "task": "Select one or both defense request channels for the first night. Use only information available by 21:00 and acknowledge that the public record does not disclose the maritime trigger, exact geographic priorities or personnel split.",
+      "visible_observation_ids": ["obs-1730-ground-sdf-request", "obs-1810-yatsushiro-port", "obs-2000-aeon-collapse", "obs-2000-yatsushiro-chimney-collapse", "obs-2000-power-outage", "obs-2000-no-published-casualty-count", "obs-2030-depth-revised"],
+      "eligible_resource_ids": ["defense-request-gsdf-8th-division", "defense-request-msdf-sasebo"],
+      "eligible_target_ids": ["kumamoto-incident-area"],
+      "action_contract": {"minimum_assignments": 1, "maximum_assignments": 2, "allow_resource_reuse": false, "maximum_total_quantity": 2},
+      "historical_choice": {
+        "summary": "The Governor made a Ground Self-Defense Force request at 17:30 and a separate Maritime Self-Defense Force Sasebo request at 21:00.",
+        "assignments": [
+          {"resource_id": "defense-request-gsdf-8th-division", "target_id": "kumamoto-incident-area", "quantity": 1},
+          {"resource_id": "defense-request-msdf-sasebo", "target_id": "kumamoto-incident-area", "quantity": 1}
+        ],
+        "source_ids": ["source-fdma-report-60", "source-prefecture-meeting-2"],
+        "unknowns": ["The exact trigger and activity scope of the maritime request are not published."]
+      },
+      "required_unknown_ids": ["unknown-maritime-request-trigger", "unknown-defense-geographic-priority"],
+      "forbidden_hindsight_observation_ids": ["outcome-0730-water-peak", "outcome-0823-municipal-deaths"],
+      "assumptions": ["Each real request channel is represented as one indivisible resource; this does not model unit or personnel counts."],
+      "scoring_boundary": "Score source and cutoff discipline, legal channel selection and explicit unknown handling. Historical overlap is descriptive only."
+    },
+    {
+      "decision_slot_id": "slot-05-escalation-minute",
+      "reconstruction_slot_number": 5,
+      "title": "Choose the national and fire escalation posture before casualty counts exist",
+      "decider": "Prime Minister and Commissioner, Fire and Disaster Management Agency",
+      "cutoff_at": "2026-07-28T18:20:00+09:00",
+      "decision_kind": "RESOURCE_MOBILIZATION",
+      "task": "Choose exactly one national headquarters posture and one fire mobilization posture. Use the infrastructure, aerial and municipal-function signals available at 18:20; do not use later casualties or incident-site rescue results.",
+      "visible_observation_ids": ["obs-163148-magnitude", "obs-163148-uki-intensity", "obs-163148-hikawa-intensity", "obs-163148-kashima-missing", "obs-163148-kosa-missing", "obs-1643-police-helicopter-feed", "obs-1810-expressway-closures", "obs-1810-rail-suspension", "obs-1810-water-problems", "obs-1810-yatsushiro-port", "obs-1820-misato-town-hall-degraded", "obs-1820-kosa-network-down", "obs-1820-no-published-casualty-count"],
+      "eligible_resource_ids": ["modeled-national-extreme-hq-posture", "modeled-national-emergency-hq-posture", "modeled-fdma-request-posture", "modeled-fdma-instruction-posture"],
+      "eligible_target_ids": ["kumamoto-incident-area"],
+      "action_contract": {"minimum_assignments": 2, "maximum_assignments": 2, "allow_resource_reuse": false, "maximum_total_quantity": 2},
+      "historical_choice": {
+        "summary": "The Prime Minister established the Article 24 Extreme Disaster Management Headquarters and the Fire and Disaster Management Agency switched mobilization from request to instruction.",
+        "assignments": [
+          {"resource_id": "modeled-national-extreme-hq-posture", "target_id": "kumamoto-incident-area", "quantity": 1},
+          {"resource_id": "modeled-fdma-instruction-posture", "target_id": "kumamoto-incident-area", "quantity": 1}
+        ],
+        "source_ids": ["source-kantei-crisis-log", "source-fdma-report-60"],
+        "unknowns": ["The full private evidence set and moving-unit reports are not public."]
+      },
+      "required_unknown_ids": ["unknown-national-escalation-inputs", "unknown-moving-fire-unit-reports"],
+      "forbidden_hindsight_observation_ids": ["obs-2000-aeon-collapse", "obs-2000-yatsushiro-chimney-collapse", "outcome-0823-municipal-deaths"],
+      "assumptions": ["The four posture options are modeled decision tokens for real legal choices, not deployable units."],
+      "scoring_boundary": "Score one choice from each posture family, time-valid evidence and unknown handling. A different legal tier is a counterfactual, not an outcome claim."
+    },
+    {
+      "decision_slot_id": "slot-07-shelter-load-triage",
+      "reconstruction_slot_number": 7,
+      "title": "Respond to the first-night shelter load using prefecture aggregates only",
+      "decider": "Modeled prefectural shelter coordination desk",
+      "cutoff_at": "2026-07-29T13:10:00+09:00",
+      "decision_kind": "RESPONSE_ALLOCATION",
+      "task": "Choose exactly two prefecture-wide shelter coordination actions after the aggregate moved from 506 shelters and 9,186 occupants to 419 shelters and 7,547 occupants. Do not allocate people, capacity or opening times to a municipality or individual shelter.",
+      "visible_observation_ids": ["obs-0729-0620-shelter-aggregate", "obs-0729-0700-three-active-rescues", "obs-0729-0930-site-rescue-counts", "obs-0729-1310-shelter-aggregate"],
+      "eligible_resource_ids": ["modeled-shelter-monitoring-action", "modeled-wide-area-evacuation-action", "modeled-shelter-water-priority-action"],
+      "eligible_target_ids": ["kumamoto-incident-area"],
+      "action_contract": {"minimum_assignments": 2, "maximum_assignments": 2, "allow_resource_reuse": false, "maximum_total_quantity": 2},
+      "historical_choice": {
+        "summary": "The public record preserves only the prefecture aggregate and a first-night instruction linking shelter or wider evacuation to delayed water; it does not expose a matched two-action municipal choice.",
+        "assignments": [],
+        "source_ids": ["source-cabinet-report-0729-0700", "source-cabinet-report-0729-1400", "source-prefecture-meeting-2"],
+        "unknowns": ["Municipal and individual shelter occupancy and trustworthy opening clocks are not published."]
+      },
+      "required_unknown_ids": ["unknown-shelter-municipal-load", "unknown-shelter-timestamp-meaning"],
+      "forbidden_hindsight_observation_ids": ["obs-0730-0630-shelter-occupant-peak", "outcome-0823-municipal-deaths"],
+      "assumptions": ["The three eligible actions are modeled coordination choices; the observed aggregate is not spatially distributed."],
+      "scoring_boundary": "Score aggregate-only discipline, action constraints and explicit unknowns. There is no historical municipal answer key and no outcome score."
+    },
+    {
+      "decision_slot_id": "slot-08-degraded-dispatch-rescue",
+      "reconstruction_slot_number": 8,
+      "title": "Allocate first-night rescue support as Yatsushiro dispatch returns",
+      "decider": "Yatsushiro fire headquarters with Emergency Fire Response Team command support",
+      "cutoff_at": "2026-07-28T20:00:00+09:00",
+      "decision_kind": "RESPONSE_ALLOCATION",
+      "task": "Assign one or two eligible prefectural battalions to the Yatsushiro paper-mill collapse while acknowledging that the dispatch system's failure start, exact degraded procedure, casualty count and unit readiness are unknown.",
+      "visible_observation_ids": ["obs-163148-yatsushiro-intensity", "obs-1810-expressway-closures", "obs-1810-yatsushiro-port", "obs-1903-uki-aftershock", "obs-2000-yatsushiro-chimney-collapse", "obs-2000-power-outage", "obs-2000-fire-fleet-inbound", "obs-2000-no-published-casualty-count", "obs-2000-yatsushiro-dispatch-restored"],
+      "eligible_resource_ids": ["fdma-battalion-fukuoka", "fdma-battalion-saga", "fdma-battalion-oita", "fdma-battalion-miyazaki"],
+      "eligible_target_ids": ["nippon-paper-yatsushiro"],
+      "action_contract": {"minimum_assignments": 1, "maximum_assignments": 2, "allow_resource_reuse": false, "maximum_total_quantity": 2},
+      "historical_choice": {
+        "summary": "The Yatsushiro fire headquarters worked the mill collapse with the Miyazaki battalion overnight; Kagoshima and Okayama appear there in the following day's 14:00 record.",
+        "assignments": [{"resource_id": "fdma-battalion-miyazaki", "target_id": "nippon-paper-yatsushiro", "quantity": 1}],
+        "source_ids": ["source-cabinet-report-0729-0700", "source-cabinet-report-0729-1400"],
+        "unknowns": ["The failure start, degraded dispatch procedure and exact personnel split are not public."]
+      },
+      "required_unknown_ids": ["unknown-dispatch-failure-start", "unknown-first-night-casualty-count", "unknown-fire-unit-destination-split"],
+      "forbidden_hindsight_observation_ids": ["obs-0729-1400-rescue-reassignment", "outcome-0823-municipal-deaths"],
+      "assumptions": ["Each battalion is one indivisible allocation unit; the task does not invent an internal personnel count."],
+      "scoring_boundary": "Score source/time discipline, eligible battalions, the one-site action contract and unknown handling. Later assignments and deaths do not score this choice."
+    },
+    {
+      "decision_slot_id": "slot-10-rescue-water-turn",
+      "reconstruction_slot_number": 10,
+      "title": "Protect active rescues while turning the regional posture toward water",
+      "decider": "Ground Self-Defense Force 8th Division with Kumamoto Prefecture",
+      "cutoff_at": "2026-07-30T09:30:00+09:00",
+      "decision_kind": "SUPPLY_ALLOCATION",
+      "task": "Assign three modeled mission priorities across the active rescue sites and regional water mission. Preserve active life-saving work, choose where to place the water-support priority, and reserve attention for the approaching seventy-two-hour search boundary without inventing a personnel split.",
+      "visible_observation_ids": ["obs-0729-1400-rescue-reassignment", "obs-0729-1600-water-eight-municipalities", "obs-0729-2219-aftershock", "obs-0730-0630-shelter-occupant-peak", "obs-0730-0630-water-peak-available", "obs-0730-0930-fire-rescue-status", "obs-0730-0930-water-shift-stated"],
+      "eligible_resource_ids": ["modeled-mission-priority-01", "modeled-mission-priority-02", "modeled-mission-priority-03"],
+      "eligible_target_ids": ["nippon-paper-yatsushiro", "aeon-mall-kumamoto", "kumamoto-incident-area", "yatsushiro-city", "uki-city", "hikawa-town", "kashima-town", "uto-city", "nishihara-village", "mifune-town", "kamiamakusa-city"],
+      "action_contract": {"minimum_assignments": 3, "maximum_assignments": 3, "allow_resource_reuse": false, "maximum_total_quantity": 3},
+      "historical_choice": {
+        "summary": "The recorded posture kept active rescues running, stated a conditional shift toward water after life-saving ended, and later ran another thorough Kashima search against the seventy-two-hour mark.",
+        "assignments": [
+          {"resource_id": "modeled-mission-priority-01", "target_id": "nippon-paper-yatsushiro", "quantity": 1},
+          {"resource_id": "modeled-mission-priority-02", "target_id": "kumamoto-incident-area", "quantity": 1},
+          {"resource_id": "modeled-mission-priority-03", "target_id": "aeon-mall-kumamoto", "quantity": 1}
+        ],
+        "source_ids": ["source-prefecture-meeting-5", "source-cabinet-report-0731-0730"],
+        "unknowns": ["The complete personnel split and interchangeability between missions are not public."]
+      },
+      "required_unknown_ids": ["unknown-response-personnel-interchangeability", "unknown-final-search-personnel-split", "unknown-people-alive-by-time"],
+      "forbidden_hindsight_observation_ids": ["outcome-0731-final-search-and-water-sites", "outcome-0823-municipal-deaths"],
+      "assumptions": ["Three modeled priority tokens represent bounded commitments, not personnel or vehicles."],
+      "scoring_boundary": "Score preservation of active rescue, regional water reasoning, eligible targets and unknown handling. Later mission totals are descriptive context only."
+    },
+    {
+      "decision_slot_id": "slot-11-aftershock-reprioritization",
+      "reconstruction_slot_number": 11,
+      "title": "Reprioritize two safety checks after the second-night aftershock",
+      "decider": "Modeled prefectural operations triage desk",
+      "cutoff_at": "2026-07-29T22:19:00+09:00",
+      "decision_kind": "INFORMATION_ESCALATION",
+      "task": "Assign exactly two immediate safety-verification priorities after the 22:19 intensity-5-lower aftershock. Use the active rescue, isolated-community, shelter and water picture without assuming an unreported site condition.",
+      "visible_observation_ids": ["obs-0729-0620-shelter-aggregate", "obs-0729-0930-site-rescue-counts", "obs-0729-1310-shelter-aggregate", "obs-0729-1400-rescue-reassignment", "obs-0729-1400-yamato-isolated", "obs-0729-1600-water-eight-municipalities", "obs-0729-2219-aftershock"],
+      "eligible_resource_ids": ["modeled-aftershock-priority-01", "modeled-aftershock-priority-02"],
+      "eligible_target_ids": ["uki-city", "kamiamakusa-city", "nippon-paper-yatsushiro", "aeon-mall-kumamoto", "hikawa-town", "yamato-town"],
+      "action_contract": {"minimum_assignments": 2, "maximum_assignments": 2, "allow_resource_reuse": false, "maximum_total_quantity": 2},
+      "historical_choice": {
+        "summary": "The public record reports the aftershock and continuing operations but does not name a matched two-target reprioritization decision.",
+        "assignments": [],
+        "source_ids": ["source-fdma-report-60", "source-prefecture-meeting-4", "source-cabinet-report-0729-1400"],
+        "unknowns": ["Immediate post-aftershock condition checks by active site are not published."]
+      },
+      "required_unknown_ids": ["unknown-aftershock-field-condition", "unknown-people-alive-by-time"],
+      "forbidden_hindsight_observation_ids": ["obs-0730-0630-water-peak-available", "outcome-0823-municipal-deaths"],
+      "assumptions": ["Two verification-priority tokens are modeled attention capacity, not real teams."],
+      "scoring_boundary": "Score use of the aftershock and current operations evidence, valid targets and explicit uncertainty. There is no historical target answer key or outcome claim."
+    }
+  ],
+  "limitations": [
+    "This is a demonstration campaign outside the registered five-slot experiment. Its metrics are descriptive and cannot create or repair a registered claim.",
+    "Shelter events remain prefecture aggregates; municipal or individual shelter occupancy is never inferred.",
+    "Road closure minutes come from a later snapshot and the access-secured record has day precision only; no route-level reopening time is invented.",
+    "Modeled decision-capacity resources are labeled in every slot and do not represent real teams, personnel or vehicles."
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "schema_version": "disaster-replay.population-grid-metadata.v1",
+  "title": "2020 census population and households, Kumamoto Prefecture, 500 m mesh",
+  "classification": "OBSERVED_PUBLIC_CENSUS",
+  "census_date": "2020-10-01",
+  "published_year": 2020,
+  "coordinate_reference_system": "JGD2000 geographic longitude/latitude",
+  "mesh_standard": "JIS X 0410 fourth-area mesh (500 m)",
+  "feature_count": 11529,
+  "population_total": 1738301,
+  "bbox": [
+    129.975,
+    32.1,
+    131.2875,
+    33.1875
+  ],
+  "output": {
+    "path": "data/full-incident/estat-2020-kumamoto-500m-population.geojson",
+    "bytes": 7503851,
+    "sha256": "fa80251ddb46469d9f0044cc6aed315f98ffd16251aae5c00408cf56cdf62684"
+  },
+  "source": {
+    "provider": "Statistics Bureau of Japan, e-Stat",
+    "landing_page": "https://www.e-stat.go.jp/gis",
+    "table_code": "T001101",
+    "prefecture_code": "43",
+    "statistics_archive": {
+      "id": "estat-2020-t001101-kumamoto",
+      "url": "https://www.e-stat.go.jp/gis/statmap-search/data?statsId=T001101&code=43&downloadType=2&datum=2000",
+      "sha256": "b3ccddf272da81da7af83c2574cc66743fec0d4886ffd3f5984bbc52afb6ffbf",
+      "filename": "tblT001101H43.zip",
+      "bytes": 441741,
+      "extracted_filename": "tblT001101H43.txt",
+      "extracted_sha256": "629e6461e297e6fc36240f79dabc58f8fc469a14e32da25cc4dd2b613c15ab91"
+    },
+    "official_boundary_archives": [
+      {
+        "id": "estat-500m-boundary-4829",
+        "mesh": "4829",
+        "url": "https://www.e-stat.go.jp/gis/statmap-search/data?dlserveyId=H&code=4829&coordSys=1&format=shape&downloadType=5",
+        "sha256": "96c1dbc0077121fd7c2fc7ffb83d3fb05872552e1757738ec289453783afeedf",
+        "filename": "HDDSWH4829.zip",
+        "bytes": 106087
+      },
+      {
+        "id": "estat-500m-boundary-4830",
+        "mesh": "4830",
+        "url": "https://www.e-stat.go.jp/gis/statmap-search/data?dlserveyId=H&code=4830&coordSys=1&format=shape&downloadType=5",
+        "sha256": "3a27e4763116cd0b05d1717ac98a36cd23bb5a10a635462fb77516d0faf9aba4",
+        "filename": "HDDSWH4830.zip",
+        "bytes": 667698
+      },
+      {
+        "id": "estat-500m-boundary-4831",
+        "mesh": "4831",
+        "url": "https://www.e-stat.go.jp/gis/statmap-search/data?dlserveyId=H&code=4831&coordSys=1&format=shape&downloadType=5",
+        "sha256": "2b42fb2c0825f3dc37ddad354cca21ed8b17898e45c4036e899f8027db8c9510",
+        "filename": "HDDSWH4831.zip",
+        "bytes": 485322
+      },
+      {
+        "id": "estat-500m-boundary-4929",
+        "mesh": "4929",
+        "url": "https://www.e-stat.go.jp/gis/statmap-search/data?dlserveyId=H&code=4929&coordSys=1&format=shape&downloadType=5",
+        "sha256": "db8c70a739f59f5180e565403d52511c4c0c10f5802ae3c53b70be4528258d4b",
+        "filename": "HDDSWH4929.zip",
+        "bytes": 572084
+      },
+      {
+        "id": "estat-500m-boundary-4930",
+        "mesh": "4930",
+        "url": "https://www.e-stat.go.jp/gis/statmap-search/data?dlserveyId=H&code=4930&coordSys=1&format=shape&downloadType=5",
+        "sha256": "4eb6dcfcc3c437adab28f3940004300039ebe84d7d9334c746c891f5948202c6",
+        "filename": "HDDSWH4930.zip",
+        "bytes": 668300
+      },
+      {
+        "id": "estat-500m-boundary-4931",
+        "mesh": "4931",
+        "url": "https://www.e-stat.go.jp/gis/statmap-search/data?dlserveyId=H&code=4931&coordSys=1&format=shape&downloadType=5",
+        "sha256": "cd2938631f533659cb2fe6358745d0248a10896d1bb86ed37643f4573e60fe2b",
+        "filename": "HDDSWH4931.zip",
+        "bytes": 679618
+      }
+    ],
+    "definition": "https://www.e-stat.go.jp/help/data-definition-information/downloaddata/T001101.pdf"
+  },
+  "license": {
+    "name": "Government Standard Terms of Use 2.0",
+    "commercial_use": true,
+    "terms": "https://www.e-stat.go.jp/terms-of-use",
+    "attribution": "出典：政府統計の総合窓口(e-Stat)（https://www.e-stat.go.jp/）を加工して作成"
+  },
+  "processing": {
+    "tool": "product/disaster-replay/scripts/import-full-incident-data.mjs population",
+    "rule": "Decode the official Shift JIS table, convert official * / - / X suppressed values to null, retain HTKSYORI / HTKSAKI / GASSAN semantics, and derive each standard mesh rectangle from its nine-digit JIS X 0410 code. Verify the six official e-Stat boundary packages by pinned SHA-256.",
+    "frozen_on": "2026-08-23"
+  }
+}

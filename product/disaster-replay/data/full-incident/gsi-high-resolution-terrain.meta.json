@@ -1,0 +1,72 @@
+{
+  "schema_version": "disaster-replay.gsi-terrain-metadata.v1",
+  "title": "High-resolution GSI terrain manifests for the Kumamoto full-incident replay",
+  "classification": "OBSERVED_PUBLIC_BASEMAP",
+  "output": {
+    "path": "data/full-incident/gsi-high-resolution-terrain.manifest.json",
+    "bytes": 2990262,
+    "sha256": "f88fc7a9330c5c629e56e710bee6e08e3f991a61623059a3e60f385554d1e455",
+    "logical_tile_count": 14755,
+    "available_tile_count": 8923,
+    "unavailable_tile_count": 5832,
+    "available_source_bytes": 551101388
+  },
+  "source": {
+    "provider": "Geospatial Information Authority of Japan",
+    "tile_catalog": "https://maps.gsi.go.jp/development/ichiran.html",
+    "elevation_specification": "https://maps.gsi.go.jp/development/demtile.html",
+    "accuracy_and_source_notes": "https://maps.gsi.go.jp/development/hyokochi.html",
+    "tile_base": "https://cyberjapandata.gsi.go.jp/xyz"
+  },
+  "encoding": {
+    "description": "GSI twenty-four-bit RGB elevation encoding; deliberately not Mapbox Terrain-RGB or Terrarium.",
+    "decode": "u=65536*R+256*G+B; if u<8388608 elevation_m=u*0.01; if u==8388608 NoData; otherwise elevation_m=(u-16777216)*0.01",
+    "nodata_rgb": [
+      128,
+      0,
+      0
+    ],
+    "self_tests": [
+      {
+        "rgb": [
+          0,
+          0,
+          100
+        ],
+        "elevation_m": 1
+      },
+      {
+        "rgb": [
+          128,
+          0,
+          0
+        ],
+        "elevation_m": null
+      },
+      {
+        "rgb": [
+          255,
+          255,
+          156
+        ],
+        "elevation_m": -1
+      }
+    ]
+  },
+  "fallback": {
+    "missing_dem1a_tile": "Use the selected five-metre DEM5A/DEM5B/DEM5C tile for the same ground area.",
+    "missing_five_metre_tile_or_nodata_pixel": "Use the existing local DEM10B terrain layer; never infer a high-resolution height."
+  },
+  "license": {
+    "name": "Japan Public Data License 1.0",
+    "commercial_use": true,
+    "terms": "https://www.gsi.go.jp/kikakuchousei/kikakuchousei40182.html",
+    "attribution": "地理院タイル（標高タイル）を加工して作成"
+  },
+  "processing": {
+    "tool": "product/disaster-replay/scripts/import-full-incident-data.mjs terrain-manifest",
+    "acquisition_mode": "Every selected tile byte was fetched and hashed. Each logical five-metre cell tries DEM5A, then DEM5B, then DEM5C. The repository stores the deterministic URL/hash manifest rather than duplicating the large public tile cache.",
+    "concurrency": 32,
+    "frozen_on": "2026-08-23"
+  }
+}

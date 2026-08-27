@@ -1,0 +1,41 @@
+{
+  "reducer_version": "disaster-replay-reducer.v1",
+  "event_count": 81,
+  "scenario_sha256": "724446b96ce8eae4aa3bf252df3976541bef4569706338eb0ff59968bcc08417",
+  "source_data_sha256_by_id": {
+    "gsi-kumamoto-2026-landslides": "91a08d04b3a76486373e9795fecc2347a552e76b78d023b98beca42a74160364",
+    "mlit-kumamoto-2026-passable-map-0729-1200": "96c8a30fa6818e1eb1ac34d59186c3f8dd13e3a0cc49ac95c015daa0f45ab0db",
+    "jma-kumamoto-2026-official-updates": "a3c342a47ff8b0eb8ccc1239b43101e3ad05b922849e7f361d874a7acade20e2",
+    "gsi-uki-designated-shelters": "5493ee55fb0d82ba41578129442558cec588c348b4768e738a1c131d9a49b476",
+    "gsi-dem-tiles": "6b74fb52109fcb70f8667fede283e2134b3b51032d616d8c51722599d4e429ca",
+    "gsi-dem-tiles-metadata": "191a822267ac292d23948c191413d5aab400f576684b973b0e367d7faef85f4c",
+    "plateau-uki-2025-3d-manifest": "3233a4279474806f53b25751c4b274362a933501a815f5051cf0c112445de796",
+    "plateau-uki-2025-3d-tileset": "fb45c1f47a05eb07d75deae279fb8b95fe64cbb4a53df2e9364c6e13cc135d04"
+  },
+  "timeline_sha256": "442031b04f0f299dc7ef5cf0d30e7e709b808ea26f02051973aadc7f26f230b3",
+  "terminal_event_sha256": "3a1983fdead49d1cd027fa596c7042dff785ed2ba67584f698474b36398becdd",
+  "final_state_sha256_by_arm": {
+    "PLAIN_GRAPH": "c8c6df18f7c5479a04cc14305809c573dd22e3e53a69b6e46dc6ca00183f60ba",
+    "EVIDENCE_GRAPH": "1db96c688b35db4a49145a962b9cfc12c481706c73e5c344bcf1851b2357b69b"
+  },
+  "byte_identical_rebuild": true,
+  "run_identity": {
+    "schema_version": "disaster-replay.run-identity.v1",
+    "equality_keys": {
+      "scenario_basis_sha256": "aecad03969b0efca4b7b3af12b5c77b24d3a009a91bd0a97e0788cde4a456857",
+      "observation_set_sha256": "effda5912392bc162740d5784d3372f029d9ac246d1c3115eb4c98fae9b50a6c",
+      "resources_sha256": "81f3a5dc71065efd3939c82a09590b84890e92b5a058d4145f45419fcb1d909f",
+      "decision_slots_sha256": "ccac2c1a1786b897f111b82e79dda4ccf780ccd319acc67925a7cf9deb2dbe76"
+    },
+    "runs": [
+      {
+        "run_id": "kumamoto-2026-evidence-routing-exercise:260728:plain-graph:v1",
+        "arm": "PLAIN_GRAPH"
+      },
+      {
+        "run_id": "kumamoto-2026-evidence-routing-exercise:260728:evidence-graph:v1",
+        "arm": "EVIDENCE_GRAPH"
+      }
+    ]
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "schema_version": "disaster-replay.scenario.v1",
+  "scenario_id": "kumamoto-2026-evidence-routing-exercise",
+  "title": "Kumamoto 2026: two scarce teams, four conflicting reports",
+  "seed": 260728,
+  "disclosure": "The earthquake, map geometry, instrument readings, and mapped landslide polygons are public observations. Every report about people and every dispatch outcome is synthetic exercise data. This is a deterministic product demonstration, not a claim about the real emergency response.",
+  "incident": {
+    "kind": "EARTHQUAKE",
+    "occurred_at": "2026-07-28T16:27:15.200+09:00",
+    "latitude": 32.625,
+    "longitude": 130.6783333333,
+    "depth_km": 16,
+    "magnitude": 7.1,
+    "maximum_intensity": "JMA 7",
+    "source_id": "jma-kumamoto-2026-event"
+  },
+  "clock": {
+    "basis": "SIMULATION_STEP",
+    "start_at": "2026-07-28T16:27:15.200+09:00",
+    "step_seconds": 60
+  },
+  "viewport": {
+    "center": [130.6783333333, 32.625],
+    "bounds": [[130.48, 32.30], [130.90, 32.83]]
+  },
+  "data_sources": [
+    {
+      "source_id": "jma-kumamoto-2026-event",
+      "title": "JMA strong-motion record for the 2026-07-28 Kumamoto earthquake",
+      "classification": "OBSERVED_PUBLIC",
+      "provider": "Japan Meteorological Agency",
+      "url": "https://www.data.jma.go.jp/eqev/data/kyoshin/jishin/2607281627_kumamoto/",
+      "access": "REMOTE_DOWNLOAD",
+      "sha256": null,
+      "attribution": "Japan Meteorological Agency",
+      "license_note": "Linked, not redistributed. Follow JMA's strong-motion data cautions and site terms."
+    },
+    {
+      "source_id": "jma-kumamoto-2026-official-updates",
+      "title": "Seven official JMA reports showing how the earthquake picture sharpened",
+      "classification": "OBSERVED_PUBLIC",
+      "provider": "Japan Meteorological Agency",
+      "url": "https://www.jma.go.jp/bosai/quake/data/list.json",
+      "access": "BUNDLED_NORMALIZED",
+      "sha256": "a3c342a47ff8b0eb8ccc1239b43101e3ad05b922849e7f361d874a7acade20e2",
+      "archive_bytes": 388732,
+      "attribution": "Japan Meteorological Agency; normalized by AURAWORLD",
+      "license_note": "Historical official reports under JMA site terms. This replay labels the normalized file as modified and never presents it as a forecast or warning."
+    },
+    {
+      "source_id": "jma-uki-toyono-waveform",
+      "title": "Uki City Toyono strong-motion waveform (intensity 7 station)",
+      "classification": "OBSERVED_PUBLIC",
+      "provider": "Japan Meteorological Agency and cooperating local authority",
+      "url": "https://www.data.jma.go.jp/eqev/data/kyoshin/jishin/2607281627_kumamoto/data/acc20260728000193025.csv",
+      "access": "REMOTE_DOWNLOAD",
+      "sha256": null,
+      "attribution": "Japan Meteorological Agency; waveform cooperation credited on the source page",
+      "license_note": "Linked, not redistributed. Follow the source page's data-use cautions."
+    },
+    {
+      "source_id": "gsi-kumamoto-2026-landslides",
+      "title": "GSI 2026 Kumamoto landslide and deposition distribution",
+      "classification": "OBSERVED_PUBLIC",
+      "provider": "Geospatial Information Authority of Japan",
+      "url": "https://www1.gsi.go.jp/geowww/saigai/20260728_kumamoto/hokai/kumamoto_yatsushiro0814.zip",
+      "access": "BUNDLED_NORMALIZED",
+      "sha256": "8133f7cb714990cc5b9fe6bfb10fb991009a413569a4468b3ffe8686c0532531",
+      "attribution": "Geospatial Information Authority of Japan",
+      "license_note": "The official incident page permits reuse, including redistribution, with source attribution. The source ZIP also carries the GSI content-use terms and disclaimer."
+    },
+    {
+      "source_id": "gsi-dem-tiles",
+      "title": "GSI elevation tiles",
+      "classification": "OBSERVED_PUBLIC",
+      "provider": "Geospatial Information Authority of Japan",
+      "url": "https://maps.gsi.go.jp/development/demtile.html",
+      "access": "BUNDLED_NORMALIZED",
+      "sha256": "6b74fb52109fcb70f8667fede283e2134b3b51032d616d8c51722599d4e429ca",
+      "archive_bytes": 863082,
+      "attribution": "Geospatial Information Authority of Japan",
+      "license_note": "Twelve official DEM10B tiles were stitched and cropped losslessly. Keep the bundled metadata and GSI attribution with the derivative."
+    },
+    {
+      "source_id": "gsi-uki-designated-shelters",
+      "title": "Officially designated Uki shelters and earthquake evacuation places",
+      "classification": "OBSERVED_PUBLIC",
+      "provider": "Geospatial Information Authority of Japan",
+      "url": "https://www.gsi.go.jp/bousaichiri/hinanbasho",
+      "access": "BUNDLED_NORMALIZED",
+      "sha256": "5493ee55fb0d82ba41578129442558cec588c348b4768e738a1c131d9a49b476",
+      "attribution": "Geospatial Information Authority of Japan; normalized by AURAWORLD",
+      "license_note": "Designation is static public information. It does not prove that a location was open, safe, staffed, supplied, reachable, or had spare capacity after this event."
+    },
+    {
+      "source_id": "mlit-kumamoto-2026-passable-map-0729-1200",
+      "title": "MLIT Passable Map road restrictions at 2026-07-29 12:00 JST",
+      "classification": "OBSERVED_PUBLIC",
+      "provider": "Ministry of Land, Infrastructure, Transport and Tourism",
+      "url": "https://www.mlit.go.jp/road/saigai/r8kumamoto/2607291200data.zip",
+      "access": "BUNDLED_NORMALIZED",
+      "sha256": "8dd8cf569879e68ae392ba6b4e26263d1f3ba8c758b09d85dcad6cfae8b62d84",
+      "attribution": "Ministry of Land, Infrastructure, Transport and Tourism, Japan",
+      "license_note": "Official public Passable Map snapshot normalized from dourokisei.geojson. Cite the source page and state that AURAWORLD processed the data under Japan Public Data License 1.0."
+    },
+    {
+      "source_id": "plateau-uki-2025-3d",
+      "title": "Project PLATEAU Uki City 2025 3D Tiles and vector tiles",
+      "classification": "OBSERVED_PUBLIC",
+      "provider": "Project PLATEAU, Ministry of Land, Infrastructure, Transport and Tourism",
+      "url": "https://assets.cms.plateau.reearth.io/assets/c3/6b9e5c-cbdc-415a-9ac1-601df5f79fd4/43213_uki-shi_city_2025_3dtiles_mvt_1_op.zip",
+      "access": "BUNDLED_NORMALIZED",
+      "sha256": "d271ce2a6e0e337cd7d8e913ee498832e7719e3cd86fa006c84036346c8385a8",
+      "archive_bytes": 178313067,
+      "attribution": "Uki City / Project PLATEAU / MLIT Japan",
+      "license_note": "Official open data governed by the PLATEAU Site Policy. The source archive contains geometry but no embedded license file; retain this source record with any derivative."
+    },
+    {
+      "source_id": "plateau-uki-2025-operations",
+      "title": "Project PLATEAU Uki City shelters and emergency routes",
+      "classification": "OBSERVED_PUBLIC",
+      "provider": "Project PLATEAU, Ministry of Land, Infrastructure, Transport and Tourism",
+      "url": "https://assets.cms.plateau.reearth.io/assets/a9/371c8e-96c6-40fa-8a00-8eb4232bd88f/43213_uki-shi_2025_related.zip",
+      "access": "REMOTE_DOWNLOAD",
+      "sha256": null,
+      "attribution": "Project PLATEAU / MLIT Japan",
+      "license_note": "Not bundled yet. The package contains shelter and emergency-route GeoJSON; preserve its license and metadata before redistribution."
+    }
+  ],
+  "world_features": {
+    "observed_hazards_geojson": "data/gsi-2026-kumamoto-landslides.geojson",
+    "observed_road_restrictions_geojson": "data/mlit-2026-kumamoto-road-restrictions.geojson",
+    "terrain_dem_png": "data/gsi-dem10b-z11-kumamoto.png",
+    "terrain_dem_metadata": "data/gsi-dem10b-z11-kumamoto.meta.json",
+    "official_report_updates": "data/jma-2026-kumamoto-official-updates.json",
+    "designated_shelters_geojson": "data/gsi-uki-designated-shelters.geojson",
+    "building_tileset": "data/plateau-uki-2025-focus/tileset.json",
+    "building_metadata": "data/plateau-uki-2025-focus/metadata.json",
+    "building_world_source_id": "plateau-uki-2025-3d",
+    "operations_source_id": "plateau-uki-2025-operations"
+  },
+  "exercise": {
+    "synthetic": true,
+    "input_path": "scenarios/kumamoto-2026/exercise-inputs.json",
+    "question": "With only two assessment teams, which two reported sites should receive them first?",
+    "one_changed_variable": "The orchestration graph. Both arms receive identical reports, truth, resources, time, and deterministic policies.",
+    "target_feature_ids": [
+      "gsi-2026-kumamoto-landslide-001",
+      "gsi-2026-kumamoto-landslide-002",
+      "gsi-2026-kumamoto-landslide-003",
+      "gsi-2026-kumamoto-landslide-004"
+    ]
+  },
+  "agents": [
+    { "agent_id": "intake-01", "role": "Normalize incoming reports without deciding whether they are true." },
+    { "agent_id": "evidence-compiler-01", "role": "Keep claim versions, sources, contradictions, and freshness separate." },
+    { "agent_id": "allocator-01", "role": "Rank legally eligible sites against the shared resource limit." },
+    { "agent_id": "dispatcher-01", "role": "Issue idempotent dispatches and record exact effect receipts." },
+    { "agent_id": "exercise-controller", "role": "Reveal synthetic outcomes and score both arms." }
+  ],
+  "resources": [
+    { "resource_id": "assessment-team-01", "kind": "RAPID_ASSESSMENT_TEAM", "capacity": 1 },
+    { "resource_id": "assessment-team-02", "kind": "RAPID_ASSESSMENT_TEAM", "capacity": 1 }
+  ],
+  "decision_slots": [
+    {
+      "decision_slot_id": "initial-assessment-allocation",
+      "decision_type": "SCARCE_RESOURCE_ALLOCATION",
+      "information_cutoff_sim_time_s": 480,
+      "visible_observation_ids": [
+        "exercise-report-001",
+        "exercise-report-002",
+        "exercise-report-003",
+        "exercise-report-004",
+        "exercise-report-005",
+        "exercise-report-006",
+        "exercise-report-007",
+        "exercise-report-008"
+      ],
+      "eligible_resource_ids": [
+        "assessment-team-01",
+        "assessment-team-02"
+      ],
+      "eligible_target_ids": [
+        "gsi-2026-kumamoto-landslide-001",
+        "gsi-2026-kumamoto-landslide-002",
+        "gsi-2026-kumamoto-landslide-003",
+        "gsi-2026-kumamoto-landslide-004"
+      ],
+      "selection_count": 2
+    }
+  ],
+  "graphs": [
+    {
+      "graph_id": "plain-priority-graph-v1",
+      "arm": "PLAIN_GRAPH",
+      "plain_english": "Read every report, keep the largest number reported for each site, then send the two teams to the two largest numbers.",
+      "nodes": ["INGEST", "SUMMARIZE", "RANK", "DISPATCH", "OBSERVE"],
+      "edges": ["INGEST_TO_SUMMARIZE", "SUMMARIZE_TO_RANK", "RANK_TO_DISPATCH", "DISPATCH_TO_OBSERVE"]
+    },
+    {
+      "graph_id": "evidence-feedback-graph-v1",
+      "arm": "EVIDENCE_GRAPH",
+      "plain_english": "Read every report, keep competing versions separate, compare independent sources, reject or hold weak versions, then rank only current supported claims and record why every dispatch happened.",
+      "nodes": ["INGEST", "VERSION", "CORROBORATE", "GATE", "RANK", "DISPATCH", "OBSERVE", "UPDATE"],
+      "edges": ["INGEST_TO_VERSION", "VERSION_TO_CORROBORATE", "CORROBORATE_TO_GATE", "GATE_TO_RANK", "RANK_TO_DISPATCH", "DISPATCH_TO_OBSERVE", "OBSERVE_TO_UPDATE"]
+    }
+  ],
+  "metrics": [
+    {
+      "metric_id": "exercise_people_reached",
+      "unit": "simulated_people",
+      "direction": "HIGHER_IS_BETTER",
+      "formula": "Sum the frozen synthetic outcome for every uniquely dispatched target.",
+      "scope": "SYNTHETIC_EXERCISE"
+    },
+    {
+      "metric_id": "dispatches_on_rejected_claim_versions",
+      "unit": "dispatches",
+      "direction": "LOWER_IS_BETTER",
+      "formula": "Count dispatches whose matched exercise claim version is rejected by the shared evidence comparison.",
+      "scope": "SYNTHETIC_EXERCISE"
+    },
+    {
+      "metric_id": "decision_source_coverage",
+      "unit": "fraction",
+      "direction": "HIGHER_IS_BETTER",
+      "formula": "Divide selected supported claim versions by all dispatched claim versions.",
+      "scope": "SYNTHETIC_EXERCISE"
+    }
+  ],
+  "reducer_version": "disaster-replay-reducer.v1"
+}

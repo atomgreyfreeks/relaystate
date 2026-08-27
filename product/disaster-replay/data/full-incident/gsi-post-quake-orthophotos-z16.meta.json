@@ -1,0 +1,37 @@
+{
+  "schema_version": "disaster-replay.gsi-post-quake-orthophoto-metadata.v1",
+  "title": "GSI post-quake orthophotos for the full Kumamoto incident area at zoom 16",
+  "classification": "OBSERVED_PUBLIC_POST_EVENT_ORTHOPHOTO",
+  "output": {
+    "path": "data/full-incident/gsi-post-quake-orthophotos-z16.manifest.json",
+    "bytes": 1985273,
+    "sha256": "a38e860aec003d3dc50e918a32d20e7987c5e5e4062aa695c266eb22bf6e3c92",
+    "layer_count": 6,
+    "tile_count": 8027,
+    "source_bytes": 1028398957
+  },
+  "source": {
+    "provider": "Geospatial Information Authority of Japan",
+    "incident_page": "https://www.gsi.go.jp/BOUSAI/20260728_kumamoto_earthquake.html",
+    "layer_definitions": {
+      "id": "gsi-2026-kumamoto-incident-layer-definitions",
+      "url": "https://maps.gsi.go.jp/layers_txt/layers_20260729kumamoto.txt",
+      "sha256": "1a5bc085a80d51a90dab770f42fa77f72d80a94b6b16d6be26d8660437f78379",
+      "snapshot_path": "data/full-incident/gsi-kumamoto-incident-layers.source.json",
+      "bytes": 34615
+    }
+  },
+  "license": {
+    "name": "Public Data License 1.0",
+    "commercial_use": true,
+    "terms": "https://www.gsi.go.jp/kikakuchousei/kikakuchousei40182.html",
+    "attribution": "国土地理院撮影の空中写真（2026年7月29日～8月12日撮影）を加工して作成"
+  },
+  "processing": {
+    "tool": "product/disaster-replay/scripts/import-gsi-full-incident-assets.mjs orthophotos",
+    "rule": "Within the declared full-incident bbox, probe every official layer at zoom 10 and recursively probe all four intersecting children of each available tile through zoom 16. Hash every available zoom-16 PNG and retain its exact URL, byte count, and SHA-256. The cocotile pyramid guarantees that an unavailable parent has no available descendant.",
+    "acquisition_mode": "Every target tile byte was fetched and hashed. The repository stores the URL/hash manifest rather than duplicating the large public image cache.",
+    "concurrency": 32,
+    "frozen_on": "2026-08-23"
+  }
+}

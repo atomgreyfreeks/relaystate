@@ -1,0 +1,75 @@
+{
+  "arms": {
+    "evidence_feedback": {
+      "communication_failure_rate": 0.05,
+      "communication_failures": 2,
+      "constraint_pass_rate": 0.85,
+      "decisions": 40,
+      "fully_valid": 34,
+      "fully_valid_rate": 0.85,
+      "gradable": 40,
+      "hindsight_violations": 0,
+      "mean_required_unknown_coverage": 1.0
+    },
+    "evidence_table": {
+      "communication_failure_rate": 0.475,
+      "communication_failures": 19,
+      "constraint_pass_rate": 0.825,
+      "decisions": 40,
+      "fully_valid": 17,
+      "fully_valid_rate": 0.425,
+      "gradable": 40,
+      "hindsight_violations": 0,
+      "mean_required_unknown_coverage": 0.9708333333333334
+    },
+    "plain_summary": {
+      "communication_failure_rate": 1.0,
+      "communication_failures": 40,
+      "constraint_pass_rate": 0.925,
+      "decisions": 40,
+      "fully_valid": 0,
+      "fully_valid_rate": 0.0,
+      "gradable": 40,
+      "hindsight_violations": 0,
+      "mean_required_unknown_coverage": 0.0
+    }
+  },
+  "evidence_table_comparison": {
+    "claim_passes": false,
+    "paired_bootstrap_95_ci": [
+      0.275,
+      0.575
+    ],
+    "rules": {
+      "bootstrap_excludes_zero": true,
+      "communication_factor": true,
+      "complete_and_gradable": true,
+      "constraint_noninferiority": false,
+      "validity_gain": true
+    },
+    "validity_gain": 0.425,
+    "verdict": "FAIL"
+  },
+  "expected_configs": 40,
+  "feedback_comparison": {
+    "claim_passes": true,
+    "invalid_initial_answers": 23,
+    "median_output_token_ratio": 1.4352066883418486,
+    "repair_rate": 0.7391304347826086,
+    "repairs": 17,
+    "rules": {
+      "introduced_errors": true,
+      "nondecreasing_validity": true,
+      "one_call_ceiling": true,
+      "output_token_ratio": true,
+      "repair_rate": true
+    },
+    "verdict": "PASS"
+  },
+  "historical_overlap_disclosure": "Descriptive only; excluded from every pass rule.",
+  "invalid_artifacts": [],
+  "manifest_hash": "d033786d42717b6aa4bcbaabc139cd813563959f57deccdc52df0d63ae8c0160",
+  "phase": "production",
+  "schema_version": 1,
+  "valid_configs": 40
+}

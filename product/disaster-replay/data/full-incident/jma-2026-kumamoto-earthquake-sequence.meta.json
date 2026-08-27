@@ -1,0 +1,52 @@
+{
+  "schema_version": "disaster-replay.jma-earthquake-sequence-metadata.v1",
+  "title": "JMA Kumamoto regional earthquake sequence following the July 28, 2026 main shock",
+  "classification": "OBSERVED_PUBLIC",
+  "output": {
+    "path": "data/full-incident/jma-2026-kumamoto-earthquake-sequence.json",
+    "bytes": 757003,
+    "sha256": "7f5aabb83b021bec9d5b6019684ffb68bc327925e71a204a7a841101b3d82377",
+    "event_count": 570,
+    "report_count": 709,
+    "main_shock_report_count": 7,
+    "later_regional_event_count": 569,
+    "area_counts": [
+      {
+        "area": "熊本県天草・芦北地方",
+        "events": 167
+      },
+      {
+        "area": "熊本県熊本地方",
+        "events": 402
+      },
+      {
+        "area": "熊本県阿蘇地方",
+        "events": 1
+      }
+    ]
+  },
+  "source": {
+    "provider": "Japan Meteorological Agency",
+    "id": "jma-earthquake-list-2026-08-23",
+    "url": "https://www.jma.go.jp/bosai/quake/data/list.json",
+    "sha256": "be725e798cd8747068a98c8b988d84c270771018c8956383e030c9289768d161",
+    "filename": "list.json",
+    "bytes": 909776,
+    "snapshot_path": "data/full-incident/jma-earthquake-list-2026-08-23.source.json",
+    "source_report_count": 906,
+    "source_event_count": 726,
+    "source_first_origin_time": "2026-07-24T20:53:00+09:00",
+    "source_last_origin_time": "2026-08-23T19:28:00+09:00"
+  },
+  "license": {
+    "name": "Japan Meteorological Agency website terms / Public Data License 1.0",
+    "commercial_use": true,
+    "terms": "https://www.jma.go.jp/jma/kishou/info/coment.html",
+    "attribution": "出典：気象庁ホームページ（https://www.jma.go.jp/bosai/quake/）を加工して作成"
+  },
+  "processing": {
+    "tool": "product/disaster-replay/scripts/import-full-incident-data.mjs jma-sequence",
+    "rule": "Freeze the complete public list by SHA-256; select event IDs at or after the main shock when at least one JMA report area name contains 熊本県; retain every update for those event IDs; use the last issued report as the event summary while retaining all report-level intensity summaries.",
+    "frozen_on": "2026-08-23"
+  }
+}

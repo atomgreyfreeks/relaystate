@@ -1,0 +1,160 @@
+{
+  "schema_version": "disaster-replay.plateau-focus.v1",
+  "title": "Project PLATEAU Uki City 2025 LOD1 building focus cut",
+  "classification": "OBSERVED_PUBLIC_BASEMAP",
+  "disclosure": "These are real pre-event municipal building geometries. They do not show earthquake damage, occupancy, safety, or rescue need.",
+  "source": {
+    "provider": "Uki City / Project PLATEAU / Ministry of Land, Infrastructure, Transport and Tourism",
+    "url": "https://assets.cms.plateau.reearth.io/assets/c3/6b9e5c-cbdc-415a-9ac1-601df5f79fd4/43213_uki-shi_city_2025_3dtiles_mvt_1_op.zip",
+    "archive_bytes": 178313067,
+    "archive_sha256": "d271ce2a6e0e337cd7d8e913ee498832e7719e3cd86fa006c84036346c8385a8",
+    "source_member": "43213_uki-shi_city_2025_citygml_1_op_bldg_3dtiles_lod1/tileset.json",
+    "attribution": "Created by processing the 2025 Uki City 3D city model (Uki City / Project PLATEAU / MLIT Japan)."
+  },
+  "focus_bounds_wgs84": [
+    130.665,
+    32.612,
+    130.691,
+    32.638
+  ],
+  "selection_rule": "For every source-tile branch intersecting the focus bounds, retain the deepest intersecting tile; flatten those coverage-frontier tiles into one local tileset.",
+  "content_count": 9,
+  "content_bytes": 3768764,
+  "contents": [
+    {
+      "uri": "data/data106.b3dm",
+      "bytes": 83064,
+      "sha256": "f41bcd6245edd442a1f693a66cfb91cf69597de14380445128acf57838a8ede2",
+      "bounding_volume": {
+        "region": [
+          2.2802675348120496,
+          0.5694151667175354,
+          2.28059334013296,
+          0.5698729209755575,
+          33.09335536817041,
+          52.47871659601529
+        ]
+      }
+    },
+    {
+      "uri": "data/data132.b3dm",
+      "bytes": 27732,
+      "sha256": "520e8445fb17334442b8e2400d9e9a548dbb8d7ea2cd4b68af9f112d0ba9ee7c",
+      "bounding_volume": {
+        "region": [
+          2.280919145453871,
+          0.56930072815303,
+          2.2810005967840987,
+          0.5694151667175354,
+          33.249156966342014,
+          36.249619592790026
+        ]
+      }
+    },
+    {
+      "uri": "data/data134.b3dm",
+      "bytes": 331580,
+      "sha256": "b88d4760714cd9d6ce3d1e628f6445fed437e77043850c0ac43cd54e9930fce6",
+      "bounding_volume": {
+        "region": [
+          2.280917037211317,
+          0.5691862895885246,
+          2.2810005967840987,
+          0.56930072815303,
+          31.2792734708576,
+          40.830604447682916
+        ]
+      }
+    },
+    {
+      "uri": "data/data182.b3dm",
+      "bytes": 364892,
+      "sha256": "ea14cef95ea14d08ec251ecac18f363e2d913a0d0d3394e52fc3b5e0c8b659f0",
+      "bounding_volume": {
+        "region": [
+          2.28083764395341,
+          0.5691862687970778,
+          2.2809195992578157,
+          0.56930072815303,
+          31.27169229498845,
+          40.676613719455645
+        ]
+      }
+    },
+    {
+      "uri": "data/data183.b3dm",
+      "bytes": 478088,
+      "sha256": "1c7d1c49447923a9e2d98752ac6ecfde6d3815d171a2af42a3972e9eadedce02",
+      "bounding_volume": {
+        "region": [
+          2.2807545719504243,
+          0.5691862895885246,
+          2.2808376941236435,
+          0.56930072815303,
+          31.270123289494546,
+          41.560716657218975
+        ]
+      }
+    },
+    {
+      "uri": "data/data185.b3dm",
+      "bytes": 105764,
+      "sha256": "b1ff69b32d4aafbf619e59984a7af0eeb2366fbd85618917dac33b4fbea324f7",
+      "bounding_volume": {
+        "region": [
+          2.28059334013296,
+          0.5691825866688321,
+          2.2807562427934154,
+          0.5694151667175354,
+          32.1954964182897,
+          41.51544616184906
+        ]
+      }
+    },
+    {
+      "uri": "data/data187.b3dm",
+      "bytes": 995888,
+      "sha256": "8385d5aecedb1a1d5c52d0b3654c6f1e833f7559a52de8959ddaab804a424cd4",
+      "bounding_volume": {
+        "region": [
+          2.2807553319397025,
+          0.5690718510240189,
+          2.2808396583314137,
+          0.5691872495878354,
+          33.472043816279,
+          43.372511758598584
+        ]
+      }
+    },
+    {
+      "uri": "data/data62.b3dm",
+      "bytes": 1368216,
+      "sha256": "f6c768a657e4254499e6ebc7e14ddaaec075fefc7619a3c272715ca5a5642857",
+      "bounding_volume": {
+        "region": [
+          2.280919145453871,
+          0.569529605282041,
+          2.2810021388932387,
+          0.5696457189078729,
+          36.96666361318899,
+          50.00216049244168
+        ]
+      }
+    },
+    {
+      "uri": "data/data94.b3dm",
+      "bytes": 13540,
+      "sha256": "944473dbbd339edcb3f33a92b5631364fde6f819c5f751c6d93843036e4cc6bf",
+      "bounding_volume": {
+        "region": [
+          2.2807562427934154,
+          0.5694151667175354,
+          2.280919145453871,
+          0.5696440438465464,
+          33.6497397878594,
+          38.34986373947982
+        ]
+      }
+    }
+  ]
+}

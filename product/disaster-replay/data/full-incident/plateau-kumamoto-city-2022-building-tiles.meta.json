@@ -1,0 +1,36 @@
+{
+  "schema_version": "disaster-replay.plateau-building-tile-metadata.v1",
+  "title": "Project PLATEAU Kumamoto City 2022 LOD1 and LOD2 building tiles",
+  "classification": "OBSERVED_PUBLIC_BASEMAP",
+  "output": {
+    "path": "data/full-incident/plateau-kumamoto-city-2022-building-tiles.manifest.json",
+    "bytes": 502896,
+    "sha256": "2a739b1aa9444a08bd6c391514c9aac608afecd54cce256ffa3ad99060d8197b",
+    "service_count": 2,
+    "source_tileset_count": 6,
+    "content_count": 941,
+    "unique_content_sha256_count": 873,
+    "content_bytes": 1449951212
+  },
+  "source": {
+    "provider": "Kumamoto City / Project PLATEAU / Ministry of Land, Infrastructure, Transport and Tourism",
+    "catalog_base": "https://api.plateauview.mlit.go.jp/datacatalog/3dtiles",
+    "services": [
+      "43100-bldg-lod1-latest",
+      "43100-bldg-lod2-latest"
+    ]
+  },
+  "license": {
+    "name": "Public Data License 1.0 / Creative Commons Attribution 4.0 International",
+    "commercial_use": true,
+    "terms": "https://www.mlit.go.jp/plateau/site-policy/",
+    "attribution": "出典：国土交通省 PLATEAUウェブサイト（Kumamoto City 2022 3D都市モデル）を加工して作成"
+  },
+  "processing": {
+    "tool": "product/disaster-replay/scripts/import-gsi-full-incident-assets.mjs plateau kumamoto",
+    "rule": "Fetch and hash the official catalog tileset, recursively resolve and hash every referenced source tileset, then fetch, validate as b3dm, and hash every unique LOD1/LOD2 content URI.",
+    "acquisition_mode": "Every 3D tile byte was fetched and hashed. The repository stores the deterministic URL/hash manifest rather than duplicating the public tile cache.",
+    "concurrency": 16,
+    "frozen_on": "2026-08-23"
+  }
+}

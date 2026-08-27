@@ -1,0 +1,83 @@
+{
+  "schema_version": "kumamoto-full-incident.final-state.v1",
+  "window": {
+    "starts_at": "2026-07-28T16:27:15.200+09:00",
+    "ends_at": "2026-07-31T16:27:15.200+09:00",
+    "elapsed_hours": 72
+  },
+  "event_count": 414,
+  "event_count_by_type": {
+    "DECISION_PROPOSED": 11,
+    "OUTCOME_OBSERVED": 391,
+    "SOURCE_INGESTED": 11,
+    "WORLD_INITIALIZED": 1
+  },
+  "act_event_counts": {
+    "act-1-hour-one": 51,
+    "act-2-first-night": 188,
+    "act-3-day-two": 109,
+    "act-4-the-turn": 66
+  },
+  "decision_moments": 11,
+  "recorded_agent_choices": 384,
+  "aftershocks": 300,
+  "jma_mainshock_bulletins": 7,
+  "timed_road_restrictions": 23,
+  "road_snapshot_only_restrictions": 6,
+  "latest_shelter_aggregate": {
+    "as_of": "2026-07-31T07:30:00+09:00",
+    "open_shelters": 399,
+    "occupants": 9637,
+    "scope": "PREFECTURE_AGGREGATE"
+  },
+  "named_water_municipalities": [
+    "Uki",
+    "Yatsushiro",
+    "Hikawa",
+    "Kashima",
+    "Uto",
+    "Nishihara",
+    "Mifune",
+    "Kamiamakusa"
+  ],
+  "later_observed_outcome_not_available_to_agents": {
+    "as_of": "2026-08-23",
+    "classification": "LATER_OBSERVED_HARM_GEOGRAPHY_NOT_AN_INPUT_TO_FIRST_72_HOURS",
+    "deaths": 38,
+    "named_municipalities": {
+      "Yatsushiro": 20,
+      "Kashima": 7,
+      "Hikawa": 5,
+      "Uki": 3,
+      "Kosa": 1
+    },
+    "other_not_named_here": 2,
+    "source_ids": [
+      "source-cabinet-report-0823"
+    ]
+  },
+  "disclosure": "Shelter and casualty aggregates remain aggregates. Later outcome geography is segregated and was never exposed to the recorded decisions.",
+  "source_data_sha256_by_path": {
+    "product/disaster-replay/scenarios/kumamoto-2026-full-incident/scenario.json": "fceefa4ec5a340c617b4a65595b2f58f9827fe75264914655deed88650a32191",
+    "product/disaster-replay/scenarios/kumamoto-2026-full-incident/timeline-inputs.json": "b997467da1dd509cd0bd86ae15da680ed24a3be440b902bd33be6fab8d082b2f",
+    "product/disaster-replay/data/full-incident/jma-2026-kumamoto-earthquake-sequence.json": "7f5aabb83b021bec9d5b6019684ffb68bc327925e71a204a7a841101b3d82377",
+    "product/disaster-replay/data/jma-2026-kumamoto-official-updates.json": "a3c342a47ff8b0eb8ccc1239b43101e3ad05b922849e7f361d874a7acade20e2",
+    "product/disaster-replay/data/mlit-2026-kumamoto-road-restrictions.geojson": "96c8a30fa6818e1eb1ac34d59186c3f8dd13e3a0cc49ac95c015daa0f45ab0db",
+    "product/disaster-replay/data/gsi-2026-kumamoto-landslides.geojson": "91a08d04b3a76486373e9795fecc2347a552e76b78d023b98beca42a74160364",
+    "product/disaster-replay/data/full-incident/gsi-dem10b-z11-full-incident.png": "d865552503f797864824854cd2065abce91756ca1a8bb8d6b6c161c654691c07",
+    "product/disaster-replay/data/full-incident/gsi-dem10b-z11-full-incident.meta.json": "fbcd8220610a3e67d925a44d7f7c096441238f77e861dc1a348503d576139125",
+    "experiments/kumamoto-real-response/validation/freeze-manifest.json": "3e14c3071a7bac34af25e1464887349a3d89ecbb6c100cd00fc49eec4811687b",
+    "experiments/kumamoto-real-response/results/production-v1.1/production-analysis.json": "65553826ffa128907ab396515d8308464a6597cd0037a3fead50592a680b032a",
+    "experiments/kumamoto-full-incident-campaign/validation/freeze-manifest.json": "5490216b1d98f51b61defb6d20d221c0804d04a560fef2a8e0c3d6fcf8aae14f",
+    "experiments/kumamoto-full-incident-campaign/results/demonstration-v1/demonstration-analysis.json": "df8089a50ba6f67dc9b83329fb7b3a011716487406aa6cb64c73757c1ca91201",
+    "experiments/kumamoto-full-incident-campaign/results/demonstration-v1/campaign-certificate.json": "48025fb5753d4d7f1873533c1dd957df88f3498771a77614092612545c6e5f92"
+  },
+  "source_data_sha256_by_id": {
+    "earthquake_sequence": "7f5aabb83b021bec9d5b6019684ffb68bc327925e71a204a7a841101b3d82377",
+    "official_mainshock_updates": "a3c342a47ff8b0eb8ccc1239b43101e3ad05b922849e7f361d874a7acade20e2",
+    "road_restrictions": "96c8a30fa6818e1eb1ac34d59186c3f8dd13e3a0cc49ac95c015daa0f45ab0db",
+    "landslide_interpretation": "91a08d04b3a76486373e9795fecc2347a552e76b78d023b98beca42a74160364",
+    "terrain_dem_png": "d865552503f797864824854cd2065abce91756ca1a8bb8d6b6c161c654691c07",
+    "terrain_dem_metadata": "fbcd8220610a3e67d925a44d7f7c096441238f77e861dc1a348503d576139125"
+  }
+}

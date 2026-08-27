@@ -1,0 +1,1133 @@
+{
+  "schema_version": 1,
+  "experiment": "kumamoto-real-response",
+  "scenario_id": "kumamoto-2026-real-response-five-slot-v1",
+  "scenario_title": "Kumamoto 2026: five real decision moments under the information then available",
+  "manifest_hash": "d033786d42717b6aa4bcbaabc139cd813563959f57deccdc52df0d63ae8c0160",
+  "configurations": 40,
+  "seeds": 8,
+  "arms": [
+    {
+      "arm": "plain_summary",
+      "name": "The plain desk"
+    },
+    {
+      "arm": "evidence_table",
+      "name": "The evidence desk"
+    },
+    {
+      "arm": "evidence_feedback",
+      "name": "The evidence desk with one correction"
+    }
+  ],
+  "verdicts": [
+    {
+      "claim": "evidence table",
+      "outcome": "failed",
+      "sentence": "The evidence-table claim failed. The evidence table raised fully valid decisions from 0/40 to 17/40 and cut communication failures from 40/40 to 19/40, but its constraint-pass rate was 82.5% versus 92.5% for the plain graph. That 10-point drop exceeded the frozen 5-point non-inferiority margin, so the whole claim fails even though its other four rules pass."
+    },
+    {
+      "claim": "bounded feedback",
+      "outcome": "passed",
+      "sentence": "The bounded-feedback claim passed. One mechanical feedback call raised the evidence path from 17/40 to 34/40 fully valid decisions, repaired 17 of 23 invalid initial decisions, introduced no errors into initially valid decisions, stayed within one call, and kept the median output-token ratio below the frozen ceiling."
+    }
+  ],
+  "registered": {
+    "fully_valid": {
+      "plain_summary": "0/40 (0.0%)",
+      "evidence_table": "17/40 (42.5%)",
+      "evidence_feedback": "34/40 (85.0%)"
+    },
+    "communication_failures": {
+      "plain_summary": "40/40 (100.0%)",
+      "evidence_table": "19/40 (47.5%)",
+      "evidence_feedback": "2/40 (5.0%)"
+    },
+    "constraint_pass": {
+      "plain_summary": "37/40 (92.5%)",
+      "evidence_table": "33/40 (82.5%)",
+      "evidence_feedback": "34/40 (85.0%)"
+    },
+    "constraint_drop": "−10.0 points",
+    "validity_gain": "+42.5 points",
+    "paired_interval": "[27.5, 57.5] points",
+    "repairs": "17/23 (73.9%)",
+    "token_ratio": "1.435×",
+    "manifest_hash": "d033786d42717b6aa4bcbaabc139cd813563959f57deccdc52df0d63ae8c0160"
+  },
+  "totals": {
+    "plain_summary": 0,
+    "evidence_table": 17,
+    "evidence_feedback": 34
+  },
+  "honesty": "These are communication and constraint results inside a reconstructed, simulated exercise. They are not evidence that an AI system would improve a real disaster response or save lives.",
+  "disclosure": "This scenario reconstructs five real decisions from public records. Agent choices are simulated counterfactuals. Later deaths, damage, rescues, and service totals are forbidden as answers for earlier decisions. A different simulated choice is not proof that responders were wrong or that lives would have been saved.",
+  "limitations": [
+    "The public record cannot reconstruct every message a real decider saw; each slot lists the exact bounded information set used.",
+    "Slot 1 includes a minimum reconstructed automatic trigger and an assumed candidate pool because the exact internal payload and unit readiness are not public.",
+    "Slot 2 uses modeled attention capacity because no real verification-team resource is named in the public record.",
+    "Historical-choice agreement is descriptive, never the primary score and never proof that one decision was better.",
+    "Later deaths, rescues, damage totals, corrected depth, liaison additions and the later water-outage peak are forbidden before their publication times.",
+    "No result may say that a simulated allocation saved lives or that real responders were wrong."
+  ],
+  "slots": [
+    {
+      "slot_id": "slot-01-early-fire-mobilization",
+      "slot_number": 1,
+      "title": "Choose the first outside fire package before a public bulletin exists",
+      "decider": "Commissioner, Fire and Disaster Management Agency",
+      "task": "Select up to eight units for immediate movement into the Kumamoto incident area. State which unknowns prevent a precise optimization. Do not use later bulletin, casualty, or mobilization results.",
+      "task_line": "Select up to eight units for immediate movement into the Kumamoto incident area.",
+      "cutoff_at": "2026-07-28T16:27:59+09:00",
+      "cutoff_day": "28 July 2026",
+      "cutoff_time": "16:27:59",
+      "cutoff_words": "28 July 2026, 16:27:59 Japan time",
+      "historical": {
+        "summary": "The real 16:27 request named one integrated command unit, three command units, three prefectural battalions and one air unit.",
+        "unknowns": [
+          "The report does not identify Article 44 paragraph 1 or 2.",
+          "The exact internal trigger payload and alternative-unit readiness are not public."
+        ],
+        "source_ids": [
+          "source-fdma-report-60"
+        ],
+        "assignment_count": 8,
+        "total_quantity": 8,
+        "targets": [
+          {
+            "label": "Kumamoto incident area",
+            "quantity": 8,
+            "listed": true
+          }
+        ],
+        "resources": [
+          {
+            "label": "Fukuoka City integrated command support unit",
+            "quantity": 1,
+            "listed": true
+          },
+          {
+            "label": "Okayama City command support unit",
+            "quantity": 1,
+            "listed": true
+          },
+          {
+            "label": "Hiroshima City command support unit",
+            "quantity": 1,
+            "listed": true
+          },
+          {
+            "label": "Kitakyushu City command support unit",
+            "quantity": 1,
+            "listed": true
+          },
+          {
+            "label": "Fukuoka prefectural battalion",
+            "quantity": 1,
+            "listed": true
+          },
+          {
+            "label": "Ōita prefectural battalion",
+            "quantity": 1,
+            "listed": true
+          },
+          {
+            "label": "Miyazaki prefectural battalion",
+            "quantity": 1,
+            "listed": true
+          },
+          {
+            "label": "Fukuoka City air unit",
+            "quantity": 1,
+            "listed": true
+          }
+        ],
+        "line": "Kumamoto incident area 8 — Fukuoka City integrated command support unit, Okayama City command support unit and 6 more"
+      },
+      "arms": [
+        {
+          "arm": "plain_summary",
+          "name": "The plain desk",
+          "seeds": 8,
+          "fully_valid": 0,
+          "communication_failures": 8,
+          "constraint_passes": 8,
+          "example": {
+            "seeds_matching": 1,
+            "first_seed": 51101,
+            "fully_valid": false,
+            "assignment_count": 8,
+            "total_quantity": 8,
+            "targets": [
+              {
+                "label": "Kumamoto incident area",
+                "quantity": 8,
+                "listed": true
+              }
+            ],
+            "resources": [
+              {
+                "label": "Unit fukuoka city command",
+                "quantity": 1,
+                "listed": false
+              },
+              {
+                "label": "Unit okayama city command",
+                "quantity": 1,
+                "listed": false
+              },
+              {
+                "label": "Unit hiroshima city command",
+                "quantity": 1,
+                "listed": false
+              },
+              {
+                "label": "Unit kitakyushu city command",
+                "quantity": 1,
+                "listed": false
+              },
+              {
+                "label": "Unit fukuoka prefectural fire battalion",
+                "quantity": 1,
+                "listed": false
+              },
+              {
+                "label": "Unit ota prefectural fire battalion",
+                "quantity": 1,
+                "listed": false
+              },
+              {
+                "label": "Unit miyazaki prefectural fire battalion",
+                "quantity": 1,
+                "listed": false
+              },
+              {
+                "label": "Unit fukuoka city air unit",
+                "quantity": 1,
+                "listed": false
+              }
+            ],
+            "unlisted": 8,
+            "line": "Kumamoto incident area 8 — Unit fukuoka city command, Unit okayama city command and 6 more"
+          }
+        },
+        {
+          "arm": "evidence_table",
+          "name": "The evidence desk",
+          "seeds": 8,
+          "fully_valid": 7,
+          "communication_failures": 1,
+          "constraint_passes": 8,
+          "example": {
+            "seeds_matching": 8,
+            "first_seed": 51101,
+            "fully_valid": true,
+            "assignment_count": 8,
+            "total_quantity": 8,
+            "targets": [
+              {
+                "label": "Kumamoto incident area",
+                "quantity": 8,
+                "listed": true
+              }
+            ],
+            "resources": [
+              {
+                "label": "Fukuoka prefectural battalion",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Ōita prefectural battalion",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Miyazaki prefectural battalion",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Fukuoka City integrated command support unit",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Okayama City command support unit",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Hiroshima City command support unit",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Kitakyushu City command support unit",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Fukuoka City air unit",
+                "quantity": 1,
+                "listed": true
+              }
+            ],
+            "unlisted": 0,
+            "line": "Kumamoto incident area 8 — Fukuoka prefectural battalion, Ōita prefectural battalion and 6 more"
+          }
+        },
+        {
+          "arm": "evidence_feedback",
+          "name": "The evidence desk with one correction",
+          "seeds": 8,
+          "fully_valid": 8,
+          "communication_failures": 0,
+          "constraint_passes": 8,
+          "example": {
+            "seeds_matching": 8,
+            "first_seed": 51101,
+            "fully_valid": true,
+            "assignment_count": 8,
+            "total_quantity": 8,
+            "targets": [
+              {
+                "label": "Kumamoto incident area",
+                "quantity": 8,
+                "listed": true
+              }
+            ],
+            "resources": [
+              {
+                "label": "Fukuoka prefectural battalion",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Ōita prefectural battalion",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Miyazaki prefectural battalion",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Fukuoka City integrated command support unit",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Okayama City command support unit",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Hiroshima City command support unit",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Kitakyushu City command support unit",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Fukuoka City air unit",
+                "quantity": 1,
+                "listed": true
+              }
+            ],
+            "unlisted": 0,
+            "line": "Kumamoto incident area 8 — Fukuoka prefectural battalion, Ōita prefectural battalion and 6 more"
+          }
+        }
+      ]
+    },
+    {
+      "slot_id": "slot-02-missing-telemetry-triage",
+      "slot_number": 2,
+      "title": "Decide what to verify when two high-risk towns have no received intensity",
+      "decider": "Modeled prefectural information triage desk",
+      "task": "Assign two modeled verification-priority slots. Missing intensity must be treated as unknown, not zero. The action is a simulated triage test because the public record names no real verification-team resource.",
+      "task_line": "Assign two modeled verification-priority slots.",
+      "cutoff_at": "2026-07-28T16:35:28+09:00",
+      "cutoff_day": "28 July 2026",
+      "cutoff_time": "16:35:28",
+      "cutoff_words": "28 July 2026, 16:35:28 Japan time",
+      "historical": {
+        "summary": "No reviewed public record identifies an action taken specifically because of the missing values; the blank persisted into the 16:35 reissue.",
+        "unknowns": [
+          "Unrecorded actions may have occurred.",
+          "The true intensity values were not in the real-time main-shock bulletins."
+        ],
+        "source_ids": [
+          "source-jma-mainshock-sequence"
+        ],
+        "assignment_count": 0,
+        "total_quantity": 0,
+        "targets": [],
+        "resources": [],
+        "line": ""
+      },
+      "arms": [
+        {
+          "arm": "plain_summary",
+          "name": "The plain desk",
+          "seeds": 8,
+          "fully_valid": 0,
+          "communication_failures": 8,
+          "constraint_passes": 8,
+          "example": {
+            "seeds_matching": 8,
+            "first_seed": 51101,
+            "fully_valid": false,
+            "assignment_count": 2,
+            "total_quantity": 2,
+            "targets": [
+              {
+                "label": "Kashima Town",
+                "quantity": 1,
+                "listed": false
+              },
+              {
+                "label": "Kōsa Town",
+                "quantity": 1,
+                "listed": false
+              }
+            ],
+            "resources": [
+              {
+                "label": "Verification priority slot 1",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Verification priority slot 2",
+                "quantity": 1,
+                "listed": true
+              }
+            ],
+            "unlisted": 2,
+            "line": "Kashima Town 1, Kōsa Town 1 — Verification priority slot 1, Verification priority slot 2"
+          }
+        },
+        {
+          "arm": "evidence_table",
+          "name": "The evidence desk",
+          "seeds": 8,
+          "fully_valid": 2,
+          "communication_failures": 6,
+          "constraint_passes": 8,
+          "example": {
+            "seeds_matching": 5,
+            "first_seed": 51101,
+            "fully_valid": false,
+            "assignment_count": 2,
+            "total_quantity": 2,
+            "targets": [
+              {
+                "label": "Kashima Town",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Kōsa Town",
+                "quantity": 1,
+                "listed": true
+              }
+            ],
+            "resources": [
+              {
+                "label": "Verification priority slot 1",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Verification priority slot 2",
+                "quantity": 1,
+                "listed": true
+              }
+            ],
+            "unlisted": 0,
+            "line": "Kashima Town 1, Kōsa Town 1 — Verification priority slot 1, Verification priority slot 2"
+          }
+        },
+        {
+          "arm": "evidence_feedback",
+          "name": "The evidence desk with one correction",
+          "seeds": 8,
+          "fully_valid": 8,
+          "communication_failures": 0,
+          "constraint_passes": 8,
+          "example": {
+            "seeds_matching": 5,
+            "first_seed": 51101,
+            "fully_valid": true,
+            "assignment_count": 2,
+            "total_quantity": 2,
+            "targets": [
+              {
+                "label": "Kashima Town",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Kōsa Town",
+                "quantity": 1,
+                "listed": true
+              }
+            ],
+            "resources": [
+              {
+                "label": "Verification priority slot 1",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Verification priority slot 2",
+                "quantity": 1,
+                "listed": true
+              }
+            ],
+            "unlisted": 0,
+            "line": "Kashima Town 1, Kōsa Town 1 — Verification priority slot 1, Verification priority slot 2"
+          }
+        }
+      ]
+    },
+    {
+      "slot_id": "slot-04-first-municipal-liaisons",
+      "slot_number": 4,
+      "title": "Place the first two municipal liaison pairs using the complete 18:10 picture",
+      "decider": "Kyushu Regional Development Bureau, MLIT",
+      "task": "Assign exactly two liaison pairs to two municipalities. Consider intensity, missing telemetry and MLIT's own infrastructure signals without claiming that suspended rail service was confirmed damage.",
+      "task_line": "Assign exactly two liaison pairs to two municipalities.",
+      "cutoff_at": "2026-07-28T18:10:00+09:00",
+      "cutoff_day": "28 July 2026",
+      "cutoff_time": "18:10:00",
+      "cutoff_words": "28 July 2026, 18:10:00 Japan time",
+      "historical": {
+        "summary": "The real first municipal liaison allocation sent two officers to Uki and two to Hikawa. Yatsushiro was added later.",
+        "unknowns": [
+          "The record does not say which non-intensity signals the liaison decider considered."
+        ],
+        "source_ids": [
+          "source-mlit-report-1-1810"
+        ],
+        "assignment_count": 2,
+        "total_quantity": 2,
+        "targets": [
+          {
+            "label": "Uki City",
+            "quantity": 1,
+            "listed": true
+          },
+          {
+            "label": "Hikawa Town",
+            "quantity": 1,
+            "listed": true
+          }
+        ],
+        "resources": [
+          {
+            "label": "MLIT municipal liaison pair 1",
+            "quantity": 1,
+            "listed": true
+          },
+          {
+            "label": "MLIT municipal liaison pair 2",
+            "quantity": 1,
+            "listed": true
+          }
+        ],
+        "line": "Uki City 1, Hikawa Town 1 — MLIT municipal liaison pair 1, MLIT municipal liaison pair 2"
+      },
+      "arms": [
+        {
+          "arm": "plain_summary",
+          "name": "The plain desk",
+          "seeds": 8,
+          "fully_valid": 0,
+          "communication_failures": 8,
+          "constraint_passes": 8,
+          "example": {
+            "seeds_matching": 2,
+            "first_seed": 51101,
+            "fully_valid": false,
+            "assignment_count": 2,
+            "total_quantity": 2,
+            "targets": [
+              {
+                "label": "Uki City",
+                "quantity": 1,
+                "listed": false
+              },
+              {
+                "label": "Hikawa Town",
+                "quantity": 1,
+                "listed": false
+              }
+            ],
+            "resources": [
+              {
+                "label": "MLIT municipal liaison pair 1",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "MLIT municipal liaison pair 2",
+                "quantity": 1,
+                "listed": true
+              }
+            ],
+            "unlisted": 2,
+            "line": "Uki City 1, Hikawa Town 1 — MLIT municipal liaison pair 1, MLIT municipal liaison pair 2"
+          }
+        },
+        {
+          "arm": "evidence_table",
+          "name": "The evidence desk",
+          "seeds": 8,
+          "fully_valid": 0,
+          "communication_failures": 8,
+          "constraint_passes": 8,
+          "example": {
+            "seeds_matching": 8,
+            "first_seed": 51101,
+            "fully_valid": false,
+            "assignment_count": 2,
+            "total_quantity": 2,
+            "targets": [
+              {
+                "label": "Uki City",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Hikawa Town",
+                "quantity": 1,
+                "listed": true
+              }
+            ],
+            "resources": [
+              {
+                "label": "MLIT municipal liaison pair 1",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "MLIT municipal liaison pair 2",
+                "quantity": 1,
+                "listed": true
+              }
+            ],
+            "unlisted": 0,
+            "line": "Uki City 1, Hikawa Town 1 — MLIT municipal liaison pair 1, MLIT municipal liaison pair 2"
+          }
+        },
+        {
+          "arm": "evidence_feedback",
+          "name": "The evidence desk with one correction",
+          "seeds": 8,
+          "fully_valid": 8,
+          "communication_failures": 0,
+          "constraint_passes": 8,
+          "example": {
+            "seeds_matching": 8,
+            "first_seed": 51101,
+            "fully_valid": true,
+            "assignment_count": 2,
+            "total_quantity": 2,
+            "targets": [
+              {
+                "label": "Uki City",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Hikawa Town",
+                "quantity": 1,
+                "listed": true
+              }
+            ],
+            "resources": [
+              {
+                "label": "MLIT municipal liaison pair 1",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "MLIT municipal liaison pair 2",
+                "quantity": 1,
+                "listed": true
+              }
+            ],
+            "unlisted": 0,
+            "line": "Uki City 1, Hikawa Town 1 — MLIT municipal liaison pair 1, MLIT municipal liaison pair 2"
+          }
+        }
+      ]
+    },
+    {
+      "slot_id": "slot-06-first-night-response-split",
+      "slot_number": 6,
+      "title": "Split the known first-night response between two reported collapse sites",
+      "decider": "Kumamoto Prefecture disaster headquarters with Emergency Fire Response Team command support",
+      "task": "Assign the four inbound prefectural battalions and the 8th Division response group across the two reported collapse sites. Use incident reports and resource facts, not later deaths or later rescue totals.",
+      "task_line": "Assign the four inbound prefectural battalions and the 8th Division response group across the two reported collapse sites.",
+      "cutoff_at": "2026-07-28T20:00:00+09:00",
+      "cutoff_day": "28 July 2026",
+      "cutoff_time": "20:00:00",
+      "cutoff_words": "28 July 2026, 20:00:00 Japan time",
+      "historical": {
+        "summary": "The minutes directed the inbound fleet toward Aeon Mall, explicitly sent the Ōita and Miyazaki battalions to Yatsushiro, and recorded the 8th Division moving to Aeon. They do not publish an exact unit or personnel split by destination.",
+        "unknowns": [
+          "The exact destination of each remaining unit and the personnel split are not stated.",
+          "No complete casualty count was available."
+        ],
+        "source_ids": [
+          "source-prefecture-meeting-1"
+        ],
+        "assignment_count": 3,
+        "total_quantity": 3,
+        "targets": [
+          {
+            "label": "Nippon Paper Yatsushiro mill",
+            "quantity": 2,
+            "listed": true
+          },
+          {
+            "label": "Aeon Mall Kumamoto",
+            "quantity": 1,
+            "listed": true
+          }
+        ],
+        "resources": [
+          {
+            "label": "Ōita prefectural battalion",
+            "quantity": 1,
+            "listed": true
+          },
+          {
+            "label": "Miyazaki prefectural battalion",
+            "quantity": 1,
+            "listed": true
+          },
+          {
+            "label": "Ground Self-Defense Force 8th Division response group",
+            "quantity": 1,
+            "listed": true
+          }
+        ],
+        "line": "Nippon Paper Yatsushiro mill 2, Aeon Mall Kumamoto 1 — Ōita prefectural battalion, Miyazaki prefectural battalion and 1 more"
+      },
+      "arms": [
+        {
+          "arm": "plain_summary",
+          "name": "The plain desk",
+          "seeds": 8,
+          "fully_valid": 0,
+          "communication_failures": 8,
+          "constraint_passes": 8,
+          "example": {
+            "seeds_matching": 2,
+            "first_seed": 51102,
+            "fully_valid": false,
+            "assignment_count": 5,
+            "total_quantity": 5,
+            "targets": [
+              {
+                "label": "Aeon Mall Kumamoto",
+                "quantity": 3,
+                "listed": false
+              },
+              {
+                "label": "Nippon Paper Yatsushiro mill",
+                "quantity": 2,
+                "listed": false
+              }
+            ],
+            "resources": [
+              {
+                "label": "Fukuoka prefectural battalion",
+                "quantity": 1,
+                "listed": false
+              },
+              {
+                "label": "Saga prefectural battalion",
+                "quantity": 1,
+                "listed": false
+              },
+              {
+                "label": "Ōita prefectural battalion",
+                "quantity": 1,
+                "listed": false
+              },
+              {
+                "label": "Miyazaki prefectural battalion",
+                "quantity": 1,
+                "listed": false
+              },
+              {
+                "label": "Ground Self Defense Force 8th Division response group",
+                "quantity": 1,
+                "listed": false
+              }
+            ],
+            "unlisted": 7,
+            "line": "Aeon Mall Kumamoto 3, Nippon Paper Yatsushiro mill 2 — Fukuoka prefectural battalion, Saga prefectural battalion and 3 more"
+          }
+        },
+        {
+          "arm": "evidence_table",
+          "name": "The evidence desk",
+          "seeds": 8,
+          "fully_valid": 7,
+          "communication_failures": 1,
+          "constraint_passes": 8,
+          "example": {
+            "seeds_matching": 6,
+            "first_seed": 51101,
+            "fully_valid": true,
+            "assignment_count": 5,
+            "total_quantity": 5,
+            "targets": [
+              {
+                "label": "Aeon Mall Kumamoto",
+                "quantity": 5,
+                "listed": true
+              }
+            ],
+            "resources": [
+              {
+                "label": "Fukuoka prefectural battalion",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Saga prefectural battalion",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Ōita prefectural battalion",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Miyazaki prefectural battalion",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Ground Self-Defense Force 8th Division response group",
+                "quantity": 1,
+                "listed": true
+              }
+            ],
+            "unlisted": 0,
+            "line": "Aeon Mall Kumamoto 5 — Fukuoka prefectural battalion, Saga prefectural battalion and 3 more"
+          }
+        },
+        {
+          "arm": "evidence_feedback",
+          "name": "The evidence desk with one correction",
+          "seeds": 8,
+          "fully_valid": 8,
+          "communication_failures": 0,
+          "constraint_passes": 8,
+          "example": {
+            "seeds_matching": 6,
+            "first_seed": 51101,
+            "fully_valid": true,
+            "assignment_count": 5,
+            "total_quantity": 5,
+            "targets": [
+              {
+                "label": "Aeon Mall Kumamoto",
+                "quantity": 5,
+                "listed": true
+              }
+            ],
+            "resources": [
+              {
+                "label": "Fukuoka prefectural battalion",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Saga prefectural battalion",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Ōita prefectural battalion",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Miyazaki prefectural battalion",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Ground Self-Defense Force 8th Division response group",
+                "quantity": 1,
+                "listed": true
+              }
+            ],
+            "unlisted": 0,
+            "line": "Aeon Mall Kumamoto 5 — Fukuoka prefectural battalion, Saga prefectural battalion and 3 more"
+          }
+        }
+      ]
+    },
+    {
+      "slot_id": "slot-09-push-water-planning",
+      "slot_number": 9,
+      "title": "Plan additional water support without waiting for every municipality to request it",
+      "decider": "Japan Water Works Association coordinating with MLIT and the Self-Defense Forces",
+      "task": "Allocate up to 22 additional water trucks across the named municipalities. Existing requests are evidence, not the only eligibility rule. Quantities must sum to no more than 22 and the already committed 23 trucks cannot be counted again.",
+      "task_line": "Allocate up to 22 additional water trucks across the named municipalities.",
+      "cutoff_at": "2026-07-29T12:00:00+09:00",
+      "cutoff_day": "29 July 2026",
+      "cutoff_time": "12:00:00",
+      "cutoff_words": "29 July 2026, 12:00:00 Japan time",
+      "historical": {
+        "summary": "The real record says the association coordinated about 22 additional trucks for broad push support without waiting for requests. It does not publish their final municipal split in this sheet.",
+        "unknowns": [
+          "The final municipal split of the additional trucks is not published.",
+          "Missing requests do not prove missing need."
+        ],
+        "source_ids": [
+          "source-mlit-water-1200"
+        ],
+        "assignment_count": 1,
+        "total_quantity": 22,
+        "targets": [
+          {
+            "label": "Kumamoto incident area",
+            "quantity": 22,
+            "listed": true
+          }
+        ],
+        "resources": [
+          {
+            "label": "Additional Japan Water Works Association truck pool",
+            "quantity": 22,
+            "listed": true
+          }
+        ],
+        "line": "Kumamoto incident area 22 — Additional Japan Water Works Association truck pool"
+      },
+      "arms": [
+        {
+          "arm": "plain_summary",
+          "name": "The plain desk",
+          "seeds": 8,
+          "fully_valid": 0,
+          "communication_failures": 8,
+          "constraint_passes": 5,
+          "example": {
+            "seeds_matching": 2,
+            "first_seed": 51101,
+            "fully_valid": false,
+            "assignment_count": 8,
+            "total_quantity": 25,
+            "targets": [
+              {
+                "label": "Yatsushiro City",
+                "quantity": 6,
+                "listed": false
+              },
+              {
+                "label": "Kumamoto City",
+                "quantity": 5,
+                "listed": false
+              },
+              {
+                "label": "Uki City",
+                "quantity": 4,
+                "listed": false
+              },
+              {
+                "label": "Hikawa Town",
+                "quantity": 3,
+                "listed": false
+              },
+              {
+                "label": "Uto City",
+                "quantity": 3,
+                "listed": false
+              },
+              {
+                "label": "Kamiamakusa City",
+                "quantity": 2,
+                "listed": false
+              },
+              {
+                "label": "Kōsa Town",
+                "quantity": 1,
+                "listed": false
+              },
+              {
+                "label": "Ashikita Town",
+                "quantity": 1,
+                "listed": false
+              }
+            ],
+            "resources": [
+              {
+                "label": "Additional Japan Water Works Association truck pool",
+                "quantity": 25,
+                "listed": true
+              }
+            ],
+            "unlisted": 8,
+            "line": "Yatsushiro City 6, Kumamoto City 5, Uki City 4, Hikawa Town 3, Uto City 3, Kamiamakusa City 2 and 2 more — Additional Japan Water Works Association truck pool"
+          }
+        },
+        {
+          "arm": "evidence_table",
+          "name": "The evidence desk",
+          "seeds": 8,
+          "fully_valid": 1,
+          "communication_failures": 3,
+          "constraint_passes": 1,
+          "example": {
+            "seeds_matching": 2,
+            "first_seed": 51101,
+            "fully_valid": false,
+            "assignment_count": 8,
+            "total_quantity": 22,
+            "targets": [
+              {
+                "label": "Yatsushiro City",
+                "quantity": 6,
+                "listed": true
+              },
+              {
+                "label": "Kumamoto City",
+                "quantity": 5,
+                "listed": true
+              },
+              {
+                "label": "Uki City",
+                "quantity": 4,
+                "listed": true
+              },
+              {
+                "label": "Hikawa Town",
+                "quantity": 3,
+                "listed": true
+              },
+              {
+                "label": "Uto City",
+                "quantity": 2,
+                "listed": true
+              },
+              {
+                "label": "Kamiamakusa City",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Kōsa Town",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Ashikita Town",
+                "quantity": 0,
+                "listed": true
+              }
+            ],
+            "resources": [
+              {
+                "label": "Additional Japan Water Works Association truck pool",
+                "quantity": 22,
+                "listed": true
+              }
+            ],
+            "unlisted": 0,
+            "line": "Yatsushiro City 6, Kumamoto City 5, Uki City 4, Hikawa Town 3, Uto City 2, Kamiamakusa City 1 and 2 more — Additional Japan Water Works Association truck pool"
+          }
+        },
+        {
+          "arm": "evidence_feedback",
+          "name": "The evidence desk with one correction",
+          "seeds": 8,
+          "fully_valid": 2,
+          "communication_failures": 2,
+          "constraint_passes": 2,
+          "example": {
+            "seeds_matching": 2,
+            "first_seed": 51101,
+            "fully_valid": false,
+            "assignment_count": 8,
+            "total_quantity": 22,
+            "targets": [
+              {
+                "label": "Yatsushiro City",
+                "quantity": 6,
+                "listed": true
+              },
+              {
+                "label": "Kumamoto City",
+                "quantity": 5,
+                "listed": true
+              },
+              {
+                "label": "Uki City",
+                "quantity": 4,
+                "listed": true
+              },
+              {
+                "label": "Hikawa Town",
+                "quantity": 3,
+                "listed": true
+              },
+              {
+                "label": "Uto City",
+                "quantity": 2,
+                "listed": true
+              },
+              {
+                "label": "Kamiamakusa City",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Kōsa Town",
+                "quantity": 1,
+                "listed": true
+              },
+              {
+                "label": "Ashikita Town",
+                "quantity": 0,
+                "listed": true
+              }
+            ],
+            "resources": [
+              {
+                "label": "Additional Japan Water Works Association truck pool",
+                "quantity": 22,
+                "listed": true
+              }
+            ],
+            "unlisted": 0,
+            "line": "Yatsushiro City 6, Kumamoto City 5, Uki City 4, Hikawa Town 3, Uto City 2, Kamiamakusa City 1 and 2 more — Additional Japan Water Works Association truck pool"
+          }
+        }
+      ]
+    }
+  ],
+  "source_files": {
+    "manifest": "experiments/kumamoto-real-response/validation/freeze-manifest.json",
+    "results": "experiments/kumamoto-real-response/results/production-v1.1",
+    "scenario": "product/disaster-replay/scenarios/kumamoto-2026-real-response/scenario.json",
+    "report": "experiments/kumamoto-real-response/PRODUCTION-RESULTS.md"
+  }
+}

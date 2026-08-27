@@ -1,0 +1,1693 @@
+{
+  "type": "FeatureCollection",
+  "schema_version": "disaster-replay.surface-rupture.v1",
+  "name": "2026 Kumamoto earthquake: GSI provisional SAR displacement-discontinuity traces",
+  "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+  "disclosure": "Provisional GSI interpretation of SAR displacement discontinuities as of 2026-08-05. These traces are not field-surveyed rupture positions; the source warns of positional errors from tens to 100 metres and recommends display at zoom 15 or below. Of 51 source features, 25 contain a trace and 26 have empty geometries.",
+  "bbox": [
+    [
+      130.60199714238712,
+      32.47209289617754
+    ],
+    [
+      130.79530671979137,
+      32.73766719502617
+    ]
+  ],
+  "source": {
+    "provider": "Geospatial Information Authority of Japan",
+    "url": "https://www.gsi.go.jp/common/000279979.zip",
+    "source_zip_sha256": "38289aa36e905b6fc2e7b3971305698c8946c5914ad19222d514b09cb7450891",
+    "extracted_geojson_sha256": "d90551fdc3207cd7a7fe26f79b29f5be95ecbd8f8198cf00c834dbdc92e755e6",
+    "revision": "2026-08-05",
+    "attribution": "解析：国土地理院 原初データ所有：JAXA。出典：国土地理院ウェブサイト（https://www.gsi.go.jp/BOUSAI/20260728_kumamoto_earthquake.html）を加工して作成"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-001",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 1,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 58
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.63292771757392,
+              32.49233050670949
+            ],
+            [
+              130.6348878302654,
+              32.493375900144954
+            ],
+            [
+              130.63956530132248,
+              32.49637976773234
+            ],
+            [
+              130.64020624102514,
+              32.49885310674623
+            ],
+            [
+              130.64222836069004,
+              32.50118278552028
+            ],
+            [
+              130.6460424482687,
+              32.501797981960856
+            ],
+            [
+              130.64741181553052,
+              32.50384584488785
+            ],
+            [
+              130.64952275534054,
+              32.50640269593282
+            ],
+            [
+              130.6512161860556,
+              32.50893419046516
+            ],
+            [
+              130.6525477157394,
+              32.511169258148655
+            ],
+            [
+              130.65722849978798,
+              32.518989082582706
+            ],
+            [
+              130.66424615510408,
+              32.53123731266853
+            ],
+            [
+              130.66731342883983,
+              32.53399548129928
+            ],
+            [
+              130.66731342883978,
+              32.535826334614484
+            ],
+            [
+              130.66917994417184,
+              32.53824841652611
+            ],
+            [
+              130.67161712299642,
+              32.54017758340251
+            ],
+            [
+              130.67444662357443,
+              32.540795793612894
+            ],
+            [
+              130.6769670190473,
+              32.54391062198032
+            ],
+            [
+              130.67734745609982,
+              32.54571769797973
+            ],
+            [
+              130.6785363218889,
+              32.547738769821194
+            ],
+            [
+              130.6797965196254,
+              32.55082982087278
+            ],
+            [
+              130.68250713362448,
+              32.553469102924616
+            ],
+            [
+              130.68402888183456,
+              32.55568039329228
+            ],
+            [
+              130.68669194120213,
+              32.561814940763995
+            ],
+            [
+              130.6888677068665,
+              32.566266871031445
+            ],
+            [
+              130.69087674877971,
+              32.56961390034044
+            ],
+            [
+              130.69163762288474,
+              32.57170630412924
+            ],
+            [
+              130.6927313794107,
+              32.573370716233974
+            ],
+            [
+              130.69477622856795,
+              32.57665198581187
+            ],
+            [
+              130.69759510212046,
+              32.58029056374007
+            ],
+            [
+              130.70148143161842,
+              32.58216832307326
+            ],
+            [
+              130.70371649930192,
+              32.58340474349392
+            ],
+            [
+              130.70481025582788,
+              32.58402295370425
+            ],
+            [
+              130.70642711330106,
+              32.58445094538832
+            ],
+            [
+              130.70879958693524,
+              32.586085358609296
+            ],
+            [
+              130.70955553687463,
+              32.587723250144656
+            ],
+            [
+              130.71183042054284,
+              32.58896406239991
+            ],
+            [
+              130.71173241490825,
+              32.59294962487261
+            ],
+            [
+              130.71575012665596,
+              32.597714388510255
+            ],
+            [
+              130.71605250663174,
+              32.59989824389073
+            ],
+            [
+              130.71874032863846,
+              32.60070459049275
+            ],
+            [
+              130.72011783741692,
+              32.60218289259645
+            ],
+            [
+              130.72088777460436,
+              32.60390992167251
+            ],
+            [
+              130.72173715677067,
+              32.60622938835744
+            ],
+            [
+              130.72619903470718,
+              32.61281658841059
+            ],
+            [
+              130.73021631774094,
+              32.618987496561466
+            ],
+            [
+              130.73214584089712,
+              32.62104804330622
+            ],
+            [
+              130.7327841986237,
+              32.623567876437534
+            ],
+            [
+              130.73530403175502,
+              32.62776759832306
+            ],
+            [
+              130.73658074720848,
+              32.63459850801109
+            ],
+            [
+              130.73792465821185,
+              32.63676765696912
+            ],
+            [
+              130.73899978701454,
+              32.63793708936996
+            ],
+            [
+              130.7410156535193,
+              32.6398291995783
+            ],
+            [
+              130.74266194449842,
+              32.64154268610759
+            ],
+            [
+              130.74403945327688,
+              32.64359215038773
+            ],
+            [
+              130.745282570955,
+              32.64611198351904
+            ],
+            [
+              130.74558495093075,
+              32.64900139217629
+            ],
+            [
+              130.74773520853614,
+              32.65091646535609
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-002",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 2,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 5
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.7110790440111,
+              32.592753613603456
+            ],
+            [
+              130.7083768531952,
+              32.592654119333055
+            ],
+            [
+              130.70602777049078,
+              32.59223375144972
+            ],
+            [
+              130.70449067228066,
+              32.59132661152245
+            ],
+            [
+              130.70312996238977,
+              32.58991550496891
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-003",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 3,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-004",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 10,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-005",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 10,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 5
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.62944035041028,
+              32.48994570293483
+            ],
+            [
+              130.6270882151805,
+              32.48850828696108
+            ],
+            [
+              130.62457001484685,
+              32.48691944866531
+            ],
+            [
+              130.6221634320423,
+              32.48554161922451
+            ],
+            [
+              130.62002034774974,
+              32.48496665615706
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-006",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 11,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 10
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.61986574438725,
+              32.484935367587006
+            ],
+            [
+              130.61727403982852,
+              32.48326356160802
+            ],
+            [
+              130.61602174560886,
+              32.48253787791782
+            ],
+            [
+              130.61494368362852,
+              32.48187649021733
+            ],
+            [
+              130.61472589332953,
+              32.481169167436974
+            ],
+            [
+              130.6139165368364,
+              32.48032716448692
+            ],
+            [
+              130.61298357093708,
+              32.4799198564788
+            ],
+            [
+              130.61130658563434,
+              32.47839493872026
+            ],
+            [
+              130.60878021816532,
+              32.47701697876704
+            ],
+            [
+              130.60294823501837,
+              32.47578861226527
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-007",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 12,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-008",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 13,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-009",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 20,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 10
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.79031473802394,
+              32.72269365071274
+            ],
+            [
+              130.78782578171595,
+              32.715865197549924
+            ],
+            [
+              130.78692224371625,
+              32.71446233591881
+            ],
+            [
+              130.78604248303233,
+              32.712916810393004
+            ],
+            [
+              130.78550749342722,
+              32.71152583741977
+            ],
+            [
+              130.7851151677168,
+              32.710598522104284
+            ],
+            [
+              130.78430673898026,
+              32.709635540815135
+            ],
+            [
+              130.78347453292787,
+              32.708850889394355
+            ],
+            [
+              130.7830465412438,
+              32.707804687499966
+            ],
+            [
+              130.78192900740206,
+              32.70654448976354
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-010",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 21,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-011",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 21,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-012",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 21,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 9
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.77430540552947,
+              32.72005297729197
+            ],
+            [
+              130.7753516074239,
+              32.71933965781852
+            ],
+            [
+              130.77608870421312,
+              32.71865011566085
+            ],
+            [
+              130.77670691442344,
+              32.71791301887162
+            ],
+            [
+              130.77718246073908,
+              32.717128367450826
+            ],
+            [
+              130.77775311631783,
+              32.716581489187845
+            ],
+            [
+              130.7788468728438,
+              32.716224829451114
+            ],
+            [
+              130.7794888603699,
+              32.71555906460923
+            ],
+            [
+              130.78127215905351,
+              32.714940854398904
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-013",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 22,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 2
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.77225040361247,
+              32.69575637777734
+            ],
+            [
+              130.77038214842545,
+              32.69423081235303
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-014",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 22,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 7
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.75568776727235,
+              32.683055473935624
+            ],
+            [
+              130.7583508266399,
+              32.68310302856719
+            ],
+            [
+              130.76034812116558,
+              32.68248481835686
+            ],
+            [
+              130.76191742400715,
+              32.6824372637253
+            ],
+            [
+              130.76386716390127,
+              32.68153372572559
+            ],
+            [
+              130.76624489547945,
+              32.68148617109403
+            ],
+            [
+              130.7669582149529,
+              32.681771498883414
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-015",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 22,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 2
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.76225382888592,
+              32.692200643943806
+            ],
+            [
+              130.76375658194942,
+              32.692292288346486
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-016",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 23,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 11
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.76456859471688,
+              32.67984553630509
+            ],
+            [
+              130.76404549376966,
+              32.67851400662131
+            ],
+            [
+              130.76238108166496,
+              32.677325140832224
+            ],
+            [
+              130.76228597240183,
+              32.67646915746408
+            ],
+            [
+              130.7630944011384,
+              32.67556561946437
+            ],
+            [
+              130.7633321742962,
+              32.67418653514903
+            ],
+            [
+              130.76328461966466,
+              32.67247456841275
+            ],
+            [
+              130.76304684650682,
+              32.67138081188679
+            ],
+            [
+              130.76257130019118,
+              32.67042971925552
+            ],
+            [
+              130.762048199244,
+              32.669811509045196
+            ],
+            [
+              130.76157265292835,
+              32.66790932378265
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-017",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 23,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 12
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.76159048591512,
+              32.66634002094101
+            ],
+            [
+              130.7607107252312,
+              32.664342726415335
+            ],
+            [
+              130.75929003061333,
+              32.66263075967911
+            ],
+            [
+              130.75697459668424,
+              32.66074381456814
+            ],
+            [
+              130.7562354456324,
+              32.66030704349205
+            ],
+            [
+              130.75505952350446,
+              32.65906392581393
+            ],
+            [
+              130.7534804280755,
+              32.6576528192604
+            ],
+            [
+              130.7530772547745,
+              32.65694726598363
+            ],
+            [
+              130.75183413709638,
+              32.65439383507723
+            ],
+            [
+              130.75055742164318,
+              32.65335230404962
+            ],
+            [
+              130.74958308616573,
+              32.65241156634726
+            ],
+            [
+              130.7481087478668,
+              32.65119387078797
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-018",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 23,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 15
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.7586361544293,
+              32.67356832493868
+            ],
+            [
+              130.7573046247455,
+              32.67216546330755
+            ],
+            [
+              130.75567587861448,
+              32.67061993778177
+            ],
+            [
+              130.75420168503604,
+              32.66943107199269
+            ],
+            [
+              130.75267993682598,
+              32.66833731546673
+            ],
+            [
+              130.7505518670635,
+              32.66675612396723
+            ],
+            [
+              130.75058753303716,
+              32.66529381904665
+            ],
+            [
+              130.7501357640373,
+              32.66454483359953
+            ],
+            [
+              130.7491608940903,
+              32.66412873057335
+            ],
+            [
+              130.74868534777465,
+              32.66206010410035
+            ],
+            [
+              130.74836435401156,
+              32.66103767952169
+            ],
+            [
+              130.74776992111703,
+              32.66020547346933
+            ],
+            [
+              130.7471754882225,
+              32.65923060352228
+            ],
+            [
+              130.74659288418323,
+              32.655099388353996
+            ],
+            [
+              130.74532680192033,
+              32.65276317362957
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-019",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 23,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-020",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 23,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 2
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.75188339674725,
+              32.65668643073363
+            ],
+            [
+              130.75219250185242,
+              32.65618710710221
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-021",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 23,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-022",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 23,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 2
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.7511522442869,
+              32.65553323091816
+            ],
+            [
+              130.7518180091288,
+              32.65510523923409
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-023",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 23,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-024",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 23,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-025",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 23,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-026",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 23,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 3
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.7205508388756,
+              32.61876161206153
+            ],
+            [
+              130.72335656213784,
+              32.6191896037456
+            ],
+            [
+              130.72739870582078,
+              32.62023580564001
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-027",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 23,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-028",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 30,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-029",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 30,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 4
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.60199714238712,
+              32.476478154422935
+            ],
+            [
+              130.60271046186057,
+              32.475241734002275
+            ],
+            [
+              130.60380421838653,
+              32.47414797747631
+            ],
+            [
+              130.60580151291222,
+              32.47348221263442
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-030",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 30,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-031",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 30,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-032",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 30,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-033",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 30,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-034",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 30,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-035",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 24,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 2
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.723641889927,
+              32.64693773126308
+            ],
+            [
+              130.73572076634417,
+              32.64370401631675
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-036",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 35,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-037",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 35,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-038",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 35,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-039",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 40,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 2
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.6176660623668,
+              32.482179626850076
+            ],
+            [
+              130.61895102513122,
+              32.48212451117461
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-040",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 41,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 5
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.62633411626913,
+              32.48638669044984
+            ],
+            [
+              130.62520160671406,
+              32.485688588703326
+            ],
+            [
+              130.62489670029535,
+              32.48506396676048
+            ],
+            [
+              130.6243304455178,
+              32.48469654006293
+            ],
+            [
+              130.62293658760387,
+              32.48399842520448
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-041",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 50,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 2
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.60777838278958,
+              32.47209289617754
+            ],
+            [
+              130.61858078162277,
+              32.47958915361658
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-042",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 51,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-043",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 51,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-044",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 51,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-045",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 51,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-046",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 33,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 2
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.73067744854657,
+              32.633748339664926
+            ],
+            [
+              130.7374725058771,
+              32.63572913291546
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-047",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 55,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 4
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.79530671979137,
+              32.73766719502617
+            ],
+            [
+              130.79484936016337,
+              32.73489036871322
+            ],
+            [
+              130.79439200053534,
+              32.7327995818423
+            ],
+            [
+              130.7935752869139,
+              32.73034944097794
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-048",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 35,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "EMPTY_SOURCE_GEOMETRY",
+        "line_part_count": 0,
+        "vertex_count": 0
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": []
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-049",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 55,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 2
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.74738243189773,
+              32.655586556092764
+            ],
+            [
+              130.7485247562506,
+              32.65484740504091
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-050",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 55,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 3
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.74550095649298,
+              32.652495560785034
+            ],
+            [
+              130.74684486749635,
+              32.651957996383686
+            ],
+            [
+              130.74778560519871,
+              32.651286040882006
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "gsi-2026-kumamoto-surface-rupture-051",
+      "properties": {
+        "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+        "source_feature_id": 56,
+        "observation_kind": "SAR_DISPLACEMENT_DISCONTINUITY_TRACE",
+        "revision": "PROVISIONAL_2026-08-05",
+        "geometry_status": "NONEMPTY_TRACE",
+        "line_part_count": 1,
+        "vertex_count": 2
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              130.7122559580472,
+              32.593077895548625
+            ],
+            [
+              130.71575012665596,
+              32.59495937095334
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

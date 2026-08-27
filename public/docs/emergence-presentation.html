@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How this project grew</title>
+<style>
+  :root {
+    --ink: #000000;
+    --ground: #060606;
+    --bone: #ffffff;
+    --body: rgba(255, 255, 255, 0.80);
+    --dim: #7a7a7a;
+    --faint: #3a3a3a;
+    --signal: #7df9ff;
+    --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --pad-y: clamp(40px, 7vh, 96px);
+    --pad-x: clamp(28px, 7vw, 120px);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--ground);
+  }
+
+  body {
+    font-family: Helvetica, "Helvetica Neue", Arial, sans-serif;
+    color: var(--body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ---------- the scroller ---------- */
+
+  #deck {
+    height: 100vh;
+    height: 100svh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  #deck::-webkit-scrollbar { width: 0; height: 0; }
+  #deck:focus { outline: none; }
+
+  section {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--pad-y) var(--pad-x);
+    padding-left: clamp(56px, 9vw, 150px);
+    position: relative;
+  }
+
+  .inner {
+    width: 100%;
+    max-width: 46em;
+  }
+
+  /* ---------- quiet reveal ---------- */
+
+  .inner > * {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 1.05s var(--ease), transform 1.05s var(--ease);
+  }
+  section.seen .inner > * { opacity: 1; transform: none; }
+  section.seen .inner > :nth-child(2) { transition-delay: 0.10s; }
+  section.seen .inner > :nth-child(3) { transition-delay: 0.20s; }
+  section.seen .inner > :nth-child(4) { transition-delay: 0.30s; }
+  section.seen .inner > :nth-child(5) { transition-delay: 0.40s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #deck { scroll-behavior: auto; }
+    .inner > * { opacity: 1; transform: none; transition: none; }
+  }
+
+  /* ---------- type ---------- */
+
+  .marker {
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--signal);
+    margin: 0 0 clamp(20px, 3.4vh, 40px) 0;
+    font-weight: normal;
+  }
+
+  h1 {
+    font-size: clamp(30px, 4.1vw, 58px);
+    line-height: 1.16;
+    letter-spacing: -0.015em;
+    font-weight: normal;
+    color: var(--bone);
+    margin: 0 0 clamp(22px, 3.6vh, 40px) 0;
+    max-width: 15em;
+  }
+
+  h2 {
+    font-size: clamp(23px, 2.9vw, 38px);
+    line-height: 1.22;
+    letter-spacing: -0.012em;
+    font-weight: normal;
+    color: var(--bone);
+    margin: 0 0 clamp(20px, 3.2vh, 38px) 0;
+    max-width: 17em;
+  }
+
+  p {
+    font-size: clamp(15.5px, 1.28vw, 19px);
+    line-height: 1.78;
+    max-width: 40em;
+    margin: 0 0 1.15em 0;
+    color: var(--body);
+  }
+
+  p.lead {
+    font-size: clamp(17px, 1.5vw, 22px);
+    line-height: 1.72;
+    color: rgba(255, 255, 255, 0.88);
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  /* ---------- the figure row ---------- */
+
+  .figures {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(22px, 3.4vw, 56px);
+    margin: clamp(22px, 3.6vh, 44px) 0 0 0;
+    padding-top: clamp(20px, 3.2vh, 36px);
+    border-top: 1px solid var(--faint);
+  }
+
+  .figure { flex: 1 1 190px; max-width: 300px; }
+
+  .figure b {
+    display: block;
+    font-weight: normal;
+    font-size: clamp(24px, 2.5vw, 34px);
+    line-height: 1.1;
+    color: var(--signal);
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5em;
+  }
+
+  .figure span {
+    display: block;
+    font-size: clamp(13px, 1.02vw, 15px);
+    line-height: 1.6;
+    color: var(--dim);
+  }
+
+  .footnote {
+    margin-top: clamp(18px, 2.8vh, 30px);
+    font-size: clamp(13px, 1.02vw, 15px);
+    line-height: 1.66;
+    color: rgba(255, 255, 255, 0.52);
+    max-width: 38em;
+  }
+
+  /* ---------- the boundary block on the closing screen ---------- */
+
+  .boundary {
+    margin-top: clamp(24px, 4vh, 46px);
+    padding-left: clamp(18px, 2vw, 28px);
+    border-left: 1px solid var(--signal);
+  }
+
+  .boundary .label {
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--signal);
+    margin: 0 0 0.9em 0;
+  }
+
+  .boundary p {
+    font-size: clamp(15px, 1.2vw, 18px);
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  /* ---------- the hint on the opening screen ---------- */
+
+  .hint {
+    margin-top: clamp(30px, 5vh, 60px);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: var(--dim);
+  }
+
+  /* ---------- the rail ---------- */
+
+  nav {
+    position: fixed;
+    left: clamp(20px, 2.6vw, 44px);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    z-index: 5;
+  }
+
+  nav button {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  nav button i {
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--faint);
+    transition: background 0.5s var(--ease), transform 0.5s var(--ease);
+  }
+
+  nav button:hover i { background: var(--dim); }
+  nav button[aria-current="true"] i { background: var(--signal); transform: scale(1.5); }
+  nav button:focus-visible { outline: 1px solid var(--signal); outline-offset: 2px; }
+
+  /* ---------- short and narrow screens ---------- */
+
+  @media (max-height: 700px) {
+    :root { --pad-y: clamp(28px, 4.5vh, 52px); }
+    h1 { font-size: clamp(28px, 3.5vw, 40px); }
+    h2 { font-size: clamp(21px, 2.5vw, 30px); }
+    p { line-height: 1.68; margin-bottom: 0.95em; }
+    .marker { margin-bottom: 18px; }
+  }
+
+  @media (max-width: 720px) {
+    section { padding-left: clamp(28px, 7vw, 60px); }
+    nav { display: none; }
+    .figures { gap: 22px; }
+    .figure { flex: 1 1 100%; max-width: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="rail" aria-label="Move between screens"></nav>
+
+<main id="deck" tabindex="-1">
+
+  <section id="s0" data-name="Opening">
+    <div class="inner">
+      <p class="marker">Auraworld</p>
+      <h1>This is how the project grew, in five steps.</h1>
+      <p class="lead">We started with a question about how living networks grow. We finished with a tool that shows how decisions were made during a real earthquake. Each step below grew out of the one before it.</p>
+      <p class="hint">Scroll down, or press the down arrow key.</p>
+    </div>
+  </section>
+
+  <section id="s1" data-name="The idea">
+    <div class="inner">
+      <p class="marker">Step one of five &nbsp;&middot;&nbsp; The idea</p>
+      <h2>We asked whether fleets of AI agents work better when they copy living networks.</h2>
+      <p>Slime moulds, fungal networks and tree roots find good routes through changing ground using simple local rules, with no manager telling any part of the network what to do.</p>
+      <p>We wrote three experiments to test whether a fleet of AI agents would work better under the same rules, and we wrote down what we expected before any agent ran.</p>
+      <p>Most of those written predictions turned out to be wrong, because capable agents already repeated the evidence inside their own writing and covered the gap the growth rules were meant to close.</p>
+      <p>That honest miss pushed the work toward a sharper question: what has to travel between two agents so that a guess does not quietly turn into a fact?</p>
+    </div>
+  </section>
+
+  <section id="s2" data-name="The real gains">
+    <div class="inner">
+      <p class="marker">Step two of five &nbsp;&middot;&nbsp; The real gains</p>
+      <h2>Checking the handoff between agents produced the first real gain.</h2>
+      <p>We built teams of AI agents that had to name the cause of a computer outage, choose the repair, and name the document that proved it.</p>
+      <p>The agents sent each other short cards marking every possible cause as supported, rejected, or still undecided. Ordinary code then checked each card before the next agent was allowed to act.</p>
+      <p>We broke the links between an agent's answer and the evidence behind it, to see which teams noticed.</p>
+      <div class="figures">
+        <div class="figure">
+          <b>48.6</b>
+          <span>Score for teams that passed the broken handoff straight along, out of a hundred points.</span>
+        </div>
+        <div class="figure">
+          <b>96.5</b>
+          <span>Score on the same broken cases when ordinary code rebuilt and checked the links first.</span>
+        </div>
+      </div>
+      <p class="footnote">On the cases where nothing was broken, the checking cost almost nothing, so the whole gain came from catching a failure that would otherwise have travelled onward.</p>
+    </div>
+  </section>
+
+  <section id="s3" data-name="The real disaster">
+    <div class="inner">
+      <p class="marker">Step three of five &nbsp;&middot;&nbsp; The real disaster</p>
+      <h2>We took that finding to a real earthquake in southern Japan.</h2>
+      <p>On 28 July 2026 an earthquake of magnitude 7.1 struck Kumamoto Prefecture. In the hours that followed, fire agencies, defence units and town halls made a long chain of choices while the information in front of them was still incomplete.</p>
+      <p>We rebuilt the first three days from public records alone, as one file of 414 numbered events with the clock time and the source named on each one.</p>
+      <p>That file is sealed with a fingerprint of its own contents, so any later edit shows up and nobody can quietly rewrite what happened.</p>
+      <p>One fact in the record set the direction of everything after it: most of the deaths were in towns that the first official readings did not single out.</p>
+    </div>
+  </section>
+
+  <section id="s4" data-name="The simulated decisions">
+    <div class="inner">
+      <p class="marker">Step four of five &nbsp;&middot;&nbsp; The simulated decisions</p>
+      <h2>AI agents then answered the same decisions the real responders faced.</h2>
+      <p>We took five moments from the earthquake record where a real person had to commit to a choice, and gave the agents only the information that existed before each deadline.</p>
+      <p>Every answer was graded against rules we wrote down before the run, and both of us checked the grading independently afterwards.</p>
+      <div class="figures">
+        <div class="figure">
+          <b>0 of 40</b>
+          <span>Answers that passed every rule when the agents worked from plain written notes.</span>
+        </div>
+        <div class="figure">
+          <b>17 of 40</b>
+          <span>Answers that passed when they worked from a table of checked evidence instead.</span>
+        </div>
+        <div class="figure">
+          <b>34 of 40</b>
+          <span>Answers that passed after one short correction message pointed out the broken rule.</span>
+        </div>
+      </div>
+      <p class="footnote">The table of checked evidence also lost ground on one rule about staying inside the allowed limits, so we recorded that claim as a failure.</p>
+    </div>
+  </section>
+
+  <section id="s5" data-name="The interface">
+    <div class="inner">
+      <p class="marker">Step five of five &nbsp;&middot;&nbsp; The interface</p>
+      <h2>The last step was making all of it readable by a person.</h2>
+      <p>The whole run plays back in one window, moment by moment, at a pace a person can follow.</p>
+      <p>When a decision arrives, a card names who was deciding, what they knew at that minute, what they chose, and what else was open to them.</p>
+      <p>Nothing from later in the timeline is allowed onto that card, so you only ever see what the decider could see.</p>
+      <p>Two readers with no knowledge of this project judged the screen text one sentence at a time. The second reading marked 1,191 sentences clear, 34 vague and 3 unreadable; all 37 remaining problems were then repaired. The finished mechanical audit now lists 1,227 visible strings and finds zero failures, while quotations from the recording remain unchanged.</p>
+    </div>
+  </section>
+
+  <section id="s6" data-name="What this is now">
+    <div class="inner">
+      <p class="marker">Where this arrived</p>
+      <h2>This is now a tool for reading decisions made under pressure.</h2>
+      <p class="lead">It holds a real disaster still, replays the moments where somebody had to commit, and shows how a fleet of AI agents answered the same questions with the same incomplete information. It is worth having when a wrong choice is expensive and somebody will later ask what the choice was based on.</p>
+      <div class="boundary">
+        <p class="label">One honest boundary</p>
+        <p>The grading measures whether a decision can be traced back to what was known at the time, and whether it followed the rules written before the run. It does not grade the real responders, and it is no evidence that an AI system would have saved lives in Kumamoto.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var deck = document.getElementById("deck");
+  var rail = document.getElementById("rail");
+  var sections = Array.prototype.slice.call(deck.querySelectorAll("section"));
+  var current = -1;
+
+  // Build the rail.
+  var buttons = sections.map(function (section, i) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.setAttribute("aria-label", "Go to " + section.dataset.name);
+    b.appendChild(document.createElement("i"));
+    b.addEventListener("click", function () { go(i); });
+    rail.appendChild(b);
+    return b;
+  });
+
+  function mark(i) {
+    if (i === current) return;
+    current = i;
+    buttons.forEach(function (b, n) {
+      b.setAttribute("aria-current", n === i ? "true" : "false");
+    });
+  }
+
+  function go(i) {
+    i = Math.max(0, Math.min(sections.length - 1, i));
+    sections[i].scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "start"
+    });
+    mark(i);
+  }
+
+  // Reveal each screen once it is in view, and track which one is showing.
+  if ("IntersectionObserver" in window) {
+    var seen = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) e.target.classList.add("seen");
+      });
+    }, { root: deck, threshold: 0.18 });
+
+    var active = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) mark(sections.indexOf(e.target));
+      });
+    }, { root: deck, threshold: 0.55 });
+
+    sections.forEach(function (s) { seen.observe(s); active.observe(s); });
+  } else {
+    sections.forEach(function (s) { s.classList.add("seen"); });
+  }
+
+  sections[0].classList.add("seen");
+  mark(0);
+
+  // Arrow keys, page keys, space, home and end.
+  document.addEventListener("keydown", function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key;
+    if (k === "ArrowDown" || k === "PageDown" || k === "ArrowRight" || k === " " || k === "Spacebar") {
+      e.preventDefault(); go(current + 1);
+    } else if (k === "ArrowUp" || k === "PageUp" || k === "ArrowLeft") {
+      e.preventDefault(); go(current - 1);
+    } else if (k === "Home") {
+      e.preventDefault(); go(0);
+    } else if (k === "End") {
+      e.preventDefault(); go(sections.length - 1);
+    }
+  });
+
+  deck.focus({ preventScroll: true });
+})();
+</script>
+
+</body>
+</html>

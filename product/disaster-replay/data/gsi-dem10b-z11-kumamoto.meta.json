@@ -1,0 +1,164 @@
+{
+  "schema_version": "disaster-replay.terrain-dem.v1",
+  "title": "GSI DEM10B terrain cut for the Kumamoto 2026 replay",
+  "classification": "OBSERVED_PUBLIC_BASEMAP",
+  "disclosure": "This is a general GSI ground-elevation basemap, not post-earthquake deformation, building height, bridge height, or survey-grade engineering data.",
+  "requested_bounds_wgs84": [
+    [
+      130.48,
+      32.3
+    ],
+    [
+      130.9,
+      32.83
+    ]
+  ],
+  "pixel_edge_bounds_wgs84": [
+    [
+      130.4798126221,
+      32.2999022411
+    ],
+    [
+      130.9000396729,
+      32.8305580294
+    ]
+  ],
+  "xyz_zoom": 11,
+  "xyz_tiles": [
+    {
+      "z": 11,
+      "x": 1766,
+      "y": 826,
+      "url": "https://cyberjapandata.gsi.go.jp/xyz/dem_png/11/1766/826.png",
+      "bytes": 8078,
+      "sha256": "e15527f6368477eeec2e799a72fc7f5291fd33721aceb6d673176e72857b796d"
+    },
+    {
+      "z": 11,
+      "x": 1767,
+      "y": 826,
+      "url": "https://cyberjapandata.gsi.go.jp/xyz/dem_png/11/1767/826.png",
+      "bytes": 84875,
+      "sha256": "b651f784995953773fed9fb3bb618beb05e69e29862bca387a87d3c4bb7be5d3"
+    },
+    {
+      "z": 11,
+      "x": 1768,
+      "y": 826,
+      "url": "https://cyberjapandata.gsi.go.jp/xyz/dem_png/11/1768/826.png",
+      "bytes": 124727,
+      "sha256": "d34d49a4d97544fbc60918f62736f83eba91847390e88bfe98e8fc7d7df90175"
+    },
+    {
+      "z": 11,
+      "x": 1766,
+      "y": 827,
+      "url": "https://cyberjapandata.gsi.go.jp/xyz/dem_png/11/1766/827.png",
+      "bytes": 59573,
+      "sha256": "c30e1ec9fc16c2fff547d0ed8c230847552b1d6571202e254a3869797baae6ca"
+    },
+    {
+      "z": 11,
+      "x": 1767,
+      "y": 827,
+      "url": "https://cyberjapandata.gsi.go.jp/xyz/dem_png/11/1767/827.png",
+      "bytes": 100983,
+      "sha256": "c69cb51db44cc622438e4aa40b52346a2e15e39b25c8ecf5320e454e2cceb0d2"
+    },
+    {
+      "z": 11,
+      "x": 1768,
+      "y": 827,
+      "url": "https://cyberjapandata.gsi.go.jp/xyz/dem_png/11/1768/827.png",
+      "bytes": 136207,
+      "sha256": "155df464b57d275f5d6c0f36f8fbd44c938907a6eccba15ddcb33c8464892e0f"
+    },
+    {
+      "z": 11,
+      "x": 1766,
+      "y": 828,
+      "url": "https://cyberjapandata.gsi.go.jp/xyz/dem_png/11/1766/828.png",
+      "bytes": 35285,
+      "sha256": "e93c8a528a69e94def6b66980cd88a9aa0391f2c933115283dab21a63ca4410a"
+    },
+    {
+      "z": 11,
+      "x": 1767,
+      "y": 828,
+      "url": "https://cyberjapandata.gsi.go.jp/xyz/dem_png/11/1767/828.png",
+      "bytes": 130513,
+      "sha256": "4c85250de0d6708cca2548ee944db1251984ede589ca05698d469fd2f9daa7e0"
+    },
+    {
+      "z": 11,
+      "x": 1768,
+      "y": 828,
+      "url": "https://cyberjapandata.gsi.go.jp/xyz/dem_png/11/1768/828.png",
+      "bytes": 141049,
+      "sha256": "2d070abd1ff9203fe66db4e7dd8f7bde5ea65430bb49fa6361c4464cbc5a1af6"
+    },
+    {
+      "z": 11,
+      "x": 1766,
+      "y": 829,
+      "url": "https://cyberjapandata.gsi.go.jp/xyz/dem_png/11/1766/829.png",
+      "bytes": 102379,
+      "sha256": "664d4daf49d7ce73dd763c0dc7b561d35ba3d968f57ba2197ed5dc0b30913231"
+    },
+    {
+      "z": 11,
+      "x": 1767,
+      "y": 829,
+      "url": "https://cyberjapandata.gsi.go.jp/xyz/dem_png/11/1767/829.png",
+      "bytes": 140035,
+      "sha256": "b28a3925145ce94e0f245b01941716ab97468d485121580ad7df45d73d05e352"
+    },
+    {
+      "z": 11,
+      "x": 1768,
+      "y": 829,
+      "url": "https://cyberjapandata.gsi.go.jp/xyz/dem_png/11/1768/829.png",
+      "bytes": 135088,
+      "sha256": "45b7a6a5482aa8784618e0359db1475fbefb01103388f4fe334bffa21e60cdae"
+    }
+  ],
+  "mosaic_pixels": [
+    768,
+    1024
+  ],
+  "crop_in_mosaic_pixels": {
+    "x": 73,
+    "y": 21,
+    "width": 612,
+    "height": 917
+  },
+  "output_pixels": [
+    612,
+    917
+  ],
+  "approximate_ground_sample_m_at_latitude_32_6": 64,
+  "output_path": "data/gsi-dem10b-z11-kumamoto.png",
+  "output_bytes": 863082,
+  "output_sha256": "6b74fb52109fcb70f8667fede283e2134b3b51032d616d8c51722599d4e429ca",
+  "encoding": {
+    "description": "Lossless GSI RGB elevation encoding preserved from the source PNG tiles.",
+    "decode": "u=65536*R+256*G+B; if u<8388608 elevation_m=u*0.01; if u==8388608 NoData; otherwise elevation_m=(u-16777216)*0.01",
+    "nodata_rgb": [
+      128,
+      0,
+      0
+    ]
+  },
+  "source": {
+    "provider": "Geospatial Information Authority of Japan",
+    "tile_template": "https://cyberjapandata.gsi.go.jp/xyz/dem_png/{z}/{x}/{y}.png",
+    "tile_catalog": "https://maps.gsi.go.jp/development/ichiran.html",
+    "technical_specification": "https://maps.gsi.go.jp/development/demtile.html",
+    "attribution": "Created by processing GSI Tiles (Elevation Tile / Fundamental Geospatial Data DEM), Geospatial Information Authority of Japan."
+  },
+  "processing": {
+    "tool": "ImageMagick",
+    "rule": "Stitch XYZ tiles with x increasing east and y increasing south; crop [73,21,685,938) without lossy conversion.",
+    "frozen_on": "2026-08-23"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": "disaster-replay.modeled-shelter-occupancy.v1",
+  "classification": "MODELED_FROM_OFFICIAL_AGGREGATES",
+  "title": "Kumamoto shelter occupancy aggregate layer",
+  "disclosure": "Official reports provide prefecture-wide shelter and occupant totals, not a trustworthy time series for each shelter. This layer preserves only those aggregates. It must not assign occupants to individual shelters, infer municipal opening times, or portray a modeled distribution as observed.",
+  "scope": {
+    "kind": "PREFECTURE_AGGREGATE",
+    "prefecture_code": "43",
+    "prefecture_name": "Kumamoto",
+    "spatial_allocation": null
+  },
+  "observed_aggregate_points": [
+    {
+      "reported_at": "2026-07-29T06:20:00+09:00",
+      "open_shelters": 506,
+      "occupants": 9186,
+      "source_note": "Maximum shelter-count observation in the reconstruction."
+    },
+    {
+      "reported_at": "2026-07-29T13:10:00+09:00",
+      "open_shelters": 419,
+      "occupants": 7547,
+      "source_note": "Daytime aggregate after the first-night peak count."
+    },
+    {
+      "reported_at": "2026-07-30T06:30:00+09:00",
+      "open_shelters": 419,
+      "occupants": 9931,
+      "source_note": "Maximum recorded occupant count; it is not contemporaneous with the 506-shelter maximum."
+    },
+    {
+      "reported_at": "2026-07-31T07:30:00+09:00",
+      "open_shelters": 399,
+      "occupants": 9637,
+      "source_note": "Aggregate at the Cabinet Office report-4 cutoff."
+    }
+  ],
+  "derived_display": {
+    "method": "LINEAR_INTERPOLATION_BETWEEN_REPORTED_PREFECTURE_TOTALS",
+    "allowed_visual": "A clearly labeled prefecture-wide occupancy pulse or counter.",
+    "forbidden_visual": "People, capacity, opening time, or occupancy assigned to a specific shelter or municipality.",
+    "peak_open_shelters": 506,
+    "peak_occupants": 9931,
+    "daytime_reference_occupants": 7547
+  },
+  "source": {
+    "reconstruction_path": "docs/rescueworld/REAL-RESPONSE-RECONSTRUCTION.md",
+    "reconstruction_sha256": "d31309435bde8328b608fe4c22c1e2edfb93d6a9d859b07360748a9903567fe9",
+    "primary_index": "https://www.bousai.go.jp/updates/r8kumamoto_jishin/status/index.html",
+    "attribution": "Cabinet Office and Kumamoto Prefecture official aggregates; modeled display by AURAWORLD"
+  }
+}

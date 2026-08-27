@@ -1,0 +1,46 @@
+{
+  "schema_version": "disaster-replay.surface-rupture-metadata.v1",
+  "title": "2026 Kumamoto earthquake: GSI provisional SAR displacement-discontinuity traces",
+  "classification": "OBSERVED_PUBLIC_REMOTE_SENSING_INTERPRETATION",
+  "source_feature_count": 51,
+  "nonempty_trace_count": 25,
+  "empty_geometry_count": 26,
+  "line_part_count": 25,
+  "vertex_count": 181,
+  "unique_source_id_count": 21,
+  "bbox": [
+    [
+      130.60199714238712,
+      32.47209289617754
+    ],
+    [
+      130.79530671979137,
+      32.73766719502617
+    ]
+  ],
+  "output": {
+    "path": "data/full-incident/gsi-2026-kumamoto-surface-rupture.geojson",
+    "bytes": 46727,
+    "sha256": "41d72edc7aeb5b40f999356ef173e5ed03a22f12fb9c0bc4d970a128ff32b3e7"
+  },
+  "source": {
+    "provider": "Geospatial Information Authority of Japan",
+    "id": "gsi-2026-kumamoto-sar-displacement-discontinuity-2026-08-05",
+    "url": "https://www.gsi.go.jp/common/000279979.zip",
+    "sha256": "38289aa36e905b6fc2e7b3971305698c8946c5914ad19222d514b09cb7450891",
+    "extracted_sha256": "d90551fdc3207cd7a7fe26f79b29f5be95ecbd8f8198cf00c834dbdc92e755e6",
+    "archive_bytes": 4163,
+    "extracted_bytes": 14221
+  },
+  "license": {
+    "name": "Public Data License 1.0",
+    "commercial_use": true,
+    "terms": "https://www.gsi.go.jp/kikakuchousei/kikakuchousei40182.html",
+    "attribution": "解析：国土地理院 原初データ所有：JAXA。出典：国土地理院ウェブサイト（https://www.gsi.go.jp/BOUSAI/20260728_kumamoto_earthquake.html）を加工して作成"
+  },
+  "processing": {
+    "tool": "product/disaster-replay/scripts/import-gsi-full-incident-assets.mjs surface-rupture",
+    "rule": "Verify the official ZIP and its single extracted GeoJSON by SHA-256; retain all 51 MultiLineString source features, including 26 explicitly labelled empty geometries; report 25 nonempty traces without deduplicating 21 repeated source IDs; add stable local IDs, classification, revision, disclosure, and bounds without changing coordinates.",
+    "frozen_on": "2026-08-23"
+  }
+}

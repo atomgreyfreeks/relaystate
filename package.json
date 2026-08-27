@@ -1,0 +1,28 @@
+{
+  "name": "rescue-world",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 5184",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 5184",
+    "verify:data": "node scripts/verify-data.mjs",
+    "verify:package": "node scripts/verify-package.mjs",
+    "verify": "npm run build && npm run verify:data && npm run verify:package",
+    "test:browser": "node scripts/browser-smoke.mjs"
+  },
+  "dependencies": {
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/three": "^0.185.1",
+    "puppeteer-core": "^25.4.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.0"
+  }
+}

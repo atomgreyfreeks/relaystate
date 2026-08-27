@@ -1,0 +1,1427 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Rescue World — seventy-two hours after an earthquake in Kumamoto</title>
+<link rel="icon" href="/favicon.svg" />
+<style>
+  html,body{margin:0;height:100%;background:#000;overflow:hidden;
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;color:#e9edf2;
+    -webkit-font-smoothing:antialiased}
+
+  /* The world fills the window edge to edge. Every piece of chrome floats over it, is
+     small, and is either always tiny or appears only when it has something to say. */
+  #gl{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+
+  .hud{position:fixed;z-index:6;pointer-events:none;user-select:none}
+  .hud.on{pointer-events:auto}
+  .k{font-size:8.5px;letter-spacing:.20em;text-transform:uppercase;opacity:.42}
+  .num{font-variant-numeric:tabular-nums}
+  .cold{color:#7df9ff}
+  .ember{color:#ff9d5c}
+  button{font-family:inherit;color:#e9edf2;background:rgba(0,0,0,.55);
+    border:1px solid rgba(255,255,255,.22);cursor:pointer}
+  button:hover{border-color:rgba(255,255,255,.62)}
+
+  #topscrim{left:0;right:0;top:0;height:230px;z-index:4;
+    background:linear-gradient(to bottom,rgba(0,0,0,.80),rgba(0,0,0,.34) 55%,rgba(0,0,0,0))}
+  #topscrim.small{height:96px}
+
+  /* ---- the masthead: three lines, in the corner of the frame for the whole run. The round
+         counter rides the second line, where app/public/target-screen.html puts it. */
+  #mast{left:1.7%;top:3.4%;max-width:30%;padding:8px 11px 9px;
+    background:rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.13)}
+  #mast b{display:block;font-size:15px;font-weight:700;letter-spacing:.13em;
+    text-transform:uppercase}
+  #mast span{display:block;font-size:10px;letter-spacing:.13em;opacity:.58;margin-top:5px;
+    line-height:1.45}
+  #mark{opacity:.44}
+
+  /* ---- the outcome: one control at the top of the frame that opens a sentence.
+         It opens over the same band of the frame the aftershock ribbon runs along, and at half
+         strength the two sets of writing showed through one another and neither could be read.
+         It stands in front of the ribbon now, on solid ground, so whichever one is open is the
+         one being read. */
+  #outcome{left:50%;top:3.4%;transform:translateX(-50%);width:min(560px,42%);
+    padding:0;transition:opacity .5s ease;z-index:7}
+  #outcome.gone{opacity:0;pointer-events:none}
+  #outcome .rvbody{padding:9px 13px 11px;background:#000;
+    border:1px solid rgba(255,255,255,.22)}
+  .verdict{font-size:13px;line-height:1.44}
+  .tally{display:flex;gap:26px;margin-top:9px;align-items:flex-end}
+  .tally b{font-size:29px;font-weight:700;line-height:.85;letter-spacing:-.03em;
+    font-variant-numeric:tabular-nums;display:block}
+  .tally i{font-style:normal;font-size:8.5px;letter-spacing:.17em;text-transform:uppercase;
+    opacity:.58;display:block;margin-top:6px}
+  #outfoot{margin-top:9px;font-size:9px;letter-spacing:.04em;opacity:.46;line-height:1.5}
+  #angles{margin-top:8px;font-size:9px;letter-spacing:.04em;opacity:.40;line-height:1.5}
+
+  #chip{left:50%;top:3.4%;transform:translateX(-50%);font-size:8.5px;letter-spacing:.18em;
+    text-transform:uppercase;padding:4px 10px 5px;opacity:0;transition:opacity .5s ease}
+  #chip.on{opacity:.85;pointer-events:auto}
+
+  /* ---- the briefing: what a stranger reads before the run starts, and the one control
+         that starts it. The scrim sits under the masthead and the outcome chip, so both are
+         already legible while the briefing is still up. */
+  #brief{inset:0;z-index:5;background:rgba(0,0,0,.86);display:flex;align-items:center;
+    justify-content:center;pointer-events:auto;opacity:1;transition:opacity .55s ease}
+  #brief.gone{opacity:0;pointer-events:none}
+  #briefCard{position:relative;width:min(620px,78%);padding:26px 30px 28px;
+    border:1px solid rgba(255,255,255,.13);background:rgba(0,0,0,.55)}
+  #briefText{font-size:15px;line-height:1.62;margin:0}
+  #briefGo{margin-top:22px;font-size:10px;letter-spacing:.24em;text-transform:uppercase;
+    padding:9px 26px 10px;border-color:rgba(125,249,255,.55);color:#7df9ff}
+  #briefGo i{font-style:normal;font-size:7px;letter-spacing:.12em;opacity:.5;margin-left:9px}
+  #briefHonest{margin:12px 0 0;font-size:9.5px;line-height:1.55;opacity:.50;max-width:52ch}
+
+  /* ---- camera: home, zoom and north in one row under the masthead, shortcuts printed on
+         them. They used to run down the right edge, which is now the story's column. */
+  #camctl{left:calc(1.7% + 180px);top:calc(3.4% + 88px);display:flex;flex-direction:row;gap:5px;
+    align-items:center}
+  #camctl button{width:32px;height:28px;font-size:12px;line-height:1;position:relative;
+    display:flex;align-items:center;justify-content:center}
+  #camctl button i{position:absolute;right:3px;bottom:1px;font-style:normal;font-size:6.5px;
+    letter-spacing:.08em;opacity:.55}
+  #north{width:32px;height:32px;border:1px solid rgba(255,255,255,.16);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:8px;letter-spacing:.1em;
+    opacity:.6;margin-left:3px}
+  #north span{display:block;transform-origin:50% 50%}
+
+  /* ---- the desk switch: a small labelled control, never a panel */
+  #desk{left:1.7%;top:calc(3.4% + 128px);display:flex;align-items:center;gap:8px;
+    border:1px solid rgba(255,255,255,.18);padding:5px 9px 6px;background:rgba(0,0,0,.55);
+    cursor:pointer;pointer-events:auto}
+  #desk:hover{border-color:rgba(255,255,255,.55)}
+  #desk.gone{display:none}
+  #deskName{font-size:9px;letter-spacing:.16em;text-transform:uppercase}
+  #desk i{font-style:normal;font-size:7px;letter-spacing:.12em;opacity:.5;
+    border:1px solid rgba(255,255,255,.20);padding:1px 4px 2px}
+
+  /* ---- overwatch: the camera tour switch, built exactly like the desk switch above so the
+         two read as one family of small controls rather than as two inventions */
+  #watch{left:1.7%;top:calc(3.4% + 88px);display:flex;align-items:center;gap:8px;
+    border:1px solid rgba(255,255,255,.18);padding:5px 9px 6px;background:rgba(0,0,0,.55);
+    cursor:pointer;pointer-events:auto;opacity:.62}
+  #watch:hover{border-color:rgba(255,255,255,.55)}
+  #watch.on{opacity:1;border-color:rgba(125,249,255,.52)}
+  #watchName{font-size:9px;letter-spacing:.16em;text-transform:uppercase}
+  #watch b{font-weight:400;font-size:8px;letter-spacing:.14em;text-transform:uppercase;
+    opacity:.62}
+  #watch.on b{color:#7df9ff;opacity:.95}
+  #watch i{font-style:normal;font-size:7px;letter-spacing:.12em;opacity:.5;
+    border:1px solid rgba(255,255,255,.20);padding:1px 4px 2px}
+
+  /* ---- the report locator: what arrived, three lines at a time, each naming its own source
+         class. The four classes are never blended into one another, which is the published
+         rule app/public/target-screen.html quotes for this region.
+         This region used to carry the report's whole sentence in small grey type, which told
+         the unfolding story a second time in the corner of the frame a viewer never looks at.
+         It now carries the report's own headline and the class it came from, and the story
+         itself is told once, in the panel over the decision rail. */
+  #feed{left:1.7%;top:26%;width:min(19%,300px);min-width:224px;
+    display:flex;flex-direction:column;gap:4px}
+  .alert{position:relative;border-left:1px solid rgba(233,237,242,.30);
+    background:rgba(0,0,0,.58);padding:5px 9px 6px;cursor:pointer;pointer-events:auto;
+    transform:scaleY(.55);transform-origin:50% 50%;
+    transition:transform .34s cubic-bezier(.16,1,.3,1)}
+  .alert.opening{transform:none}
+  .alert:hover{background:rgba(255,255,255,.09)}
+  .alert.k-simulated{border-left-color:rgba(125,249,255,.62)}
+  .alert.k-official{border-left-color:rgba(233,237,242,.72)}
+  .alert.k-road{border-left-color:rgba(233,237,242,.40)}
+  .alert.k-layer{border-left-color:rgba(233,237,242,.22)}
+  .alert b{display:block;font-size:9.5px;font-weight:400;line-height:1.35;opacity:.72}
+  .alert em{font-style:normal;display:block;font-size:8.5px;line-height:1.4;opacity:.44;
+    margin-top:3px}
+  .alert .meta{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+  .pill{font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+    opacity:.60;border:1px solid rgba(233,237,242,.16);padding:1px 4px 2px}
+  .k-simulated .pill{border-color:rgba(125,249,255,.30)}
+  #feedEmpty{font-size:10px;line-height:1.4;opacity:.42;padding:2px 0 0 10px}
+  #feedRows{display:flex;flex-direction:column;gap:5px}
+
+  /* ---- the rest of the region: recorded road closures, recorded earthquakes and the recorded
+         deadlines of the five real decision moments, entering under the reports at the minute
+         each one happened. They are drawn quieter than the reports and set apart by their own
+         heading, so a regional line is never read as one of the exercise's reports. */
+  #beats{left:calc(1.7% + min(21%,336px) + 20px);bottom:66px;
+    width:min(21%,336px);min-width:250px;
+    display:flex;flex-direction:column;justify-content:flex-end;gap:4px}
+  #beatsHead{font-size:7.5px;letter-spacing:.20em;text-transform:uppercase;opacity:.52;
+    padding:2px 6px 3px 10px;margin-bottom:1px;background:rgba(0,0,0,.62);align-self:flex-start}
+  .rbeat{position:relative;border-left:1px solid rgba(233,237,242,.26);
+    background:rgba(0,0,0,.62);padding:5px 10px 6px;cursor:pointer;pointer-events:auto;
+    transform:scaleY(.55);transform-origin:50% 50%;
+    transition:transform .34s cubic-bezier(.16,1,.3,1)}
+  .rbeat.opening{transform:none}
+  .rbeat:hover{background:rgba(255,255,255,.09)}
+  .rbeat.b-quake{border-left-color:rgba(233,237,242,.62)}
+  .rbeat.b-moment{border-left-color:rgba(125,249,255,.62)}
+  .rbeat span{font-size:10px;line-height:1.4;display:block}
+  .rbeat em{font-style:normal;display:block;font-size:8.5px;line-height:1.4;opacity:.46;
+    margin-top:3px}
+  #beatsMore{font-size:8.5px;line-height:1.4;opacity:.48;padding:2px 6px 3px 10px;
+    background:rgba(0,0,0,.62);align-self:flex-start}
+
+  /* ---- how a container opens, everywhere on this page.
+         Four corner brackets start condensed together at the middle of the container in a
+         crosshair, spin, and ease out to its corners on the house curves; the box fades in
+         with them, and only then does the writing arrive. Closing reverses, faster. Nothing
+         here touches layout: transform and opacity only, so the cost is a compositor pass.
+         The house curves are app/src/design/system.ts — outExpo opening, inOutCubic closing. */
+  .rv{position:absolute;inset:0;pointer-events:none;z-index:3}
+  .rv i{position:absolute;width:6px;height:6px;border:0 solid rgba(125,249,255,.92);
+    opacity:0;transform:translate(var(--dx,0),var(--dy,0)) rotate(-135deg) scale(.55)}
+  .rv i.tl{left:-1px;top:-1px;border-left-width:1px;border-top-width:1px}
+  .rv i.tr{right:-1px;top:-1px;border-right-width:1px;border-top-width:1px}
+  .rv i.bl{left:-1px;bottom:-1px;border-left-width:1px;border-bottom-width:1px}
+  .rv i.br{right:-1px;bottom:-1px;border-right-width:1px;border-bottom-width:1px}
+  .opening>.rv i{opacity:1;transform:translate(0,0) rotate(0deg) scale(1);
+    transition:transform .44s cubic-bezier(.16,1,.3,1),opacity .20s ease}
+  .closing>.rv i{opacity:0;transition:transform .18s cubic-bezier(.65,0,.35,1),
+    opacity .15s ease}
+  .rvbody{opacity:0;transform:translateY(5px);
+    transition:opacity .26s ease,transform .26s cubic-bezier(.16,1,.3,1)}
+  .ready>.rvbody{opacity:1;transform:none}
+  .closing>.rvbody{opacity:0;transition:opacity .12s ease}
+
+  /* ---- the decision rail: the standing column down the right edge where the desk's own work
+         appears — every claim as a card with its verdict stamped on it, and every dispatch
+         carrying the claim version that authorized it. It is sparse: collapsed to the claim
+         lines when nothing is selected, opened when a selection asks a question of it or when
+         the round is one where the desk decides something. */
+  #rail{right:1.6%;top:30.5%;bottom:14%;width:min(22%,352px);min-width:274px;
+    background:rgba(0,0,0,.46);border:1px solid rgba(255,255,255,.14);padding:9px 11px 11px;
+    pointer-events:auto;display:flex;flex-direction:column}
+  /* The frame only exists once it has something in it. Before the run begins the rail holds
+     no cards, and an empty outlined box standing on screen is the one thing this page must
+     never show, so the whole panel is off until the opening reveal brings it in. */
+  #rail:not(.on){visibility:hidden;opacity:0;pointer-events:none}
+  #rail>.rvbody{display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
+  #railHead{font-size:7.5px;letter-spacing:.20em;text-transform:uppercase;opacity:.46;
+    margin-bottom:8px;flex:0 0 auto}
+  /* The rail holds far more than one window of cards, so its scrollbar is wide enough to see
+     and its track is drawn, rather than a four-pixel thumb that reads as an edge highlight. */
+  #railScroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;
+    scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.42) rgba(255,255,255,.08)}
+  #railScroll::-webkit-scrollbar{width:9px}
+  #railScroll::-webkit-scrollbar-track{background:rgba(255,255,255,.08)}
+  #railScroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.42)}
+  #railScroll::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.66)}
+  .claim,.dispatch{border:1px solid rgba(255,255,255,.14);padding:5px 8px 6px;margin-bottom:5px}
+  .claim .cl,.dispatch .cl{display:flex;justify-content:space-between;align-items:baseline;
+    gap:7px}
+  .claim .cl p,.dispatch .cl p{font-size:10.5px;line-height:1.35;margin:0}
+  .claim.struck .cl p{text-decoration:line-through;opacity:.42}
+  .stamp{font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;
+    border:1px solid rgba(255,255,255,.22);padding:1px 4px 2px;white-space:nowrap}
+  .stamp.off{opacity:.44;border-color:rgba(255,255,255,.12)}
+  .claim .why,.dispatch .why{font-size:9.5px;line-height:1.45;opacity:.56;margin-top:5px}
+  .claim .id,.dispatch .id{font-size:7.5px;letter-spacing:.05em;opacity:.34;margin-top:5px;
+    word-break:break-all}
+  .dispatch{border-color:rgba(233,237,242,.34);padding:6px 8px 7px;margin-top:9px}
+  .dispatch .cl p{font-weight:700}
+  .dispatch .why{opacity:.68}
+  .claim .route,.dispatch .route{font-size:7.5px;letter-spacing:.16em;text-transform:uppercase;
+    opacity:.40;
+    margin-top:6px}
+  #railNote{font-size:9px;line-height:1.45;opacity:.40;margin-top:8px;flex:0 0 auto}
+
+  /* ---- a decision row that carries its own outcome.
+         Every row states four things without being touched: who decided, what the simulated desk
+         chose, how far its eight recorded tries agreed, and what the prewritten checks made of
+         it. The row is keyed by a bar down its left edge in one of the two colours this page
+         already uses — the live colour where the answer passed every check, the burn colour
+         where it did not — so the good moments and the bad ones separate from across a room. */
+  .claim.good,.dispatch.good{border-left:3px solid rgba(125,249,255,.95)}
+  .claim.bad,.dispatch.bad{border-left:3px solid rgba(255,157,92,.98)}
+  .claim.plainrow,.dispatch.plainrow{border-left:3px solid rgba(233,237,242,.24)}
+  .chose{font-size:10.5px;line-height:1.42;margin:6px 0 0;opacity:.92}
+
+  /* ---- the eight cells beside a choice.
+         One cell per recorded try, in the recorded seed order. A filled cell is a try that chose
+         the same set of places as the one on screen; a hollow cell chose something else. The
+         colour is the separate question of whether that try passed every prewritten check: live
+         colour for a pass, burn colour for a fail. The two readings never merge, and the cells
+         never merge with the grade beside them. */
+  .strip{display:flex;gap:3px;margin-top:7px;align-items:flex-end}
+  .strip i{display:block;width:11px;height:13px;border:1px solid rgba(125,249,255,.55);
+    background:transparent}
+  .strip i.on{background:rgba(125,249,255,.80);border-color:rgba(125,249,255,.90)}
+  .strip i.broke{border-color:rgba(255,157,92,.62)}
+  .strip i.broke.on{background:rgba(255,157,92,.82);border-color:rgba(255,157,92,.92)}
+  /* a moment outside the frozen experiment: eight hollow cells and no fill, ever */
+  .strip.empty i{border-color:rgba(233,237,242,.26);background:transparent}
+  .striplab{font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;opacity:.44;
+    margin-top:7px}
+  .stripsay{font-size:9px;line-height:1.45;opacity:.62;margin:5px 0 0}
+  .stripwarn{font-size:9.5px;line-height:1.48;margin:5px 0 0;color:#ff9d5c;opacity:.86}
+  /* what the five cell states mean, standing where the cells first appear and again in the
+     ledger. It is always visible, because nothing on this page appears on hover. */
+  .striplegend{font-size:8.5px;line-height:1.5;opacity:.52;margin:7px 0 2px;
+    border-left:1px solid rgba(233,237,242,.20);padding-left:8px}
+  /* what a grade is about, standing next to the grade wherever the eight cells are beside it */
+  .badgescope{font-size:8.5px;line-height:1.5;opacity:.52;margin:5px 0 0}
+  /* what the descriptive-only badge means, standing directly under that badge */
+  .descwhy{font-size:8.5px;line-height:1.5;opacity:.52;margin:5px 0 0}
+
+  /* ---- a grade that opens its own reasons in place.
+         Clicking any grade anywhere on this page opens the itemized list of what the check found
+         under it, in the same plain words the walk-through uses, with the house corner reveal.
+         Clicking it again or pressing escape closes it. Nothing here appears on hover. */
+  .verdict-badge{display:inline-block;text-align:left;font-size:9px;letter-spacing:.06em;
+    line-height:1.35;padding:3px 7px 4px;margin-top:7px;
+    border:1px solid rgba(255,255,255,.24);background:rgba(0,0,0,.55);cursor:pointer;
+    font-family:inherit;color:#e9edf2}
+  .verdict-badge.pass{color:#7df9ff;border-color:rgba(125,249,255,.52)}
+  .verdict-badge.fail{color:#ff9d5c;border-color:rgba(255,157,92,.52)}
+  .verdict-badge.desc{opacity:.62}
+  .verdict-badge:hover{border-color:rgba(255,255,255,.62)}
+  .verdict-badge.open{border-color:rgba(255,255,255,.72)}
+  .verdict-badge i{font-style:normal;display:block;font-size:7px;letter-spacing:.16em;
+    text-transform:uppercase;opacity:.55;margin-top:4px}
+  .reasons{position:relative;display:none;margin-top:6px;padding:8px 10px 9px;
+    border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.62)}
+  .reasons.on{display:block}
+  .reasons p{margin:0 0 6px;font-size:9.5px;line-height:1.5;color:#ff9d5c;opacity:.92}
+  .reasons p:last-child{margin-bottom:0}
+  .reasons p.clean{color:#e9edf2;opacity:.66}
+  .reasons .rlab{font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;opacity:.44;
+    color:#e9edf2;margin-bottom:6px}
+
+  /* ---- the selection's own evidence, which opens inside the rail */
+  #panel{overflow:hidden;padding:0 0 11px;margin-bottom:9px;
+    border-bottom:1px solid rgba(255,255,255,.13);
+    pointer-events:auto;display:none;position:relative;opacity:0;flex:0 0 auto;
+    transition:opacity .34s cubic-bezier(.16,1,.3,1)}
+  #panel.on{display:block}
+  #panel.opening{opacity:1}
+  #panel.closing{opacity:0;transition:opacity .16s cubic-bezier(.65,0,.35,1)}
+  #panelKind{font-size:7.5px;letter-spacing:.20em;text-transform:uppercase;opacity:.48}
+  #panelName{font-size:13.5px;font-weight:700;line-height:1.25;margin-top:5px}
+  #panelSub{font-size:9.5px;line-height:1.5;opacity:.55;margin-top:6px}
+  .plines{margin-top:12px;border-top:1px solid rgba(255,255,255,.13)}
+  .pl{padding:8px 0 9px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .pl b{font-weight:400;font-size:10.5px;line-height:1.45;display:block}
+  .pl u{text-decoration:none;display:block;font-size:7.5px;letter-spacing:.13em;
+    text-transform:uppercase;opacity:.42;margin-top:5px;word-break:break-word}
+  .pl.hot b{color:#ff9d5c}
+  .pl.sig b{color:#7df9ff}
+  #panelClose{position:fixed;right:1.6%;top:calc(30.5% - 26px);font-size:8px;
+    letter-spacing:.14em;text-transform:uppercase;padding:2px 6px 3px;display:none;z-index:7;
+    pointer-events:auto}
+  #panelClose.on{display:block}
+
+  /* ---- the consequence, stated where it bites: a caption at the site, at the moment the
+         outcome event fires, with the stamp that keeps simulated damage labelled */
+  #caption{position:fixed;z-index:5;pointer-events:none;transform:translate(-50%,18px);
+    max-width:330px;padding:7px 10px 8px;background:rgba(0,0,0,.72);
+    border:1px solid rgba(255,157,92,.42);opacity:0;transition:opacity .3s ease}
+  #caption.on{opacity:1}
+  #caption p{margin:0;font-size:10.5px;line-height:1.42}
+  #caption p.more{margin-top:5px;opacity:.62}
+  #caption .k{margin-top:6px;color:#ff9d5c;opacity:.85}
+
+  /* ---- the mini-map: the whole ground, small, with the camera's view drawn on it */
+  #mini{left:24px;bottom:66px;border:1px solid rgba(255,255,255,.16);
+    background:rgba(0,0,0,.55);padding:4px;pointer-events:auto;cursor:crosshair}
+  #minicv{display:block}
+  #minilab{margin-top:3px;text-align:center}
+
+  /* ---- the transport: rounds, not a video scrub bar. The run is a sequence of steps the
+         desk takes, so the time control counts those steps and the clock rides underneath. */
+  /* The round's headline can run to three lines on a wide moment, and a fixed height cut the
+     clock line off at the bottom edge of the window in every frame. The bar is sized by what
+     is in it and grows upward from the bottom edge, so the clock always stands inside. */
+  #bar{left:0;right:0;bottom:0;min-height:54px;display:flex;align-items:center;gap:16px;
+    padding:7px 22px 9px;pointer-events:auto;
+    background:linear-gradient(to top,rgba(0,0,0,.92),rgba(0,0,0,.72) 62%,rgba(0,0,0,0))}
+  #play{font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;padding:5px 11px 6px;
+    min-width:96px;position:relative;display:flex;align-items:center;justify-content:center;
+    gap:7px}
+  #play i{font-style:normal;font-size:6.5px;letter-spacing:.10em;opacity:.5}
+  #speeds{display:flex;gap:0}
+  #speeds button{font-size:8.5px;letter-spacing:.10em;padding:5px 8px 6px;min-width:34px;
+    border-right-width:0}
+  #speeds button:last-child{border-right-width:1px}
+  #speeds button.on{color:#7df9ff;border-color:rgba(125,249,255,.65)}
+  /* the mode chip names how the run is playing, and takes it back to the directed watch */
+  #mode{font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;padding:5px 9px 6px;
+    min-width:64px;opacity:.55}
+  #mode.on{color:#7df9ff;border-color:rgba(125,249,255,.65);opacity:1}
+  /* the hold between rounds, in small type: the countdown and the key that skips it */
+  #dwell{flex:0 0 auto;font-size:8px;letter-spacing:.13em;text-transform:uppercase;opacity:0;
+    transition:opacity .28s cubic-bezier(.22,1,.36,1);white-space:nowrap;color:#7df9ff}
+  #dwell.on{opacity:.72}
+  #dwell u{text-decoration:none;border:1px solid rgba(125,249,255,.40);padding:1px 0 2px;
+    margin-left:6px;font-size:8.5px;display:inline-block;min-width:12px;text-align:center;
+    line-height:1}
+  /* ---- the unfolding story, and where it stands.
+         This is the one place a viewer follows what is happening in the world, and it is the
+         most readable panel on the page. It stands in the right-hand column directly over the
+         decision rail, so the eye that follows the account and the eye that reads the decisions
+         stay in the same column for the whole run.
+         The order inside it is fixed: which act the run is in, then the sentence saying what is
+         happening at this minute in the largest type any running panel carries, then the clock
+         and how far through the record the run has got, then what the whole act is about. The
+         arriving reports at the upper left were narrating the same story in small grey type at
+         the same time, which gave a viewer two places to look; they are a locator now and this
+         panel is the story. */
+  #narrate{right:1.6%;bottom:calc(69.5% + 34px);width:min(22%,352px);min-width:274px;
+    background:#000;border:1px solid rgba(255,255,255,.34);padding:12px 14px 13px;
+    pointer-events:auto}
+  #narrate:not(.on){visibility:hidden;opacity:0;pointer-events:none}
+  #round{min-width:0}
+  #roundKicker{font-weight:700;font-size:8.5px;letter-spacing:.20em;text-transform:uppercase;
+    opacity:.82;color:#7df9ff;margin-bottom:8px}
+  /* the sentence a viewer follows the run by: the largest and brightest running type on the
+     page, so it reads from across a room while the world plays under it */
+  #roundNow{font-size:17px;line-height:1.42;font-weight:400;opacity:.96}
+  /* where the run has got to: the recorded wall clock, the hour of the three days and the
+     moment of the record. Chrome under the sentence, never competing with it. */
+  #roundSub{font-size:9.5px;line-height:1.55;letter-spacing:.11em;opacity:.58;margin-top:9px;
+    text-transform:uppercase}
+  #roundAboutLabel{font-size:7.5px;letter-spacing:.20em;text-transform:uppercase;opacity:.44;
+    margin-top:11px;padding-top:9px;border-top:1px solid rgba(255,255,255,.16)}
+  #roundLine{font-size:11.5px;line-height:1.52;opacity:.70;margin-top:5px}
+  #steps{flex:0 0 auto;font-size:7.5px;letter-spacing:.13em;text-transform:uppercase;
+    opacity:.34;line-height:1.7}
+  #steps u{text-decoration:none;border:1px solid rgba(255,255,255,.26);padding:1px 0 2px;
+    margin-right:4px;font-size:8.5px;display:inline-block;min-width:12px;text-align:center;
+    line-height:1}
+  #scrub{-webkit-appearance:none;appearance:none;flex:1 1 auto;height:3px;
+    background:rgba(255,255,255,.14);outline:none;cursor:pointer;display:none}
+  #bar.internal #scrub{display:block}
+  #spacer{flex:1 1 auto}
+  #bar.internal #spacer{display:none}
+  #meter{font-size:8.5px;letter-spacing:.13em;opacity:.42;white-space:nowrap}
+  #helpBtn{font-size:11px;line-height:1;width:26px;height:24px}
+
+  /* ---- the context layers: three switches at the right of the transport for real open data
+         laid over the same ground. They are context and never the subject, so they are the
+         quietest controls on the page, every one of them starts off, and each carries its own
+         source on its face. */
+  #layerctl{display:flex;align-items:center;gap:5px;flex:0 0 auto}
+  #layerctl>.k{margin-right:2px;white-space:nowrap}
+  #layerctl button{padding:3px 7px 4px;line-height:1.15;text-align:left;opacity:.60;
+    border-color:rgba(255,255,255,.16);white-space:nowrap}
+  #layerctl button:hover{opacity:.92}
+  #layerctl button[disabled]{opacity:.20;cursor:default;border-color:rgba(255,255,255,.10)}
+  #layerctl button b{display:block;font-size:7.5px;letter-spacing:.16em;text-transform:uppercase;
+    font-weight:700}
+  #layerctl button i{display:block;font-style:normal;font-size:6.5px;letter-spacing:.09em;
+    opacity:.55;margin-top:2px}
+  #layerctl button.on{opacity:1;color:#7df9ff;border-color:rgba(125,249,255,.55)}
+
+  /* the lines a layer states the first time it is switched on, and then lets go of */
+  /* It stands in the corridor between two columns that are always there: the list of what
+     happened elsewhere in the region on its left, and the decision rail on its right. Both
+     edges are named here, so the note can never open across either one. */
+  #layerNote{right:calc(1.6% + min(22%,352px) + 40px);bottom:58px;
+    left:calc(1.7% + min(21%,336px) + min(21%,336px) + 44px);
+    padding:8px 11px 9px;
+    background:rgba(0,0,0,.76);border:1px solid rgba(255,255,255,.16);
+    opacity:0;transition:opacity .5s ease}
+  #layerNote.on{opacity:1}
+  #layerNote p{margin:6px 0 0;font-size:9.5px;line-height:1.5;opacity:.70}
+  #layerNote p:first-child{margin:0;font-size:8px;letter-spacing:.14em;text-transform:uppercase;
+    opacity:.95;line-height:1.45}
+
+  /* ---- the event label that rides the picture, at the coordinate it happened */
+  #tag{position:fixed;z-index:5;pointer-events:none;transform:translate(-50%,-260%);
+    font-size:8.5px;letter-spacing:.17em;text-transform:uppercase;white-space:nowrap;
+    padding:3px 7px 4px;background:rgba(0,0,0,.62);border:1px solid rgba(255,255,255,.20);
+    opacity:0;transition:opacity .25s ease}
+  #tag.on{opacity:.95}
+
+  /* ---- everything a stranger needs, one key away and never in the way */
+  #help{inset:0;background:rgba(0,0,0,.90);overflow-y:auto;display:none;z-index:9;
+    pointer-events:auto;opacity:0;transition:opacity .30s cubic-bezier(.16,1,.3,1)}
+  #help.opening{opacity:1}
+  #help.closing{opacity:0;transition:opacity .15s cubic-bezier(.65,0,.35,1)}
+  #help.on{display:block}
+  #helpInner{max-width:860px;margin:0 auto;padding:56px 30px 80px}
+  #help h2{font-size:15px;letter-spacing:.13em;text-transform:uppercase;margin:0 0 16px}
+  #help h3{font-size:9px;letter-spacing:.20em;text-transform:uppercase;opacity:.48;
+    margin:26px 0 8px}
+  #help p{font-size:12.5px;line-height:1.62;margin:0 0 11px;max-width:66ch;opacity:.86}
+  #help ul{margin:0;padding:0;list-style:none;font-size:11.5px;line-height:1.72;opacity:.80;
+    max-width:66ch}
+  #help li{padding-left:14px;text-indent:-14px}
+  /* 64px from the right edge, which is where the trace, the real-decision surface and the ledger
+     put their own close control. At 26px this one ran 24 pixels under the site menu button and
+     the menu button covered its last letter. */
+  #helpClose{position:fixed;right:64px;top:22px;font-size:9px;letter-spacing:.16em;
+    text-transform:uppercase;padding:4px 10px 5px;z-index:10;display:none}
+  /* These four controls are standalone HUD buttons rather than children of a HUD carrying the
+     `on` class. The HUD base disables pointer events, so their explicit display toggle also has
+     to restore pointer input or the visible close button cannot be clicked. */
+  #helpClose,#traceClose,#realClose,#ledgerClose{pointer-events:auto}
+
+  /* ---- the agent trace: the walk-through of one moment of decision, standing in the right-hand
+         column with the world still playing beside it. Six cards, one at a time, read in order:
+         what the real responders did, then the five steps the agents took. It is the one surface
+         on this page where the product's whole claim is visible, so it is set to be read across a
+         classroom rather than as a panel of fine print. */
+  /* The panel is solid black. It is a page of reading standing over a lit world, and at nine
+     tenths the decision rail behind it was still legible through every paragraph. */
+  #trace{right:1.6%;top:4.5%;bottom:6.5%;width:min(34%,520px);min-width:320px;
+    background:#000;border:1px solid rgba(255,255,255,.26);padding:13px 15px 11px;
+    pointer-events:auto;display:none;flex-direction:column;z-index:8}
+  #trace.on{display:flex}
+  #trace>.rvbody{display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
+  /* the head: the moment itself, so a reader always knows which decision the cards are about */
+  #traceHead{flex:0 0 auto;border-bottom:1px solid rgba(255,255,255,.16);padding-bottom:9px}
+  #traceKicker{font-size:7.5px;letter-spacing:.20em;text-transform:uppercase;opacity:.46;
+    display:flex;justify-content:space-between;gap:10px}
+  #traceKicker b{font-weight:700;color:#7df9ff;opacity:.92}
+  #traceMoment{font-size:14px;line-height:1.36;margin:7px 0 0}
+  #traceWhen{font-size:9.5px;line-height:1.5;opacity:.62;margin:6px 0 0}
+  #traceWho{font-size:9.5px;line-height:1.5;opacity:.48;margin:3px 0 0}
+  /* the card itself, one at a time. Sequential, never two runs beside each other. */
+  /* the card sits in its own scrolling frame, with a cue at its foot while there is more of it
+     below the window, because a reader who cannot see a scrollbar reads the first screen and
+     stops */
+  #traceBody{flex:1 1 auto;min-height:0;position:relative;margin-top:10px}
+  #traceScroll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+    scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.42) rgba(255,255,255,.08)}
+  #traceScroll::-webkit-scrollbar{width:9px}
+  #traceScroll::-webkit-scrollbar-track{background:rgba(255,255,255,.08)}
+  #traceScroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.42)}
+  #traceMore{position:absolute;left:0;right:9px;bottom:0;height:44px;display:none;
+    pointer-events:none;align-items:flex-end;justify-content:center;padding-bottom:2px;
+    background:linear-gradient(to top,#000 26%,rgba(0,0,0,.88) 60%,rgba(0,0,0,0))}
+  #traceMore.on{display:flex}
+  #traceMore span{font-size:8px;letter-spacing:.14em;text-transform:uppercase;opacity:.72}
+  #traceMore span::after{content:"  \25BE";font-size:11px}
+  #traceCard{padding-left:11px;border-left:1px solid rgba(255,255,255,.20)}
+  /* The card holding the public record carries the bone the whole page is written in; the five
+     cards holding the simulation carry the one live colour. Both are set at the same size, in
+     the same place, with the same weight, because the record is a run and never a straw man. */
+  #traceCard.record{border-left-color:rgba(233,237,242,.80)}
+  #traceCard.model{border-left-color:rgba(125,249,255,.62)}
+  #traceStep{font-size:7.5px;letter-spacing:.20em;text-transform:uppercase;opacity:.52}
+  #traceFrame{font-size:7.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.44;
+    margin-top:4px}
+  #traceCard.record #traceFrame{color:#e9edf2;opacity:.72}
+  #traceCard.model #traceFrame{color:#7df9ff;opacity:.66}
+  #traceHeading{font-size:15px;line-height:1.40;margin:8px 0 0;max-width:44ch}
+  #traceBadges{margin-top:9px;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+  .tbadge{font-size:9px;letter-spacing:.06em;border:1px solid rgba(255,255,255,.24);
+    padding:3px 7px 4px;line-height:1.35}
+  .tbadge.pass{color:#7df9ff;border-color:rgba(125,249,255,.52)}
+  .tbadge.fail{color:#ff9d5c;border-color:rgba(255,157,92,.52)}
+  .tbadge.desc{opacity:.56}
+  #traceLines{margin-top:11px}
+  .tlead{font-size:13px;line-height:1.60;margin:0 0 10px;opacity:.97;max-width:52ch}
+  .tfact{font-size:12px;line-height:1.58;margin:0 0 7px;opacity:.90;max-width:56ch}
+  .tcaveat{font-size:10.5px;line-height:1.55;margin:-3px 0 9px 0;opacity:.56;max-width:60ch}
+  .tlabel{font-size:7.5px;letter-spacing:.20em;text-transform:uppercase;opacity:.46;
+    margin:14px 0 7px}
+  .tquote{font-size:11.5px;line-height:1.56;margin:0 0 8px;opacity:.84;max-width:56ch;
+    border-left:1px solid rgba(255,255,255,.22);padding-left:9px}
+  /* the quotation is the machine's own words and is never edited, so the plain words this page
+     adds for its jargon sit inside it in square brackets and in the signal colour, which is how
+     a reader tells at a glance which words are ours and which are the machine's */
+  .tquote .tgloss{color:#7df9ff;opacity:.80}
+  /* what the check found, one sentence per rule it named, in the burn colour so a reader can
+     see at a glance that these are the lines that stopped the answer */
+  .tmessage{font-size:12px;line-height:1.56;margin:0 0 8px;color:#ff9d5c;opacity:.94;
+    border-left:1px solid rgba(255,157,92,.46);padding-left:9px;max-width:54ch}
+  .tnote{font-size:9.5px;line-height:1.58;margin:13px 0 0;opacity:.52;max-width:62ch;
+    border-top:1px solid rgba(255,255,255,.12);padding-top:9px}
+  /* the foot: where the reader stands among the cards, and the two controls that move them */
+  #traceFoot{flex:0 0 auto;border-top:1px solid rgba(255,255,255,.16);margin-top:9px;
+    padding-top:8px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  /* the standing limitation is pinned here rather than left at the foot of a card, so it can
+     never be scrolled off a card that carries a grade */
+  #traceLimit{font-size:9px;line-height:1.55;opacity:.58;flex-basis:100%;display:none}
+  #traceLimit.on{display:block}
+  #traceDots{display:flex;gap:5px;flex:0 0 auto}
+  #traceDots i{width:16px;height:2px;background:rgba(255,255,255,.22);display:block}
+  #traceDots i.on{background:#7df9ff}
+  #traceDots i.record.on{background:#e9edf2}
+  #tracePlace{font-size:8px;letter-spacing:.14em;text-transform:uppercase;opacity:.50;
+    flex:1 1 auto;white-space:nowrap}
+  #traceFoot button{font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
+    padding:4px 9px 5px;flex:0 0 auto}
+  #traceHint{font-size:8px;letter-spacing:.10em;opacity:.34;flex-basis:100%;line-height:1.5}
+  #traceSource{font-size:7.5px;line-height:1.5;opacity:.30;flex-basis:100%}
+  /* clear of the site control the shared navigation puts in the top right corner */
+  #traceClose{position:fixed;right:64px;top:22px;font-size:9px;letter-spacing:.16em;
+    text-transform:uppercase;padding:4px 10px 5px;z-index:10;display:none}
+  /* the control that opens the trace from a moment of decision in the rail */
+  .traceopen{margin-top:7px;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
+    padding:3px 8px 4px;color:#7df9ff;border:1px solid rgba(125,249,255,.44);
+    background:rgba(0,0,0,.42);cursor:pointer;font-family:inherit}
+  .traceopen:hover{background:rgba(125,249,255,.14)}
+
+  /* ---- the real decision moments: the comparison against the reconstructed real response.
+         Five cards, one for each decision the reconstruction found, each stating the moment,
+         its clock, what the real responders did as the record has it, and how the three desks
+         answered it across eight runs. The opening tells the whole result in classroom English,
+         the wording the two agents signed sits one click below it, and the standing assumption
+         line sits above all five cards, so no card can be read without it. */
+  /* The surface is a page of reading, so the world behind it is closed off rather than left
+     showing through: at nine-tenths black the act title standing behind it was still legible
+     through paragraph four. It also holds more than one window of writing, so it carries a
+     scrollbar wide enough to see and a fade at the bottom edge that says so. */
+  #real{inset:0;background:#000;overflow-y:auto;display:none;z-index:9;
+    pointer-events:auto;opacity:0;transition:opacity .30s cubic-bezier(.16,1,.3,1);
+    scrollbar-width:auto;scrollbar-color:rgba(255,255,255,.42) rgba(255,255,255,.07)}
+  #real::-webkit-scrollbar{width:11px}
+  #real::-webkit-scrollbar-track{background:rgba(255,255,255,.07)}
+  #real::-webkit-scrollbar-thumb{background:rgba(255,255,255,.42);
+    border:2px solid #000}
+  #real::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.62)}
+  /* the cue at the bottom edge: it stands while there is more to read and goes at the end */
+  #realMore{position:fixed;left:0;right:11px;bottom:0;height:96px;display:none;z-index:10;
+    pointer-events:none;align-items:flex-end;justify-content:center;padding-bottom:11px;
+    background:linear-gradient(to top,#000 18%,rgba(0,0,0,.86) 52%,rgba(0,0,0,0))}
+  #realMore.on{display:flex}
+  #realMore span{font-size:11px;line-height:1.4;letter-spacing:.10em;opacity:.82;
+    text-transform:uppercase}
+  #realMore span::after{content:"  \25BE";font-size:13px}
+  #real.opening{opacity:1}
+  #real.closing{opacity:0;transition:opacity .15s cubic-bezier(.65,0,.35,1)}
+  #real.on{display:block}
+  #realInner{max-width:900px;margin:0 auto;padding:52px 30px 96px}
+  #real h2{font-size:15px;letter-spacing:.13em;text-transform:uppercase;margin:0 0 12px}
+  /* The surface opens on the earthquake, so the incident is the first and largest thing read
+     and the human problem stands under it. Every count on this page comes later, and each one
+     stands underneath a sentence that already makes sense without it. */
+  #realScene{margin:0;font-size:20px;line-height:1.50;max-width:58ch}
+  #realProblem{margin:18px 0 0;font-size:15.5px;line-height:1.58;opacity:.94;max-width:70ch}
+  /* the one line the surface shows while its recorded file is being read, or if it cannot be */
+  #realLead{font-size:13px;line-height:1.62;margin:16px 0 0;max-width:74ch;opacity:.90}
+  #realJob{margin:0;font-size:14.5px;line-height:1.60;opacity:.92;max-width:74ch}
+  #realDefinition{margin:16px 0 0;font-size:13.5px;line-height:1.58;opacity:.84;max-width:74ch}
+  #realNormal{margin:0 0 14px;font-size:14px;line-height:1.58;opacity:.90;max-width:74ch}
+  #realTry{margin:16px 0 0;font-size:14px;line-height:1.58;opacity:.90;max-width:74ch}
+  #realZero{margin:0 0 14px;font-size:14.5px;line-height:1.58;opacity:.94;max-width:74ch}
+  #realTranslate{margin:14px 0 0;font-size:14.5px;line-height:1.58;opacity:.94;max-width:74ch}
+  #realRepair{margin:12px 0 0;font-size:14.5px;line-height:1.58;opacity:.94;max-width:74ch}
+  #realProves{margin:0;font-size:15px;line-height:1.58;opacity:.96;max-width:74ch}
+  #realFailed{margin:14px 0 0;font-size:14.5px;line-height:1.58;opacity:.92;max-width:74ch}
+  /* the standing limitation is the brightest supporting line here, never fine print */
+  #realLimit{margin:14px 0 0;font-size:14px;line-height:1.58;opacity:.92;max-width:74ch}
+  #realNoReach{margin:12px 0 0;font-size:14px;line-height:1.58;opacity:.90;max-width:74ch}
+  #realWider{margin:12px 0 0;font-size:13px;line-height:1.58;opacity:.80;max-width:78ch}
+  #realUse{margin:0;font-size:14px;line-height:1.58;opacity:.90;max-width:74ch}
+  #realStoryNext{margin:12px 0 0;font-size:14px;line-height:1.58;opacity:.90;max-width:74ch}
+  /* the scored moments, each with the minute it fell due and the office the record names */
+  #realMoments{margin:9px 0 0;padding:0;list-style:none;
+    border-top:1px solid rgba(255,255,255,.16)}
+  #realMoments li{padding:9px 0 10px;border-bottom:1px solid rgba(255,255,255,.11)}
+  #realMoments b{display:block;font-weight:400;font-size:13.5px;line-height:1.50}
+  #realMoments i{font-style:normal;display:block;font-size:11.5px;line-height:1.50;
+    opacity:.64;margin-top:4px}
+  /* one moment carried through all three ways of deciding, with the badge each answer earned
+     standing beside the sentence that says what it did */
+  #realWorked p{margin:12px 0 0;font-size:14.5px;line-height:1.58;opacity:.94;max-width:74ch}
+  #realWorked p:first-child{margin-top:0}
+  #realWorked p.quote{border-left:1px solid rgba(125,249,255,.55);padding-left:13px;
+    color:#7df9ff;opacity:.96}
+  #realWorked p.small{font-size:12.5px;opacity:.78}
+  #realWorked .badge{display:inline-block;margin:9px 0 0;font-size:9px;letter-spacing:.14em;
+    text-transform:uppercase;border:1px solid rgba(255,255,255,.26);padding:3px 8px 4px;
+    opacity:.84;line-height:1.4}
+  #realWorked .badge.ok{border-color:rgba(125,249,255,.60);color:#7df9ff;opacity:1}
+  /* the line that hands the reader on to the six-step walk-through, and the control that opens
+     it on the same moment the worked example just told */
+  #realTraceHandoff{margin:16px 0 0;font-size:13.5px;line-height:1.58;opacity:.88;max-width:74ch}
+  #realWorkedTrace{margin-top:9px}
+  /* the three counts, read only after the story has reached them */
+  #real .tally{margin:0 0 16px;gap:40px;align-items:flex-start}
+  #real .tally>div{max-width:19ch}
+  #real .tally b{font-size:38px}
+  #real .tally i{font-size:10px;letter-spacing:.10em;text-transform:none;opacity:.74;
+    line-height:1.45;margin-top:9px}
+  /* what the moment-by-moment cards are, said before the first one */
+  #realSlotsLead{margin:0 0 4px;font-size:13px;line-height:1.58;opacity:.84;max-width:76ch}
+  /* the wording the two agents signed, one click below the classroom opening */
+  .rexact{margin:14px 0 0;border-top:1px solid rgba(255,255,255,.13);padding-top:11px}
+  .rexact>summary{cursor:pointer;font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+    opacity:.62;list-style:none;padding:2px 0 6px}
+  .rexact>summary::-webkit-details-marker{display:none}
+  .rexact>summary::before{content:"+  "}
+  .rexact[open]>summary::before{content:"\2013  "}
+  .rexact>summary:hover{opacity:1;color:#7df9ff}
+  #realExactNote{margin:4px 0 12px;font-size:9.5px;line-height:1.58;opacity:.50;max-width:78ch}
+  .rlimit{margin:11px 0 0;font-size:10px;line-height:1.60;opacity:.62;max-width:78ch}
+  .rverdict{border-left:1px solid rgba(255,255,255,.20);padding:2px 0 2px 13px;margin:0 0 12px}
+  .rverdict.failed{border-left-color:#ff9d5c}
+  .rverdict.passed{border-left-color:#7df9ff}
+  .rverdict p{margin:0;font-size:12px;line-height:1.60;max-width:78ch;opacity:.92}
+  /* the standing assumption line now carries the whole honest boundary in plain words, so it is
+     set large enough for a class to read rather than as fine print */
+  #realAssume{margin:16px 0 0;font-size:10.5px;line-height:1.60;opacity:.62;max-width:78ch}
+  #realSource{margin:18px 0 0;font-size:8.5px;line-height:1.55;opacity:.36;max-width:78ch}
+  #realSlots{margin-top:26px;display:grid;gap:12px}
+  .rslot{border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.42);
+    padding:14px 16px 15px}
+  .rslot .rhead{display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+  .rslot .rhead b{font-size:13px;line-height:1.40;font-weight:400}
+  .rclock{font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.58;
+    white-space:nowrap;color:#7df9ff}
+  .rwho{font-size:9px;letter-spacing:.10em;opacity:.46;margin-top:6px}
+  /* the sentence a student reads first on every card, built from that card's own record */
+  .rstudent{margin:9px 0 0;font-size:11.5px;line-height:1.60;opacity:.96;max-width:80ch}
+  .rtask{margin:9px 0 0;font-size:11px;line-height:1.55;opacity:.80;max-width:80ch}
+  .rreal{margin-top:11px;padding:9px 11px 10px;background:rgba(255,255,255,.045)}
+  .rslot .k{display:block;font-size:7.5px;letter-spacing:.20em;text-transform:uppercase;
+    opacity:.46;margin-bottom:6px}
+  .rreal p{margin:0;font-size:11px;line-height:1.55;opacity:.86;max-width:80ch}
+  .rline{margin:6px 0 0;font-size:10px;line-height:1.50;opacity:.66}
+  /* a plan is two lines, what was sent and where it went, and the second sits tight under the
+     first so the pair reads as one block rather than as two unrelated notes */
+  .rline.rwhere{margin-top:2px;opacity:.80}
+  .rnote{margin:6px 0 0;font-size:9px;line-height:1.50;opacity:.44}
+  .rarms{margin-top:11px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+  /* The three desk cards under each moment are the whole point of the surface, so they are set
+     to be read across a classroom rather than as fine print at the foot of a card. */
+  .rarm{border:1px solid rgba(255,255,255,.12);padding:10px 11px 11px;background:rgba(0,0,0,.30)}
+  .rarm .rname{font-size:11.5px;letter-spacing:.04em;opacity:.92;min-height:2.6em;
+    line-height:1.40}
+  .rarm .rdesk{margin:6px 0 0;font-size:11px;line-height:1.50;opacity:.80}
+  .rarm .rcount{display:flex;align-items:baseline;gap:7px;margin-top:8px}
+  .rarm .rcount b{font-size:26px;line-height:1;font-weight:400;opacity:.88}
+  .rarm .rcount i{font-style:normal;font-size:10px;letter-spacing:.06em;opacity:.80;
+    line-height:1.35}
+  /* the signal colour marks the desk that reads its evidence, the same way the outcome
+     tally marks it; the plain desk stands in the bone the rest of the page is written in */
+  .rarm.lit .rcount b{color:#7df9ff;opacity:1}
+  .rstamp{margin:8px 0 0;font-size:11px;line-height:1.45;letter-spacing:.02em;opacity:.82}
+  .rstamp.broke{color:#ff9d5c;opacity:.95}
+  /* clear of the site control the shared navigation puts in the top right corner */
+  #realClose{position:fixed;right:64px;top:22px;font-size:9px;letter-spacing:.16em;
+    text-transform:uppercase;padding:4px 10px 5px;z-index:10;display:none}
+
+  /* ---- the map telegraph: what is about to be decided, drawn on the ground before it is.
+         As a deadline comes up, every place a recorded answer proposed sending to lights as a
+         hollow, hatched mark at the position the record puts it. A hollow hatched mark is never
+         a team that has moved: a dispatched unit is drawn solid everywhere else on this page.
+         Where several proposed places share one recorded position, they stack in the order the
+         answers wrote them rather than piling on one point. */
+  #telegraph{inset:0;z-index:5;pointer-events:none}
+  /* The ground under a stack is solid black, never a wash. A story card standing behind a stack
+     at three quarters strength printed its own sentences up through the proposal cells and
+     neither could be read. This is the same repair the incident panel took. */
+  .tgstack{position:absolute;transform:translate(-50%,-100%);width:246px;
+    padding:7px 10px 8px;background:#000;
+    border:1px dashed rgba(125,249,255,.46);
+    opacity:0;transition:opacity .30s cubic-bezier(.16,1,.3,1)}
+  .tglab{font-size:7.5px;letter-spacing:.20em;text-transform:uppercase;opacity:.60;
+    margin-bottom:5px;color:#7df9ff}
+  .tgdue{font-size:9px;line-height:1.4;opacity:.62;margin:0 0 6px}
+  /* one proposed place: a hollow hatched cell, never the solid mark a dispatched team wears.
+     The diagonal hatch and the dashed edge are the whole vocabulary of a proposal here. The
+     cell carries three marks and no more: the place, the count, and which desk wanted it. */
+  .ghostcell{display:block;padding:4px 7px 5px;margin-bottom:3px;
+    border:1px dashed rgba(125,249,255,.52);
+    background:repeating-linear-gradient(135deg,rgba(125,249,255,.11) 0 2px,
+      rgba(0,0,0,0) 2px 6px)}
+  .ghostcell b{display:block;font-weight:400;font-size:10.5px;line-height:1.32;opacity:.96}
+  .ghostcell u{display:block;text-decoration:none;font-size:7px;letter-spacing:.13em;
+    text-transform:uppercase;opacity:.52;margin-top:3px}
+  .ghostcell.burn{border-color:rgba(255,157,92,.52);
+    background:repeating-linear-gradient(135deg,rgba(255,157,92,.11) 0 2px,
+      rgba(0,0,0,0) 2px 6px)}
+  /* the place the deadline settled on: the one cell that stops being a proposal */
+  .ghostcell.taken{border-style:solid;border-color:rgba(125,249,255,.86);
+    background:rgba(125,249,255,.16)}
+  .ghostcell.faded{opacity:.28}
+  .tgnote{font-size:8px;line-height:1.42;opacity:.46;margin:5px 0 0}
+  .tgsaid{font-size:9.5px;line-height:1.45;opacity:.86;margin:6px 0 0;color:#7df9ff}
+  /* the line that counts a proposal panel this window is too narrow to stand clear of the rest.
+     It stands under the panel it belongs to, on the same solid ground the panels use. */
+  .tgcrowd{position:absolute;width:246px;padding:6px 10px;margin:0;background:#000;
+    border:1px dashed rgba(125,249,255,.28);opacity:0;
+    transition:opacity .30s cubic-bezier(.16,1,.3,1)}
+
+  /* ---- the decision ledger: the eleven moments, read back at the end.
+         It lists moments and totals nothing. There is no sum across the rows, no average and no
+         ranking, because this experiment counted tries at each moment and never scored a run.
+         The three counts it closes on are the frozen experiment's own, stated as the counts out
+         of forty tries that they are, beside the standing limitation. */
+  #ledger{inset:0;background:#000;overflow-y:auto;display:none;z-index:9;
+    pointer-events:auto;opacity:0;transition:opacity .30s cubic-bezier(.16,1,.3,1);
+    scrollbar-width:auto;scrollbar-color:rgba(255,255,255,.42) rgba(255,255,255,.07)}
+  #ledger::-webkit-scrollbar{width:11px}
+  #ledger::-webkit-scrollbar-track{background:rgba(255,255,255,.07)}
+  #ledger::-webkit-scrollbar-thumb{background:rgba(255,255,255,.42);border:2px solid #000}
+  #ledger.on{display:block}
+  #ledger.opening{opacity:1}
+  #ledger.closing{opacity:0;transition:opacity .15s cubic-bezier(.65,0,.35,1)}
+  #ledgerInner{position:relative;max-width:960px;margin:0 auto;padding:52px 30px 96px}
+  #ledgerTitle{font-size:15px;letter-spacing:.13em;text-transform:uppercase;margin:0 0 16px}
+  #ledgerEnded{margin:0 0 10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    opacity:.56;color:#7df9ff}
+  #ledgerLead{margin:0;font-size:17px;line-height:1.54;max-width:64ch}
+  #ledgerScope{margin:14px 0 0;font-size:13.5px;line-height:1.56;opacity:.84;max-width:70ch}
+  #ledgerDefinition{margin:12px 0 0;font-size:12.5px;line-height:1.56;opacity:.74;max-width:70ch}
+  .ldhead{font-size:9px;letter-spacing:.20em;text-transform:uppercase;opacity:.50;
+    margin:34px 0 12px;border-top:1px solid rgba(255,255,255,.14);padding-top:12px}
+  .ledrow{position:relative;border:1px solid rgba(255,255,255,.14);
+    background:rgba(0,0,0,.42);padding:14px 16px 15px;margin-bottom:11px}
+  .ledrow.good{border-left:3px solid rgba(125,249,255,.95)}
+  .ledrow.bad{border-left:3px solid rgba(255,157,92,.98)}
+  .ledrow.plainrow{border-left:3px solid rgba(233,237,242,.24)}
+  .ledrow .lhead{display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+  .ledrow .lhead b{font-size:13.5px;line-height:1.40;font-weight:400}
+  .ledrow .lclock{font-size:9px;letter-spacing:.14em;text-transform:uppercase;opacity:.48;
+    white-space:nowrap}
+  .ledrow .lwho{font-size:11px;line-height:1.5;opacity:.60;margin:7px 0 0}
+  .ledrow .lchose{font-size:13px;line-height:1.52;margin:10px 0 0;opacity:.94;max-width:66ch}
+  .ledrow .lsaid{font-size:11.5px;line-height:1.52;margin:8px 0 0;opacity:.72;max-width:70ch}
+  .lmark{display:inline-block;font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+    border:1px solid rgba(125,249,255,.52);color:#7df9ff;padding:2px 6px 3px;margin:12px 8px 0 0}
+  .lmark.bad{border-color:rgba(255,157,92,.56);color:#ff9d5c}
+  .lmarksay{font-size:11.5px;line-height:1.52;margin:7px 0 0;opacity:.80;max-width:74ch}
+  #ledger .stripsay{font-size:11px;line-height:1.5;opacity:.70;max-width:74ch}
+  #ledger .striplab{font-size:8px}
+  #ledger .strip i{width:14px;height:16px}
+  #ledger .striplegend{font-size:11px;line-height:1.55;max-width:74ch;margin:12px 0 0}
+  #ledger .badgescope{font-size:11px;line-height:1.5;max-width:74ch}
+  #ledger .descwhy{font-size:11px;line-height:1.5;max-width:74ch}
+  #ledger .stripwarn{font-size:11.5px;line-height:1.5;max-width:74ch}
+  #ledger .verdict-badge{font-size:11px;padding:4px 9px 5px}
+  #ledger .reasons p{font-size:11.5px}
+  .ledrow .lopen{margin-top:12px;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
+    padding:4px 10px 5px}
+  #ledger .tally{margin:0 0 16px;gap:40px;align-items:flex-start}
+  #ledger .tally>div{max-width:19ch}
+  #ledger .tally b{font-size:38px}
+  #ledger .tally i{font-size:10px;letter-spacing:.10em;text-transform:none;opacity:.74;
+    line-height:1.45;display:block;margin-top:7px;font-style:normal}
+  #ledgerLimit{margin:16px 0 0;font-size:13.5px;line-height:1.58;opacity:.92;max-width:74ch}
+  #ledgerSource{margin:16px 0 0;font-size:10px;line-height:1.55;opacity:.42;max-width:78ch}
+  #ledgerClose{position:fixed;right:64px;top:22px;font-size:9px;letter-spacing:.16em;
+    text-transform:uppercase;padding:4px 10px 5px;z-index:10;display:none}
+  #ledgerMore{position:fixed;left:0;right:11px;bottom:0;height:96px;display:none;z-index:10;
+    pointer-events:none;align-items:flex-end;justify-content:center;padding-bottom:11px;
+    background:linear-gradient(to top,#000 18%,rgba(0,0,0,.86) 52%,rgba(0,0,0,0))}
+  #ledgerMore.on{display:flex}
+  #ledgerMore span{font-size:11px;line-height:1.4;letter-spacing:.10em;opacity:.82;
+    text-transform:uppercase}
+  #ledgerMore span::after{content:"  \25BE";font-size:13px}
+  /* the control that reaches the ledger from the closing panel */
+  #debriefLedger{margin-top:18px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+    padding:6px 13px 7px}
+
+  /* ---- the debrief: what rises when the run ends. The world dims behind it, the outcome is
+         stated as a sentence before it is stated as a number, and the one moment where the two
+         desks chose differently is told as three beats you can fly back to. */
+  /* Layer 9, which is the layer the help, the ledger and the real-decision surface stand on.
+     At layer 8 it shared a layer with the run-preparation chip, and the chip, being added to the
+     page later, printed over the debrief's opening sentence. A surface that holds the whole
+     frame stands above every floating control. */
+  #debrief{inset:0;z-index:9;background:rgba(0,0,0,.94);display:none;
+    align-items:center;justify-content:center;pointer-events:auto;opacity:0;
+    transition:opacity .45s cubic-bezier(.16,1,.3,1)}
+  #debrief.on{display:flex}
+  #debrief.opening{opacity:1}
+  #debrief.closing{opacity:0;transition:opacity .2s cubic-bezier(.65,0,.35,1)}
+  /* The card is a page of reading, so it is closed off from the world behind it rather than
+     left at half strength with the decision rail showing through the paragraphs, and it
+     scrolls when the story runs longer than the window. */
+  #debriefCard{position:relative;width:min(980px,88%);max-height:88vh;overflow-y:auto;
+    padding:30px 34px 32px;border:1px solid rgba(255,255,255,.20);background:#000;
+    scrollbar-width:auto;scrollbar-color:rgba(255,255,255,.42) rgba(255,255,255,.07)}
+  #debriefCard::-webkit-scrollbar{width:11px}
+  #debriefCard::-webkit-scrollbar-track{background:rgba(255,255,255,.07)}
+  #debriefCard::-webkit-scrollbar-thumb{background:rgba(255,255,255,.42)}
+  /* The page opens on the incident itself, so the earthquake, the place and the three days are
+     the first and largest thing read. The question comes second, and every count on the page
+     stands underneath a sentence that already makes sense without it. */
+  #debriefScene{margin:0;font-size:20px;line-height:1.50;max-width:58ch}
+  #debriefVerdict{margin:18px 0 0;font-size:15.5px;line-height:1.58;opacity:.94;max-width:70ch}
+  #debriefJob{margin:0;font-size:14.5px;line-height:1.60;opacity:.92;max-width:74ch}
+  #debriefDefinition{margin:16px 0 0;font-size:13.5px;line-height:1.58;opacity:.84;
+    max-width:74ch}
+  #debriefNormal{margin:0 0 14px;font-size:14px;line-height:1.58;opacity:.90;max-width:74ch}
+  #debriefTry{margin:16px 0 0;font-size:14px;line-height:1.58;opacity:.90;max-width:74ch}
+  #debriefZero{margin:0 0 14px;font-size:14.5px;line-height:1.58;opacity:.94;max-width:74ch}
+  #debriefTranslate{margin:14px 0 0;font-size:14.5px;line-height:1.58;opacity:.94;max-width:74ch}
+  #debriefRepair{margin:12px 0 0;font-size:14.5px;line-height:1.58;opacity:.94;max-width:74ch}
+  #debriefProves{margin:0;font-size:15px;line-height:1.58;opacity:.96;max-width:74ch}
+  #debriefFailed{margin:14px 0 0;font-size:14.5px;line-height:1.58;opacity:.92;max-width:74ch}
+  #debriefNoReach{margin:12px 0 0;font-size:14px;line-height:1.58;opacity:.90;max-width:74ch}
+  #debriefWider{margin:12px 0 0;font-size:13px;line-height:1.58;opacity:.80;max-width:78ch}
+  /* the scored moments, each with the minute it fell due and the office the record names */
+  #debriefMoments{margin:9px 0 0;padding:0;list-style:none;
+    border-top:1px solid rgba(255,255,255,.16)}
+  #debriefMoments li{padding:9px 0 10px;border-bottom:1px solid rgba(255,255,255,.11)}
+  #debriefMoments b{display:block;font-weight:400;font-size:13.5px;line-height:1.50}
+  #debriefMoments i{font-style:normal;display:block;font-size:11.5px;line-height:1.50;
+    opacity:.64;margin-top:4px}
+  /* one moment carried through all three ways of deciding, with the badge each answer earned
+     standing beside the sentence that says what it did */
+  #debriefWorked p{margin:12px 0 0;font-size:14.5px;line-height:1.58;opacity:.94;max-width:74ch}
+  #debriefWorked p:first-child{margin-top:0}
+  #debriefWorked p.quote{border-left:1px solid rgba(125,249,255,.55);padding-left:13px;
+    color:#7df9ff;opacity:.96}
+  #debriefWorked p.small{font-size:12.5px;opacity:.78}
+  #debriefWorked .badge{display:inline-block;margin:9px 0 0;font-size:9px;letter-spacing:.14em;
+    text-transform:uppercase;border:1px solid rgba(255,255,255,.26);padding:3px 8px 4px;
+    opacity:.84;line-height:1.4}
+  #debriefWorked .badge.ok{border-color:rgba(125,249,255,.60);color:#7df9ff;opacity:1}
+  /* The cue at the foot of the card while there is more of the story below the window. It
+     sticks to the bottom edge of the reading frame rather than being pinned to one point in
+     the writing: the story is several screens long now, and an absolutely placed cue scrolled
+     up into the middle of the page and covered a sentence. */
+  #debriefMore{position:sticky;bottom:0;height:82px;margin:-82px -34px 0;display:none;
+    pointer-events:none;align-items:flex-end;justify-content:center;padding-bottom:9px;
+    background:linear-gradient(to top,#000 20%,rgba(0,0,0,.86) 56%,rgba(0,0,0,0))}
+  #debriefMore.on{display:flex}
+  #debriefMore span{font-size:11px;letter-spacing:.10em;text-transform:uppercase;opacity:.82}
+  #debriefMore span::after{content:"  \25BE";font-size:13px}
+  /* the small heading over a block, so the page reads as a story with parts */
+  .dhead{margin:26px 0 12px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    opacity:.72}
+  /* a quieter label inside a part, over a list rather than over a whole part */
+  .dsub{margin:16px 0 0;font-size:9px;letter-spacing:.18em;text-transform:uppercase;opacity:.52}
+  /* The counts are read after the story reaches them, and each one says what it counts, so
+     the label under a number wraps to as many lines as the sentence needs. */
+  #debrief .tally{margin:0 0 16px;gap:40px;align-items:flex-start}
+  #debrief .tally>div{max-width:19ch}
+  #debrief .tally b{font-size:38px}
+  #debrief .tally i{font-size:10px;letter-spacing:.10em;text-transform:none;opacity:.74;
+    line-height:1.45;margin-top:9px}
+  .beats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .beat{border:1px solid rgba(255,255,255,.16);padding:12px 13px 13px;cursor:pointer;
+    background:rgba(0,0,0,.35);transition:border-color .2s ease,background .2s ease}
+  .beat:hover{border-color:rgba(125,249,255,.55);background:rgba(255,255,255,.05)}
+  .beat.loss{border-top:1px solid #ff9d5c}
+  .beat .t{font-size:8.5px;letter-spacing:.20em;text-transform:uppercase;opacity:.50;
+    margin-bottom:7px}
+  .beat p{margin:0;font-size:11.5px;line-height:1.55}
+  .beat p.second{margin-top:7px;font-size:10px;opacity:.66}
+  /* The three cards carry a third of the story, so they are set at reading size rather than
+     at the size of a caption. They were the smallest type on a page a reader is asked to
+     follow from the back of a classroom. */
+  .beat.flat .t{font-size:9.5px;opacity:.64;margin-bottom:8px}
+  .beat.flat p{font-size:13.5px;line-height:1.55}
+  .beat.flat p.second{margin-top:9px;font-size:12.5px;opacity:.84}
+  .beat .id{font-size:7.5px;letter-spacing:.05em;opacity:.34;margin-top:8px;
+    word-break:break-all}
+  .beat .go{margin-top:9px;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:#7df9ff;opacity:.80}
+  /* The debrief is read from the back of a classroom. The two sentences that bound what the
+     run has shown — what it has not shown, and the three angles it is one of — were the two
+     dimmest lines on the page, which is exactly backwards. The standing limitation is now the
+     brightest supporting line here, and only the line naming the source file is quieter. */
+  #debriefUse{margin:0;font-size:14px;line-height:1.58;opacity:.90;max-width:74ch}
+  #debriefNext{margin:12px 0 0;font-size:14px;line-height:1.58;opacity:.90;max-width:74ch}
+  #debriefAssume{margin:14px 0 0;font-size:14px;line-height:1.58;opacity:.92;max-width:74ch}
+  #debriefAngles{margin:14px 0 0;font-size:13.5px;line-height:1.58;opacity:.82;max-width:78ch}
+  #debriefHonest{margin:14px 0 0;font-size:11.5px;line-height:1.55;opacity:.62;max-width:70ch}
+  #debriefClose{position:absolute;right:14px;top:14px;font-size:8px;letter-spacing:.14em;
+    text-transform:uppercase;padding:3px 8px 4px}
+
+  /* ---- the act card: what rises in the middle of the screen as each act of the record opens.
+         The first one is the earthquake itself — its magnitude, the agency's intensity reading
+         and the clock it happened on — and the rest name the act and carry its story line. It
+         holds for a few seconds and goes, so the world is never covered for long. */
+  #actcard{inset:0;z-index:7;display:none;align-items:center;justify-content:center;
+    pointer-events:none;opacity:0;transition:opacity .5s cubic-bezier(.16,1,.3,1)}
+  #actcard.on{display:flex}
+  #actcard.opening{opacity:1}
+  /* The card stands over live terrain, and the contour lines behind it are the busiest thing
+     on screen. So the backing is close to solid and every line of type is set bright enough to
+     read over that, rather than being quietened the way chrome at the frame edge is. */
+  /* The card stands over live terrain, and the contour lines behind it are the busiest thing
+     on screen. Legibility comes from the type rather than from blacking the world out: every
+     line is set at full strength and carries its own shadow, so it reads over the busiest
+     ground while the world stays visible through the card. */
+  #actcardBox{position:relative;width:min(560px,66%);padding:18px 24px 20px;text-align:center;
+    border:1px solid rgba(255,255,255,.24);background:rgba(0,0,0,.58);
+    text-shadow:0 1px 4px rgba(0,0,0,.98),0 0 12px rgba(0,0,0,.92)}
+  #actcardKicker{margin-bottom:8px;opacity:.78}
+  #actcardTitle{font-size:25px;line-height:1.22;letter-spacing:.01em}
+  #actcardLine{margin:9px 0 0;font-size:12.5px;line-height:1.5;color:#7df9ff;opacity:1}
+  #actcardStory{margin:9px 0 0;font-size:12.5px;line-height:1.55;opacity:.96}
+  #actcardNote{margin:10px 0 0;font-size:10px;line-height:1.5;opacity:.82}
+
+  /* The story cards hang over the ground too. `billboards.ts` installs its own rules at run
+     time, after this sheet, so these carry one more step of specificity to win. */
+  body .rwbb{background:rgba(0,0,0,.66);border-color:rgba(255,255,255,.26);
+    text-shadow:0 1px 3px rgba(0,0,0,.98),0 0 10px rgba(0,0,0,.90)}
+  body .rwbb .rwbb-title{opacity:.78}
+  body .rwbb .rwbb-sentence{font-size:11px}
+  body .rwbb .rwbb-detail{opacity:.86;font-size:9.5px}
+  body .rwbb-lead path{stroke-opacity:.78}
+
+  /* the lead sentence over the moments of decision in the rail */
+  .raillead{margin:0 0 9px;font-size:9.5px;line-height:1.5;opacity:.56}
+  /* a debrief card that only states a result carries no control, so it takes no pointer */
+  .beat.flat{cursor:default}
+  .beat.flat:hover{border-color:rgba(255,255,255,.16);background:rgba(0,0,0,.35)}
+
+  /* ---- the aftershock timeline: the tremors the agency recorded after the main shock, laid
+         on a strip that fills as the first act plays, so the shaking is visibly still going */
+  #quakestrip{left:50%;top:12.6%;transform:translateX(-50%);z-index:5;display:none;
+    padding:6px 10px 7px;background:rgba(0,0,0,.52);border:1px solid rgba(255,255,255,.10)}
+  #quakestrip.on{display:block}
+  #quakestripLab{margin-bottom:4px;text-align:center}
+  #quakestrip canvas{display:block}
+
+  /* ---- the world swap: one key exchanges the run on screen under the same camera. The stamp
+         names the run now showing and the standing assumption line rides with it, because a
+         swap is a comparison and every comparison surface carries that line. */
+  /* below the rail: the head of the right-hand column belongs to the story being told */
+  #deskToast{right:1.6%;bottom:calc(14% + 12px);position:fixed;padding:7px 11px 8px;
+    max-width:26%;background:rgba(0,0,0,.78);border:1px solid rgba(125,249,255,.35);
+    display:none;z-index:7}
+  #deskToast.on{display:block}
+  #deskToastName{font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;
+    white-space:nowrap;color:#7df9ff}
+  #deskToastNote{font-size:9px;line-height:1.45;opacity:.52;margin-top:5px}
+
+  /* ---- the ghost echo: for one beat at the moment the desks chose differently, the other
+         desk's dispatch stands on the ground as a spectral marker with its illustrative route */
+  #ghost{position:fixed;z-index:5;pointer-events:none;transform:translate(-50%,-140%);
+    max-width:300px;padding:7px 10px 8px;background:rgba(0,0,0,.62);
+    border:1px dashed rgba(233,237,242,.42);opacity:0;transition:opacity .3s ease}
+  #ghost.on{opacity:1}
+  #ghost p{margin:0;font-size:10.5px;line-height:1.42;opacity:.88}
+  #ghost p.note{margin-top:5px;font-size:8.5px;line-height:1.45;opacity:.46}
+
+  /* ---- the internal view is a building tool, and says so across the whole frame */
+  #internal{left:0;right:0;top:0;z-index:9;padding:7px 22px 8px;text-align:center;
+    background:rgba(0,0,0,.80);border-bottom:1px solid rgba(255,157,92,.42);
+    font-size:9.5px;letter-spacing:.06em;display:none}
+  #internal.on{display:block}
+
+  #boot{inset:0;display:flex;align-items:center;justify-content:center;z-index:8;
+    background:#000;font-size:10px;letter-spacing:.22em;text-transform:uppercase;opacity:.6}
+  #boot.gone{display:none}
+</style>
+</head>
+<body>
+
+<canvas id="gl"></canvas>
+<!-- the only permanent scrim: a soft darkening under the two lines the page always states,
+     so the masthead and the outcome stay readable when the camera flies over bright ground -->
+<div class="hud" id="topscrim"></div>
+<div class="hud" id="tag">—</div>
+
+<div class="hud" id="brief">
+  <div id="briefCard">
+    <div class="rv"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+    <div class="rvbody">
+      <p id="briefText">&mdash;</p>
+      <button id="briefGo" type="button">Begin<i>enter</i></button>
+      <p id="briefHonest">&mdash;</p>
+    </div>
+  </div>
+</div>
+
+<div class="hud" id="mast">
+  <b id="mastName">Rescue World</b>
+  <span id="mastDate">—</span>
+  <span id="mark">—</span>
+</div>
+
+<div class="hud" id="outcome">
+  <div class="rv"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="rvbody">
+    <div class="verdict" id="verdict">&mdash;</div>
+    <!-- the counts. A run of two desks fills the two cells below with the two desks' own
+         recorded numbers; a run that is one recorded story has no such pair, so the cells are
+         rewritten with what that record does hold and nothing is stated that it does not. -->
+    <div class="tally" id="tally">
+      <div><b class="cold" id="countB">—</b><i id="countNameB">—</i></div>
+      <div><b id="countA">—</b><i id="countNameA">—</i></div>
+    </div>
+    <div id="outfoot">—</div>
+    <div id="angles">—</div>
+  </div>
+</div>
+<button class="hud" id="chip" type="button">outcome — o</button>
+
+<div class="hud on" id="camctl">
+  <button id="camHome" type="button" title="home view">⌂<i>H</i></button>
+  <button id="camIn" type="button" title="zoom in">+</button>
+  <button id="camOut" type="button" title="zoom out">−</button>
+  <div id="north" title="north"><span id="northMark">N</span></div>
+</div>
+
+<div class="hud on" id="desk" title="switch desk">
+  <span id="deskName">—</span><i>tab</i>
+</div>
+
+<div class="hud on" id="watch">
+  <span id="watchName">—</span><b>—</b><i>p</i>
+</div>
+
+<div class="hud" id="feed">
+  <div id="feedRows"></div>
+</div>
+<div class="hud" id="beats"></div>
+
+<!-- the story being told right now, at the head of the right-hand column and directly over the
+     decision rail, so a viewer follows the unfolding account in one place -->
+<aside class="hud" id="narrate">
+  <div class="rv"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="rvbody">
+    <div id="round">
+      <div id="roundKicker">&mdash;</div>
+      <div id="roundNow">&mdash;</div>
+      <div class="num" id="roundSub">&mdash;</div>
+      <div id="roundAboutLabel">&mdash;</div>
+      <div id="roundLine">&mdash;</div>
+    </div>
+  </div>
+</aside>
+
+<button class="hud" id="panelClose" type="button">clear — esc</button>
+<aside class="hud" id="rail">
+  <div class="rv"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="rvbody">
+    <div id="railHead">The decisions, in order</div>
+    <div id="railScroll">
+      <div id="panel">
+        <div id="panelKind">&mdash;</div>
+        <div id="panelName">&mdash;</div>
+        <div id="panelSub">&mdash;</div>
+        <div class="plines" id="panelLines"></div>
+      </div>
+      <div id="railBody"></div>
+    </div>
+    <div id="railNote">&mdash;</div>
+  </div>
+</aside>
+
+<div class="hud" id="caption">
+  <p id="captionText">&mdash;</p>
+  <p class="more" id="captionMore">&mdash;</p>
+  <div class="k" id="captionStamp">&mdash;</div>
+</div>
+
+<div class="hud" id="mini">
+  <canvas id="minicv" width="132" height="198"></canvas>
+  <div class="k" id="minilab">the camera holds the whole ground</div>
+</div>
+
+<div class="hud on" id="bar">
+  <button id="play" type="button">Pause<i>space</i></button>
+  <div id="speeds">
+    <button type="button" data-speed="1" class="on">1&times;</button>
+    <button type="button" data-speed="4">4&times;</button>
+    <button type="button" data-speed="16">16&times;</button>
+  </div>
+  <!-- which way the run is playing: the directed watch, or one of the named speeds. Clicking it
+       returns to the directed watch. -->
+  <button id="mode" type="button">&mdash;</button>
+  <!-- the hold between rounds: how long is left on it, and the key that starts the next round
+       straight away. It is only on screen while the run is holding. -->
+  <div id="dwell"><b>&mdash;</b><u>]</u></div>
+  <div id="steps">
+    <div><u>,</u><u>.</u>step one recorded event</div>
+    <div><u>[</u><u>]</u>skip to the next stretch of the story</div>
+  </div>
+  <div id="spacer"></div>
+  <!-- the full-incident context layers: three switches for real open data laid over the same
+       ground. Each is off until a reader asks for it, each names its own source on its face,
+       and each states its classification and its file's own disclosure on first use. -->
+  <div id="layerctl">
+    <span class="k">layers</span>
+    <button id="layerQuake" type="button" aria-pressed="false"
+      title="Japan's national weather agency recorded 570 earthquakes here between a main shock on 28 July and 23 August. This map draws only the ones that happened inside the stretch of time this run covers, and whose centre lies on this map."><b>aftershocks</b><i>a weather agency recorded these</i></button>
+    <button id="layerPop" type="button" aria-pressed="false"
+      title="How many people lived in each 500 metre square in 2020, counted by Japan's national statistics office. These are 2020 figures. They do not say how many people were here in 2026, or who was here during the earthquake."><b>who lives here</b><i>counted in 2020</i></button>
+    <button id="layerShelter" type="button" aria-pressed="false"
+      title="Japan's national mapping agency lists 92 places at 56 sites that towns had named as shelters before the earthquake. Being named says nothing about whether a place opened, was safe, had staff or supplies, could be reached, or had room after the earthquake."><b>official shelters</b><i>nobody says if they opened</i></button>
+    <button id="layerOccupancy" type="button" aria-pressed="false"
+      title="Japan's Cabinet Office published two totals for the whole prefecture. At the worst point 9,931 people were sleeping in shelters, and at the worst point 506 shelters stood open. This map spreads those totals over its own shelters, and gives more to the ones with more people living nearby. No agency ever published how many people slept in any single shelter, so no ring here is a measured number."><b>how full shelters got</b><i>worked out, not measured</i></button>
+  </div>
+  <input id="scrub" type="range" min="0" max="520" step="1" value="0" />
+  <div class="num" id="meter">&mdash;</div>
+  <button id="helpBtn" type="button" title="what am I looking at?">?</button>
+</div>
+
+<!-- what a context layer says the first time it is switched on: its classification and source,
+     the disclosure sentence its own delivered file carries, and how much of its record actually
+     falls on this map and inside this run. It fades on its own. -->
+<div class="hud" id="layerNote"></div>
+
+<button class="hud" id="helpClose" type="button" style="display:none">close — esc</button>
+<div class="hud" id="help">
+  <div class="rv"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div id="helpInner" class="rvbody">
+    <h2>What you are looking at</h2>
+    <p id="helpScenario">—</p>
+    <p id="helpDesks">—</p>
+    <p id="helpLichen">—</p>
+    <h3>What is real and what is invented</h3>
+    <p>The ground is real. Japan's national mapping agency publishes the height of the land in
+      tiles, and this page reads them by the rule that agency states. The same agency read
+      aerial photographs flown between 29 July and 3 August 2026. It marked where the land had
+      slipped, and those marks are drawn here. Japan's ministry for roads and railways published
+      a list of which roads could still be driven at noon on 29 July 2026. Every closure on this
+      map comes from that list. The shelters are places towns had named as shelters before the
+      earthquake. Being named says nothing about whether any of them opened, was safe, had
+      staff, or could be reached afterwards. The buildings come from Japan's open model of Uki
+      City. They stand where that model says they stand, as they were before the
+      earthquake.</p>
+    <p>Everything about people is invented. Every report, every count of people waiting, every
+      crew sent out and every outcome was made up for this exercise. The damage drawn on the
+      ground is invented too, and it shows what an earthquake like this one does. Nothing on this page
+      claims to show what really happened to any real building. No real building here is ever
+      drawn broken, and none is ever marked as a place where people were rescued.
+      <span id="helpPlaces">—</span></p>
+    <p id="helpScale">—</p>
+    <h3>How it is driven</h3>
+    <!-- Both of these read their counts out of the log that is actually loaded. This page can
+         load three different records, and a count written into the markup is true of one of
+         them: this paragraph named eighty-one events on a record holding four hundred and
+         fourteen. -->
+    <p id="helpDriven">—</p>
+    <p id="helpPaced">—</p>
+    <h3>The controls</h3>
+    <ul id="helpControls"></ul>
+    <h3>Where the data came from</h3>
+    <p id="helpAttribution">—</p>
+  </div>
+</div>
+
+<!-- the agent trace: one moment of decision, walked through six cards in the right-hand column
+     while the world keeps standing beside it. Card one is the public record of what the real
+     responders did; cards two to six are the five steps the agents took. -->
+<button class="hud" id="traceClose" type="button">close — esc</button>
+<aside class="hud" id="trace">
+  <div class="rv"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div class="rvbody">
+    <div id="traceHead">
+      <div id="traceKicker"><span>&mdash;</span><b id="traceCount">&mdash;</b></div>
+      <p id="traceMoment">&mdash;</p>
+      <p id="traceWhen">&mdash;</p>
+      <p id="traceWho">&mdash;</p>
+    </div>
+    <div id="traceBody">
+      <div id="traceScroll">
+        <article id="traceCard">
+          <div id="traceStep">&mdash;</div>
+          <div id="traceFrame">&mdash;</div>
+          <h3 id="traceHeading">&mdash;</h3>
+          <div id="traceBadges"></div>
+          <div id="traceLines"></div>
+        </article>
+      </div>
+      <div id="traceMore"><span id="traceMoreText">&mdash;</span></div>
+    </div>
+    <div id="traceFoot">
+      <div id="traceLimit">&mdash;</div>
+      <div id="traceDots"></div>
+      <div id="tracePlace">&mdash;</div>
+      <button id="tracePrev" type="button">&mdash;</button>
+      <button id="traceNext" type="button">&mdash;</button>
+      <div id="traceHint">&mdash;</div>
+      <div id="traceSource">&mdash;</div>
+    </div>
+  </div>
+</aside>
+
+<button class="hud" id="realClose" type="button">close — esc</button>
+<div class="hud" id="real">
+  <div class="rv"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+  <div id="realInner" class="rvbody">
+    <h2 id="realTitle">&mdash;</h2>
+    <!-- The order this surface is read in, top to bottom. Nothing that has been counted
+         appears before the scenario and the job: the earthquake with its minute, its date, its
+         place and its size, then the human problem; then what the agents had to decide and by
+         when, with every scored moment and the minute it fell due; then what passing a check
+         means; then one moment carried all the way through a mistake and its repair, with the
+         line that hands the reader on to the six-step walk-through; then the three ways of
+         working and only then the three counts, each one under a sentence that already makes
+         sense without it; then what the result shows and what it does not show, including the
+         standing limitation word for word; then where this could be useful and the exact next
+         test. The moment-by-moment cards are the detail behind that story and stand last. -->
+    <p id="realScene">&mdash;</p>
+    <p id="realProblem">&mdash;</p>
+    <!-- the one line the surface can show before its recorded file has been read -->
+    <p id="realLead">&mdash;</p>
+
+    <div class="dhead" id="realJobHead">&mdash;</div>
+    <p id="realJob">&mdash;</p>
+    <div class="dsub" id="realMomentsHead">&mdash;</div>
+    <ol id="realMoments"></ol>
+    <p id="realDefinition">&mdash;</p>
+
+    <div class="dhead" id="realWorkedHead">&mdash;</div>
+    <div id="realWorked"></div>
+    <p id="realTraceHandoff">&mdash;</p>
+    <button class="traceopen" id="realWorkedTrace" type="button">&mdash;</button>
+
+    <div class="dhead" id="realMethodsHead">&mdash;</div>
+    <p id="realNormal">&mdash;</p>
+    <div class="beats" id="realWays"></div>
+    <p id="realTry">&mdash;</p>
+
+    <div class="dhead" id="realResultHead">&mdash;</div>
+    <div class="tally" id="realTally"></div>
+    <p id="realZero">&mdash;</p>
+    <p id="realTranslate">&mdash;</p>
+    <p id="realRepair">&mdash;</p>
+
+    <div class="dhead" id="realProvesHead">&mdash;</div>
+    <p id="realProves">&mdash;</p>
+    <p id="realFailed">&mdash;</p>
+    <p id="realLimit">&mdash;</p>
+    <p id="realNoReach">&mdash;</p>
+    <p id="realWider">&mdash;</p>
+
+    <div class="dhead" id="realUseHead">&mdash;</div>
+    <p id="realUse">&mdash;</p>
+    <p id="realStoryNext">&mdash;</p>
+
+    <details class="rexact" id="realExact">
+      <summary id="realExactLabel">&mdash;</summary>
+      <p id="realExactNote">&mdash;</p>
+      <div class="rverdict failed"><p id="realVerdictA">&mdash;</p></div>
+      <div class="rverdict passed"><p id="realVerdictB">&mdash;</p></div>
+      <p class="rlimit" id="realHonesty">&mdash;</p>
+      <p class="rlimit" id="realDisclosure">&mdash;</p>
+    </details>
+    <p id="realAssume">&mdash;</p>
+
+    <div class="dhead" id="realSlotsHead">&mdash;</div>
+    <p id="realSlotsLead">&mdash;</p>
+    <div id="realSlots"></div>
+    <p id="realSource">&mdash;</p>
+  </div>
+</div>
+<!-- the cue at the foot of the real-decision surface: it stands while there is more writing
+     below the window and goes when the reader reaches the end -->
+<div id="realMore"><span id="realMoreText">&mdash;</span></div>
+
+<div class="hud" id="debrief">
+  <div id="debriefCard">
+    <div class="rv"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+    <div class="rvbody">
+      <button id="debriefClose" type="button">close — esc</button>
+      <!-- The story order this page is read in, top to bottom, with the numbers supporting the
+           sentences rather than opening the page: what happened at Kumamoto; the question that
+           was asked about it; what the agents had to decide and by when, with every scored
+           moment and its deadline listed; what passing a check means; one moment carried all
+           the way through the three ways of deciding; the three ways stated generally with
+           their counts; what one try was; the counts themselves; what the finding shows and
+           what it does not show, including the standing limitation; where this could be useful
+           and what gets tested next. -->
+      <p id="debriefScene">&mdash;</p>
+      <p id="debriefVerdict">&mdash;</p>
+      <div class="dhead" id="debriefJobHead">&mdash;</div>
+      <p id="debriefJob">&mdash;</p>
+      <div class="dsub" id="debriefMomentsHead">&mdash;</div>
+      <ol id="debriefMoments"></ol>
+      <p id="debriefDefinition">&mdash;</p>
+      <div class="dhead" id="debriefWorkedHead">&mdash;</div>
+      <div id="debriefWorked"></div>
+      <div class="dhead" id="debriefMethodsHead">&mdash;</div>
+      <p id="debriefNormal">&mdash;</p>
+      <div class="beats" id="debriefBeats"></div>
+      <p id="debriefTry">&mdash;</p>
+      <div class="dhead" id="debriefResultHead">&mdash;</div>
+      <div class="tally" id="dTally">
+        <div><b class="cold" id="dCountB">—</b><i id="dNameB">—</i></div>
+        <div><b id="dCountA">—</b><i id="dNameA">—</i></div>
+      </div>
+      <p id="debriefZero">&mdash;</p>
+      <p id="debriefTranslate">&mdash;</p>
+      <p id="debriefRepair">&mdash;</p>
+      <!-- what the run shows and what it does not show, the second half at the same size as
+           the first: the standing limitation, the reach count this record does not keep, and
+           the wider runs that carry no registered claim -->
+      <div class="dhead" id="debriefProvesHead">&mdash;</div>
+      <p id="debriefProves">&mdash;</p>
+      <p id="debriefFailed">&mdash;</p>
+      <p id="debriefAssume">&mdash;</p>
+      <p id="debriefNoReach">&mdash;</p>
+      <p id="debriefWider">&mdash;</p>
+      <!-- the closing lines, in the order the story template fixes: where this could be
+           useful, the exact next run, all three angles together, and the file every number
+           came out of -->
+      <div class="dhead" id="debriefUseHead">&mdash;</div>
+      <p id="debriefUse">&mdash;</p>
+      <p id="debriefNext">&mdash;</p>
+      <p id="debriefAngles">&mdash;</p>
+      <p id="debriefHonest">&mdash;</p>
+      <!-- the one control that reaches the ledger of all eleven moments from the closing panel -->
+      <button id="debriefLedger" type="button">&mdash;</button>
+    </div>
+    <div id="debriefMore"><span id="debriefMoreText">&mdash;</span></div>
+  </div>
+</div>
+
+<!-- the ledger of all eleven moments of decision, read back when the three days have played.
+     It lists the moments and totals nothing across them: the only counts on it are the frozen
+     experiment's own counts out of forty tries, and the standing limitation stands beside them. -->
+<button class="hud" id="ledgerClose" type="button" style="display:none">close — esc</button>
+<div class="hud" id="ledger">
+  <div id="ledgerInner">
+    <div class="rv"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+    <div class="rvbody">
+      <div id="ledgerEnded">&mdash;</div>
+      <h2 id="ledgerTitle">&mdash;</h2>
+      <p id="ledgerLead">&mdash;</p>
+      <p id="ledgerScope">&mdash;</p>
+      <!-- what a record with no highlight file of its own says in place of counts it does not
+           have. It stands only on such a record and is hidden on the run the file was derived
+           from. -->
+      <p id="ledgerNoHighlights" style="display:none">&mdash;</p>
+      <p id="ledgerDefinition">&mdash;</p>
+      <div class="ldhead" id="ledgerMarkedHead">&mdash;</div>
+      <div id="ledgerMarked"></div>
+      <div class="ldhead" id="ledgerRowsHead">&mdash;</div>
+      <div id="ledgerRows"></div>
+      <div class="ldhead" id="ledgerCountHead">&mdash;</div>
+      <div class="tally" id="ledgerTally"></div>
+      <p id="ledgerLimit">&mdash;</p>
+      <p id="ledgerSource">&mdash;</p>
+    </div>
+  </div>
+</div>
+<div id="ledgerMore"><span id="ledgerMoreText">&mdash;</span></div>
+
+<!-- what is about to be decided, drawn over the ground before the deadline passes. The hollow
+     hatched marks are proposals a recorded answer made; a team that actually moved is drawn
+     solid everywhere else on this page. -->
+<div class="hud" id="telegraph"></div>
+
+<div class="hud" id="actcard">
+  <div id="actcardBox">
+    <div class="rv"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+    <div class="rvbody">
+      <div class="k" id="actcardKicker">&mdash;</div>
+      <div id="actcardTitle">&mdash;</div>
+      <p id="actcardLine">&mdash;</p>
+      <p id="actcardStory">&mdash;</p>
+      <p id="actcardNote">&mdash;</p>
+    </div>
+  </div>
+</div>
+
+<div class="hud" id="quakestrip">
+  <div class="k" id="quakestripLab">&mdash;</div>
+  <canvas id="quakestripCv" width="640" height="30"></canvas>
+</div>
+
+<div class="hud" id="deskToast">
+  <div id="deskToastName">&mdash;</div>
+  <div id="deskToastNote">&mdash;</div>
+</div>
+
+<div class="hud" id="ghost">
+  <p id="ghostText">&mdash;</p>
+  <p class="note" id="ghostNote">&mdash;</p>
+</div>
+
+<div class="hud" id="internal">&mdash;</div>
+
+<div class="hud" id="boot">reading the recorded run</div>
+
+<script type="module" src="/src/rescueworld/main.ts"></script>
+<script src="/nav.js" defer></script>
+</body>
+</html>
