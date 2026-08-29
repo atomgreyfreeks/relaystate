@@ -86,10 +86,10 @@
    },
    "proposals": [
     {
-     "agent": "{{tree_receipt_prefix_arm}}",
+     "agent": "Same saved history",
      "method": "shared_prefix",
      "registered": false,
-     "sentence": "{{tree_receipt_shared_prefix}}",
+     "sentence": "Both test paths start from this unchanged decision.",
      "tries": [
       {
        "order": 1,
@@ -254,10 +254,10 @@
    },
    "proposals": [
     {
-     "agent": "{{tree_receipt_prefix_arm}}",
+     "agent": "Same saved history",
      "method": "shared_prefix",
      "registered": false,
-     "sentence": "{{tree_receipt_shared_prefix}}",
+     "sentence": "Both test paths start from this unchanged decision.",
      "tries": [
       {
        "order": 1,
@@ -422,10 +422,10 @@
    },
    "proposals": [
     {
-     "agent": "{{tree_receipt_prefix_arm}}",
+     "agent": "Same saved history",
      "method": "shared_prefix",
      "registered": false,
-     "sentence": "{{tree_receipt_shared_prefix}}",
+     "sentence": "Both test paths start from this unchanged decision.",
      "tries": [
       {
        "order": 1,
@@ -590,7 +590,7 @@
    },
    "proposals": [
     {
-     "agent": "{{tree_receipt_control_arm}}",
+     "agent": "Earlier decision stayed in history",
      "method": "control",
      "registered": true,
      "tries": [
@@ -599,9 +599,9 @@
        "seed": 51201,
        "walkthrough": false,
        "passed": false,
-       "action": "{{tree_receipt_no_assignments}}",
-       "short": "{{tree_receipt_no_assignments}}",
-       "tag": "{{tree_receipt_no_assignments}}",
+       "action": "No follow-up assignment was proposed",
+       "short": "No follow-up assignment was proposed",
+       "tag": "No follow-up assignment was proposed",
        "badge": "",
        "failure": "the proposal named more or fewer assignments than this decision allows",
        "recorded": true,
@@ -767,9 +767,9 @@
        "seed": 51207,
        "walkthrough": false,
        "passed": false,
-       "action": "{{tree_receipt_no_assignments}}",
-       "short": "{{tree_receipt_no_assignments}}",
-       "tag": "{{tree_receipt_no_assignments}}",
+       "action": "No follow-up assignment was proposed",
+       "short": "No follow-up assignment was proposed",
+       "tag": "No follow-up assignment was proposed",
        "badge": "",
        "failure": "the proposal named more or fewer assignments than this decision allows",
        "recorded": true,
@@ -818,7 +818,7 @@
      ]
     },
     {
-     "agent": "{{tree_receipt_treatment_arm}}",
+     "agent": "Action card delivered",
      "method": "treatment",
      "registered": true,
      "tries": [
