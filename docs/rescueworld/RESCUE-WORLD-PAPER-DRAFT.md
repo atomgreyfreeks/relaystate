@@ -1,40 +1,59 @@
-# Rescue World
+# Rescue World: Compiling Verified Decision Dependencies into Executable LLM Context
 
-## Action Cards for a Known Stateful LLM Decision Dependency
+**A traceable case study of stateful agent handoffs**
 
-**Working paper — first complete draft, 28 August 2026**
+**Working paper — revised draft, 29 August 2026**
 
-**Authors:** [Randy / AURA WORLD authors to finalize]
+**Authors:** To be finalized before submission
 
 **Artifact:** [Rescue World](../../rescueworld.html)
 
 **Evidence package:** [portable receipt-fork bundle](evidence/receipt-fork/README.md)
 
-> **Draft status.** This manuscript reports a completed exploratory mechanism demonstration suited to a workshop, case-study, or demo submission. The decisive experiment repeatedly samples one same-cutoff dependency through eight verified source wrappers from one modeled incident. The two tested models are from the same Qwen lineage. The study does not measure real emergency outcomes, delayed memory, persistent obligations, or automatic dependency discovery.
+> **Draft status.** This manuscript reports an exploratory mechanism demonstration suited to a workshop, case-study, artifact, or demo submission. The decisive experiment repeats one identical, same-cutoff dependency through eight verified source wrappers representing seven unique source seeds. The two tested models are from the same Qwen lineage. The study does not establish delayed memory, persistent obligations, automatic dependency discovery, or superiority over fact-matched history, retrieval, or summary controls.
+
+> **Integrity boundary.** In this paper, an **accepted** artifact passed the frozen integrity, schema, provenance, chain, and replay checks required for its experiment; “accepted” does not mean that an AI proposal was judged operationally correct. **Hash-verified** means that artifact identity, ordering, and tamper evidence were checked. It does not establish that the underlying public sources, exercise assumptions, demand model, or operational interpretation are true or expert-validated.
 
 ## Abstract
 
-Stateful AI workflows can schedule two linked model calls yet omit the first call's output from the dependent call's input. The receiving model then cannot directly execute the source relation, even though the orchestration layer can verify it outside the prompt.
+Stateful LLM workflows can preserve a dependency in verified orchestration state while omitting it from the model call that must act on it. A log may therefore remain complete while the receiving model lacks executable context. We study this boundary in **Rescue World**, a 72-hour earthquake-response exercise containing 414 hash-linked public-source and labeled-assumption events and eleven connected decision moments per campaign.
 
-We study this failure in **Rescue World**, a stateful earthquake-response exercise built from 414 hash-linked events that combine public sources with labeled exercise assumptions across 72 hours. One open-weight model faced eleven connected decisions in each complete campaign. Earlier validated actions changed the resources and options available at subsequent moments. Across four orchestration methods, eight runs each, all 32 campaigns failed the same paper-mill confirmation. That diagnostic handoff involved two sibling calls at the same 20:00 cutoff inside one atomic decision tier: one proposed a collapse-site assignment and the other could confirm only a group named in that exact provisional proposal. Not every campaign created an eligible proposal.
+Across 32 complete campaigns, none completed one paper-mill confirmation handoff end to end. The source and receiving calls were siblings at the same 20:00 cutoff: one proposed a collapse-site assignment, and the other could confirm only a group named in that exact provisional proposal. Not every campaign created an eligible source assignment. We therefore selected eight verified source wrappers that did, representing seven unique campaign seeds but one identical model-facing assignment and receiving task.
 
-We evaluate an **action card**, serialized as a decision receipt. For this known dependency, the model-visible card contained the exact provisional assignment, observation identifiers allowed by the current decision packet, current required unknowns, an authority-and-eligibility statement, and a required `CONFIRM` or `DECLINE` response. We selected eight verified source wrappers containing an eligible proposal, representing seven unique campaign seeds but one repeated model-facing card and task. With an empty receipt, the common exact-and-valid action endpoint was met in 0/8 samples. With the full card, Qwen3-32B met it immediately in 8/8 samples; Qwen3.5-122B repeated 8/8. A shared empty-receipt unknown-preservation check passed in 8/8 and 7/8 samples respectively, with zero false resolutions.
+For each wrapper, we reran the receiving decision under two matched conditions. The control received an empty `decision_receipts` array and did not receive the source assignment elsewhere. The treatment received an **action card** containing the exact verified assignment, currently allowed observation identifiers, current required unknowns, an authority-and-eligibility statement, and a mandatory `CONFIRM` or `DECLINE` disposition. The same validators, model settings, request seed, endpoint, response schema, and bounded-correction policy applied within each pair. Qwen3-32B produced the exact state-admissible action in 0/8 control executions and 8/8 treatment executions; Qwen3.5-122B-A10B repeated the 0/8 and 8/8 pattern. Every treatment success occurred on the first response.
 
-The result supports a narrow but useful claim: for this mechanically known same-tier dependency, the complete answer-bearing card made the source assignment executable by the receiving model. It does not establish delayed delivery, persistent obligation storage, automatic trigger discovery, action-card-specific causation, or which component of the bundle caused the effect. We position Rescue World as a hash-verified case-study evaluation at the intersection of dependent-call orchestration, LLM memory-to-action research, commitment-based workflow, and traceable state validation.
+These results establish a narrow systems mechanism: one known verified dependency became executable when the complete answer-bearing state projection was compiled into the receiving model's current decision contract. Because this transition had one mechanically determined answer, code could have executed it directly; the experiment tests faithful consumption by an existing LLM-mediated stage, not LLM necessity. The results do not establish that the action-card representation outperforms ordinary history, retrieval, a token-matched summary, or prose containing the same assignment. They also do not test delayed persistence, automatic dependency discovery, distinct obligation contents, or real emergency outcomes. Rescue World contributes an inspectable case study of the boundary between verified workflow state, model-visible context, model disposition, and deterministic state admission.
 
 ## Plain-language summary
 
-Imagine one AI step assigns a crew to a location and a linked step must confirm that same crew. The receiving AI sees the confirmation task, but not the exact assignment chosen by the first step. An action card places the assignment, allowed current report identifiers, required unanswered questions, and the confirm-or-decline response directly into the receiving task.
+Imagine one AI step assigns a crew to a location and a linked step must confirm that same crew. The software record contains the assignment, but the receiving AI is not shown it. The dependency exists in the workflow while remaining unusable to the model responsible for the next action.
 
-That is what our focused test evaluated. The receiving AI completed the exact rule-passing follow-up in every sample when it received the full card, using two Qwen models. With an empty card field, it did not complete that follow-up in any sample.
+Our action card puts the exact assignment into the receiving task, explicitly links the observations that may support it, copies the unanswered questions that must remain open, and requires a clear response. In one repeated dependency, two Qwen models completed the exact rule-passing follow-up in every treatment execution. With an empty card field and no source assignment elsewhere in the prompt, neither completed it.
 
-The present result demonstrates that one source relation became executable when its complete action-card bundle was added to the receiving prompt. Turning that prompt transformation into a source-bound, persistent, evidence-versioned workflow across hours or days remains a design hypothesis and next experiment.
+This demonstrates that the complete answer-bearing bundle made the dependency executable. It does not yet show that cards work better than another way of presenting the same facts. Fact-matched representation controls and active cards that should be declined are the decisive next experiments.
 
 ## 1. Introduction
 
-AI workflows increasingly split work across model calls, tools, sessions, and changing state. When call B depends on a precise output from call A, the orchestration layer must decide whether and how that output enters B's model-visible task. A complete external record does not help B if the needed relation is omitted from its prompt.
+AI workflows increasingly divide work across model calls, tools, sessions, and changing state. This creates two different kinds of state:
 
-This distinction matters. A log can record what A produced. A dependency handoff must tell B which exact part of A constrains B's valid action. A future obligation system would additionally preserve and reactivate that relation across elapsed time, but the experiment reported here tests only the handoff.
+- **workflow state:** what the orchestration system has stored and validated; and
+- **model-executable context:** what the current model call can see, interpret, and act upon.
+
+The two are not automatically equivalent. When call B depends on a precise output from call A, a complete external log does not help B if the relevant relation never enters B's task. We call the transformation between these layers **dependency compilation**:
+
+```text
+verified workflow state
+        ↓
+known decision dependency
+        ↓
+model-visible action contract
+        ↓
+model disposition
+        ↓
+deterministic state admission
+```
+
+The action card is the model-visible intermediate representation in this pipeline. It is not merely a reminder: it joins a verified assignment to the current decision's evidence constraints, unresolved questions, and required disposition. A future system could persist and reactivate such records across elapsed time, but the experiment reported here tests only one same-cutoff handoff.
 
 Rescue World was built to make connected decision failures observable. It replays the first 72 hours of a reconstructed Kumamoto earthquake record and inserts eleven AI decision moments. Each run sees only information available by the corresponding historical deadline. Validated actions persist. Resources cannot silently duplicate, teleport, or reset. A proposal can therefore fail even when it sounds reasonable in isolation, because it conflicts with the run's state or with a linked proposal.
 
@@ -42,38 +61,25 @@ The continuous exercise revealed one unusually clean failure. At a collapse-site
 
 This led to our central research question:
 
-> **When one validated AI proposal is known to constrain a linked receiving decision, can a compact action card make the required follow-up executable?**
+> **Can a known dependency in verified workflow state be compiled into model-visible context that produces the exact mechanically admissible receiving action?**
 
-We tested the question with a matched focused intervention. Eight verified source wrappers contained an eligible paper-mill assignment in the provisional sibling proposal. For each wrapper, the control decision received an empty receipt array. The treatment received one canonical model-visible card carrying the exact assignment, current allowed observation identifiers and required unknowns, authority-and-eligibility text, and a mandatory confirm-or-decline disposition. The validator, decision packet, model settings, request seed, endpoint, response schema, and bounded correction policy were matched within each pair. All eight treatment prompts presented the same card content and task; they are repeated stochastic executions, not eight distinct dependency instances.
+We tested the question with a paired empty-versus-full comparison. Eight verified source wrappers contained an eligible paper-mill assignment in the provisional sibling proposal. For each wrapper, the control decision received an empty receipt array. The treatment received one canonical model-visible card carrying the exact assignment, current allowed observation identifiers and required unknowns, authority-and-eligibility text, and a mandatory confirm-or-decline disposition. The validator, base decision packet, model settings, request seed, endpoint, response schema, and bounded correction policy were matched within each pair, but the facts and token counts were not: the control lacked the source assignment. All eight treatment prompts presented the same card content and task; they are repeated stochastic executions, not eight distinct dependency instances.
 
-The contribution is the integrated mechanism and its inspectable test, not the general idea that events can create obligations. Commitment protocols and declarative workflow systems have formalized pending responsibilities for decades [7, 8]. Recent agent-memory research also studies when stored state should influence later action [1–6, 9, 10, 13, 14]. Our contribution is more specific:
+The contribution is the integrated mechanism and its inspectable test, not the general idea that events can create obligations or that model context can be state-conditioned. Commitment protocols and declarative workflow systems have formalized pending responsibilities for decades [7, 8]. Recent agent-memory and state-machine research studies when stored state should influence later action [1–6, 9, 10, 13, 14]. Our contribution is more specific:
 
-1. **An action-card pattern for a known LLM decision dependency.** The tested card joined an exact provisional assignment with current allowed observation identifiers, current required unknowns, authority-and-eligibility text, and a required disposition.
-2. **A stateful testbed for causally connected decisions.** Rescue World links eleven decisions through carried resources and validated state inside a 414-event, 72-hour replay.
-3. **A focused paired demonstration.** Across eight eligible source wrappers for one model-facing case, the full action-card bundle produced the exact valid follow-up in 8/8 repeated samples for each of two Qwen models, while the empty-receipt condition produced 0/8.
-4. **An inspectable artifact.** The interface exposes the available reports, AI proposal, validation result, state transition, agent network, and focused receipt result without treating modeled demand as real people or real dispatch.
+1. **A state-to-context compilation pattern for a known LLM decision dependency.** The tested action card joined an exact verified assignment with current allowed observation identifiers, current required unknowns, authority-and-eligibility text, and a required disposition.
+2. **A focused, mechanically scored demonstration.** Across eight repeated executions of one model-facing dependency, the full bundle produced the exact validator-admissible follow-up in 8/8 executions for each of two Qwen models, while the absent-assignment control produced 0/8.
+3. **An inspectable stateful artifact.** Rescue World links eleven decisions through carried resources and deterministic admission inside a 414-event, 72-hour replay, exposing the source proposal, receiving context, model output, validation result, and state consequence.
 
-The remainder of the paper explains the design path from growth intelligence to obligation routing, situates the mechanism in prior work, describes the continuous campaign and focused experiment, reports the results, and states the limits and next tests required for a broader claim.
+The remainder of the paper summarizes the design lineage, situates the mechanism in prior work, describes the observed failure and focused experiment, reports the result, and specifies the fact-matched and active-decline tests required for a broader claim.
 
-## 2. Design lineage: from growth intelligence to obligation routing
+## 2. Design lineage in brief
 
-The project began with a practical question inspired by living networks: how should an AI workflow move attention toward useful signals while preserving diversity, uncertainty, and evidence? Roots, fungal networks, and slime moulds offered design metaphors for selective growth, local sensing, and bounded reinforcement. We translated those metaphors into testable information-routing patterns rather than treating biology as proof.
+The project began with a practical question inspired by living networks: how should an AI workflow direct attention toward useful signals while preserving uncertainty and evidence? We translated ideas such as selective growth, local sensing, and bounded reinforcement into testable information-routing patterns rather than treating biology as proof. The registered aggregate result of the first growth-routing benchmark was inconclusive, but its diagnostics showed that routing could amplify both correct and incorrect early gradients [A1].
 
-The first matched benchmark compared ordinary agent graphs with several growth-informed routing tactics across 120 cases and five task families. The preregistered aggregate result was inconclusive: 69.05% for the ordinary graph and 73.13% for the growth graphs, a +4.08-point difference with a 95% interval from −1.39 to +9.48. The diagnostic results were more useful than the aggregate. Growth routing amplified a correct early gradient but also amplified a wrong one; layered planning hardened early errors; and the registered evidence-ID secondary outcome improved by 7.89 points across the benchmark [A1].
+Subsequent experiments shifted the focus from network shape to information integrity. Typed evidence judgments, deterministic validation, and bounded rule feedback showed useful effects in synthetic investigations and five independent disaster-decision moments, while several broader registered claims failed [A2–A4]. The durable lesson was narrower: the workflow must control what evidence and uncertainty reach the decision-maker, and code should prevent malformed outputs from silently changing state. Detailed benchmark designs, numbers, and failed claims are retained in the internal reports rather than repeated here.
 
-A later layer ablation separated a graph-and-routing treatment from a combined specialist-prompt-and-evidence-partition treatment. The registered graph/routing factor gained 16.19 score points, while the specialist treatment was inconclusive. That effect was concentrated in synthetic incident diagnosis, where connecting a hypothesis to evidence capable of verifying or rejecting it mattered [A2]. Those cases had clean early signals; misleading gradients, disagreement, and fallback behavior were not tested. This redirected the research toward **what information moves, where it moves, and what remains attached to it**.
-
-The evidence-state experiment made that idea explicit. Reviewers classified each candidate as `SUPPORTED`, `REJECTED`, or `UNRESOLVED`; deterministic code checked those judgments and attached exact document fields before the final decision. On 120 synthetic incident investigations, evidence-state routing reached a 96.52 composite score, 100% exact-answer accuracy, and 76.79% evidence-ID F1, and passed its registered split-evidence and protected-condition comparisons. The result was a bundle—typed judgments, validation, deterministic compilation, and state-aware reduction—so it did not show that any one label caused the gain [A3].
-
-We then applied the pattern to five independent reconstructed disaster-decision moments. An evidence table raised fully valid decisions from 0/40 to 17/40 but failed its registered constraint non-inferiority condition. Giving the model one bounded revision after deterministic code reported mechanical rule violations—without adding new facts or recommending an answer—raised the evidence path to 34/40 fully valid decisions and passed the narrower bounded-feedback claim [A4]. The evidence-table claim itself did not pass. This taught two lessons: evidence must survive handoffs, and mechanical violation feedback can help a model revise some malformed decisions.
-
-Those studies still reset state between decisions. A real long-running workflow does not. The 72-hour continuous campaign therefore carried validated actions, resources, unresolved questions, and rejections through a connected exercise. That change exposed a precise handoff failure inside one atomic tier: the confirmation call never produced the validator-admissible assignment required by its sibling proposal.
-
-That path motivates a broader design hypothesis:
-
-> **A decision that creates future work could be compiled into an evidence-linked obligation, stored in a living ledger, activated by an explicit due condition, and resolved by the responsible decision-maker.**
-
-We call the human-readable object an **action card**, its serialized record a **decision receipt**, and the proposed complete lifecycle **obligation routing**. The focused experiment evaluates only the receiving-step card and disposition, not that complete lifecycle.
+Those studies reset state between decisions. The 72-hour campaign instead carried admitted actions, resources, unresolved questions, and rejections through one connected exercise. It exposed the paper's central failure: verified workflow state and model-visible executable context had diverged at a known dependency. The focused experiment evaluates only a receiver-time projection and disposition for that dependency. A persistent source-time ledger—creating, updating, activating, superseding, and closing obligations across elapsed time—remains the broader research program, not a result of this study.
 
 ## 3. Related work
 
@@ -83,7 +89,7 @@ Long-context access and memory retrieval do not by themselves establish that sto
 
 Recent benchmarks sharpen the distinction between recall and action. MemoryArena evaluates interdependent multi-session tasks in which earlier interactions must guide later behavior [3]. Mem2ActBench tests whether long-term memory is used to select tools and ground their parameters rather than merely answer factual questions [4]. MAGE argues that semantic retrieval can mismatch execution-state dependencies and instead stores a hierarchical execution-state tree whose summaries are validated during maintenance [5]. Rescue World shares their memory-to-action concern but focuses on an exact exercise-eligible assignment derived from verified system state.
 
-Among the closest recent implementation-level neighbors we found is *Remember When It Matters*, which identifies “behavioral state decay” and uses a separate memory agent to inject grounded reminders selectively when the current state makes them useful [2]. A close conceptual neighbor is Google's *Agentic Coding Needs Proactivity, Not Just Autonomy*, which proposes an “insight policy” deciding what matters next, what evidence supports it, and whether to surface it [1]. StateFlow represents LLM workflows as state machines with rule- or model-controlled transitions [14]. Our study instantiates one specific combination: a deterministic known-dependency trigger, an exact state-derived assignment, current-decision evidence and unknown requirements, a mandatory confirm-or-decline disposition, mechanical admission, and an inspectable state transition in a non-coding exercise.
+Among the closest recent implementation-level neighbors we found is *Remember When It Matters*, which identifies “behavioral state decay” and uses a separate memory agent to inject grounded reminders selectively when the current state makes them useful [2]. A close conceptual neighbor is Google's *Agentic Coding Needs Proactivity, Not Just Autonomy*, which proposes an “insight policy” deciding what matters next, what evidence supports it, and whether to surface it [1]. StateFlow represents LLM workflows as state machines with rule- or model-controlled transitions [14]. Our study instantiates one specific combination: a deterministic known-dependency routing rule, an exact state-derived assignment, current-decision evidence and unknown requirements, a mandatory confirm-or-decline disposition, mechanical admission, and an inspectable state transition in a non-coding exercise.
 
 ### 3.2 Commitments and declarative workflow
 
@@ -95,13 +101,24 @@ Our claim is therefore not that Rescue World invented obligations. The focused s
 
 ### 3.3 Agent orchestration and disaster evaluation
 
-Frameworks such as AutoGen support flexible multi-agent conversations and programmable interaction patterns [11]. Rescue World uses routed scouts, reviewers, and a coordinator, but its research question is not about a particular conversation topology. It asks how a consequential decision remains actionable across time and handoffs.
+Frameworks such as AutoGen support flexible multi-agent conversations and programmable interaction patterns [11]. Rescue World uses routed scouts, reviewers, and a coordinator, but its research question is not about a particular conversation topology. It asks how an exact workflow dependency crosses linked model calls—and, in future work, how such dependencies might persist across time.
 
 DORA is among the closest disaster-agent benchmarks we found. It evaluates 515 expert-authored tasks across 45 real disaster events and 108 geospatial tools, with a focus on end-to-end geospatial reasoning and long tool trajectories [6]. Rescue World examines a known dependency inside one changing incident: when one modeled proposal constrains a linked exercise-eligible action, can an AI workflow execute that handoff? The two efforts are complementary. Neither warrants claims about real-world response effectiveness without expert validation and deployment evidence.
 
 ### 3.4 Novelty position
 
-The defensible contribution is a **hash-verified case-study demonstration of one action-card handoff under deterministic admission rules**. We do not claim priority over event obligations, proactive reminders, execution-state memory, state-driven workflows, replayable histories, or disaster-agent benchmarks. We also do not claim a universal memory solution, action-card-specific causal effect, or tested persistent obligation lifecycle. The present evidence supports a narrow mechanism demonstration for one known same-tier dependency.
+The defensible contribution is a **traceable case-study demonstration of one receiver-time state projection under deterministic admission rules**. We do not claim priority over event obligations, proactive reminders, execution-state memory, state-driven workflows, replayable histories, or disaster-agent benchmarks. We also do not claim a universal memory solution, action-card-specific causal effect, or tested persistent obligation lifecycle.
+
+**Table 1. Position relative to representative system classes.**
+
+| System class | Already established | Rescue World instantiation evaluated here | Current boundary |
+|---|---|---|---|
+| Declarative response workflows [7] | Conditions, required responses, pending work, and role distribution | Projects one known workflow dependency into an LLM-visible decision packet and validates the response with domain rules | No persistent response lifecycle, delayed activation, conflicts, or concurrency tested |
+| Commitment protocols [8] | Explicit obligations and commitment-state evolution | Binds one eligible assignment to a receiving-model disposition and an inspectable state-admission trace | No new commitment semantics, ownership model, or autonomous trigger discovery |
+| State-driven LLM workflows [14] | Rule- or model-controlled workflow states and transitions | Tests one exact data-level dependency crossing two model calls with field-level output admission | Not a new state-machine framework or a comparison against StateFlow |
+| State-aware agent memory [13] | Retrieval of fine-grained experiential memory for the current state | Deterministically projects authoritative workflow state rather than retrieving experiential memory | No retrieval, delay, long-horizon memory, or SAMem comparison tested |
+
+The present evidence therefore supports an evaluated integration pattern: deterministic code can project one known eligible assignment and its current constraints into an LLM decision packet, then mechanically check whether the proposed action may change state. “Compile” denotes this frozen schema-to-prompt serialization; it does not imply a general-purpose compiler, a learned dependency detector, or a proof of semantic equivalence.
 
 ## 4. Rescue World
 
@@ -115,35 +132,21 @@ Every proposal passes through deterministic checks. These verify the response sh
 
 ### 4.2 The continuous campaign
 
-The accepted campaign reported here is the artifact directory `kumamoto-continuous-production-v1.accepted`, not the separate accepted growth campaign on the same seeds. It used Qwen3-32B-AWQ at a pinned model revision, temperature 0.2, and top-p 0.95. Four stateful orchestration methods each completed eight seeded campaigns. Every campaign contained eleven decisions, producing 32 chains and 352 certified decision-cell artifacts. Many cells contain proposals that were rejected by the frozen rules; 158 proposals were admitted and changed state. All 352 cell artifacts and all 32 state chains passed the artifact-acceptance checks. The excluded engineering smoke run was not pooled with the results.
+The artifact-accepted campaign reported here is the directory `kumamoto-continuous-production-v1.accepted`, not the separate accepted growth campaign on the same seeds. It used Qwen3-32B-AWQ at a pinned model revision, temperature 0.2, and top-p 0.95. Four stateful orchestration methods each completed eight seeded campaigns. Every campaign contained eleven decisions, producing 32 chains and 352 certified decision-cell artifacts. Many cells contain proposals that were rejected by the frozen rules; 158 proposals were admitted and changed state. All 352 cell artifacts and all 32 state chains passed the artifact-acceptance checks. The excluded engineering smoke run was not pooled with the results.
 
-The methods were:
+Three terms remain distinct throughout the paper:
 
-- **Fixed coverage:** three scouts and three reviewers divided eligible targets in a fixed order before one coordinator decided.
-- **Guarded routing:** the same full coverage, with an existing review path allowed to revisit a leading need only after independent source-bound agreement.
-- **Evidence state:** reviewers emitted supported, rejected, or unresolved judgments tied to report identifiers before coordination.
-- **Evidence and correction:** evidence state plus at most one coordinator revision containing only deterministic rule violations.
+- an **artifact-accepted campaign** passed the experiment's completeness, integrity, provenance, chain, and replay gates; this does not mean every proposal passed;
+- an **admitted action** passed the frozen simulator rules and changed modeled state; and
+- an **eligible source wrapper** is a certified saved prefix containing a source assignment that satisfies the focused refinement contract.
 
-The campaign's impact model contains 49 modeled demand units, 34 urgent. One urgent demand unit left open for one hour creates one urgent unmet demand-hour. These are exercise units for operational coverage, delay, and waste. They are not people, actual households served, lives saved, or real dispatches.
-
-Table 1 reports the descriptive campaign means. The accepted analysis explicitly labels these results `DESCRIPTIVE_ONLY_NO_REGISTERED_CLAIMS`; no p-values or confidence intervals were produced.
-
-**Table 1. Descriptive outcomes across eight complete campaigns per method.**
-
-| Method | Rule-passing decisions that changed state / 11 | Modeled demand covered / 49 | Urgent units open / 34 | Projected urgent unmet demand-hours | Modeled waste |
-|---|---:|---:|---:|---:|---:|
-| Fixed coverage | 1.9 | 5.0 | 31.3 | 1,628.9 | 1.0 |
-| Guarded routing | 6.6 | 33.3 | 3.8 | 257.6 | 1.5 |
-| Evidence state | 5.3 | 29.8 | 7.3 | 411.9 | 0.0 |
-| Evidence and correction | 6.0 | 32.0 | 5.0 | 342.3 | 0.0 |
-
-The continuous runner carried validated state across the 72-hour exercise, and the model produced actions at later water, shelter, aftershock, and mission-shift decisions. The campaign also exposed the shared handoff failure described next.
+The four methods varied how scouts, reviewers, typed evidence, and one bounded correction were routed before coordination. Those descriptive method outcomes belong to the continuous-campaign report [A5, A6]; they are not the causal comparison in this paper. What matters here is that the runner carried validated state across all eleven decisions and exposed the shared handoff failure described next. The campaign's modeled impact units remain exercise constructs, not people, real dispatches, or real outcomes.
 
 ## 5. Failure diagnosis: a known assignment was absent from the receiving task
 
 At 20:00, the collapse-site decision could assign five modeled response groups across Aeon Mall Kumamoto and the Nippon Paper Yatsushiro mill. A linked confirmation asked which groups from that exact provisional proposal could be confirmed for the mill after a dispatch system returned. The confirmation was a refinement: it could select only a group named at that target in the sibling proposal.
 
-In the original continuous campaign, these two model calls belonged to one atomic decision tier. Both had the same `2026-07-28T20:00:00+09:00` cutoff and were answered from the same pre-tier state. The confirmation was bound to the exact provisional collapse-site proposal before the pair was committed. The focused experiment later selected verified accepted post-assignment prefixes and reran only the confirmation from those saved bytes. It did not test a delay, a shift change, or context growth between source and receiving decisions.
+In the original continuous campaign, these two model calls belonged to one atomic decision tier. Both had the same `2026-07-28T20:00:00+09:00` cutoff and were answered from the same pre-tier state. The confirmation was bound to the exact provisional collapse-site proposal before the pair was committed. The focused experiment later selected artifact-accepted post-assignment prefixes containing an admitted source action and reran only the confirmation model call from those saved bytes; admission replayed the saved source proposal before evaluating the confirmation. It did not test a delay, a shift change, or context growth between source and receiving decisions.
 
 All 32 complete campaigns failed the confirmation. This aggregate statement needs an important qualification. A campaign could fail for two different reasons:
 
@@ -152,38 +155,42 @@ All 32 complete campaigns failed the confirmation. This aggregate statement need
 
 The 32-run observation therefore does **not** show that all 32 model calls forgot an available exercise-eligible assignment. It shows that the end-to-end handoff was unresolved in every complete campaign.
 
-For a focused mechanism test, we selected the eight saved histories that contained a mechanically verified source assignment eligible for the confirmation. These were eight prefixes but only seven unique source campaign seeds; seed 51204 contributed two accepted histories. The experimental plan bound each prefix to its source decision, validator result, exact resource-target-quantity tuple, state checkpoint, and refinement contract.
+For a focused mechanism test, we selected the eight saved histories that contained a mechanically verified source assignment eligible for the confirmation. These were eight wrappers but only seven unique source campaign seeds; seed 51204 contributed two artifact-accepted wrappers. The experimental plan bound each wrapper to its source decision, validator result, exact resource-target-quantity tuple, state checkpoint, and refinement contract.
 
-All eight prefixes produced the same model-facing task and the same card: one Miyazaki battalion assigned to the Nippon Paper Yatsushiro mill, with the same two observation identifiers, three required unknowns, and receipt identifier. The eight samples therefore measure repeated stochastic execution of one obligation content, not eight distinct responsibilities.
+All eight wrappers produced the same model-facing task and the same card: one Miyazaki battalion assigned to the Nippon Paper Yatsushiro mill, with the same two observation identifiers, three required unknowns, and receipt identifier. The eight executions therefore measure repeated stochastic behavior for one dependency content, not eight distinct responsibilities.
 
 This selection isolated the narrow question: when the exercise-eligible source assignment definitely exists, what happens if its complete action-card bundle is present in the receiving model's prompt?
 
-## 6. The tested action card
+## 6. The state-to-context compiler and action card
 
 ### 6.1 Human-readable idea
 
 The tested action card says, in effect:
 
-> The accepted source action assigned **this resource** in **this quantity** to **this place**. **These reports are visible for the current decision, and these questions are required now.** The current refinement permits this assignment. **Confirm or decline it.**
+> The admitted source action assigned **this resource** in **this quantity** to **this place**. **These reports are visible for the current decision, and these questions are required now.** The current refinement permits this assignment. **Confirm or decline it.**
 
-The card is not a free-form summary of the whole history. Code constructed it at the receiving step by joining one accepted source assignment to selected observations and required unknowns from the current decision packet. It did not copy the source decision's complete evidence set or unknown set.
+The card is not a free-form summary of the whole history. Code constructed it at the receiving step by joining one verified eligible source assignment to selected observations and required unknowns from the current decision packet. It did not copy the source decision's complete evidence set or unknown set.
 
 ### 6.2 Implemented model-visible record
 
-The card delivered to the model in the focused fork can be represented as:
+The implemented compiler is a deterministic serialization:
 
-\[
-c = (id, a, E_r, U_r, p, g)
-\]
+```text
+decision_receipt = compile(
+    verified_source_state,
+    receiving_decision_packet,
+    known_dependency
+)
+```
 
-where:
+The resulting decision receipt is the model-visible intermediate representation. Its human-readable presentation is the **action card**. The serialized fields are:
 
-- \(id\) is the receipt identifier derived from the card body;
-- \(a=(resource, target, quantity)\) is the exact assignment;
-- \(E_r\) is a set of observation identifiers visible to the receiving decision, selected by a frozen target-or-resource-status rule;
-- \(U_r\) is the receiving decision's required unknown set;
-- \(p\) is a code-written statement that the source assignment was accepted and remains eligible for this refinement; and
-- \(g\) is the instruction to confirm or decline the card now.
+- `receipt_id`, derived from the card body;
+- `assignment`, containing the exact resource, target, and quantity;
+- `allowed_observation_ids`, selected from observations visible to the receiving decision by a frozen target-or-resource-status rule;
+- `required_unknown_ids`, copied from the receiving decision's required unknown set;
+- `authority_and_eligibility`, stating that the source assignment was admitted and remains eligible for this refinement; and
+- `required_disposition`, instructing the model to confirm or decline the card now.
 
 The model-visible card did not contain an owner field, explicit lifecycle state, source cutoff, source-cell certificate, parent-state hash, or executable trigger expression. The surrounding experimental plan and case provenance separately bound the saved prefix, source certificate, state, request, response, and validator result. Because the eight card bodies were identical, their receipt identifiers were also identical; the receipt identifier alone did not bind a particular history.
 
@@ -191,22 +198,22 @@ The model-visible card did not contain an owner field, explicit lifecycle state,
 
 | Field | Plain meaning | Produced by | Checked by |
 |---|---|---|---|
-| Exact assignment | What the accepted source action assigned | Verified saved prefix | State and refinement validator |
+| Exact assignment | What the admitted source action assigned | Verified saved prefix | State and refinement validator |
 | Current observations | Which report identifiers the receiving answer may cite | Receiving decision packet + frozen selection rule | Cutoff and evidence validator |
 | Current required unknowns | Which unanswered items the receiving answer must acknowledge | Receiving decision packet | Required-unknown validator |
 | Authority and eligibility text | Why this exact assignment may be confirmed in the exercise | Deterministic code | State and refinement validator |
 | Required disposition | What the receiving model must do | Receipt contract | Receipt validator |
 | Experimental source binding | Which saved prefix produced the assignment | Plan and case provenance, outside the model-visible card | Replay verifier |
 
-### 6.3 Tested flow and proposed lifecycle
+### 6.3 Implemented compiler flow and proposed lifecycle
 
 The focused fork implemented this short flow:
 
 ```text
-verified accepted source prefix
+verified eligible source wrapper
         │
         ▼
-construct receiving-time card from source assignment + current packet
+deterministically serialize source assignment + current packet constraints
         │
         ▼
 model returns assignment and receipt disposition
@@ -217,9 +224,11 @@ mechanically validate receipt, evidence, unknowns, and current state
 
 It did not create an obligation at source time, persist an `ACTIVE` record through a ledger, wait for a later cutoff, or continue the campaign after closing the record. The fuller lifecycle below is a proposed architecture motivated by the result, not an evaluated component:
 
+**Table 3. Tested capabilities and proposed lifecycle boundaries.**
+
 | Lifecycle capability | Implemented in the focused fork? | Exact boundary |
 |---|---|---|
-| Verify a source assignment | Yes | Loaded from an accepted post-source prefix and replay-checked outside the card |
+| Verify a source assignment | Yes | Loaded from an artifact-accepted post-source prefix containing an admitted action and replay-checked outside the card |
 | Construct a receiving-time card | Yes | One frozen code path joined the assignment to the current packet |
 | Require `CONFIRM` or `DECLINE` | Yes | Treatment receipt contract only |
 | Validate the response against current state | Yes | Same refinement admission engine as the continuous campaign |
@@ -254,7 +263,15 @@ mechanically validate evidence, eligibility, and current state
 
 In the present experiment, deterministic code already knew the source-to-refinement relation. We therefore test **execution of one known same-tier dependency when the full bundle is present**, not automatic discovery, delayed activation, or persistent ledger behavior.
 
-## 7. Focused matched experiment
+### 6.4 Why involve an LLM?
+
+For this exact confirmation case, an LLM was not necessary. Once code had deterministically selected and verified the card's exact exercise-eligible assignment, a program could have copied that assignment directly into the next state. The experiment instead asked whether an existing LLM-mediated workflow stage could faithfully consume a known dependency, bind it to current observation and unknown requirements, return the required disposition and structured decision, and pass the ordinary state validator.
+
+That is a narrower role than autonomous planning. In a broader system, deterministic software should own verified facts, dependency rules, resource constraints, lifecycle state, and final admission. An LLM is useful only where semantic judgment remains—for example, interpreting unstructured reports, comparing several currently admissible actions, explaining uncertainty, or choosing to decline or escalate when the evidence changes. If a transition has exactly one mechanically determined answer, a production system should bypass the model.
+
+The present experiment exercised only valid cards whose required disposition was `CONFIRM`. It did not show that the LLM could reject a stale or contradicted card, nor that model judgment improved a transition that code could already complete. Active `DECLINE` cases and dependencies with multiple admissible actions are therefore necessary to demonstrate a substantive decision-making role for the model.
+
+## 7. Focused paired experiment
 
 ### 7.1 Research questions
 
@@ -264,12 +281,27 @@ In the present experiment, deterministic code already knew the source-to-refinem
 
 ### 7.2 Conditions
 
-Each of the eight positive histories produced a matched pair:
+Each of the eight eligible source wrappers produced a paired comparison:
 
 - **Empty-receipt control:** `decision_receipts: []`; the output had to contain no receipt disposition.
 - **Full-receipt treatment:** one canonical receipt constructed from the verified source assignment and current decision packet; the output had to `CONFIRM` or `DECLINE` it.
 
 Both conditions received the same decision packet, system instructions, output schema, model settings, validator, continuous-state admission engine, and one bounded correction policy. Within each pair they used the same physical endpoint and request seed. Pair order was counterbalanced. The intervention added receipt content, so the prompts were not token-matched.
+
+The comparison was paired on its execution surfaces but was **not fact-matched**: the empty-receipt control lacked the exact source assignment, while the treatment received that assignment together with the rest of the action-card bundle. Table 4 makes the changed surface explicit.
+
+**Table 4. Model-visible comparison before inference.**
+
+| Model-visible element | Empty receipt | Full action card |
+|---|---|---|
+| Same verified source wrapper and base decision packet | Yes | Yes |
+| Exact source assignment | No | Yes |
+| Receipt-selected current observation identifiers | No | Yes |
+| Receipt copy of current required unknowns | No | Yes |
+| Authority-and-eligibility statement | No | Yes |
+| Receipt disposition | Must be absent | Must be `CONFIRM` or `DECLINE` |
+| Fact matched | No | No |
+| Token matched | No | No |
 
 If the first answer violated the contract, the model could receive one correction containing only deterministic violation codes. The correction provided no new facts and no suggested assignment. There was no third call. Immediate success and correction-rescued success were recorded separately.
 
@@ -299,7 +331,9 @@ The first focused run used `Qwen/Qwen3-32B-AWQ`, revision `0499c3ac83fdef8810b90
 
 The second run used `Qwen/Qwen3.5-122B-A10B-GPTQ-Int4`, revision `30cd92cba9707a9aba09d1e490ed4b66b78e9606`, with the same sampling settings. It ran on one eight-GPU tensor-parallel endpoint and completed 33 logical and 33 physical experiment calls, plus two excluded readiness-canary calls. A strict excluded canary and live server receipt bound the served model, revision, process, runtime, and endpoint before production. This is a robustness check within the Qwen lineage, not an independent model-family replication.
 
-The eight prefixes were:
+The eight wrappers were:
+
+**Table 5. Verified source wrappers used for repeated executions.**
 
 | Prefix | Source campaign seed | Source history |
 |---|---:|---|
@@ -312,60 +346,52 @@ The eight prefixes were:
 | 51207-FIXED_COVERAGE | 51207 | Fixed-coverage campaign |
 | 51208-FIXED_COVERAGE | 51208 | Fixed-coverage campaign |
 
-Because source seed 51204 appears twice, these are eight paired histories but seven unique source seeds. Focused inference request seeds were deterministically derived and paired within each source history. We report counts and matched differences without an ordinary eight-independent-sample significance test. More importantly, all eight initial treatment payloads and all eight empty-receipt unknown-preservation payloads were byte-identical within each task; model-facing obligation diversity was one.
+Because source seed 51204 appears twice, these are eight paired executions associated with eight verified source wrappers but seven unique source seeds. Focused inference request seeds were deterministically derived and paired within each wrapper. We report counts and paired differences without treating the repetitions as eight independent cases drawn from a task population. More importantly, all eight initial treatment payloads and all eight empty-receipt unknown-preservation payloads were byte-identical within each task; model-facing dependency diversity was one.
 
 ## 8. Results
 
 ### 8.1 Primary result
 
-The full action-card treatment produced the exact validator-admissible confirmation in every repeated sample for both models. The empty-receipt condition produced none. Every treatment success also satisfied the treatment-only `CONFIRM` contract.
+The full action-card treatment produced the exact validator-admissible confirmation in every repeated execution for both models. The empty-receipt condition produced none. Every treatment success also satisfied the treatment-only `CONFIRM` contract.
 
-**Table 3. Focused matched action-card results for one repeated model-facing obligation.**
+**Table 6. Focused paired action-card results for one repeated model-facing dependency.**
 
 | Model | Empty receipt: common exact + valid action | Full card: common exact + valid action | Full card: matching `CONFIRM` | Full-card successes on first answer | Rescued by correction | Empty-receipt check passed | False resolutions |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | Qwen3-32B | 0/8 | **8/8** | 8/8 | 8/8 | 0 | 8/8 | 0 |
 | Qwen3.5-122B | 0/8 | **8/8** | 8/8 | 8/8 | 0 | 7/8 | 0 |
 
-For Qwen3-32B, every empty-receipt positive sample used its allowed correction and still failed the primary outcome. Every full-card sample succeeded on the first answer. The matched difference was therefore +8 successful repeated samples out of eight.
+For Qwen3-32B, every empty-receipt positive execution used its allowed correction and still failed the primary outcome. Every full-card execution succeeded on the first answer. The paired difference was therefore +8 successful executions out of eight.
 
-Qwen3.5-122B repeated the same primary pattern: 0/8 for the empty-receipt condition and 8/8 for the full card, all on the first answer. The run used one additional call in the safety set, for 33 experiment calls in total rather than 32.
+Qwen3.5-122B repeated the same primary pattern: 0/8 for the empty-receipt condition and 8/8 for the full card, all on the first answer. The run used one additional call in the empty-receipt unknown-preservation set, for 33 experiment calls in total rather than 32.
 
-The result is exact rather than interpretive. Every counted treatment answer named the Miyazaki battalion, Nippon Paper Yatsushiro mill, and quantity one carried by the verified source assignment; confirmed the supplied receipt; cited only allowed current-decision observations; acknowledged the current required unknowns; passed the ordinary decision score; and was accepted by the continuous-state refinement engine.
+The result is exact rather than interpretive. Every counted treatment answer named the Miyazaki battalion, Nippon Paper Yatsushiro mill, and quantity one carried by the verified source assignment; confirmed the supplied receipt; cited only allowed current-decision observations; acknowledged the current required unknowns; passed the ordinary decision score; and was admitted by the continuous-state refinement engine.
 
 ### 8.2 Empty-receipt unknown-preservation result
 
 Qwen3-32B passed all eight complete empty-receipt checks. Qwen3.5-122B passed seven. Across both models, the specified unsupported moving-unit question remained open in every case and there were zero false resolutions.
 
-The remaining Qwen3.5 case is informative. After one correction it returned no assignment and no supporting observation. It therefore failed the frozen assignment-count and supporting-observation rules. It did **not** invent evidence, and it did **not** claim that the missing report had been resolved. We report 7/8 for the complete safety contract rather than converting honest non-resolution into a full pass.
+The remaining Qwen3.5 case is informative. After one correction it returned no assignment and no supporting observation. It therefore failed the frozen assignment-count and supporting-observation rules. It did **not** invent evidence, and it did **not** claim that the missing report had been resolved. We report 7/8 for the complete empty-receipt check rather than converting honest non-resolution into a full pass.
 
 ### 8.3 What changed—and what did not
 
 The focused fork did not rerun the preceding incident or continue the treatment to the 72-hour close. It therefore provides no new estimate of demand coverage, urgent unmet demand-hours, or waste. Those measures belong only to the separate continuous campaign.
 
-The focused result isolates a specific prompt-and-contract surface: an empty receipt array versus one complete answer-bearing action card. It does not isolate the card's ingredients from one another. Exact assignment, current evidence links, current unknown requirements, authority and eligibility text, receiving-step placement, and mandatory disposition changed together.
+The focused result compares two prompt-and-contract surfaces: an empty receipt array versus one complete answer-bearing action card. It does not isolate the card's ingredients from one another. The exact assignment and fact access, receipt-level selection of allowed evidence, receipt-level copies of current unknown requirements, authority-and-eligibility text, and mandatory disposition changed together. Both arms otherwise retained the same base decision packet.
 
-## 9. Interpretation
+## 9. What the result means
 
-### 9.1 The result concerns model-visible access, not proven forgetting
+### 9.1 Model-visible access, not proven forgetting or card-specific causation
 
-We cannot infer from model outputs that the LLM internally “forgot” the source assignment. The assignment remained present in the saved state and audit record, but the empty-receipt control prompt did not contain it. The observable comparison is therefore direct: the receiving model got either no receipt or the complete answer-bearing receipt bundle.
-
-The experiment shows that the model could execute the exact source-to-refinement relation when that relation was made explicit in its current task. It does not show that the model would fail to retrieve the assignment from a prompt that contained it as ordinary history, because that control has not yet been run.
-
-The focused experiment therefore supports a narrower statement: when the full card was present, the exact validator-admissible action appeared; when the card field was empty, it did not. Ordinary-history, summary, and retrieval controls are necessary before attributing the effect specifically to obligation semantics.
-
-### 9.2 Why the action card worked remains an ablation question
-
-The action card is short, structured, answer-bearing, linked to current evidence requirements, presented at a known dependent step, and mandatory to resolve. The surrounding experiment binds it to verified state. Any one of those properties—or their interaction—could explain the result. The present experiment tests the full bundle. It cannot identify one component as the cause.
+We cannot infer that the LLM internally “forgot” the source assignment. The assignment remained in saved state, but the empty-receipt prompt did not contain it. Likewise, the action card changed fact access, structure, receipt-level evidence selection, receipt-level copies of current unknown requirements, authority text, and disposition together. The experiment therefore cannot attribute the result to card format or obligation semantics.
 
 The safest interpretation is functional:
 
-> The complete action-card bundle made one verified source assignment explicit and executable in its known receiving task.
+> For one known same-cutoff dependency, deterministic code projected a verified eligible source assignment and current constraints into the receiving task, and the LLM returned an action admitted by the ordinary state rules.
 
-Determining whether timing, exact identifiers, evidence links, brevity, or mandatory disposition carries most of the effect requires the ablations in Section 12.
+Fact-matched history, prose, summary, and component controls are required before making a representation claim. Delayed timing and persistence require a separate longitudinal study.
 
-### 9.3 Who decides when an obligation is due?
+### 9.2 Who selects the receiving call?
 
 Deterministic code did so in this experiment. The scenario already defined the relationship between the collapse-site assignment and its dispatch confirmation. Code verified the source action, checked current eligibility, and constructed the card for the linked decision at the same cutoff.
 
@@ -379,18 +405,7 @@ A broader architecture could split the work:
 4. the responsible model interprets and disposes it; and
 5. high-risk, ambiguous, or conflicting cases escalate to a human.
 
-### 9.4 Proposed systems generalization
-
-The focused result motivates a fuller mechanism we call **obligation routing**:
-
-- identify a consequential validated decision and its dependent work;
-- preserve the exact action, source evidence, ownership, and lifecycle state in a canonical record;
-- version its unresolved questions as evidence changes;
-- recognize a known point at which follow-up becomes required;
-- place that obligation in the current decision context; and
-- require a disposition that is checked against current state.
-
-Only the first experiment-specific projection and receiving-step disposition were tested here. Source-time creation, persistent storage, delayed activation, changing evidence, ownership, and lifecycle transitions remain proposed work.
+Only the experiment-specific projection and receiving-step disposition were tested here. Source-time creation, persistence, delayed activation, changing evidence, ownership, and lifecycle transitions remain proposed work.
 
 ## 10. Rescue World as an inspectable artifact
 
@@ -408,7 +423,7 @@ The interface uses three questions, summarized as **Model, Move, Mesh**:
 - **Move:** What exact action did it propose, and did that action enter the modeled state?
 - **Mesh:** Did the source assignment, current evidence requirements, and current unknowns remain connected through the handoff?
 
-The 3D replay, decision network, run tree, impact view, and presentation materials are visual aids for these questions. They do not create the empirical result. Their contribution is traceability: a reviewer can see where the information came from, what the model proposed, why code accepted or rejected it, and how the action card changed the receiving decision. We did not run a human comprehension or audit-performance study.
+The 3D replay, decision network, run tree, impact view, and presentation materials are visual aids for these questions. They do not create the empirical result. Their contribution is traceability: a reviewer can see where the information came from, what the model proposed, why code admitted or rejected it, and how outputs differed between empty- and full-receipt executions. We did not run a human comprehension or audit-performance study.
 
 The public record remains separate and explicitly labeled as not a score. Rescue World does not grade real responders, estimate lives saved, or claim that an AI proposal was operationally superior.
 
@@ -422,7 +437,7 @@ The public record remains separate and explicitly labeled as not a score. Rescue
 
 **Absent-fact control.** The empty-receipt control did not receive the source assignment elsewhere in its model-visible input. The experiment does not isolate action-card semantics from simple access to the answer-bearing fact.
 
-**Same-cutoff fork.** The source and receiving decisions shared one 20:00 cutoff in the original atomic tier. The focused fork began from an accepted post-source prefix but introduced no elapsed incident time, context growth, or shift change. It is not a test of delayed resurfacing.
+**Same-cutoff fork.** The source and receiving decisions shared one 20:00 cutoff in the original atomic tier. The focused fork began from an artifact-accepted post-source prefix containing an admitted action but introduced no elapsed incident time, context growth, or shift change. It is not a test of delayed resurfacing.
 
 **Repeated model-facing input.** All eight positive treatment prompts carried the same card and task; all eight empty-receipt checks also shared one prompt. The histories establish eight verified source wrappers across seven unique source seeds, but obligation-content diversity is one.
 
@@ -434,7 +449,7 @@ The final card design also followed five excluded bounded-probe runs, one exclud
 
 **Non-independent prefixes.** The eight histories contain seven unique seeds because seed 51204 contributes two source trajectories.
 
-**Prompt length.** The control and treatment are structurally matched but not token-matched; the treatment necessarily includes the action card.
+**Prompt length and facts.** The conditions are paired on the base task but are neither fact-matched nor token-matched; the treatment necessarily includes the action card and its answer-bearing assignment.
 
 **Stochastic execution.** Sampling settings and request seeds were pinned and endpoint order was counterbalanced, but GPU inference is not assumed to be mathematically deterministic.
 
@@ -442,7 +457,7 @@ The final card design also followed five excluded bounded-probe runs, one exclud
 
 **One operational dependency.** The primary outcome measures one exact assignment-confirmation handoff. It does not cover plans, preferences, diagnoses, or open-ended obligations.
 
-**Known trigger.** Code already knew when the card was due. The study does not measure trigger discovery, missed triggers, or false triggers.
+**Known receiving call.** Code already knew which linked same-cutoff call should receive the card. The study does not measure trigger discovery, delayed activation, missed triggers, or false triggers.
 
 **One empty-receipt check.** The separate check concerns one missing-report pattern and a frozen set of ordinary decision rules. It does not test an active invalid, stale, forged, superseded, or conflicting card.
 
@@ -458,67 +473,49 @@ The focused fork also does not evaluate a production obligation system's schedul
 
 ### 11.4 Reproducibility and artifact limits
 
-The repository includes a portable evidence bundle containing exact plans, accepted analyses, model identities, semantic hashes, and a verification manifest. The complete continuous result and raw focused model-call directories are not included in Git. Consequently, a clean checkout can verify the accepted summaries and public feed but cannot independently replay every raw inference without a separate archival supplement. The receipt protocol linked in the live tree was edited after execution; the run-bound protocol bytes are at commit `58ba8b3240bf7e404442f7cadec3421ebdf64369` with SHA-256 `58125098adfb7163330220621f1f694c3959a75a37f161fcb403d2707fa340ad`.
+The repository includes a portable evidence bundle containing exact plans, internally accepted analyses, model identities, semantic hashes, and a verification manifest. The hashes establish that the tracked plan, analysis, and public-feed bytes match their recorded identities; they do not establish source truth, exercise realism, or independent replay of model inference. The complete continuous result and raw focused model-call directories are not included in Git. Consequently, a clean checkout can verify the accepted summaries and public feed but cannot independently replay every raw inference without a separate archival supplement. The receipt protocol linked in the live tree was edited after execution; the run-bound protocol bytes are at commit `58ba8b3240bf7e404442f7cadec3421ebdf64369` with SHA-256 `58125098adfb7163330220621f1f694c3959a75a37f161fcb403d2707fa340ad`.
 
 For publication, the artifact should include every permissible raw request, response, validation trace, receipt, state projection, server receipt, and collection command, or deposit those materials in a durable external archive.
 
-## 12. Necessary ablations
+## 12. The decisive next experiment
 
-The next controlled experiment should keep the source histories, model settings, validator, and decision packet fixed while comparing:
+The present control omitted both the card representation and its answer-bearing facts. The next controlled study must hold fact access constant. Using fresh preregistered dependencies, every unique dependency should appear in every condition with counterbalanced order, identical semantic fields, matched total input length, the same base packet, model settings, validator, and correction policy. The arms should compare:
 
-1. the full action card;
-2. the same facts presented as an ordinary history excerpt;
-3. the same facts in a token-matched free-form summary;
-4. assignment and evidence without a due obligation;
-5. a due obligation without evidence links;
-6. the full card without mandatory `CONFIRM` or `DECLINE`;
-7. the full card delivered early or always visible rather than only when due; and
-8. an assignment-only card.
+1. the exact assignment and supporting fields embedded in an ordinary history excerpt;
+2. the same complete facts in token-matched free-form prose;
+3. the same complete facts in a token-matched structured summary;
+4. an assignment-only structured record;
+5. the full structured record without mandatory disposition; and
+6. the full action card.
 
-These arms would distinguish answer access from structure, timing, evidence linkage, and forced disposition. Additional safety arms should supply invalid, stale, superseded, and forged active cards that the model must decline. The experiment should use fresh, preregistered histories with many distinct obligation contents rather than reuse the eight discovery prefixes.
+The preregistered primary contrasts should compare the full card against the ordinary-history, free-form-prose, and structured-summary arms. Those contrasts distinguish an effect of fact access from an effect of action-card representation. The remaining arms separate the assignment, structure, and forced disposition. Timing should be tested in a separate longitudinal experiment that actually creates a record at source time, persists it across elapsed decisions and context growth, and activates it later; the current same-cutoff fork cannot supply that baseline.
 
-## 13. Generalizing the mechanism
+A second required axis is **active decline**. Code should reject malformed, forged, superseded, or mechanically ineligible records before inference. To test substantive model judgment, structurally valid cards should be paired with new unstructured evidence that supports either `CONFIRM` or `DECLINE`; the scored outcome should require the correct disposition, no invalid state mutation, and an exact reason. Injected forged-card tests remain useful as defense-in-depth robustness checks, not as evidence that an LLM supplied semantic judgment. The present schema allowed `DECLINE`, but every active treatment card was valid and every successful disposition was `CONFIRM`.
 
-A long-running obligation ledger needs more than `ACTIVE`, `CONFIRMED`, and `DECLINED`. At minimum it should support:
+Task breadth matters more than additional repetitions of the present prompt. The study should include many distinct resources, destinations, quantities, evidence patterns, unknown sets, and correct dispositions; dependencies with multiple admissible actions; at least one unrelated model family; and an ordinary deterministic baseline. If one mechanically determined answer exists, code should execute it directly rather than invoke an LLM.
 
-- `BLOCKED` when required evidence is still missing;
-- `SUPERSEDED` when a newer validated decision replaces the old one;
-- `CANCELLED` when an authorized actor closes it;
-- `DISPUTED` when evidence or ownership conflicts;
-- `EXPIRED` when the due window closes; and
-- `ESCALATED` when the model cannot safely resolve it.
+## 13. Proposed longitudinal system
 
-It also needs explicit priority, ownership, dependencies, evidence versions, conflict rules, and human escalation. Multiple cards may become due together. New evidence may invalidate an earlier commitment. Two earlier decisions may demand incompatible uses of one resource. A mature system must resolve these conditions before it can serve as a general operating layer for long-running AI work.
+A long-running implementation would need explicit ownership, priority, dependency links, evidence versions, conflict rules, human escalation, and lifecycle states such as `BLOCKED`, `SUPERSEDED`, `CANCELLED`, `DISPUTED`, `EXPIRED`, and `ESCALATED`. It would also need to survive duplicate delivery, concurrency, crash recovery, reassignment, and changing evidence. None of those capabilities was evaluated in the focused fork.
 
-The next research program should therefore test:
-
-1. stale or invalid cards that should be declined;
-2. new evidence that reverses the earlier decision;
-3. conflicting cards and simultaneous deadlines;
-4. cancellation, replacement, reassignment, and escalation;
-5. AI-proposed triggers checked by code;
-6. false-trigger and missed-trigger rates;
-7. a complete 72-hour campaign with obligations active throughout;
-8. an unrelated model family;
-9. a second incident and a non-disaster workflow; and
-10. performance as both historical state and active obligations grow.
-
-Candidate domains include hospital transfers, security incidents, maintenance programs, financial approvals, research operations, and supply-chain coordination—any setting where a decision creates follow-up work whose evidence and ownership must survive time and handoffs.
+The research program should therefore progress from fact-matched representation ablations, to active confirmations and declines over varied obligations, to source-time persistence across a complete campaign, and finally to conflicts, simultaneous deadlines, automatic trigger proposals checked by code, human escalation, another incident, and a non-disaster workflow. Candidate domains include hospital transfers, security incidents, maintenance programs, financial approvals, research operations, and supply-chain coordination—settings where a decision creates follow-up work whose evidence and ownership must survive time and handoffs.
 
 ## 14. Claim boundary
 
-**Table 4. What the current evidence supports and does not support.**
+**Table 7. What the current evidence supports and does not support.**
 
 | Supported by this study | Not established by this study |
 |---|---|
-| All 32 accepted continuous campaigns failed the paper-mill confirmation. | All 32 had an exercise-eligible source assignment available. |
+| All 32 artifact-accepted continuous campaigns failed the paper-mill confirmation. | All 32 had an exercise-eligible source assignment available. |
 | Eight selected source wrappers contained a valid eligible source assignment. | The eight wrappers are eight independent incidents, seeds, tasks, or card contents. |
-| The full action-card bundle produced an exact valid follow-up in 8/8 repeated samples for each tested model. | One particular card field caused the result. |
-| Empty-receipt controls produced 0/8 exact valid follow-ups for each model. | The result generalizes to all agents, tasks, incidents, or models. |
+| The full action-card bundle produced an exact valid follow-up in 8/8 repeated executions for each tested model. | One particular card field caused the result. |
+| Empty-receipt controls that lacked the source assignment produced 0/8 exact valid follow-ups for each model. | The card is better than fact-matched history, prose, retrieval, or summary. |
+| The LLM integrated the supplied assignment with the required current-decision output contract. | An LLM was necessary for this one mechanically determined confirmation. |
 | The unsupported question remained open in all empty-receipt checks; false resolutions were zero. | The action-card mechanism safely rejects invalid, stale, forged, or conflicting active cards. |
 | Deterministic code successfully constructed a card for a known same-tier dependency. | The system automatically discovers, stores, or later activates obligations. |
-| The focused fork tested one same-cutoff dependency from accepted post-source prefixes. | The result demonstrates an obligation persisting across time, sessions, shifts, or context growth. |
-| Rescue World can display and trace the accepted modeled decisions and state changes. | The system improved a real response, served real people, or saved lives. |
+| The focused fork tested one same-cutoff dependency from artifact-accepted post-source prefixes containing admitted actions. | The result demonstrates an obligation persisting across time, sessions, shifts, or context growth. |
+| Tracked plans, analyses, and public-feed artifacts match their recorded hashes. | The hashes prove source truth, exercise realism, operational correctness, or independent replay of every raw inference. |
+| Rescue World can display and trace admitted modeled decisions and state changes. | The system improved a real response, served real people, or saved lives. |
 
 ## 15. Ethical and operational boundary
 
@@ -528,13 +525,11 @@ An obligation-routing system deployed in a high-stakes environment could create 
 
 ## 16. Conclusion
 
-Rescue World began as an investigation into how growth-inspired information routing could preserve useful signals, uncertainty, and evidence. Benchmark results showed that routing and state structure could materially affect source-sensitive decisions, while the continuous earthquake exercise exposed a more precise handoff failure: a linked confirmation never produced the exact validator-admissible assignment required by its sibling proposal.
+Rescue World exposes a systems boundary that persistent logs do not solve by themselves: a dependency can exist in verified workflow state while remaining absent from the context of the model call responsible for acting on it. In the continuous exercise, one linked confirmation remained unresolved in all 32 complete campaigns. In the focused fork, deterministic code compiled one verified eligible assignment and current receiving constraints into an action card, and the ordinary validators controlled whether the model's response could change state.
 
-The focused action card addresses that seam by placing the exact verified source assignment, selected allowed observation identifiers, current required unknowns, authority-and-eligibility text, and an explicit disposition contract in the receiving task, then validating the result against current state.
+Across eight repeated executions of one identical dependency, the complete bundle produced the exact validator-admissible follow-up in 8/8 executions for Qwen3-32B and 8/8 for Qwen3.5-122B; controls that lacked both the card and source assignment produced 0/8 for each model. This demonstrates end-to-end executability of the complete answer-bearing state projection. It does not establish that the card representation is better than fact-matched history, prose, retrieval, or summary, and it does not show that an LLM was necessary for this mechanically determined confirmation.
 
-Across eight repeated samples of one exercise-eligible handoff, the full action-card bundle produced the exact valid follow-up in every case for Qwen3-32B and Qwen3.5-122B; empty-receipt controls produced none. This is a useful exploratory mechanism result for this task. It is not a general proof about memory, delayed obligation routing, autonomous trigger discovery, disaster performance, or the card's individual components.
-
-The broader research direction is to test whether long-running AI systems can turn consequential decisions into explicit, evidence-linked obligations that remain visible until they are validly completed, revised, declined, or escalated. The present study supplies one narrow starting point for that program.
+The strongest supported principle is therefore precise: **when an LLM step depends on a verified workflow fact, the orchestration layer can project that fact and its current constraints into the model's decision packet, then mechanically check whether the proposed action may change state.** The next experiment must compare fact-matched representations and require both valid confirmations and valid declines across many distinct dependencies. Persistent obligation routing across elapsed time remains the larger research program.
 
 ## Artifact and evidence map
 
@@ -581,24 +576,3 @@ The broader research direction is to test whether long-running AI systems can tu
 - **A6.** [Continuous campaign findings](CONTINUOUS-CAMPAIGN-FINDINGS.md)
 - **A7.** Current post-run receipt-disposition protocol (full laboratory workspace: `experiments/kumamoto-bounded-probe-pilot/RECEIPT-DISPOSITION-PROTOCOL.md`); run-bound commit/hash listed in the artifact map
 - **A8.** [Portable receipt evidence acceptance manifest](evidence/receipt-fork/acceptance-manifest.json)
-
-## Figure plan for the submission version
-
-1. **Tested flow versus proposed lifecycle:** clearly separate the receiving-time prompt transformation from the untested persistent-ledger design.
-2. **72-hour timeline:** all eleven decisions, showing the collapse assignment and paper-mill confirmation at the same 20:00 cutoff inside one atomic tier.
-3. **Matched fork:** identical verified source wrapper branching into empty and full receipt.
-4. **Repeated-sample matrix:** eight rows, two models, control/treatment primary result, and empty-receipt check status; visually mark the two prefixes sharing seed 51204 and state that all model-facing card contents are identical.
-5. **Action-card anatomy:** each implemented model-visible field, its receiver-time source, its validator, and the source-binding provenance that stayed outside the card.
-6. **Rescue World inspection surface:** available reports, proposal, rule result, state consequence, and focused action card.
-
-## Author checklist before external submission
-
-- Finalize author names, affiliations, contribution statement, and corresponding author.
-- Choose a venue and convert this Markdown draft to its required template.
-- Archive permissible raw calls and validation traces in a durable supplement.
-- Add final figures from the verified Rescue World surfaces.
-- Do not describe an action-card-specific causal effect until fact-matched controls separate answer access, structure, timing, observation linkage, and forced disposition.
-- Preserve the exact units everywhere: eight verified source wrappers, seven unique source seeds, and one repeated model-facing card/task.
-- Do not present the Qwen3.5 run as cross-family replication.
-- Keep modeled operational units separate from people, real dispatch, and human outcomes.
-- Ask an emergency-management expert and an agent-memory researcher to review the claim boundary before submission.
