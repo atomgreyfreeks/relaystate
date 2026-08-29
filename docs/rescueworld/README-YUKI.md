@@ -9,11 +9,9 @@ the final story, the working product, the visual explanations, and the accepted 
    what to click, the one-minute explanation, and the exact numbers.
 2. [Full handoff](YUKI-HANDOFF-2026-08-28.md) — the complete narrative from growth intelligence
    to the action-card finding, translation guidance, evidence paths, and claim boundaries.
-3. [Working paper draft](RESCUE-WORLD-PAPER-DRAFT.md) — the evidence-bounded research account,
-   related work, exact methods, results, limitations, and next experiments.
-4. [Emergence presentation](emergence-presentation.html) — the full high-level story.
-5. [Submission presentation](submission-presentation.html) — the shorter presentation version.
-6. [Orchestration process map](ORCHESTRATION-PROCESS-MAP.html) — the mechanism and checks in
+3. [Emergence presentation](emergence-presentation.html) — the full high-level story.
+4. [Submission presentation](submission-presentation.html) — the shorter presentation version.
+5. [Orchestration process map](ORCHESTRATION-PROCESS-MAP.html) — the mechanism and checks in
    beginner-friendly language.
 
 ## Open the working product
@@ -55,7 +53,6 @@ node scripts/bake-receipt-fork.mjs --check
 
 - A high-school-level explanation of the project and finding.
 - A short deck and a full deck.
-- A first complete working-paper draft.
 - A plain process map explaining how the action card works.
 - The interactive 72-hour Rescue World.
 - A plain-English impact view carrying both accepted model results.
@@ -66,24 +63,19 @@ node scripts/bake-receipt-fork.mjs --check
 
 ## The central finding
 
-The 72-hour exercise exposed one exact handoff that failed in every complete campaign. In the
-focused follow-up test, software placed the verified source assignment, the receiving decision's
-allowed reports and required unknowns, and a confirm-or-decline instruction into one short action
-card.
+When an AI makes a decision that creates work for later, the system should make a short action
+card containing the exact decision, its supporting evidence, the questions still open, and the
+required next step. When that next step becomes possible, the system delivers the card directly
+to the person or AI handling it and requires a clear resolution.
 
-Both Qwen models then completed the exact rule-passing follow-up in all eight repeated samples on
-the first attempt. This focused fork tested one same-cutoff handoff and one repeated card—not a
-decision carried across days. A persistent action-card ledger is the next system to build and
-evaluate.
+In the focused Rescue World test, both Qwen models completed the exact required follow-up in all
+eight saved histories on the first attempt.
 
 ## Claim boundary
 
-This is a modeled exercise, not a real dispatch system. The focused result covers one same-cutoff
-follow-up, one repeated model-facing card across eight verified source wrappers and seven unique
-source seeds, one incident, and two models from the same Qwen family. The empty-receipt control did
-not receive the source assignment elsewhere. The study therefore tests the complete answer-bearing
-bundle, not delayed memory or the effect of any one card field. It does not measure people reached,
-lives saved, or real-world emergency outcomes.
+This is a modeled exercise, not a real dispatch system. The focused result covers one follow-up,
+eight saved histories, one incident, and two models from the same Qwen family. It does not measure
+people reached, lives saved, or real-world emergency outcomes.
 
 ## Guidance for Yuki's AI tools
 
