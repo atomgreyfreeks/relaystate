@@ -7,35 +7,46 @@ Purpose: understand the project quickly, work with your own AI tools, and prepar
 
 **What were we trying to learn?**
 
-How can an AI keep making sensible decisions during a long, changing operation?
+How can an AI workflow execute one decision when that decision depends on the exact choice made in
+another step?
 
 **What problem did we find?**
 
-Important earlier decisions became buried in the growing history. When a follow-up action became possible, the AI did not reliably use the exact earlier decision it needed.
+In a connected 72-hour exercise, every complete campaign failed one paper-mill confirmation. The
+confirmation had to use the exact response group selected by a linked source proposal, but it never
+produced a rule-passing match.
 
 **What did we build?**
 
-An action card: a short record created when an important decision makes work for later.
+An action card for that known handoff: a short record placed directly into the receiving task.
 
 **What does the action card contain?**
 
-What was decided, which resource and place it concerns, why it was decided, what remains unknown, and what must happen next.
+The verified source assignment, reports allowed for the receiving decision, questions that decision
+must still acknowledge, an eligibility statement, and a required confirm-or-decline response.
 
-**What happens later?**
+**When did this focused test happen?**
 
-When the follow-up becomes possible, the system automatically gives that card to the AI handling the next decision. The AI must confirm or decline it. Software then checks the answer.
+The source and receiving decisions had the same 20:00 cutoff in one paired decision tier. The test
+did not wait hours or days. Software constructed the card for the receiving step, the AI had to
+confirm or decline it, and the same frozen rules checked the answer.
 
 **Did it work?**
 
-Yes. Qwen3-32B completed the exact required follow-up in all eight tested histories, and every answer passed the complete rule check on its first attempt. Qwen3.5-122B repeated the exact result in all eight histories on its first attempt.
+Yes, for this focused handoff. Qwen3-32B completed the exact required follow-up in all eight repeated
+samples, and every answer passed the complete rule check on its first attempt. Qwen3.5-122B repeated
+the exact result in all eight samples on its first attempt.
 
 **What did we learn?**
 
-Storing history is not enough. When an AI decision will matter later, the system should turn it into a clear action card and deliver it again at the exact moment it needs follow-through.
+The complete action-card bundle made one verified source assignment explicit and executable in its
+known receiving task. The test does not yet tell us whether the effect came from the exact assignment,
+the compact format, the evidence links, or the required response.
 
 **Why is that useful?**
 
-The same idea can help long-running AI systems avoid losing promises, evidence, unfinished work and important follow-ups as tasks become larger and change over time.
+It gives us a concrete pattern to test next in long-running systems: create a persistent card at the
+source decision, keep it current, and activate it when a genuinely later step depends on it.
 
 **What is Rescue World?**
 
@@ -63,58 +74,83 @@ Rescue World replays 414 public-record events from the first 72 hours after an e
 
 We completed 32 full seventy-two-hour simulation runs containing 352 checked decision moments. An action changed the simulation only after it passed the evidence, resource and timing rules. An accepted assignment then changed what remained possible later.
 
-This let us study a question that short benchmarks cannot show: can an AI keep its earlier decisions usable while the situation changes for three days?
+This let us observe where connected AI decisions broke across a three-day exercise. The successful
+focused fix was tested only on the same-cutoff paper-mill handoff, not across the full three days.
 
 ### 3. The long simulation exposed one exact failure
 
-At one moment, the AI had to assign response groups across two collapsed buildings. A paired follow-up then asked it to confirm one group already assigned to a paper mill.
+At one moment, the AI had to assign response groups across two collapsed buildings. A paired sibling
+call at the same 20:00 cutoff asked it to confirm one group from that exact provisional proposal for
+a paper mill.
 
-The confirmation remained unresolved in all 32 complete runs. We then isolated eight saved histories in which the earlier paper-mill assignment was valid. Those eight histories gave us a fair test of whether the later AI could use that exact response group, destination, quantity and supporting reports.
+The confirmation remained unresolved in all 32 complete runs. We then isolated eight accepted
+post-source wrappers in which the paper-mill assignment was valid. They represented seven unique
+source seeds, but all produced the same model-facing card and task. The focused fork therefore ran
+eight stochastic samples of one known handoff, not eight different responsibilities.
 
-This made the real problem clear: information can still exist in a history without reaching the decision that needs it.
+This gave us a precise test: what happens when the receiving prompt contains the complete card versus
+an empty card field? The empty-card prompt did not contain the source assignment elsewhere, so this
+test does not yet separate action-card structure from simple access to the answer-bearing fact.
 
-### 4. We turned the earlier decision into an action card
+### 4. We turned the source assignment into an action card
 
-When an important decision creates future work, the system now makes a short card containing:
+For this focused handoff, software made a short card containing:
 
-1. the earlier decision;
+1. the exact verified source assignment;
 2. the exact resource, destination and quantity;
-3. the reports that support it;
-4. the questions that remain unanswered;
-5. the next action that must be completed;
-6. the moment when that action becomes possible.
+3. reports visible and allowed for the receiving decision;
+4. questions the receiving decision must acknowledge;
+5. an authority-and-eligibility statement; and
+6. a confirm-or-decline instruction.
 
-At that moment, the card appears directly in the work of the AI making the next decision. That AI must return one answer: **confirm** or **decline**. Software then checks the resource, evidence, place, quantity and timing.
+The card appeared directly in the receiving AI's work. That AI had to return one answer:
+**confirm** or **decline**. Software then checked the resource, evidence, place, quantity and current
+state.
 
-The important earlier decision is no longer background text. It arrives as a clear piece of work that must be resolved.
+The source assignment became a clear model input and a response contract. The experiment did not
+test creating the card at source time, storing it through a long operation, or activating it after
+an elapsed delay.
 
 ### 5. Two models completed the exact follow-up
 
-We tested eight saved, unchanged versions of the paper-mill handoff where the earlier assignment was valid.
+We tested eight accepted source wrappers of the paper-mill handoff where the assignment was valid.
+All eight presented the same card and receiving task.
 
 | Result | Qwen3-32B | Qwen3.5-122B |
 |---|---:|---:|
 | Exact follow-up completed | 8 / 8 | 8 / 8 |
 | Passed the complete rule check on the first attempt | 8 / 8 | 8 / 8 |
 | Needed a correction | 0 / 8 | 0 / 8 |
-| Strict safety cases passed | 8 / 8 | 7 / 8 |
+| Complete empty-card unknown checks passed | 8 / 8 | 7 / 8 |
 | False claims that an unsupported task was complete | 0 | 0 |
 
-The one Qwen3.5 safety miss kept the unsupported question open and invented nothing, but it failed the complete check because it gave the wrong number of assignments and no supporting report.
+The one Qwen3.5 check miss kept the unsupported question open and invented nothing, but it failed the complete check because it gave the wrong number of assignments and no allowed report identifier.
 
-These are successful exploratory results. They show that the same action-card mechanism produced the exact follow-up with two Qwen models. Both models are from the same model family, so this is not yet evidence of independence across unrelated model families.
+These are successful exploratory results. They show that the complete answer-bearing card bundle
+produced the exact follow-up with two Qwen models on this repeated task. The test did not isolate
+which card ingredient caused the result. Both models are from the same model family, so this is not
+yet evidence of independence across unrelated model families.
 
-## How ordinary AI orchestration usually handles a long task
+## What this result means for AI orchestration
 
-AI orchestration means deciding which AI role receives which information, when it receives it and how the separate work is combined. A typical system gives different roles parts of a task, collects their notes and passes a summary or conversation history to the next role. As the task grows, that history becomes longer. The next AI must search it and decide which old details matter now.
+AI orchestration means deciding which AI role receives which information, when it receives it and
+how separate work is combined. The focused experiment tested one additional model-visible object:
+an exact source assignment joined to current reports, current unknowns, and a required disposition.
 
-Our method adds timed follow-through. The system recognizes when a decision creates future work, records that work as an action card and schedules its return. When the follow-up becomes possible, the exact card goes directly to the AI handling that step. This changes memory from a history that must be searched into a clear responsibility that must be completed.
+For the known paper-mill dependency, deterministic code selected the receiving step and constructed
+the card. A fuller orchestration system could create such cards when decisions are made, persist
+them, update them as evidence changes, and deliver them at later steps. That full lifecycle is the
+research direction; it was not evaluated by this same-cutoff fork.
 
 ## Why this finding matters
 
-Many important tasks unfold over hours, days or months. Work passes between people, AI roles and software systems. A decision made early may not matter until much later. By then, the original context may be buried under hundreds of messages and new events.
+A future action-card system could help with important tasks that unfold over hours, days or months,
+where work passes between people, AI roles and software. A decision made early may not matter until
+much later, after hundreds of messages and new events. That delayed lifecycle is the next research
+step, not a result of the focused fork.
 
-An action card preserves the relationship between the original decision and its future consequence. It can say:
+Such a system could preserve the relationship between an original decision and its future
+consequence. It could say:
 
 - this resource was assigned here;
 - these reports supported the assignment;
@@ -132,7 +168,7 @@ The plain-English story must always come first:
 2. **Proposal:** What exactly did the AI suggest, how much and where?
 3. **Rule check:** Did the simulation accept it? Why or why not?
 4. **Effect:** What changed inside the simulation? What remained open?
-5. **Action card:** Which earlier decision returned, and what follow-up was required?
+5. **Action card:** Which verified source assignment appeared in the focused receiving task?
 
 The 3D environment and network graphs are visual aids for this story. They should never replace the explanation.
 
@@ -140,11 +176,15 @@ Model–Move–Mesh gives the reader three questions:
 
 - **Model:** What did the AI believe from the reports available then?
 - **Move:** What exact action did it propose?
-- **Mesh:** Did the supporting reports, unanswered questions and earlier assignments reach this decision intact?
+- **Mesh:** Did the source assignment, allowed current reports and current unanswered questions reach
+  this decision together?
 
-## The one sentence to preserve in translation
+## The two sentences to preserve in translation
 
-> When an AI makes a decision that will matter later, the system should create a clear action card and deliver it to the person or AI handling the next step exactly when they need it.
+> In our focused test, the receiving AI executed one known source assignment when software presented
+> the exact assignment, current evidence requirements, current unknowns, and a required response as
+> one action card. The next research step is to create, store, update, and activate these cards across
+> genuinely long-running work.
 
 ## Translation guidance
 
@@ -162,12 +202,13 @@ Model–Move–Mesh gives the reader three questions:
 
 1. `docs/rescueworld/README-YUKI.md` — the index for Yuki and any AI tools helping with the submission.
 2. `docs/rescueworld/YUKI-RESCUE-WORLD-ONE-SHEET.md` — the one-page “open this, click this, explain this” guide.
-3. `docs/rescueworld/emergence-presentation.html` — the complete story from growth intelligence to the finding and product.
-4. `docs/rescueworld/submission-presentation.html` — the shorter presentation version.
-5. `docs/rescueworld/ORCHESTRATION-PROCESS-MAP.html` — the beginner explanation plus the exact process and quality checks.
-6. `public/impact-view.html` — the accepted simulation and action-card results.
-7. `public/decision-network.html` — the expandable network behind each proposal.
-8. `rescueworld.html` — the full emergency viewer.
+3. `docs/rescueworld/RESCUE-WORLD-PAPER-DRAFT.md` — the full research draft with exact methods, evidence, limits, and next experiments.
+4. `docs/rescueworld/emergence-presentation.html` — the complete story from growth intelligence to the finding and product.
+5. `docs/rescueworld/submission-presentation.html` — the shorter presentation version.
+6. `docs/rescueworld/ORCHESTRATION-PROCESS-MAP.html` — the beginner explanation plus the exact process and quality checks.
+7. `public/impact-view.html` — the accepted simulation and action-card results.
+8. `public/decision-network.html` — the expandable network behind each proposal.
+9. `rescueworld.html` — the full emergency viewer.
 
 The three HTML presentations can be opened directly from the repository. The Rescue World pages
 must be served over HTTP because they load data and code from neighboring files. From the
@@ -212,4 +253,9 @@ Then open:
 
 ## Evidence boundary
 
-The result covers one exact follow-up, eight selected saved histories, one earthquake exercise and two models from the same Qwen family. It is a promising research result, not a general proof of real-world operational effectiveness. The next scientific step is to repeat the mechanism on another incident and unrelated model families.
+The result covers one same-cutoff follow-up, one repeated model-facing card across eight selected
+source histories and seven unique source seeds, one earthquake exercise, and two models from the
+same Qwen family. The empty-card control did not contain the source assignment elsewhere. It is a
+useful exploratory mechanism result, not a test of delayed memory, a component ablation, or a
+general proof of real-world operational effectiveness. The next scientific steps are fact-matched
+controls, genuinely delayed and varied obligations, another incident, and unrelated model families.
