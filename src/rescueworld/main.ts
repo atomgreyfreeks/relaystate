@@ -5656,10 +5656,25 @@ async function boot() {
       Math.max(spread * 1.8, standBackFor(mid, TREE_FLY_DIST)), TREE_FLY_DIST, WIDE_DIST);
     rig.flyTo(mid.x, mid.y, mid.z, dist, TREE_FLY_SECONDS);
   }
+  /**
+   * Whether the decision map is open, as the page's own keys read it.
+   *
+   * The frame keeps its `on` class for the length of the closing move, so the class says the map
+   * is still up for a fifth of a second after a reader has closed it. Keys used to be routed off
+   * that class, so a key pressed straight after escape was answered by a screen that was already
+   * on its way out and reached nothing. This flag turns over the moment the reader acts.
+   */
+  let treeOpen = false;
+  /** the timer that takes the closed frame off the page, cleared if the map reopens first */
+  let treeCloseTimer = 0;
   function showTree(on: boolean) {
     if (on && !treeAvailable) return;
-    if (on === treeBox.classList.contains("on")) return;
+    if (on === treeOpen) return;
+    treeOpen = on;
     if (on) {
+      // a map reopened during its own closing move keeps its frame, so the timer that would have
+      // taken that frame away is cancelled rather than left to fire under the open screen
+      if (treeCloseTimer) { clearTimeout(treeCloseTimer); treeCloseTimer = 0; }
       drawTreeOnce();
       setPlay(false);
       // the moment the run has reached is the one the instrument opens on, so a viewer lands
@@ -5686,13 +5701,16 @@ async function boot() {
       treeBox.classList.remove("opening");
       treeBox.classList.add("closing");
       document.body.classList.remove("treeon");
-      setTimeout(() => treeBox.classList.remove("on", "closing"), 220);
+      treeCloseTimer = window.setTimeout(() => {
+        treeCloseTimer = 0;
+        treeBox.classList.remove("on", "closing");
+      }, 220);
     }
     treeCloseBtn.style.display = on ? "block" : "none";
     treeFoot.classList.toggle("on", on);
     rig.keysEnabled = !on;
   }
-  const treeIsOpen = () => treeBox.classList.contains("on");
+  const treeIsOpen = () => treeOpen;
   treeCloseBtn.addEventListener("click", () => showTree(false));
   // The control list names the b key only on a record that has a tree to draw.
   if (treeAvailable) {
@@ -6551,6 +6569,28 @@ async function boot() {
     billboards.tick(cardScreen);
   }
 
+  // ---------------------------------------------------------------- the three other pages
+  /**
+   * The links to the sealed decision tree, to the impact view, and to the page that draws every
+   * agent step behind each decision. Their words and their addresses live in COPY.OPEN_PAGES, so
+   * the wording is edited in one place. The small map they stand above is sized by the recorded
+   * ground, so its measured height is written into --minih and the group keeps its clearance
+   * whatever ground the run is playing on.
+   */
+  for (const [id, page] of [
+    ["openTree", COPY.OPEN_PAGES.tree],
+    ["openImpact", COPY.OPEN_PAGES.impact],
+    ["openNetwork", COPY.OPEN_PAGES.network],
+  ] as const) {
+    const link = el(id) as HTMLAnchorElement;
+    (link.querySelector("b") as HTMLElement).textContent = page.label;
+    (link.querySelector("i") as HTMLElement).textContent = COPY.OPEN_PAGES.mark;
+    link.href = page.href;
+    link.title = COPY.OPEN_PAGES.newTab;
+  }
+  document.documentElement.style.setProperty(
+    "--minih", `${el("mini").getBoundingClientRect().height}px`);
+
   el("camHome").addEventListener("click", () => { handsOffDirection(); rig.goHome(); });
   el("camIn").addEventListener("click", () => { handsOffDirection(); rig.zoomBy(1 / 1.35); });
   el("camOut").addEventListener("click", () => { handsOffDirection(); rig.zoomBy(1.35); });
@@ -6769,12 +6809,16 @@ async function boot() {
     }
     if (low === "r") { showReal(true); return; }
     if (low === "t") {
-      // the walk-through of the moment of decision the run has reached, or the first one ahead
-      // of it where none has passed yet
+      // The walk-through belongs to the decision the reader has chosen. That is the beacon the
+      // decision map was left standing on, which outlives the map itself, so a reader who opens
+      // the water-truck decision, closes the map and presses this key is given that decision and
+      // not whichever one the clock happens to have passed. Where no decision has been chosen it
+      // is the moment the run has reached, or the first one ahead of it where none has passed.
       const ti = Math.min(TICKS, Math.floor(P.tick));
       const passed = decisionRows.filter((row) => row.tick <= ti);
-      const row = passed[passed.length - 1] ?? decisionRows[0] ?? null;
-      if (row) openTraceFor(row.id);
+      const reached = passed[passed.length - 1] ?? decisionRows[0] ?? null;
+      const momentId = openedMoment ?? reached?.id ?? null;
+      if (momentId) openTraceFor(momentId);
       return;
     }
     // p, because v already opens the internal view

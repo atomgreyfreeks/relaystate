@@ -599,6 +599,8 @@ export const HELP = {
     "Press g for the picture controls, which set the colours on screen and how much they glow."
       + " They are a tool for the people making this page, and they change nothing about the"
       + " record.",
+    "Press n for the run-preparation console, which writes out the exact settings a real run with"
+      + " a language model in it would use. It starts nothing.",
   ],
   /**
    * The ledger's own line, kept apart from the list above because a record that holds no moment
@@ -859,12 +861,12 @@ export const REGION = {
     + ` the shocks of magnitude ${threshold} and above that fall inside the time this run covers`
     + ` and on this map, which is ${shown} of them. The smaller ones are still drawn on the ground`
     + " with the other aftershocks.",
-  /** one of the five real decision moments, at the minute its recorded deadline runs out */
-  moment: (title: string) => `A real decision falls due: ${title}. Press r.`,
+  /** one of the eleven reconstructed response decisions, when its recorded deadline arrives */
+  moment: (title: string) => `A response decision is due: ${title}.`,
   momentTip:
-    "This is the recorded deadline of one of the five real decisions, and the camera goes to the"
-    + " places that moment was allowed to choose between. Only the moments whose deadline falls"
-    + " inside this run's window appear here; press r for all five.",
+    "Public records were used to reconstruct eleven response deadlines. This is one of them."
+    + " The camera goes to the places available for this decision. Press b to compare all"
+    + " eleven decisions, or press r to read the result from the five scored decisions.",
   /** what a line states about its own recorded time */
   stamp: (clock: string) => `Recorded at ${clock}.`,
   /** when one recorded minute brings more lines than the feed shows at once */
@@ -1025,7 +1027,7 @@ export const INCIDENT = {
     + ` tries. Source-linked proposals did so in ${table} of ${runs} tries. After one error`
     + ` message, ${corrected} of ${runs} proposals stayed within those limits.`,
   /**
-   * The debrief, told in the order `docs/method/FINDINGS-STORYTELLING-GOLD-STANDARD.md` sets: the
+   * The debrief, told in the order `docs/gpu/FINDINGS-STORYTELLING-GOLD-STANDARD.md` sets: the
    * human question first, then one concrete example, then what each way of deciding actually
    * did, then what was counted and what the counts mean, then what it is good for, what it does
    * not show, and the exact next test. No number appears before a sentence a stranger can read.
@@ -1066,8 +1068,9 @@ export const INCIDENT = {
       `The experiment scored ${countWord(moments)} decisions rebuilt from public records. For two`
       + " decisions, the record omitted facts the test needed: an internal alert and which team"
       + " could investigate two missing shaking readings. The screen clearly labels those added"
-      + " facts as assumptions for this exercise. At each deadline, an AI proposed a rescue"
-      + ` action using only the information and assumptions shown on screen. Each approach`
+      + " facts as assumptions for this exercise. For each historical deadline, an AI later"
+      + " proposed a rescue action using only the information and exercise assumptions available"
+      + " for that deadline. Each approach"
       + ` answered every decision ${tries} times.`,
     /** the heading over the list of scored moments. Chrome. */
     momentsHead: (moments: number) =>
@@ -1347,7 +1350,7 @@ export const TRACE = {
    * says a card holds what a software agent wrote afterwards. Chrome, six words each.
    */
   frameReal: "public response recorded that day",
-  frameSituation: "This card shows the disaster situation at the deadline.",
+  frameSituation: "This card explains what was happening when the decision was due.",
   frameModel: "This AI proposal was generated later.",
   frameTest: "This card explains how one AI proposal was tested.",
   /** the one sentence that separates the two framings, on the card a reader opens on */
@@ -1418,8 +1421,9 @@ export const TRACE = {
    * brackets are.
    */
   reasonFrame:
-    "The itemized list above shows what the AI proposed. The quoted paragraph below shows why the"
-    + " AI said it made those choices. If they disagree, use the itemized list.",
+    "The itemized list above shows what the AI proposed. Below the list, a direct quotation"
+    + " from the AI explains why it said it made those choices. If they disagree, use the"
+    + " itemized list.",
   reasonBrackets:
     "[Brackets] expand terms used by the AI.",
   compareLabel: "Compare the AI proposal with the public response.",
@@ -1474,8 +1478,8 @@ export const TRACE = {
   planPartWrotePlace: (unit: string, place: string) =>
     `The AI proposed ${unit} for ${place}, but ${place} was not an available destination.`,
   planPartWroteBoth: (unit: string, place: string) =>
-    `The AI proposed ${unit} for ${place}, but this decision allowed neither what the AI chose`
-    + " nor where it sent it.",
+    `The AI proposed ${unit} for ${place}, but the exercise allowed neither ${unit} nor ${place}`
+    + " for this decision.",
   /** the same two forms, for the choice the public record holds */
   realCount: (total: number, unit: string, places: string) =>
     `The record names ${total} ${unit} ${places}.`,
@@ -1554,8 +1558,8 @@ export const TRACE = {
     quantity: (total: number, limit: number) =>
       `The AI proposed ${total}; the limit was ${limit}.`,
     quantityFloor:
-      "The AI tried to send only part of a crew or response team, but this decision required"
-      + " every team to stay together.",
+      "The AI tried to send only part of a crew or response team. Every listed crew or response"
+      + " team had to stay together.",
     capacity: (asked: number, held: number, pool: string) =>
       `The AI requested ${asked} from ${pool}, but only ${held} were available.`,
     ineligibleTarget: (place: string) =>
@@ -1637,14 +1641,14 @@ export const TRACE = {
   compareNamed: (real: number, model: number) =>
     `The public record names ${countWord(real)} units. The AI proposed ${countWord(model)}.`,
   compareDifferent:
-    "Responders and the AI chose different kinds of action, so their quantities are not"
-    + " comparable. This does not show which action was better.",
+    "The public record describes one kind of responder action; the AI later proposed another,"
+    + " so their quantities are not comparable. This does not show which was better.",
   compareNone:
     "The public record names no choice of units for this decision, so there is nothing here to set"
     + " the simulated decision beside.",
   compareClaim:
-    "These two lines compare only what each side proposed and how much. They do not say which"
-    + " choice was better.",
+    "One line shows what responders did. Another shows what the AI later proposed and how much."
+    + " Neither shows which choice was better.",
   /** where every word on this surface came from */
   source: (events: number) =>
     `Source: the recorded run's ${events} saved events and the file used to verify its AI`
@@ -1752,7 +1756,9 @@ export const OUTCOMES = {
    * rather than only what was decided.
    */
   telegraph: {
-    underConsideration: "The AI considered sending help here before the deadline.",
+    underConsideration:
+      "During playback, a marker appears before the historical deadline. It previews a"
+      + " place where an AI later considered sending help.",
     chosen: "The AI proposed sending help here.",
     notChosen: "The AI considered this place but did not include it in the proposal.",
     /** the label over the ghost stack. Four words. */
@@ -1805,8 +1811,8 @@ export const OUTCOMES = {
           + " screen, so they are left out. Open the walk-through to read every place in full."),
     /** what the ghost outlines are, stated once so a hollow mark is never read as a real unit */
     what:
-      "Hollow marks show proposed destinations before the deadline. No real team moved because"
-      + " of these AI proposals.",
+      "During playback, hollow marks appear before each historical deadline. They preview"
+      + " destinations from AI proposals created later. No real team moved because of them.",
   },
   /**
    * The ledger the run closes on: all eleven moments of decision, each with what was chosen, how
@@ -1815,7 +1821,7 @@ export const OUTCOMES = {
    */
   ledger: {
     /** the surface's own name across its head. Eight words. */
-    title: "AI agents proposed rescue actions at eleven points during the first 72 hours.",
+    title: "AI agents later proposed rescue actions for eleven moments from the first 72 hours.",
     /** the control that opens it from the closing panel. Five words. */
     open: "Open every AI rescue decision",
     /** chrome, three words */
@@ -1906,7 +1912,7 @@ export const TREE = {
   /** the control that closes it. Chrome, three words. */
   close: "close \u2014 esc",
   /** why the screen exists, in one sentence. The contract allows eighteen words; this is ten. */
-  purpose: "The map follows eleven decisions made during Kumamoto's first 72 hours.",
+  purpose: "The map follows AI proposals for eleven decision moments from Kumamoto's first 72 hours.",
   /** the standing qualifier, agreed with the other agent and kept in view the whole time */
   qualifier:
     "These are recorded AI rescue proposals, not actions taken or possible futures.",
@@ -1919,7 +1925,7 @@ export const TREE = {
    */
   spineNote: "Beacons follow decision order; each shows its actual deadline.",
   /** the whole row, named for a reader using a screen reader. Chrome. */
-  spineLabel: "The page lists eleven decisions from the earthquake response in time order.",
+  spineLabel: "The page lists eleven historical moments when responders had decisions to make.",
   /** one mark, named for a reader using a screen reader. Chrome. */
   markLabel: (n: number, of: number, clock: string, locator: string, _registered: boolean) =>
     `Decision ${n} of ${of}. ${clock}. ${locator}.`,
@@ -2146,4 +2152,29 @@ export const TREE_LOCATOR: Record<string, string> = {
   "slot-09-push-water-planning": "Water trucks early",
   "slot-10-rescue-water-turn": "Rescue or water",
   "slot-11-aftershock-reprioritization": "After the aftershock",
+};
+
+/**
+ * The three other Rescue World pages a reader can open from the replay. Each one opens in its own
+ * tab, so the replay keeps running behind it. These words are the only place the viewer states
+ * them. The field guide at `app/public/rescueworld-guide.html` is a separate static page and
+ * carries the same three labels in its own markup.
+ */
+export const OPEN_PAGES = {
+  tree: {
+    label: "Explore all 11 decisions",
+    href: "/decision-run-tree.html",
+  },
+  impact: {
+    label: "See what the AI teams changed",
+    href: "/impact-view.html",
+  },
+  network: {
+    label: "See how the AI team reached each decision",
+    href: "/decision-network.html",
+  },
+  /** the small mark on every control that says the page opens somewhere else */
+  mark: "\u2197",
+  /** what the controls say when a reader rests the pointer on them */
+  newTab: "This page opens in a new tab. The replay keeps running here.",
 };

@@ -1,0 +1,2957 @@
+<!--
+liveref component · generated 2026-08-27T07:57:44.924Z
+run r6f2a5f73 · archetype readout
+brief: a video game style skill tree in 3D that is meant to show the decision making trees and flows of AI agent orchrestrations across a timeline
+contract:
+  palette #000101 #164eaa #460710 #232424 #434343 #030304 #141318 #242426
+  luma mean 32 · p10-p90 1-129
+  saturation 0.21 · contrast 32 · edge density 0.34
+This file is one self-contained interactive component, rendered on the
+LiveRef canvas in a sandboxed iframe (allow-scripts only: no network, no
+storage, system fonts). The canvas watches this file — every save
+hot-reloads it in place. Keep it one file and keep the numbers true.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kumamoto Impact View</title>
+<!--
+  READOUT — a 3D skill tree of one agent orchestration, read across a timeline.
+  Construction taken from the selection: node-and-edge constellations on a black
+  field (giphy.gif), the ruled plus-mark grid (threeplussixisnine_pluses2), and
+  the hairline oscilloscope readout of 01-disruptive-insights.
+  Technique named from the local R3ARXIV archive
+  (skills/r3arxiv-react-three-dev/references/review-rules.md, "Geometry and Draw
+  Calls"): one InstancedMesh for every repeated node gem, one LineSegments for
+  every edge, one Points object for the glow, delta-timed motion, capped DPR.
+-->
+<script type="importmap">
+{"imports":{"three":"/media/vendor/three/three.module.min.js",
+"three/webgpu":"/media/vendor/three/three.webgpu.min.js",
+"three/tsl":"/media/vendor/three/three.tsl.min.js",
+"three/addons/":"/media/vendor/three/jsm/"}}
+</script>
+<script type="application/json" id="liveref-dials">
+[
+{"name":"glow","label":"node glow","min":0,"max":2.2,"step":0.01,"value":1,"group":"look"},
+{"name":"edge","label":"edge weight","min":0.05,"max":1,"step":0.01,"value":0.6,"group":"look"},
+{"name":"spread","label":"branch spread","min":0.5,"max":1.7,"step":0.01,"value":1,"group":"look"},
+{"name":"tempo","label":"run speed","min":0.2,"max":2.2,"step":0.01,"value":1,"unit":"x","group":"look"},
+{"name":"grain","label":"screen grain","min":0,"max":1,"step":0.01,"value":0.28,"group":"look"},
+{"name":"depth","label":"camera distance","min":0.65,"max":1.8,"step":0.01,"value":1,"group":"look"},
+{"name":"dim","label":"idle branch dim","min":0,"max":1,"step":0.01,"value":0.45,"group":"look"},
+{"name":"flow","label":"flow density","min":0.15,"max":1.8,"step":0.01,"value":1,"group":"look"},
+{"name":"grid","label":"floor grid","min":0.4,"max":2,"step":0.01,"value":1,"group":"look"},
+{"name":"soft","label":"shadow softness","min":0,"max":8,"step":0.1,"value":2.6,"group":"light"},
+{"name":"az","label":"light azimuth","min":-3.14,"max":3.14,"step":0.01,"value":0.95,"unit":"rad","group":"light"},
+{"name":"el","label":"light elevation","min":0.06,"max":1.5,"step":0.01,"value":0.8,"unit":"rad","group":"light"},
+{"name":"ilev","label":"light intensity","min":0,"max":3,"step":0.01,"value":1.45,"group":"light"},
+{"name":"warm","label":"light warmth","min":0,"max":1,"step":0.01,"value":0.22,"group":"light"},
+{"name":"amb","label":"ambient level","min":0,"max":1.2,"step":0.01,"value":0.36,"group":"light"},
+{"name":"rim","label":"rim strength","min":0,"max":2.5,"step":0.01,"value":0.9,"group":"light"}
+]
+</script>
+<style>
+  :root{ --acc:#164eaa; --accHi:#4183e7; --rule:rgba(201,201,201,.14); }
+  html,body{margin:0;height:100%;background:#030304;}
+  body{font-family:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;color:#c9c9c9;
+       font-variant-numeric:tabular-nums;overflow:hidden;}
+  #stage{position:absolute;inset:0;outline:none;background:#030304;cursor:grab;touch-action:none;}
+  #stage.drag{cursor:grabbing;}
+  #stage.pick{cursor:pointer;}
+  #stage::after{content:"";position:absolute;inset:0;pointer-events:none;
+    box-shadow:inset 0 0 0 1px transparent;transition:box-shadow .24s cubic-bezier(.16,1,.3,1);}
+  #stage:focus-visible::after{box-shadow:inset 0 0 0 1px var(--acc);}
+  #gl{position:absolute;left:0;right:0;display:block;}
+  #hud{position:absolute;inset:0;display:block;pointer-events:none;}
+  #tp{position:absolute;display:flex;gap:4px;z-index:2;}
+  .btn{font-family:inherit;font-size:11px;line-height:1;letter-spacing:.08em;text-transform:uppercase;
+    color:#808080;background:transparent;border:1px solid var(--rule);border-radius:2px;
+    padding:6px 8px;cursor:pointer;-webkit-appearance:none;appearance:none;
+    transition:color .24s cubic-bezier(.16,1,.3,1),border-color .24s cubic-bezier(.16,1,.3,1),background-color .24s cubic-bezier(.16,1,.3,1);}
+  .btn:hover{color:#c9c9c9;border-color:rgba(201,201,201,.32);transition-duration:.12s;}
+  .btn:active{background:rgba(22,78,170,.30);color:#e6e6e6;}
+  .btn:focus-visible{outline:none;color:#c9c9c9;border-color:var(--acc);box-shadow:0 0 0 1px var(--acc);}
+  .btn[data-on="1"]{color:var(--accHi);border-color:rgba(65,131,231,.55);}
+  #stage.compact .wide{display:none;}
+</style>
+</head>
+<body>
+<div id="stage" tabindex="0" role="application" aria-label="Agent run tree. Drag to turn it. Arrow keys move the selected step. Space pauses.">
+  <canvas id="gl"></canvas>
+  <canvas id="hud"></canvas>
+  <div id="tp">
+    <button class="btn" id="bPlay" data-on="1" aria-pressed="false">Pause</button>
+    <button class="btn wide" id="bAgain">Replay</button>
+    <button class="btn" id="bNew"></button>
+    <button class="btn wide" id="bStory" aria-pressed="false"></button>
+    <button class="btn wide" id="bFull"></button>
+    <button class="btn wide" id="bCamp"></button>
+  </div>
+</div>
+
+<script>window.__dq=[];window.setDial=function(n,v){window.__dq.push([n,v]);};</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+/* ---------------------------------------------------------------- elements */
+const stage = document.getElementById('stage');
+const glc   = document.getElementById('gl');
+const hud   = document.getElementById('hud');
+const tp    = document.getElementById('tp');
+const bPlay = document.getElementById('bPlay');
+const bAgain= document.getElementById('bAgain');
+const bNew  = document.getElementById('bNew');
+const bStory= document.getElementById('bStory');
+const bFull = document.getElementById('bFull');
+const bCamp = document.getElementById('bCamp');
+const ctx   = (hud && hud.getContext) ? hud.getContext('2d') : null;
+if (stage && glc && hud && ctx && tp && bPlay && bAgain && bNew && bStory && bFull && bCamp) {
+
+/* ------------------------------------------------------------------- dials */
+const D = {
+  glow:1, edge:0.6, spread:1, tempo:1, grain:0.28, depth:1, dim:0.45, flow:1, grid:1,
+  soft:2.6, az:0.95, el:0.8, ilev:1.45, warm:0.22, amb:0.36, rim:0.9
+};
+
+/* ------------------------------------------------------------------ colors */
+const INK='#c9c9c9', INK2='#808080', INK3='#525252';
+const RULE='rgba(201,201,201,0.14)', RULE2='rgba(201,201,201,0.26)';
+const ACC='#164eaa', ACCHI='#4183e7', BAD='#b11020';
+const C_PEND=new THREE.Color(0x242426), C_LIVE=new THREE.Color(0x4183e7),
+      C_DONE=new THREE.Color(0x164eaa), C_BAD=new THREE.Color(0xb11020),
+      C_SKIP=new THREE.Color(0x141318), _pc=new THREE.Color(), _ec=new THREE.Color();
+
+/* ------------------------------------------------------------ run contents */
+const SEC_PER_UNIT = 2.38;
+/**
+ * VIEW_WORDS — every word this page says to a reader, in one place, in plain English.
+ *
+ * Reword anything here without touching code. No sentence about the earthquake is written
+ * anywhere else on this page. The action sentences, the admission notes, the limitation line and
+ * every impact number arrive from the continuous campaign's own analysis through
+ * /impact-view-data.json, which app/scripts/bake-impact-view.mjs copies out of the campaign's
+ * impact engine. Where the campaign holds nothing, the page says so and stops.
+ */
+const VIEW_WORDS = {
+  /** the head of the frame, and the line under it */
+  masthead: 'what each method changed',
+  run: (seed, tiers, branches) => 'seed ' + seed + '  ·  ' + tiers + ' decision tiers  ·  '
+    + branches + ' branches',
+  /** the big reading at the top right: where the replay stands on the earthquake's own clock */
+  clockLabel: 'incident clock',
+  /** the four readings down the left, in the order the design fixes them in */
+  counterNames: ['urgent unmet demand-hours so far', 'modeled demand coverage so far',
+                 'urgent demand units still open', 'waste units'],
+  /** the line under the run, and the unit its marks are counted in */
+  timeline: (hours) => hours + ' hours',
+  tickUnit: 'h',
+  /** how each kind of counter is written where it is read */
+  hours: (value) => String(Math.round(value * 10) / 10),
+  share: (value) => Math.round(value * 100) + '%',
+  whole: (value) => ('0' + value).slice(-2),
+  /** what a reading says where the campaign holds no number for it */
+  none: '—',
+  /** the line at the top of the band, for each kind of run whose numbers are not a result */
+  sampleLine: (kind) => kind === 'excluded smoke run'
+    ? "The campaign's excluded smoke run, not a production result."
+    : "Sample data from the tier's fake backend; no model was called.",
+  /**
+   * How big the band under the picture reads, and the frame it reads that big in.
+   *
+   * A classroom reads this page from a distance, so the four lines under the picture are 18
+   * pixels in a frame 1600 wide or wider and never smaller than 16 pixels anywhere. A line too
+   * long for its room is written at 16 first, and only then does it drop a whole sentence from
+   * its end: nothing is ever shrunk into fine print and nothing is ever cut mid-thought.
+   *
+   * A frame 1280 wide or narrower is a narrow frame. There the words above the picture have to
+   * leave it room to be a picture, so the four method sentences stand behind the details control
+   * rather than on the canvas, and the run is allowed to stand further around its own axis.
+   */
+  reading: { large: 18, small: 16, wideFrom: 1600, narrowTo: 1280 },
+  /**
+   * How wide a phrase standing beside a node may be, in pixels, at the size the picture draws it.
+   *
+   * The campaign writes each action out several ways, longest to shortest. A phrase wider than
+   * this crosses the branch names further out in the picture, so the page takes the longest form
+   * that stands inside this width. The decision run tree bounds its own node phrases the same way.
+   */
+  labelWidth: 320,
+  /** what the earthquake node is, said as the campaign's own first fact */
+  rootTag: 'The earthquake',
+  quake: 'The earthquake this campaign starts from.',
+  /** (1) where in the seventy-two hours this decision stands */
+  situation: (clock, hour, total) => 'Hour ' + hour + ' of ' + total + ', ' + clock + '.',
+  /** the three playback states. Nothing is decided live here: this is a replay of a record. */
+  waiting: 'The replay has not reached this decision yet.',
+  showing: 'The replay is showing this decision.',
+  /** (2) how many assignments the same decision carried besides the one written out in full */
+  more: (count) => count === 1 ? 'And one more assignment.'
+    : 'And ' + count + ' more assignments.',
+  /**
+   * (2) again: what a refused proposal that carried no assignment at all actually proposed.
+   *
+   * Two different things happened at those moments and neither of them is a method choosing not
+   * to act. At seven of them the coordinator proposed no assignment and wrote down its own
+   * reason, quoted here in the viewer's own plain names, its first whole sentence and no more. A
+   * sentence is never cut in the middle, so where that first sentence is longer than this band
+   * reads, the page shows the plain summary the bake carries for it instead, says so in its own
+   * words rather than between quotation marks, and says the full reason is kept in the data.
+   * At one of them the method first proposed two assignments, the rule checker found problems in
+   * them, and the revision that followed proposed none. Each entry of the checker's list is one
+   * problem and each rule name in it is one kind of rule, so both are counted and neither is
+   * collapsed into the other. Where the two counts are the same the sentence says the problems
+   * once and stops. The campaign's own cell says which of the two things happened.
+   */
+  noAssignment: (reason) => 'The AI proposed no assignment. Its recorded reason was: “'
+    + reason + '” Because no valid action passed the rules, the modeled situation did not change.',
+  /** what stands after a summary, so a reader knows the whole recorded reason is on file */
+  summaryKept: 'The full recorded reason is kept in the data.',
+  noAssignmentSummary: (summary) => 'The AI proposed no assignment. Its recorded reason, in plain'
+    + ' words: ' + summary + ' ' + VIEW_WORDS.summaryKept + ' Because no valid action passed the'
+    + ' rules, the modeled situation did not change.',
+  withdrawnProposal: (first, problems, kinds) => 'The AI first proposed ' + first
+    + ' assignments. After the rule checker found '
+    + (problems === 1 ? 'one problem' : problems + ' problems')
+    + (problems === kinds ? ''
+      : ' across ' + (kinds === 1 ? 'one kind of rule' : kinds + ' kinds of rule'))
+    + ', its revision proposed none. The proposal did not pass the rules, so the modeled situation did not change.',
+  /** the same two, in the room a phrase standing beside a node in the picture has */
+  noAssignmentLabel: 'No assignment proposed.',
+  withdrawnProposalLabel: 'Revised proposal: no assignment.',
+  /**
+   * (3) what became of a proposal that named no assignment for a rule to refuse.
+   *
+   * The other refusals name the rule the proposal failed. This one has no proposal to have failed
+   * a rule, so the line says only that nothing was admitted and the state stood still.
+   */
+  nothingAdmitted: 'The proposal did not pass the rules, so the modeled situation did not change.',
+  /** (3) what the admission gate did with the proposal, and whether the state moved */
+  admitted: 'The proposal passed the rules, so the modeled situation changed.',
+  /**
+   * A proposal the admission gate refused broke an admission rule. It is never a method choosing
+   * to do nothing, so the line names the rule that failed and then says the state stood still.
+   */
+  refused: (reason) => 'The proposal failed this rule: ' + reason
+    + ', so the modeled situation did not change.',
+  recorded: 'This is what the public record shows. It was never scored.',
+  /**
+   * (3) again: what this one moment served and wasted, as the campaign measured that moment.
+   *
+   * One need is named and the rest are counted, because the band holds one line for this and a
+   * reader holds one thing at a time.
+   */
+  moment: (name, more, waste) => (name ? 'Served ' + name + (more ? ' and ' + more + ' more' : '')
+    : 'Nothing served')
+    + (waste ? (waste === 1 ? '; one unit wasted.' : '; ' + waste + ' units wasted.')
+      : '; nothing wasted.'),
+  /**
+   * (1) again: what changed between this decision and the one before it.
+   *
+   * The clock moves between two checkpoints and new needs open on their own, so this says what
+   * changed in that stretch and never says the action on this node caused any of it.
+   */
+  since: (clauses) => 'Since the previous decision: ' + clauses + '.',
+  sinceStart: (clauses) => 'Since the earthquake: ' + clauses + '.',
+  sinceHours: (hours) => hours + (hours === '1' ? ' hour' : ' hours') + ' passed',
+  sinceWaited: (hours) => hours
+    + (hours === '1' ? ' more urgent demand-hour waited' : ' more urgent demand-hours waited'),
+  sinceOpen: (units) => (units > 0 ? units + ' more' : (-units) + ' fewer')
+    + (Math.abs(units) === 1 ? ' urgent unit open' : ' urgent units open'),
+  sinceWaste: (units) => (units > 0 ? units + ' more' : (-units) + ' fewer')
+    + (Math.abs(units) === 1 ? ' unit wasted' : ' units wasted'),
+  sinceNothing: 'nothing else in the four readings changed',
+  /** (4) the four cumulative readings the counters carry, said in words */
+  sofar: (share, open, hours) => 'So far: ' + share + ' of modeled demand covered, '
+    + open + ' urgent units open, ' + hours + ' urgent demand-hours unmet.',
+  /** (4) the registered primary outcome, carried to the close of the seventy-two hours */
+  projected: (hours) => 'Projected to the 72-hour close: ' + hours + '.',
+  /** the list of names in one line, said the way a person says a list */
+  list: (names) => names.length < 2 ? (names[0] || '')
+    : names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1],
+  /** The truth boundary: what this picture compares, and where the agent work is shown. */
+  header: 'This picture compares each method’s decision path.'
+    + ' Open a decision to see the agents working inside that method.',
+  /** the small heading over the sentence for the branch on screen, in the counters' own style */
+  methodHeading: 'method',
+  /** one sentence per branch, in the words the auditor wrote for it */
+  methodNote: {
+    FIXED_COVERAGE: 'Three report readers divide the available places once. Three reviewers check'
+      + ' their notes, and one decision maker proposes the action.',
+    GUARDED_GROWTH: 'When three sources agree on one need, every reviewer checks that need again.',
+    EVIDENCE_STATE: 'Each claim stays beside the source that supports it, contradicts it or leaves'
+      + ' it unanswered.',
+    EVIDENCE_FEEDBACK: 'After software names one broken rule, the decision maker may revise once'
+      + ' using the same facts.',
+    public_record: 'The public record is context, not a correct answer or score.',
+  },
+  /** how big that sentence reads in the counters' column, in pixels */
+  methodReading: 14,
+  /**
+   * The name of the seed control.
+   *
+   * It steps through the campaign's recorded seeds and wraps. It never runs a model, grades an
+   * answer or starts anything, so it is never called a new run.
+   */
+  seedControl: 'Next run',
+  /**
+   * The control that opens the whole network of one method, and the one that opens the numbers.
+   *
+   * Neither runs anything. The first opens the page that draws every agent of every decision for
+   * the run on screen; the second turns the story's four sentences into the exact readings behind
+   * them and back again.
+   */
+  networkControl: 'Full network',
+  detailsControl: 'Details',
+  /** The control that shows the second accepted campaign, and the one that brings the first back. */
+  growthCampaign: 'Growth run',
+  acceptedCampaign: 'Accepted run',
+  /** the heading over the finding, and the heading over the exact readings behind it */
+  storyHeading: 'what this run found',
+  /**
+   * What this page is, in one line, in the words the high-level decks lead with.
+   *
+   * The work is growth-intelligence orchestration — several ways of organising one team of AI
+   * agents — put to a disaster-recovery simulation that runs seventy-two hours from the
+   * earthquake. This line says that before the finding does.
+   */
+  subtitle: 'Growth-intelligence orchestration, applied to a 72-hour earthquake-response'
+    + ' simulation, in one accepted run.',
+  whyHeading: 'why each method landed there',
+  /**
+   * One sentence per method, saying why it landed where the story says it did.
+   *
+   * These four slots hold the auditor's own sentences, word for word. Each one is written here
+   * and nowhere else, and each is drawn under its own method's name, so choosing a sentence and
+   * choosing that method's trajectory are the same act.
+   */
+  why: {
+    FIXED_COVERAGE: 'With ordinary notes, required reports or unanswered questions often went'
+      + ' missing. Most proposals failed the rules, and about 5 modeled needs were covered.',
+    GUARDED_GROWTH: 'Repeatedly checking the strongest reported need helped proposals pass for'
+      + ' water, shelter, aftershock and final-priority work, covering about 33 modeled needs;'
+      + ' some assignments went unused.',
+    EVIDENCE_STATE: 'Keeping each claim linked to its source passed the rules for missing readings,'
+      + ' water, shelter and aftershock work with zero waste, but not for the collapsed-building'
+      + ' split or most final-priority decisions.',
+    EVIDENCE_FEEDBACK: 'After one precise rule correction, the source-linked method passed'
+      + ' consistently: 32 modeled needs and six decisions passed every rule in every run, with zero waste.'
+      + ' The collapsed-building split still failed.',
+  },
+  /**
+   * The bottom line, under the four sentences: what this run is really about.
+   *
+   * Every one of the thirty-two chains failed the same confirmation at the paper mill, and not one
+   * of them ever broke a capacity rule or booked the same unit twice. So the thing worth carrying
+   * out of this run is continuity — holding earlier commitments and evidence forward — rather than
+   * any claim that a more complex method beats a simpler one. The page paints this only where the
+   * bake has proved both readings; where it has not, the second slot writes the true counts.
+   */
+  bottomLine: 'All 32 three-day runs missed the paper-mill confirmation. In a focused test of the'
+    + ' eight frozen histories with a valid earlier crew assignment, both AI models used the'
+    + ' action card to confirm that exact assignment on the first try, 8/8 each.',
+  bottomLineCount: (failed, chains) => 'The paper-mill confirmation remained unresolved in '
+    + failed + ' of ' + chains + ' runs.',
+  /** the short block of limits that stands beside the story at all times */
+  limitsHeading: 'what this is not',
+  /** the heading over the reading down the left that decodes every colour and shape */
+  keyName: 'what each colour and shape means',
+  /** the heading over the readout at the right of a wide frame */
+  panelHeading: 'the step you picked',
+  /** what the readout says about the run the picked step belongs to */
+  panelRun: (seed, method) => 'seed ' + seed + '  ·  ' + method,
+  /** what a decision whose agent work is folded away carries on its own marker */
+  clusterName: (count) => count + ' agent steps folded here',
+  /**
+   * The accepted receipt run, in the seven slots the writer of this page's words owns.
+   *
+   * Every one of the seven strings below is a placeholder. Each is keyed by the exact name the
+   * writer will look for, and each may be rewritten here without touching a line of code. No
+   * number is ever typed into one of them. The result line and the safety line are templates
+   * with braces in them, and the page fills every brace from the run's own file,
+   * /receipt-fork-data.json, before it paints the line. The brace names are:
+   *
+   *   {delivered}   how many handoffs delivered the exact responsibility asked for
+   *   {total}       how many handoffs there were in all
+   *   {first_try}   how many were admitted on the first try
+   *   {corrections} how many corrections were used
+   *   {safe}        how many cases stayed safely open
+   *   {cases}       how many cases had an empty receipt to begin with
+   *   {false}       how many resolutions were false
+   *
+   * The replication reads its status slot while it is still pending, and the two number lines
+   * once it has been run, in the same words and from its own block. A slot with no number behind
+   * it paints the page's own dash rather than a blank. The name of the model and the hash of its
+   * analysis are never painted: they are machine names, and they stay in the run's file and in
+   * the page's handle.
+   */
+  receipt_heading: 'the action-card result',
+  receipt_result: 'Qwen3-32B confirmed {first_delivered}/{first_total}; Qwen3.5-122B confirmed {again_delivered}/{again_total}. Every confirmation worked on the first try.',
+  receipt_pending_result: 'Qwen3-32B confirmed {first_delivered}/{first_total}; every confirmation worked on the first try.',
+  receipt_safety: 'The specified unsupported moving-unit question stayed open in every safety case. False completions: {false_total}. Full safety check: Qwen3 {first_safe}/{first_cases}; Qwen3.5 {again_safe}/{again_cases}.',
+  replication_status: 'Waiting for a verified second-model run.',
+  evidence_boundary: 'Focused test: one handoff in eight frozen histories from the three-day runs—not another full run.',
+};
+
+/* the seed control is named from the words above, so every visible word is edited in one place */
+bNew.textContent = VIEW_WORDS.seedControl;
+bStory.textContent = VIEW_WORDS.detailsControl;
+bFull.textContent = VIEW_WORDS.networkControl;
+bCamp.textContent = VIEW_WORDS.growthCampaign;
+
+/** the campaign analysis this page shows, and nothing else */
+let VIEW = await (await fetch('/impact-view-data.json')).json();
+/**
+ * The agent work inside every decision of the same accepted run.
+ *
+ * The trajectories on screen are what each method's decisions did to the modeled state. This file
+ * holds who did the work at each of those decisions: three scouts, three reviewers, one
+ * coordinator, the rule checks around them and the state they changed. Every node in it points at
+ * a recorded model call, rule check or state change, and `app/scripts/bake-decision-network.mjs`
+ * copies it out of the same accepted run this page's numbers come from.
+ */
+let AGENT_WORK = await (await fetch('/decision-network-data.json')).json();
+/**
+ * The accepted receipt run, and the slot kept for its replication on a second model.
+ *
+ * This is a separate accepted run, not part of either campaign on screen, so the same strip is
+ * drawn whichever campaign a reader is looking at. The file holds one block for the first model
+ * and one for the replication. Each block carries how many handoffs there were, how many
+ * delivered the exact responsibility asked for, how many were admitted on the first try, how
+ * many corrections were used, how many cases had an empty receipt, how many of those stayed
+ * safely open and how many resolutions were false. The replication block also carries a status,
+ * which reads pending until a replication exists. Every number the strip paints is read from
+ * here; every word it paints is read from the words above.
+ */
+let RECEIPT = await (await fetch('/receipt-fork-data.json')).json();
+/**
+ * The second accepted campaign, and which of the two the page is showing. It has its own two
+ * files. The campaign control fetches them once, the first time a reader asks for that run, and
+ * every word and every trajectory on screen is then read from them through the same code as
+ * before.
+ */
+const GROWTH_FILES = ['/impact-view-growth-data.json', '/decision-network-growth-data.json'];
+/** the first campaign's own two files, kept whole so the control can bring them back exactly */
+const ACCEPTED_RUN = {view: VIEW, agents: AGENT_WORK};
+/** the growth run's two files once they have been fetched, and nothing before that */
+let GROWTH_RUN = null;
+/** which campaign is on screen: the first at load, the growth run once the control is used */
+let showingGrowth = false;
+/**
+ * The largest picture this page will draw.
+ *
+ * The component was built for a synthesized run of at most forty-six steps. One view here is one
+ * earthquake, five trajectories of eleven decisions each, and the ten or eleven agent steps of
+ * the one decision a viewer has opened. The build refuses to draw more than this.
+ */
+const MAXN = 600;
+/** the layout is fixed, so the same analysis always draws the same picture */
+const LAYOUT_SEED = 20260827;
+/** how long before its recorded deadline a decision reads as open, in hours */
+const WINDOW_HOURS = 2;
+/** which of the campaign's seeds the next build shows. The seed control steps it on and wraps. */
+let seedAt = 0;
+/** true while a build is redrawing the run on screen rather than stepping to the next seed */
+let holdSeed = false;
+/** which decision's agent work is open, as the branch and the decision it belongs to */
+let openBranch = -1, openDecision = -1;
+/** true while the story shows the exact per-seed readings instead of its four sentences */
+let storyDetails = false;
+
+/**
+ * One tint and one shape per kind of agent step, so a viewer can read a step without touching it.
+ *
+ * The auditor set these kinds, their colours and their shapes for the dense network page, and the
+ * bake carries them. They are used here for the agent steps alone: a trajectory node keeps the
+ * component's own playback colours, so the five trajectories read exactly as they did before.
+ */
+const TINT = {};
+const tintFor = (cls) => TINT[cls] || {live:C_LIVE, done:C_DONE};
+/** the same kinds by name, for the shape and the colour the key and the readout draw */
+const GLYPH = {};
+/** the two kinds of edge: what one agent passed to the next, and what a decision carried on */
+const EDGE_TINT = {};
+/**
+ * The kind the campaign gives to help a decision called in, where the campaign records one.
+ *
+ * The growth run names one kind more than the first campaign does. An agent called in keeps the
+ * shape of the work it did — a scout finding, a reviewer judgment — and wears this kind's ring as
+ * well, so a reader sees both what it did and that it was called in. The first campaign called
+ * none in and names no such kind, so this stands empty there.
+ */
+let CALLED_IN = null;
+/**
+ * Read the kinds of step and of line out of the campaign now on screen.
+ *
+ * Each campaign names its own kinds, their colours and their shapes in its own file. This runs
+ * again whenever the campaign control changes which file the page reads, so nothing here is ever
+ * left over from the other campaign.
+ */
+function readClasses(){
+  for (const held of [TINT, GLYPH, EDGE_TINT]) for (const id in held) delete held[id];
+  for (const one of AGENT_WORK.classes){
+    TINT[one.id] = {live:new THREE.Color(one.live), done:new THREE.Color(one.done)};
+    GLYPH[one.id] = one;
+  }
+  for (const one of AGENT_WORK.edge_kinds) EDGE_TINT[one.id] = new THREE.Color(one.color);
+  CALLED_IN = AGENT_WORK.classes.find(one => one.id === 'called_in') || null;
+}
+readClasses();
+
+/**
+ * The room the frame keeps for the words beside the picture.
+ *
+ * The left column holds the counters, the method sentence and the key. A frame this wide also
+ * holds a readout column at the right. The story stands across the top between them, and the run
+ * itself is laid out inside what is left, so no part of the picture is ever drawn behind a word.
+ */
+const COLUMN = 250;
+const PANEL = 320;
+const PANEL_FROM = 1600;
+/**
+ * How wide the receipt run's own strip stands, in pixels, at the right of the story.
+ *
+ * The strip is read at the same size as the limits above it and holds one short line per
+ * reading, so it needs a column rather than a caption. The four method sentences beside it give
+ * up this much of their own width, which costs them two more rows each and leaves the picture
+ * under them the room the contract fixes for it.
+ */
+const RECEIPT_COLUMN = 280;
+/**
+ * How the run is shaped so that it stands clear of those words.
+ *
+ * The component lays a run out along its own axis and around it. These four numbers narrow that
+ * run, slide it and lower the camera's aim so the whole picture sits under the story and between
+ * the two columns of words, at both frame sizes. Nothing about the run itself changes: the same
+ * five trajectories, the same eleven decisions, in the same order.
+ */
+const RUN_ACROSS = 0.75;
+const RUN_AROUND = 0.46;
+const RUN_SLIDE = 0.10;
+/** the room the run keeps from the story above it and from the line under it, in pixels */
+const RUN_ROOM = 34;
+/**
+ * The room the left column keeps, and the least it keeps where a long sentence fills it.
+ *
+ * The column holds the four counters, the sentence for the method on screen, the key and the
+ * controls, and the controls stand above the timeline. Where the longest sentence a campaign can
+ * show would push the key down into the controls, the column gives room back in one order — the
+ * gap over the sentence first, then the sentence's own line step, then the key's — and never
+ * past these floors. A frame with room to spare gives nothing back and stands exactly as before.
+ */
+const COUNTER_ROOM = 46;
+const COUNTER_TIGHT = 34;
+const READING_TIGHT = 16;
+const KEY_TIGHT = 12;
+/** the room the controls keep under the key, and how tall the strip stands before it is measured */
+const CONTROL_ROOM = 16;
+const CONTROL_TALL = 25;
+
+/** the earthquake's own clock at a point on the playhead, counted from the recorded minute */
+function clockAt(u){
+  const mins = VIEW.incident.startMinute + Math.round(u * SEC_PER_UNIT * 60);
+  const day = VIEW.incident.startDay + Math.floor(mins/1440);
+  const held = ((mins % 1440) + 1440) % 1440;
+  const two = n => ('0'+n).slice(-2);
+  return day + ' ' + VIEW.incident.month + '  ' + two(Math.floor(held/60)) + ':' + two(held%60);
+}
+
+function mulberry32(sd){
+  let a = sd>>>0;
+  return function(){
+    a = (a + 0x6D2B79F5)|0;
+    let t = Math.imul(a ^ (a>>>15), 1|a);
+    t = (t + Math.imul(t ^ (t>>>7), 61|t)) ^ t;
+    return ((t ^ (t>>>14))>>>0) / 4294967296;
+  };
+}
+
+let tree = null, seed = 20260826;
+
+/**
+ * The agent work recorded inside one decision of one method, from the accepted run.
+ *
+ * A decision is named by its own recorded cell, not by its place in a list, so the agent steps and
+ * the impact record on screen can only ever be the same decision of the same seed and method.
+ */
+function agentViewOf(seed, methodId){
+  return AGENT_WORK.views.find(one => one.seed === seed && one.method_id === methodId) || null;
+}
+function agentSlotOf(node){
+  const cell = (node && node.artifact && node.artifact.cell) ? node.artifact.cell : '';
+  const at = cell.indexOf('-slot-');
+  return at < 0 ? '' : cell.slice(at + 1);
+}
+
+/**
+ * How the agent work of one decision is laid out around it.
+ *
+ * The steps read left to right, one stage at a time, in three lanes. They stand on their own band
+ * inboard of the trajectory they belong to, at the same angle around the run, rather than further
+ * out than it: an early decision stands near the run's own axis and a late one far out, and the
+ * work of either has to fit in the same room. On that band the picture never grows when a
+ * decision is opened, so nothing it draws can reach the words at the edge of the frame.
+ */
+const STEP_ACROSS = 0.42, STEP_OUT = 0.52, STEP_LANE = 0.55;
+
+function buildTree(_sd){
+  // The seed is inert. The analysis does not change, so neither does the picture: one fixed seed
+  // lays the branches out, and the seed control steps through the campaign's own seeds instead.
+  const r = mulberry32(LAYOUT_SEED);
+  const many = Math.max(1, VIEW.seeds.length);
+  // a redraw shows the run already on screen; only the seed control steps to the next one
+  const at = holdSeed ? (seedAt - 1 + many) % many : seedAt;
+  const run = VIEW.seeds[at];
+  if (!holdSeed) seedAt = (seedAt + 1) % many;
+  // the run is narrowed and slid so the whole picture stands clear of the words around it
+  const across = (t) => ((t*1.5 - 4.4)*RUN_ACROSS + RUN_SLIDE + 4.4)/1.5;
+  const nodes = [], edges = [];
+  // the seventy-two hours the campaign covers, laid along the same run the component was built for
+  const total = VIEW.incident.hours / SEC_PER_UNIT;
+  const win = WINDOW_HOURS / SEC_PER_UNIT;
+  const tiers = run.branches[0] ? run.branches[0].tiers.length : 1;
+  const step = 6 / (tiers + 1);
+  const root = {
+    id:0, tier:across(0), ang:0, rad:0, parent:-1, kids:[], branch:-1, kind:'incident',
+    label: VIEW.incident.label, tag: VIEW_WORDS.rootTag, action: VIEW.incident.label,
+    sentence: VIEW_WORDS.quake, labels: [VIEW_WORDS.rootTag], projected: null,
+    counters: null, delta: null, servedNames: [], servedCount: 0, openCount: 0, more: 0,
+    waste: null, admitted: true, note: '', reason: '',
+    hours: 0, since: 0,
+    prune:false, reach:true, open:0, res:0
+  };
+  nodes.push(root);
+  run.branches.forEach((branch, b) => {
+    // the five branches stand around the run at even angles, so each one keeps its own lane
+    const lane = (b / Math.max(1, run.branches.length)) * Math.PI * 2;
+    let par = root;
+    branch.tiers.forEach((tier, t) => {
+      let spine = null;
+      tier.records.forEach((record, k) => {
+        const hours = Math.max(0, Math.min(VIEW.incident.hours, record.hours));
+        // what the campaign's own cell holds where a refused proposal assigned nothing: either
+        // the coordinator's recorded reason for proposing none, or the count it first proposed
+        // and the problems the checker found before its revision proposed none
+        const empty = record.empty_proposal || null;
+        const emptySaid = !empty ? '' : (empty.kind === 'withdrawn'
+          ? VIEW_WORDS.withdrawnProposal(
+            empty.initial_count, empty.problem_count, empty.kind_count)
+          : (empty.summarized ? VIEW_WORDS.noAssignmentSummary(empty.short_reason)
+            : VIEW_WORDS.noAssignment(empty.short_reason)));
+        const emptyLabel = !empty ? '' : (empty.kind === 'withdrawn'
+          ? VIEW_WORDS.withdrawnProposalLabel : VIEW_WORDS.noAssignmentLabel);
+        const when = (hours / VIEW.incident.hours) * total;
+        const open = Math.max(0, when - win), res = Math.max(open, when);
+        const nd = {
+          id: nodes.length, tier: across((t+1)*step), parent: par.id, kids: [], branch: b,
+          kind: branch.kind, slotId: record.decision_slot_id,
+          // the second record of the 20:00 tier stands beside the first, on the same lane
+          ang: lane + (r()-0.5)*0.06 + (k ? 0.30 : 0),
+          rad: (0.55 + (t+1)*step*0.52 + r()*0.06) * RUN_AROUND,
+          label: branch.label, tag: emptySaid || record.gem_tag,
+          action: emptySaid || record.gem_tag,
+          // the same action written from the longest form to the shortest, so the phrase beside
+          // the gem is a whole action at a width that never crosses a branch name
+          labels: emptyLabel ? [emptyLabel] : record.node_labels,
+          sentence: branch.kind === 'public record' ? VIEW_WORDS.recorded
+            : (record.admitted ? VIEW_WORDS.admitted
+              : (empty && empty.kind === 'none' ? VIEW_WORDS.nothingAdmitted
+                : VIEW_WORDS.refused(record.admission_reason))),
+          projected: branch.projected_72h,
+          counters: record.counters, delta: record.impact_delta,
+          // the needs this moment served, in the short wording the one line under the picture has
+          // room for, and how many the moment served in all
+          servedNames: record.served_short, servedCount: record.served_demand_ids.length,
+          openCount: record.open_demand_ids.length,
+          // how many assignments this one decision carried besides the one written out in full
+          more: Math.max(0, record.actions.length - 1),
+          waste: record.waste_units_at_this_moment,
+          admitted: record.admitted, note: record.admission_note || '',
+          reason: record.admission_reason || '',
+          since: record.hours_since_previous,
+          // the first decision on a branch has no decision before it to be measured against
+          first: (t === 0 && k === 0),
+          hours, prune:false, reach:true, open, res
+        };
+        par.kids.push(nd.id); nodes.push(nd); edges.push([par.id, nd.id]);
+        if (k === 0) spine = nd;
+      });
+      // the next tier continues from the first record of this one, which is where the campaign's
+      // own state carried on
+      par = spine || par;
+    });
+  });
+  // the tallest reading the wire under the first counter is drawn against
+  let peak = 1;
+  for (const nd of nodes){
+    if (nd.counters) peak = Math.max(peak, nd.counters[VIEW.counter_fields[0]] || 0);
+  }
+  /** how many decisions one trajectory holds, which is where every trajectory node stands */
+  const perBranch = run.branches[0]
+    ? run.branches[0].tiers.reduce((n, tier) => n + tier.records.length, 0) : 0;
+  const trajectory = nodes.length;
+
+  /**
+   * The agent work of the one decision a viewer has opened, drawn around that decision.
+   *
+   * Three scouts, three reviewers, one coordinator, the rule checks around them and the state they
+   * changed: every one of them a recorded model call, rule check or state change in the same cell
+   * of the same seed and method the trajectory node stands for. The stages read left to right in
+   * the order the method ran them, and the three lanes stand off the trajectory so the run itself
+   * is never covered. Every other decision keeps its work folded away under one marker.
+   */
+  const opened = {branch: openBranch, decision: openDecision, count: 0, method: null, steps: 0};
+  const branchAt = (openBranch >= 0) ? run.branches[openBranch] : null;
+  const agentView = (branchAt && branchAt.kind === 'method')
+    ? agentViewOf(run.seed, branchAt.method_id) : null;
+  if (agentView && openDecision >= 0 && openDecision < perBranch){
+    const home = nodes[1 + openBranch*perBranch + openDecision];
+    const want = home.slotId;
+    const steps = agentView.nodes.filter(one => one.decision >= 0 && agentSlotOf(one) === want);
+    const wide = (agentView.stages - 1) / 2;
+    const byId = new Map();
+    // where a step of another decision stands: on that decision's own trajectory node, folded
+    const folded = (id) => {
+      const one = agentView.nodes[id];
+      if (!one) return null;
+      if (one.decision < 0) return 0;
+      const slot = agentSlotOf(one);
+      const found = nodes.findIndex(node => node.branch === openBranch && node.slotId === slot);
+      return found < 0 ? null : found;
+    };
+    for (const row of steps){
+      if (nodes.length >= MAXN) break;
+      const lane = (row.slot === undefined || row.slot === null) ? 1 : row.slot;
+      const when = home.open
+        + ((row.stage + 1) / (agentView.stages + 1)) * Math.max(0.001, home.res - home.open);
+      const nd = {
+        id: nodes.length, tier: home.tier,
+        // where the step stands once the decision has opened out, and where it starts from
+        homeTier: home.tier, homeRad: home.rad,
+        outTier: home.tier + (row.stage - wide) * (STEP_ACROSS/1.5),
+        outRad: STEP_OUT + (lane - 1) * STEP_LANE,
+        parent: home.id, kids: [], branch: openBranch, kind: 'agent step',
+        cls: row.cls, agent: row.agent, stage: row.stage, stages: agentView.stages,
+        // where the campaign recorded that this agent was called in rather than standing on the
+        // team from the start, which the picture draws as one ring around its own shape
+        added: row.added || null,
+        decision: openDecision, home: home.id, method: agentView.method_id,
+        methodLabel: agentView.method_label, seed: agentView.seed,
+        ang: home.ang, rad: home.rad,
+        label: home.label, tag: row.labels[0], action: row.labels[0],
+        labels: row.labels, readout: row.readout, chips: row.chips,
+        sentence: row.readout[1] || '', projected: null, counters: null, delta: null,
+        servedNames: [], servedCount: 0, openCount: 0, more: 0, waste: null,
+        admitted: null, note: '', reason: '', modelCall: row.model_call, artifact: row.artifact,
+        hours: row.hours, since: 0, first: false, prune: false, reach: false,
+        // an agent step is shown or not yet shown; the one pulse on screen belongs to the run
+        open: when, res: when
+      };
+      byId.set(row.id, nd.id);
+      home.kids.push(nd.id);
+      nodes.push(nd);
+    }
+    const seen = new Set();
+    for (const edge of agentView.edges){
+      const held = byId.has(edge.a);
+      const there = byId.has(edge.b);
+      if (!held && !there) continue;
+      const a = held ? byId.get(edge.a) : folded(edge.a);
+      const b = there ? byId.get(edge.b) : folded(edge.b);
+      if (a === null || b === null || a === b) continue;
+      const mark = edge.kind + ':' + a + ':' + b;
+      if (seen.has(mark)) continue;
+      seen.add(mark);
+      const line = [a, b];
+      line.kind = edge.kind;
+      line.carry = edge.kind === 'carry';
+      line.agent = true;
+      edges.push(line);
+    }
+    opened.count = steps.length;
+    opened.steps = nodes.length - trajectory;
+    opened.method = agentView.method_id;
+  }
+  // the information one step passed to the next, so choosing a step can light its own path
+  for (const nd of nodes){ nd.in = []; nd.out = []; }
+  edges.forEach((edge, e) => {
+    if (!edge.agent) return;
+    nodes[edge[1]].in.push(e);
+    nodes[edge[0]].out.push(e);
+  });
+  // the replay opens on the earthquake itself, not part way through the first night
+  if (!holdSeed) p = 0;
+  const built = {
+    nodes, edges, total, peak, view: at, seed: run.seed,
+    branches: run.branches, tiers, records: trajectory - 1,
+    trajectory, perBranch, opened,
+    // what the growth run recorded about this seed: how many of its decisions called extra agents
+    // in, how many were called in, and what share of the run's model time those calls took. The
+    // first campaign called none in and records none of this.
+    growth: run.growth || null
+  };
+  // one handle, so a gate can read what is drawn and stand on one node without a mouse
+  try {
+    built.selected = () => ({id: sel, state: states[sel], node: tree.nodes[sel]});
+    built.select = (id) => { sel = id; userPicked = true; return states[id]; };
+    built.seek = (u) => { p = u; };
+    built.counters = () => counterText(tree.nodes[sel] || tree.nodes[0]);
+    built.sampleLine = () => VIEW.sample ? VIEW_WORDS.sampleLine(VIEW.sample_kind) : '';
+    // what the band under the picture is saying now, and how big it is saying each line. These
+    // read the run on screen rather than the run this build made, so a handle taken before a
+    // decision was opened still answers for the picture as it stands.
+    built.readout = () => (tree.said || []).slice();
+    // what the page is saying about the boundary between a method's decision path and the agents
+    // inside it: the header sentence, where it stands, and the sentence for the branch on screen
+    built.boundary = null;
+    // the phrase the picture stands beside one gem, and the width no phrase may pass
+    built.labelAt = (id) => roomFor(id);
+    built.labelWidth = VIEW_WORDS.labelWidth;
+    built.seeds = VIEW.seeds.length;
+    // the five trajectories, and the agent work of the one decision that is open
+    built.trajectoryNodes = () => tree.nodes.filter(one => !one.cls).map(one => one.id);
+    built.agentNodes = () => tree.nodes.filter(one => one.cls).map(one => one.id);
+    built.openDecision = () => ({branch: openBranch, decision: openDecision,
+      count: tree.opened.count, steps: tree.opened.steps, method: tree.opened.method});
+    // how many agent steps the accepted run recorded at one decision of one trajectory
+    built.agentCountAt = (branch, decision) => {
+      const one = tree.branches[branch];
+      const view = (one && one.kind === 'method') ? agentViewOf(tree.seed, one.method_id) : null;
+      if (!view) return 0;
+      const rows = one.tiers.flatMap(tier => tier.records);
+      const want = rows[decision] ? rows[decision].decision_slot_id : '';
+      return view.nodes.filter(node => node.decision >= 0 && agentSlotOf(node) === want).length;
+    };
+    built.classes = AGENT_WORK.classes.slice();
+    built.edgeKinds = AGENT_WORK.edge_kinds.slice();
+    built.growthReceipts = () => tree.growth;
+    // which of the two accepted campaigns is on screen, and the agent steps this one records as
+    // called in at the decision now open
+    built.campaign = () => showingGrowth ? 'growth' : 'accepted';
+    built.calledIn = () => tree.nodes
+      .filter(one => one.added)
+      .map(one => ({id: one.id, cls: one.cls, agent: one.agent, readout: one.readout.slice()}));
+    // where every word this page draws beside the picture stands, so nothing is drawn behind it
+    built.keyBox = () => keyBox;
+    built.storyBox = () => storyBox;
+    built.panelBox = () => panelBox;
+    built.countersBox = () => countersBox;
+    built.controlBox = () => controlBox;
+    built.story = () => storyDrawn;
+    // the accepted receipt run: the two blocks of its own file, the words the six slots hold,
+    // and the rows the strip actually painted, so a gate can read both against each other
+    built.receiptStrip = () => ({
+      data: RECEIPT.strip,
+      words: {receipt_heading: VIEW_WORDS.receipt_heading,
+        receipt_result: VIEW_WORDS.receipt_result,
+        receipt_pending_result: VIEW_WORDS.receipt_pending_result,
+        receipt_safety: VIEW_WORDS.receipt_safety,
+        replication_status: VIEW_WORDS.replication_status,
+        evidence_boundary: VIEW_WORDS.evidence_boundary},
+      painted: Boolean(receiptDrawn),
+      rows: receiptDrawn ? receiptDrawn.rows.slice() : [],
+      size: receiptDrawn ? receiptDrawn.size : 0,
+      pending: receiptDrawn ? receiptDrawn.pending : null,
+      box: receiptBox,
+    });
+    built.panel = () => panelDrawn;
+    built.keyRows = () => keyDrawn.slice();
+    built.marks = () => (tree.drawn || []).slice();
+    built.pulses = () => states.filter(one => one === 'running').length;
+    built.metrics = () => ({W: W, H: H, TOP: TOP, BOT: BOT,
+      timelineBaseline: H - BOT - 8, timelineTop: H - BOT - 26, reading: VIEW_WORDS.reading});
+    built.screen = () => scr.map((one, id) => ({id: id, x: one.x, y: one.y + TOP, vis: one.vis}));
+    built.ink = (id) => {
+      const held = new THREE.Color();
+      nodeMesh.getColorAt(id, held);
+      return {r: held.r, g: held.g, b: held.b, state: states[id],
+        cls: tree.nodes[id].cls || null, branch: tree.nodes[id].branch};
+    };
+    built.path = () => {
+      const lit = pathFrom(sel);
+      return lit.nodes ? {nodes:[...lit.nodes], edges:[...lit.edges]} : null;
+    };
+    built.fullNetwork = () => fullHref();
+    window.__IMPACTVIEW = built;
+  } catch(_){}
+  // the story's four sentences are the page's own controls, so this listens for a click on them
+  if (firstBuild){ firstBuild = false; stage.addEventListener('pointerup', pickStory); }
+  return built;
+}
+/** true until the page has built its first run */
+let firstBuild = true;
+
+/**
+ * The path one agent step stands on, inside its own decision.
+ *
+ * Everything that reached this step and everything this step reached: what it was handed,
+ * upstream, and the proposal, the admission and the state it led to, downstream. The rest of the
+ * picture keeps its colour and stands back, so nothing is hidden and a viewer keeps their bearings.
+ * A trajectory node isolates nothing: the five trajectories always read as they did before.
+ */
+function pathFrom(at){
+  if (!tree || at < 0 || at >= tree.nodes.length || !tree.nodes[at].cls) return {nodes:null, edges:null};
+  const heldNodes = new Set([at]), heldEdges = new Set();
+  const walk = (from, way, only) => {
+    const queue = [from];
+    const seen = new Set([from]);
+    while (queue.length){
+      const id = queue.pop();
+      for (const e of tree.nodes[id][way]){
+        if (only && tree.edges[e].kind !== only) continue;
+        const next = tree.edges[e][way === 'in' ? 0 : 1];
+        heldEdges.add(e);
+        heldNodes.add(next);
+        if (!seen.has(next)){ seen.add(next); queue.push(next); }
+      }
+    }
+  };
+  walk(at, 'in', 'information');
+  walk(at, 'out', 'information');
+  for (const id of [...heldNodes]){
+    walk(id, 'in', 'carry');
+    walk(id, 'out', 'carry');
+  }
+  return {nodes:heldNodes, edges:heldEdges};
+}
+
+/**
+ * Where the whole network of the run on screen is read, which the full-network control opens.
+ *
+ * The link names the seed and the method the reader is standing on, and, while the growth run is
+ * the one on screen, the campaign as well, so the network page opens that campaign's own record
+ * rather than the first one's.
+ */
+function fullHref(){
+  const branch = tree && tree.nodes[sel] ? tree.nodes[sel].branch : -1;
+  const one = (branch >= 0 && tree.branches[branch] && tree.branches[branch].kind === 'method')
+    ? tree.branches[branch].method_id : AGENT_WORK.method_order[0];
+  return '/decision-network.html?seed=' + (tree ? tree.seed : '') + '&method=' + one
+    + (showingGrowth ? '&campaign=growth' : '');
+}
+
+/**
+ * Which decision's agent work belongs open, from the step or the decision a viewer is standing on.
+ *
+ * One decision at a time. Standing on a trajectory node opens that decision's own work; standing
+ * on one of its steps keeps it open; standing on the earthquake or on the public record opens
+ * none, because the record is context and carries no agent work.
+ */
+function wantsOpen(){
+  const n = tree ? tree.nodes[sel] : null;
+  if (!n || n.branch < 0) return [-1, -1];
+  const branch = tree.branches[n.branch];
+  if (!branch || branch.kind !== 'method') return [-1, -1];
+  if (n.cls) return [n.branch, n.decision];
+  const rows = branch.tiers.flatMap(tier => tier.records);
+  const at = rows.findIndex(one => one.decision_slot_id === n.slotId);
+  return at < 0 ? [-1, -1] : [n.branch, at];
+}
+
+/** draw the same run again, with a different decision opened, keeping the seed and the playhead */
+function regrow(){
+  const keep = sel, kept = userPicked;
+  holdSeed = true;
+  tree = buildTree(seed);
+  holdSeed = false;
+  states = new Array(tree.nodes.length).fill('');
+  scr.length = 0;
+  sel = Math.min(keep, tree.nodes.length - 1);
+  userPicked = kept;
+  grow = 0;
+  buildScene();
+}
+/** how far the open decision's work has opened out from its own trajectory node, eased */
+let grow = 1;
+
+function placeTree(tr){
+  for (const nd of tr.nodes){
+    const rad = (nd.rad||0) * D.spread;
+    if (!nd.pos) nd.pos = new THREE.Vector3();
+    nd.pos.set(nd.tier*1.5 - 4.4, 1.95 + Math.sin(nd.ang)*rad*0.52, Math.cos(nd.ang)*rad*1.02);
+  }
+}
+
+/* ---------------------------------------------------------------- 3d scene */
+let renderer=null, scene=null, camera=null, key=null, rimL=null, hemi=null;
+let nodeMesh=null, edgeLine=null, halo=null, flowPts=null, gridLines=null, floor=null, ring=null;
+let haloGeo=null, edgeGeo=null, flowGeo=null;
+let gl_ok = false;
+const EDGE_SEG = 8, MAXFLOW = 420;
+const tmpM = new THREE.Matrix4(), tmpQ = new THREE.Quaternion(),
+      tmpS = new THREE.Vector3(), tmpV = new THREE.Vector3(), tmpV2 = new THREE.Vector3(),
+      tmpAx = new THREE.Vector3(), tmpProj = new THREE.Vector3();
+const target = new THREE.Vector3(0, 1.95, 0);
+
+try {
+  renderer = new THREE.WebGLRenderer({canvas:glc, antialias:true, alpha:false, powerPreference:'high-performance'});
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio||1));
+  renderer.setClearColor(0x030304, 1);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x030304, 11, 27);
+  camera = new THREE.PerspectiveCamera(38, 1.5, 0.1, 90);
+  gl_ok = true;
+} catch(err){ gl_ok = false; }
+
+const haloMat = gl_ok ? new THREE.ShaderMaterial({
+  uniforms:{ uPx:{value:400}, uGlow:{value:1} },
+  vertexShader:[
+    'attribute float aSize;','attribute float aAlpha;','attribute vec3 aColor;',
+    'varying vec3 vC; varying float vA; uniform float uPx;',
+    'void main(){ vC = aColor; vA = aAlpha;',
+    '  vec4 mv = modelViewMatrix * vec4(position, 1.0);',
+    '  gl_PointSize = aSize * uPx / max(0.001, -mv.z);',
+    '  gl_Position = projectionMatrix * mv; }'
+  ].join('\n'),
+  fragmentShader:[
+    'varying vec3 vC; varying float vA; uniform float uGlow;',
+    'void main(){ vec2 d = gl_PointCoord - 0.5; float r = length(d) * 2.0;',
+    '  if (r > 1.0) discard;',
+    '  float a = pow(1.0 - r, 2.4);',
+    '  gl_FragColor = vec4(vC * a * vA * uGlow, 1.0); }'
+  ].join('\n'),
+  transparent:true, blending:THREE.AdditiveBlending, depthWrite:false
+}) : null;
+
+function ctrlPoint(a, b, out){
+  out.copy(a).add(b).multiplyScalar(0.5);
+  out.y += 0.10;
+  out.z *= 1.16;
+  return out;
+}
+function bez(a, c, b, t, out){
+  const it = 1-t, w0 = it*it, w1 = 2*it*t, w2 = t*t;
+  out.set(a.x*w0 + c.x*w1 + b.x*w2, a.y*w0 + c.y*w1 + b.y*w2, a.z*w0 + c.z*w1 + b.z*w2);
+  return out;
+}
+
+function buildScene(){
+  if (!gl_ok) return;
+  disposeScene();
+  placeTree(tree);
+  const N = tree.nodes.length, E = tree.edges.length;
+
+  const gemGeo = new THREE.OctahedronGeometry(0.19, 0);
+  const gemMat = new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.44, metalness:0.15, flatShading:true});
+  nodeMesh = new THREE.InstancedMesh(gemGeo, gemMat, N);
+  nodeMesh.castShadow = true;
+  nodeMesh.frustumCulled = false;
+  for (let i=0;i<N;i++){
+    tmpM.compose(tree.nodes[i].pos, tmpQ.identity(), tmpS.set(1,1,1));
+    nodeMesh.setMatrixAt(i, tmpM);
+    nodeMesh.setColorAt(i, C_PEND);
+  }
+  scene.add(nodeMesh);
+
+  edgeGeo = new THREE.BufferGeometry();
+  edgeGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(E*EDGE_SEG*2*3),3));
+  edgeGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(E*EDGE_SEG*2*3),3));
+  edgeLine = new THREE.LineSegments(edgeGeo, new THREE.LineBasicMaterial({
+    vertexColors:true, transparent:true, opacity:D.edge, blending:THREE.AdditiveBlending, depthWrite:false}));
+  edgeLine.frustumCulled = false;
+  scene.add(edgeLine);
+
+  haloGeo = new THREE.BufferGeometry();
+  haloGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(N*3),3));
+  haloGeo.setAttribute('aSize', new THREE.BufferAttribute(new Float32Array(N),1));
+  haloGeo.setAttribute('aAlpha', new THREE.BufferAttribute(new Float32Array(N),1));
+  haloGeo.setAttribute('aColor', new THREE.BufferAttribute(new Float32Array(N*3),3));
+  halo = new THREE.Points(haloGeo, haloMat);
+  halo.frustumCulled = false;
+  scene.add(halo);
+
+  flowGeo = new THREE.BufferGeometry();
+  flowGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(MAXFLOW*3),3));
+  flowGeo.setDrawRange(0,0);
+  flowPts = new THREE.Points(flowGeo, new THREE.PointsMaterial({
+    color:0x8fb6f2, size:0.052, sizeAttenuation:true, transparent:true, opacity:0.95,
+    blending:THREE.AdditiveBlending, depthWrite:false}));
+  flowPts.frustumCulled = false;
+  scene.add(flowPts);
+
+  ring = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.008, 5, 44),
+    new THREE.MeshBasicMaterial({color:0x4183e7, transparent:true, opacity:0.9}));
+  ring.frustumCulled = false;
+  scene.add(ring);
+
+  refreshGeometry();
+  buildFloor();
+  buildLights();
+  rebuildFlow();
+}
+
+function buildFloor(){
+  if (floor){ scene.remove(floor); floor.geometry.dispose(); floor.material.dispose(); floor = null; }
+  floor = new THREE.Mesh(new THREE.PlaneGeometry(30,22),
+    new THREE.MeshStandardMaterial({color:0x0a0a0d, roughness:1, metalness:0}));
+  floor.rotation.x = -Math.PI/2;
+  floor.position.y = -0.02;
+  floor.receiveShadow = true;
+  scene.add(floor);
+  rebuildGrid();
+}
+
+function rebuildGrid(){
+  if (!gl_ok) return;
+  if (gridLines){ scene.remove(gridLines); gridLines.geometry.dispose(); gridLines.material.dispose(); gridLines = null; }
+  const step = 1.15 / Math.max(0.4, D.grid);
+  const hx = 7.2, hz = 5.4, arm = step*0.16;
+  const pts = [];
+  for (let x=-hx; x<=hx+1e-6; x+=step) pts.push(x,0,-hz, x,0,hz);
+  for (let z=-hz; z<=hz+1e-6; z+=step) pts.push(-hx,0,z, hx,0,z);
+  for (let x=-hx; x<=hx+1e-6; x+=step)
+    for (let z=-hz; z<=hz+1e-6; z+=step)
+      pts.push(x-arm,0.004,z, x+arm,0.004,z, x,0.004,z-arm, x,0.004,z+arm);
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pts,3));
+  gridLines = new THREE.LineSegments(g, new THREE.LineBasicMaterial({
+    color:0x434343, transparent:true, opacity:0.26, depthWrite:false}));
+  gridLines.frustumCulled = false;
+  scene.add(gridLines);
+}
+
+function buildLights(){
+  if (!key){
+    key = new THREE.DirectionalLight(0xffffff, 1.4);
+    key.castShadow = true;
+    key.shadow.mapSize.set(1024,1024);
+    const sc = key.shadow.camera;
+    sc.left=-8; sc.right=8; sc.top=6; sc.bottom=-6; sc.near=0.5; sc.far=34;
+    sc.updateProjectionMatrix();
+    scene.add(key); scene.add(key.target);
+    rimL = new THREE.DirectionalLight(0x4183e7, 0.9);
+    scene.add(rimL); scene.add(rimL.target);
+    hemi = new THREE.HemisphereLight(0x2a3a5c, 0x0b0b0e, 0.36);
+    scene.add(hemi);
+  }
+  applyLights();
+}
+
+const COOL = new THREE.Color(0xc6d4ea), WARM = new THREE.Color(0xffd7ac);
+function applyLights(){
+  if (!key) return;
+  const d = 13;
+  key.position.set(target.x + d*Math.sin(D.az)*Math.cos(D.el),
+                   target.y + d*Math.sin(D.el),
+                   target.z + d*Math.cos(D.az)*Math.cos(D.el));
+  key.target.position.copy(target);
+  key.intensity = D.ilev;
+  key.shadow.radius = D.soft;
+  key.color.copy(COOL).lerp(WARM, D.warm);
+  rimL.position.set(target.x - d*Math.sin(D.az)*0.8, target.y + d*0.28, target.z - d*Math.cos(D.az)*0.8);
+  rimL.target.position.copy(target);
+  rimL.intensity = D.rim;
+  hemi.intensity = D.amb;
+}
+
+function disposeScene(){
+  if (!scene) return;
+  [nodeMesh, edgeLine, halo, flowPts, ring].forEach(o=>{
+    if (!o) return;
+    scene.remove(o);
+    if (o.geometry) o.geometry.dispose();
+    if (o.material && o.material !== haloMat) o.material.dispose();
+  });
+  nodeMesh=null; edgeLine=null; halo=null; flowPts=null; ring=null;
+  haloGeo=null; edgeGeo=null; flowGeo=null;
+}
+
+function refreshGeometry(){
+  if (!gl_ok || !edgeGeo || !haloGeo) return;
+  const pos = edgeGeo.getAttribute('position'), arr = pos.array;
+  const cp = tmpV2;
+  let k = 0;
+  for (let e=0;e<tree.edges.length;e++){
+    const a = tree.nodes[tree.edges[e][0]].pos, b = tree.nodes[tree.edges[e][1]].pos;
+    ctrlPoint(a,b,cp);
+    for (let s=0;s<EDGE_SEG;s++){
+      bez(a,cp,b, s/EDGE_SEG, tmpV);      arr[k]=tmpV.x; arr[k+1]=tmpV.y; arr[k+2]=tmpV.z; k+=3;
+      bez(a,cp,b,(s+1)/EDGE_SEG, tmpV);   arr[k]=tmpV.x; arr[k+1]=tmpV.y; arr[k+2]=tmpV.z; k+=3;
+    }
+  }
+  pos.needsUpdate = true;
+  const hp = haloGeo.getAttribute('position');
+  for (let i=0;i<tree.nodes.length;i++){
+    hp.array[i*3]   = tree.nodes[i].pos.x;
+    hp.array[i*3+1] = tree.nodes[i].pos.y;
+    hp.array[i*3+2] = tree.nodes[i].pos.z;
+  }
+  hp.needsUpdate = true;
+}
+
+/* --------------------------------------------------------------- run state */
+let p = 2.6;
+let playing = true;
+let endHold = 0;
+let sel = 0, hover = -1, userPicked = false;
+let states = [];
+let flow = [];
+
+function resolveStates(){
+  // the camera aims above the run, so the whole picture stands in the room the story and the line
+  // under the picture leave it, and no part of it is ever drawn behind a word
+  const want = 1.95 + aimFor();
+  if (Math.abs(target.y - want) > 0.0005){ target.y = want; applyLights(); }
+  const around = aroundFor();
+  if (Math.abs(D.spread - around) > 0.0005){
+    D.spread = around;
+    placeTree(tree);
+    refreshGeometry();
+  }
+  // one decision at a time: the agent work of the decision a viewer stands on, and no other
+  const open = wantsOpen();
+  if (open[0] !== openBranch || open[1] !== openDecision){
+    openBranch = open[0];
+    openDecision = open[1];
+    regrow();
+    return true;
+  }
+  // that work opens out from its own decision rather than appearing at its full reach
+  if (grow < 1){
+    grow += (1 - grow) * 0.18 + 0.012;
+    if (grow > 0.999) grow = 1;
+    for (const one of tree.nodes){
+      if (!one.cls) continue;
+      one.tier = one.homeTier + (one.outTier - one.homeTier) * grow;
+      one.rad = one.homeRad + (one.outRad - one.homeRad) * grow;
+    }
+    placeTree(tree);
+    refreshGeometry();
+  }
+  // Playback only: waiting, being shown, shown. A proposal the campaign did not admit still
+  // stands on the branch and the branch carries on past it, exactly as the campaign did.
+  // One pulse stands on screen at a time: the decision the replay is opening now. The others
+  // resolve as the replay passes them, and an agent step never pulses at all.
+  const nd = tree.nodes;
+  let changed = false;
+  let pulse = -1, latest = -1;
+  for (let i=0;i<nd.length;i++){
+    if (nd[i].cls) continue;
+    if (p >= nd[i].open && p < nd[i].res && nd[i].open > latest){ latest = nd[i].open; pulse = i; }
+  }
+  for (let i=0;i<nd.length;i++){
+    const n = nd[i];
+    let s;
+    if (p < n.open) s = 'pending';
+    else if (p < n.res && i === pulse) s = 'running';
+    else s = 'done';
+    if (states[i] !== s){ states[i] = s; changed = true; }
+  }
+  // a new selection lights a new path through the open decision, which is a repaint and no more
+  if (paintedSel !== sel){ paintedSel = sel; changed = true; }
+  return changed;
+}
+/** which node the picture last painted its lit path from */
+let paintedSel = -1;
+
+/**
+ * Where the camera aims, so the run stands in the room the words around it leave.
+ *
+ * The story is the first thing a reader reads and the line under the picture is the last, so the
+ * run itself sits in the middle of what is left between them. The camera aims that far above the
+ * run, which lowers the whole picture on screen without moving one node relative to the ground it
+ * stands on. The camera keeps its own angle, its own distance and its own drift.
+ */
+function aimFor(){
+  const from = (storyBox ? storyBox.y1 : TOP) + RUN_ROOM;
+  const to = H - BOT - RUN_ROOM - 26;
+  const per = FH / (2 * 12.2 * Math.max(0.1, D.depth) * Math.tan(38 * Math.PI / 360));
+  const held = runOnScreen();
+  if (!held) return ((from + to)/2 - (TOP + FH/2)) / Math.max(1, per);
+  // eased toward the aim that puts the run's own middle in the middle of the room it has
+  const step = (((from + to)/2 - (held.top + held.bottom)/2) / Math.max(1, per)) * 0.30;
+  return (target.y - 1.95) + step;
+}
+
+/** where the run reaches on screen as it stands, from the frame's own last projection */
+function runOnScreen(){
+  let top = Infinity, bottom = -Infinity;
+  for (let i = 0; i < scr.length; i++){
+    const one = scr[i];
+    if (!one || !one.vis) continue;
+    top = Math.min(top, one.y + TOP);
+    bottom = Math.max(bottom, one.y + TOP);
+  }
+  return (isFinite(top) && bottom > top) ? {top: top, bottom: bottom} : null;
+}
+
+/**
+ * How far the run stands around its own axis, so it fits the room the words leave it.
+ *
+ * The story is read first and takes what it needs; the line under the picture takes what it needs;
+ * the run is flattened just enough to stand in what is left. This is the component's own branch
+ * spread, set from the frame rather than from a dial, so a narrow frame never draws one gem behind
+ * one word. The room and the reach are both read from the frame as it stands, so no number here
+ * has to be kept true by hand.
+ */
+function aroundFor(){
+  const from = (storyBox ? storyBox.y1 : TOP) + RUN_ROOM;
+  const to = H - BOT - RUN_ROOM - 26;
+  const room = to - from;
+  if (room < 40) return D.spread;
+  // how far the run reaches on screen as it stands, which is what has to fit that room
+  const held = runOnScreen();
+  if (!held) return D.spread;
+  const want = D.spread * (room / (held.bottom - held.top));
+  // A narrow frame draws fewer pixels per step of the run, and standing further around the axis
+  // also carries a node further from the camera, so the picture there grows more slowly than the
+  // spread does. The run is allowed to stand further around its axis in a narrow frame, up to 1.8
+  // rather than 1.0, which is what lets the picture reach the 220 pixels the contract asks of it:
+  // at 1.7 the same picture stands 217.7 pixels at its shortest, whatever room the words leave it.
+  const most = (W <= VIEW_WORDS.reading.narrowTo) ? 1.8 : 1;
+  // eased, so the picture settles into its room rather than snapping between two sizes
+  return Math.max(0.15, Math.min(most, D.spread + (want - D.spread) * 0.22));
+}
+
+function edgeLive(e){
+  const a = states[tree.edges[e][0]], b = states[tree.edges[e][1]];
+  if (b === 'pruned') return 2;
+  if (b === 'running' || b === 'done') return 1;
+  if (a === 'done' && b === 'pending') return 0.5;
+  return 0;
+}
+
+/** how far back an unpicked trajectory, the public record and an unlit agent step stand */
+const AWAY_BRANCH = 0.35, RECORD_FAINT = 0.62, AWAY_STEP = 0.30;
+
+function paintStates(){
+  if (!gl_ok || !nodeMesh || !edgeGeo) return;
+  const dim = 0.18 + (1-D.dim)*0.9;
+  // the trajectory a viewer stands on keeps its own brightness; the other four stand back, and
+  // the public record stands back further still, because it is context and not an answer
+  const here = tree.nodes[sel] ? tree.nodes[sel].branch : -1;
+  const standing = (n) => {
+    const one = (n.branch >= 0) ? tree.branches[n.branch] : null;
+    let held = (here >= 0 && n.branch >= 0 && n.branch !== here) ? AWAY_BRANCH : 1;
+    if (one && one.kind !== 'method') held *= RECORD_FAINT;
+    return held;
+  };
+  // the lit path, where a viewer has picked one agent step; everything else keeps its colour and
+  // stands back, so nothing is hidden and a viewer keeps their bearings
+  const lit = pathFrom(sel);
+  for (let i=0;i<tree.nodes.length;i++){
+    // an agent step takes the colour of its own kind, from the key that decodes the picture
+    const n = tree.nodes[i], hue = n.cls ? tintFor(n.cls) : null;
+    const s = states[i];
+    if (hue){
+      const near = (lit.nodes && !lit.nodes.has(i)) ? AWAY_STEP : 1;
+      if (s === 'pending') _pc.copy(hue.done).multiplyScalar(0.78 * near);
+      else _pc.copy(hue.live).multiplyScalar(near);
+    }
+    else {
+      const k = standing(n);
+      if (s === 'running') _pc.copy(C_LIVE).multiplyScalar(k);
+      else if (s === 'done') _pc.copy(C_DONE).multiplyScalar(k);
+      else if (s === 'pruned') _pc.copy(C_BAD).multiplyScalar(k);
+      else if (s === 'skipped') _pc.copy(C_SKIP).multiplyScalar(dim*k);
+      else _pc.copy(C_PEND).multiplyScalar(dim*k);
+    }
+    nodeMesh.setColorAt(i, _pc);
+  }
+  if (nodeMesh.instanceColor) nodeMesh.instanceColor.needsUpdate = true;
+
+  const col = edgeGeo.getAttribute('color'), arr = col.array;
+  for (let e=0;e<tree.edges.length;e++){
+    const lv = edgeLive(e);
+    const edge = tree.edges[e];
+    // the second kind of line: what one agent passed to the next runs thin and tapers along its
+    // own line, and what the decision carried either side of it runs solid and brighter, end to end
+    if (edge.agent){
+      const near = (lit.edges && !lit.edges.has(e)) ? AWAY_STEP : 1;
+      _ec.copy(EDGE_TINT[edge.carry ? 'carry' : 'information'])
+        .multiplyScalar((lv >= 1 ? 1 : 0.30) * near);
+    }
+    else {
+      const k = standing(tree.nodes[edge[1]]);
+      if (lv === 2) _ec.setHex(0xb11020).multiplyScalar(0.9*k);
+      else if (lv === 1) _ec.setHex(0x2f6ac4).multiplyScalar(k);
+      else if (lv === 0.5) _ec.setHex(0x1a2740).multiplyScalar((0.7 + (1-D.dim)*0.6)*k);
+      else _ec.setHex(0x1b1b21).multiplyScalar((0.35 + (1-D.dim)*1.1)*k);
+    }
+    const base = e*EDGE_SEG*2*3;
+    for (let v=0; v<EDGE_SEG*2; v++){
+      const f = (lv >= 1 && !edge.carry) ? (0.55 + 0.45*(v/(EDGE_SEG*2-1))) : 1;
+      arr[base+v*3]   = _ec.r*f;
+      arr[base+v*3+1] = _ec.g*f;
+      arr[base+v*3+2] = _ec.b*f;
+    }
+  }
+  col.needsUpdate = true;
+  rebuildFlow();
+}
+
+function rebuildFlow(){
+  if (!gl_ok || !flowGeo) return;
+  flow.length = 0;
+  const per = Math.max(1, Math.round(3*D.flow));
+  for (let e=0;e<tree.edges.length;e++){
+    if (edgeLive(e) !== 1) continue;
+    for (let i=0;i<per;i++){
+      if (flow.length >= MAXFLOW) break;
+      flow.push({e:e, off:((i + 0.31*e) % per)/per});
+    }
+  }
+  flowGeo.setDrawRange(0, flow.length);
+}
+
+/* --------------------------------------------------- synthesized live wire */
+const HIST = 168;
+const hist = new Float32Array(HIST);
+let histN = 0, walkT = 0, walkA = 0, walkB = 0, sig = 900;
+
+function signal(t, dt, active){
+  // the wire is the record, not a synthesized number: the first counter of the branch on screen,
+  // as it stood at the last decision the replay has passed on that branch
+  const n = tree.nodes[sel] || tree.nodes[0];
+  const branch = n.branch;
+  let held = 0;
+  for (let i=0;i<tree.nodes.length;i++){
+    const row = tree.nodes[i];
+    if (row.branch !== branch || !row.counters || states[i] === 'pending') continue;
+    held = row.counters[VIEW.counter_fields[0]] || 0;
+  }
+  sig = held;
+  return sig;
+}
+
+/* ------------------------------------------------------------ hud plumbing */
+let W=560, H=380, TOP=46, BOT=76, FW=0, FH=0, compact=false, dpr=1;
+const scr = [];
+let noiseTile = null;
+
+function makeNoise(){
+  const n = document.createElement('canvas');
+  n.width = n.height = 128;
+  const g = n.getContext('2d');
+  if (!g) return null;
+  const img = g.createImageData(128,128);
+  for (let i=0;i<128*128;i++){
+    const v = Math.random();
+    const a = v > 0.86 ? Math.floor((v-0.86)*1500) : 0;
+    img.data[i*4] = 210; img.data[i*4+1] = 214; img.data[i*4+2] = 224;
+    img.data[i*4+3] = Math.min(90, a);
+  }
+  g.putImageData(img,0,0);
+  return n;
+}
+
+function layout(){
+  W = stage.clientWidth || 560; H = stage.clientHeight || 380;
+  compact = (W < 440 || H < 320);
+  stage.classList.toggle('compact', compact);
+  TOP = compact ? 34 : 46;
+  BOT = compact ? 52 : 76;
+  FW = Math.max(1, W); FH = Math.max(60, H - TOP - BOT);
+  glc.style.top = TOP + 'px';
+  glc.style.height = FH + 'px';
+  tp.style.left = (compact ? 10 : 16) + 'px';
+  tp.style.bottom = (compact ? 8 : 10) + 'px';
+  dpr = Math.min(2, window.devicePixelRatio||1);
+  hud.width = Math.max(1, Math.round(W*dpr));
+  hud.height = Math.max(1, Math.round(H*dpr));
+  hud.style.width = W + 'px'; hud.style.height = H + 'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  if (gl_ok){
+    renderer.setPixelRatio(dpr);
+    renderer.setSize(FW, FH, false);
+    camera.aspect = FW/Math.max(1,FH);
+    camera.updateProjectionMatrix();
+    if (haloMat) haloMat.uniforms.uPx.value = FH*0.5 / Math.tan(camera.fov*Math.PI/360);
+  }
+}
+
+/* ------------------------------------------------------------ hud painting */
+const F = w => w + 'px "Helvetica Neue",Helvetica,Arial,sans-serif';
+function track(s, x, y, sp, align){
+  let total = 0;
+  for (let i=0;i<s.length;i++) total += ctx.measureText(s[i]).width + sp;
+  total -= sp;
+  let cx = (align==='right') ? x-total : (align==='center') ? x-total/2 : x;
+  for (let i=0;i<s.length;i++){ ctx.fillText(s[i], cx, y); cx += ctx.measureText(s[i]).width + sp; }
+}
+function label(s,x,y,align,col){
+  ctx.font = F(11); ctx.fillStyle = col || INK3;
+  track(String(s).toUpperCase(), x, y, 0.88, align || 'left');
+}
+function num(s,x,y,size,align,col){
+  ctx.font = F(size); ctx.fillStyle = col || INK;
+  ctx.textAlign = align || 'left'; ctx.fillText(String(s), x, y); ctx.textAlign = 'left';
+}
+function hair(x0,y0,x1,y1,col){
+  ctx.strokeStyle = col || RULE; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(Math.round(x0)+0.5, Math.round(y0)+0.5);
+  ctx.lineTo(Math.round(x1)+0.5, Math.round(y1)+0.5); ctx.stroke();
+}
+function cross(x,y,a,col){
+  ctx.strokeStyle = col; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(Math.round(x)-a, Math.round(y)+0.5); ctx.lineTo(Math.round(x)+a, Math.round(y)+0.5);
+  ctx.moveTo(Math.round(x)+0.5, Math.round(y)-a); ctx.lineTo(Math.round(x)+0.5, Math.round(y)+a);
+  ctx.stroke();
+}
+
+function drawHud(t){
+  ctx.clearRect(0,0,W,H);
+  const padX = compact ? 10 : 16;
+  // nothing is claimed about the truth boundary until this frame has drawn it
+  tree.boundary = null;
+
+  ctx.fillStyle = '#0b0b0e';
+  ctx.fillRect(0,0,W,TOP);
+  ctx.fillRect(0,H-BOT,W,BOT);
+  hair(0, TOP, W, TOP, RULE);
+  hair(0, H-BOT, W, H-BOT, RULE);
+
+  label(VIEW_WORDS.masthead, padX, compact?14:17, 'left', INK2);
+  // where the header sentence stands. It reads in the head of the frame unless the sample line
+  // owns that slot and the two will not stand in it together, and then it goes under the counters.
+  let headerBelow = false;
+  if (!compact){
+    // the limitation stands in the head of the frame, beside the name of the run, at all times,
+    // and the line under it says when these numbers are not a production result
+    ctx.font = F(11);
+    const wide = (s) => ctx.measureText(s.toUpperCase()).width + 0.88*s.length;
+    ctx.fillStyle = INK3;
+    ctx.fillText(VIEW.limitation, padX + wide(VIEW_WORDS.masthead) + 18, 17);
+    const run = VIEW_WORDS.run(tree.seed, tree.tiers, tree.branches.length);
+    num(run, padX, 34, 13, 'left', INK);
+    // this row is read from the left and the incident clock is read from the right at the same
+    // height, so the row stops where the clock begins and never crosses it
+    ctx.font = F(28);
+    const stop = W - padX - ctx.measureText(clockAt(Math.min(p, tree.total))).width - 18;
+    ctx.font = F(13);
+    let at = padX + ctx.measureText(run).width + 18;
+    ctx.font = F(11);
+    if (VIEW.sample){
+      const note = VIEW_WORDS.sampleLine(VIEW.sample_kind);
+      ctx.fillStyle = ACCHI;
+      ctx.fillText(note, at, 34);
+      at += ctx.measureText(note).width + 18;
+    }
+    // what the picture compares, and what it does not show
+    if (at + ctx.measureText(VIEW_WORDS.header).width <= stop){
+      ctx.fillStyle = INK2;
+      ctx.fillText(VIEW_WORDS.header, at, 34);
+    } else headerBelow = true;
+  }
+  label(VIEW_WORDS.clockLabel, W-padX, compact?14:17, 'right', INK2);
+  num(clockAt(Math.min(p, tree.total)), W-padX, compact?30:38, compact?18:28, 'right', playing?INK:INK2);
+
+  // the four counters the design fixes, for the branch the selected decision stands on, at the
+  // moment on screen. Every one of them is a number the campaign's impact engine wrote.
+  const n = tree.nodes[sel] || tree.nodes[0];
+  const shown = counterText(n);
+  const cy = TOP + (compact?16:22);
+  // The finding this run produced, in plain English, across the top of the frame, above every
+  // graph on the page and above the readout column that stands under it.
+  const wideFrame = !compact && W >= PANEL_FROM;
+  if (!compact) drawStory(padX + COLUMN + 30, cy, W - padX);
+  else { storyBox = null; storyDrawn = null; receiptBox = null; receiptDrawn = null; }
+  // the whole detail of the step a viewer picked, in its own column under the story
+  if (wideFrame) {
+    drawPanel(W - padX - PANEL, (storyBox ? storyBox.y1 : cy) + 30, W - padX, n);
+  } else { panelBox = null; panelDrawn = null; }
+  label(VIEW_WORDS.counterNames[0], padX, cy, 'left', INK2);
+  num(shown[0], padX, cy+22, 18, 'left', ACCHI);
+  drawSpark(padX, cy+30, compact?76:104, compact?18:26);
+  countersBox = compact ? null : {x0: padX - 4, y0: cy - 14, x1: padX + COLUMN, y1: cy + 60};
+
+  if (!compact && (H - BOT) > (TOP + 216)){
+    const y2 = cy + 70;
+    label(VIEW_WORDS.counterNames[1], padX, y2, 'left', INK2);
+    num(shown[1], padX, y2+20, 18, 'left', INK);
+    const y3 = y2 + 40;
+    label(VIEW_WORDS.counterNames[2], padX, y3, 'left', INK2);
+    num(shown[2], padX, y3+20, 18, 'left', INK);
+    const y4 = y3 + 40;
+    label(VIEW_WORDS.counterNames[3], padX, y4, 'left', INK2);
+    num(shown[3], padX, y4+20, 18, 'left', INK);
+    countersBox = {x0: padX - 4, y0: cy - 14, x1: padX + COLUMN, y1: y4 + 26};
+
+    // METHOD — how the decision path on the selected branch worked, under the four counters and
+    // inside its own column. With nothing selected this is the control's own sentence.
+    ctx.font = F(11);
+    const colW = Math.max.apply(null, VIEW_WORDS.counterNames.map(
+      (one) => ctx.measureText(one.toUpperCase()).width + 0.88*one.length));
+    const size = VIEW_WORDS.methodReading;
+    // one sentence broken across that column on whole words, so no line is ever cut mid-word
+    const broken = (text) => {
+      ctx.font = F(size);
+      const lines = [];
+      let line = '';
+      for (const word of String(text || '').split(' ')){
+        const next = line ? line + ' ' + word : word;
+        if (line && ctx.measureText(next).width > colW){ lines.push(line); line = word; }
+        else line = next;
+      }
+      if (line) lines.push(line);
+      return lines;
+    };
+    const branch = (n.branch >= 0) ? tree.branches[n.branch] : null;
+    const id = (branch && branch.method_id) ? branch.method_id : VIEW.method_order[0];
+    // the words above are the first campaign's own; a campaign that names its methods elsewhere
+    // has its sentence for each of them in its own story block, and the page reads it from there
+    /**
+     * Where that sentence is already on screen, this column does not paint it a second time.
+     *
+     * A campaign that names its methods elsewhere writes one sentence for each of them and none
+     * apart for this column, so the sentence this column would paint is the very sentence the
+     * story paints under that method's own name. In a frame wide enough to carry those four
+     * columns the sentence is already standing there, and this column paints its heading alone
+     * and gives the room back to the key. In a narrow frame the columns stand behind the details
+     * control, so this column is the only place the sentence stands at rest and it is painted
+     * here. The first campaign has its own sentence for this column and is untouched.
+     */
+    const columnsSayIt = showingGrowth && W > VIEW_WORDS.reading.narrowTo;
+    const noteFor = (one) => {
+      if (columnsSayIt) return '';
+      const row = VIEW.outcome_story.methods.find((held) => held.method_id === one);
+      return VIEW_WORDS.methodNote[one] || (row && row.sentence)
+        || VIEW_WORDS.methodNote[VIEW.method_order[0]] || '';
+    };
+    const note = noteFor(id);
+    /**
+     * How much room the column gives back, so the key never ends behind the controls.
+     *
+     * The column is measured for the longest sentence any of this campaign's methods can show,
+     * not for the one on screen, so nothing in it moves as a reader steps from one method to the
+     * next. Where that column would end deeper than the controls may stand, the room comes back
+     * in one order — the gap over the sentence, then the sentence's own line step, then the
+     * key's — each only as far as its floor and only by as much as is missing. In a frame with
+     * room to spare nothing is given back and the column stands exactly as it did.
+     */
+    const headLines = headerBelow ? broken(VIEW_WORDS.header).length : 0;
+    const mostLines = Math.max.apply(null,
+      VIEW.method_order.map((one) => broken(noteFor(one)).length));
+    const keyLines = 1 + AGENT_WORK.classes.filter((one) => one.id !== 'incident').length
+      + AGENT_WORK.edge_kinds.length;
+    // the deepest the key may end: the controls stand under it, and the timeline under them
+    const deepest = H - BOT - 26 - (tp.offsetHeight || CONTROL_TALL) - 14 - CONTROL_ROOM;
+    let gap = COUNTER_ROOM, step = size + 5, keyStep = (W >= PANEL_FROM) ? 18 : 16;
+    const takes = () => y4 + gap + (headLines ? headLines*step + 14 : 0)
+      + 20 + mostLines*step + 22 + keyStep*keyLines + 6;
+    let over = takes() - deepest;
+    if (over > 0){
+      const give = Math.min(over, COUNTER_ROOM - COUNTER_TIGHT);
+      gap -= give; over -= give;
+    }
+    if (over > 0 && (mostLines + headLines) > 0){
+      const give = Math.min(Math.ceil(over/(mostLines + headLines)), (size + 5) - READING_TIGHT);
+      step -= give; over -= give*(mostLines + headLines);
+    }
+    if (over > 0){
+      keyStep -= Math.min(Math.ceil(over/keyLines), keyStep - KEY_TIGHT);
+    }
+    const write = (text, top) => {
+      const lines = broken(text);
+      ctx.fillStyle = INK2;
+      lines.forEach((one, i) => ctx.fillText(one, padX, top + i*step));
+      return lines;
+    };
+    let top = y4 + gap;
+    // where the sample line owns the slot in the head of the frame, the header sentence reads here
+    if (headerBelow) top += write(VIEW_WORDS.header, top).length*step + 14;
+    label(VIEW_WORDS.methodHeading, padX, top, 'left', INK2);
+    const said = write(note, top + 20);
+    // one handle, so a gate can read the boundary the page is drawing and how big it is drawn
+    tree.boundary = {
+      header: VIEW_WORDS.header, headerInHead: !headerBelow,
+      heading: String(VIEW_WORDS.methodHeading).toUpperCase(),
+      methodId: id, sentence: note, lines: said, size: size, color: INK2, width: Math.round(colW),
+    };
+    // the reading that decodes every colour and shape in the picture, under the counters and the
+    // method sentence, at the edge of the frame, at all times
+    drawKey(padX, top + 20 + said.length*step + 22, keyStep);
+  } else {
+    keyBox = null;
+    keyDrawn = [];
+  }
+
+  // The controls stand at the foot of that same column, under the key, rather than in the band.
+  // The band under the picture then keeps its whole width for the sentences a reader came for,
+  // and nothing it says has to stop short of a button.
+  //
+  // They stand under the key at the same room whatever the key does, because the column above has
+  // already been measured to leave them that room. The second reading is the last guard: however
+  // deep the key ends, the controls never reach the timeline.
+  if (!compact && keyBox){
+    const wantTop = Math.round(Math.min(keyBox.y1 + CONTROL_ROOM,
+      H - BOT - 26 - (tp.offsetHeight || CONTROL_TALL) - 14));
+    if (tp.dataset.at !== String(wantTop)){
+      tp.dataset.at = String(wantTop);
+      tp.style.bottom = 'auto';
+      tp.style.top = wantTop + 'px';
+    }
+    controlBox = {x0: padX - 4, y0: wantTop - 4,
+      x1: padX + tp.offsetWidth + 4, y1: wantTop + tp.offsetHeight + 4};
+  } else if (tp.dataset.at){
+    delete tp.dataset.at;
+    tp.style.top = 'auto';
+    tp.style.bottom = (compact ? 8 : 10) + 'px';
+    controlBox = null;
+  }
+
+  drawNodeMarks(t);
+  drawTimeline(padX);
+
+  if (!compact) drawReadout(padX, n);
+
+  drawGrain();
+}
+
+/**
+ * One run of words broken between whole words into the room it has, and never mid-word.
+ *
+ * The same sentences are laid out on every frame, so each answer is kept under the words, the room
+ * and the size that produced it. Nothing about the answer depends on anything else.
+ */
+const wrapped = new Map();
+function wrapInto(said, room, size){
+  const key = size + '|' + Math.round(room) + '|' + said;
+  const held = wrapped.get(key);
+  if (held) return held;
+  ctx.font = F(size);
+  const rows = [];
+  let row = '';
+  for (const word of String(said || '').split(' ')){
+    const next = row ? row + ' ' + word : word;
+    if (row && ctx.measureText(next).width > room){ rows.push(row); row = word; }
+    else row = next;
+  }
+  if (row) rows.push(row);
+  if (wrapped.size > 400) wrapped.clear();
+  wrapped.set(key, rows);
+  return rows;
+}
+
+/**
+ * One shape, drawn at a point, in the colour of the kind of step it stands for.
+ *
+ * Colour never acts alone on this page. Every kind of agent step carries its own small shape as
+ * well, over its gem in the picture and beside its line in the key, so a reader who cannot tell
+ * the hues apart still reads the picture, and so does a grayscale print of it.
+ */
+function glyph(kind, x, y, r, col){
+  ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 1;
+  ctx.beginPath();
+  if (kind === 'circle'){ ctx.arc(x, y, r, 0, Math.PI*2); ctx.stroke(); }
+  else if (kind === 'ring'){
+    ctx.arc(x, y, r, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(x, y, r*0.42, 0, Math.PI*2); ctx.stroke();
+  }
+  else if (kind === 'dot'){ ctx.arc(x, y, r*0.82, 0, Math.PI*2); ctx.fill(); }
+  // the ring the picture draws around an agent a decision called in, standing on its own where
+  // the key names it, so the key and the picture never show a reader two different marks
+  else if (kind === 'halo'){
+    ctx.arc(x, y, r, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(x, y, r*0.22, 0, Math.PI*2); ctx.fill();
+  }
+  else if (kind === 'square'){ ctx.strokeRect(x-r+0.5, y-r+0.5, r*2-1, r*2-1); }
+  else if (kind === 'hexagon'){
+    for (let i=0;i<6;i++){
+      const a = Math.PI/6 + i*Math.PI/3;
+      const px = x + Math.cos(a)*r, py = y + Math.sin(a)*r;
+      if (i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    }
+    ctx.closePath(); ctx.stroke();
+  }
+  else if (kind === 'diamond'){
+    ctx.moveTo(x, y-r); ctx.lineTo(x+r, y); ctx.lineTo(x, y+r); ctx.lineTo(x-r, y);
+    ctx.closePath(); ctx.stroke();
+  }
+  else if (kind === 'triangle'){
+    ctx.moveTo(x, y-r); ctx.lineTo(x+r, y+r*0.8); ctx.lineTo(x-r, y+r*0.8);
+    ctx.closePath(); ctx.stroke();
+  }
+  else if (kind === 'cross'){
+    ctx.moveTo(x-r, y-r); ctx.lineTo(x+r, y+r);
+    ctx.moveTo(x+r, y-r); ctx.lineTo(x-r, y+r);
+    ctx.stroke();
+  }
+  else if (kind === 'bar'){ ctx.fillRect(x-r, y-2, r*2, 4); }
+  else if (kind === 'slashbar'){
+    ctx.fillRect(x-r, y-2, r*2, 4);
+    ctx.beginPath(); ctx.moveTo(x+r*0.7, y-r); ctx.lineTo(x-r*0.7, y+r); ctx.stroke();
+  }
+  else { ctx.moveTo(x-r, y); ctx.lineTo(x+r, y); ctx.moveTo(x, y-r); ctx.lineTo(x, y+r);
+    ctx.stroke(); }
+}
+
+/**
+ * The key, at the edge of the frame, at all times, in both frames.
+ *
+ * One line for each kind of agent step the accepted run records, in the auditor's own words,
+ * colours and shapes, with how many of that kind stand in the decision now open; then one line for
+ * each of the two kinds of line between them. A viewer never has to remember what a colour meant,
+ * and a kind that is not in the open decision still holds its place, so the key never changes
+ * shape under a reader.
+ *
+ * The column hands in the step between its lines. It is 18 pixels in a wide frame and 16 in a
+ * narrow one, and closer than that only where a short frame has no other room to give, so that
+ * the key still ends above the controls.
+ */
+function drawKey(padX, y, step){
+  const counts = {};
+  for (const one of tree.nodes) if (one.cls) counts[one.cls] = (counts[one.cls] || 0) + 1;
+  // an agent called in stands under two lines of the key: the shape of the work it did, and the
+  // ring that says it was called in. Neither replaces the other, so it is counted under both.
+  if (CALLED_IN){
+    for (const one of tree.nodes){
+      if (one.added) counts[CALLED_IN.id] = (counts[CALLED_IN.id] || 0) + 1;
+    }
+  }
+  label(VIEW_WORDS.keyName, padX, y, 'left', INK2);
+  let at = y + step;
+  keyDrawn = [];
+  for (const one of AGENT_WORK.classes){
+    if (one.id === 'incident') continue;
+    const held = counts[one.id] || 0;
+    glyph(one.glyph, padX + 5, at - 4, 5, held ? one.live : one.done);
+    label(one.key, padX + 18, at, 'left', held ? INK : INK3);
+    num(held, padX + COLUMN - 54, at, 11, 'right', held ? INK2 : INK3);
+    keyDrawn.push({id: one.id, key: one.key, glyph: one.glyph, count: held, y: at, size: 11});
+    at += step;
+  }
+  at += 6;
+  for (const one of AGENT_WORK.edge_kinds){
+    ctx.strokeStyle = one.color; ctx.lineWidth = one.id === 'carry' ? 2 : 1;
+    ctx.beginPath();
+    ctx.moveTo(padX, at - 4.5); ctx.lineTo(padX + 9, at - 4.5); ctx.stroke();
+    ctx.lineWidth = 1;
+    label(one.key, padX + 16, at, 'left', INK3);
+    keyDrawn.push({id: one.id, key: one.key, glyph: 'line', count: null, y: at, size: 11});
+    at += step;
+  }
+  // the box the key stands in, so nothing else the page draws is ever written across it
+  keyBox = {x0: padX - 4, y0: y - 12, x1: padX + COLUMN, y1: at};
+}
+/** where the key stands, and what it drew, once it has been drawn */
+let keyBox = null, keyDrawn = [];
+
+/**
+ * The accepted receipt run, in one short strip in the right column.
+ *
+ * A separate accepted run, on its own model, is read here beside the two campaigns: how many
+ * handoffs delivered the exact responsibility asked for, how many were admitted on the first
+ * try, how many corrections were used, and what happened where a case had an empty receipt. The
+ * replication of the same run on a second model stands under it, and reads as pending until
+ * there is one. Every word is one of the six slots in the words above and every number is read
+ * from the run's own file: the result line and the safety line are templates whose braces are
+ * filled here, and the model's name and the hash of its analysis are never painted.
+ */
+function drawReceipt(x0, y, x1, size){
+  receiptBox = null;
+  receiptDrawn = null;
+  const strip = RECEIPT && RECEIPT.strip;
+  const first = strip && strip.first_model;
+  if (!first) return y;
+  const again = strip.replication || null;
+  const room = x1 - x0;
+  const step = size + 4;
+  const rows = [];
+  let at = y;
+  // one heading, in the same small capitals every heading beside the picture is written in
+  const heading = (said) => {
+    label(said, x0, at, 'left', INK2);
+    rows.push({slot: said, text: String(said).toUpperCase(), size: 11, rows: [String(said)
+      .toUpperCase()]});
+    at += size + 6;
+  };
+  // one line, broken between whole words into the column it has, and never mid-word
+  const line = (slot, said, col) => {
+    const broken = wrapInto(said, room, size);
+    ctx.font = F(size); ctx.fillStyle = col;
+    for (const one of broken){ ctx.fillText(one, x0, at); at += step; }
+    rows.push({slot: slot, text: said, size: size, rows: broken.slice()});
+  };
+  // the braces the words above carry, filled from both accepted result blocks
+  const values = {
+    first_delivered: first.exact_responsibilities_delivered,
+    first_total: first.handoffs_total,
+    first_try: first.admitted_first_try,
+    first_safe: first.safe_open_cases,
+    first_cases: first.empty_receipt_cases,
+    again_delivered: again && again.exact_responsibilities_delivered,
+    again_total: again && again.handoffs_total,
+    again_first_try: again && again.admitted_first_try,
+    again_safe: again && again.safe_open_cases,
+    again_cases: again && again.empty_receipt_cases,
+    false_total: first.false_resolutions + (again ? again.false_resolutions : 0),
+  };
+  const fill = (said) => String(said).replace(/\{(\w+)\}/g, (whole, name) => {
+    const value = values[name];
+    return (value === null || value === undefined) ? VIEW_WORDS.none : String(value);
+  });
+  heading(VIEW_WORDS.receipt_heading);
+  // A pending replication keeps the first-model result and the waiting status. Once accepted, the
+  // two model results share one sentence and the two safety readings share the next.
+  const pending = !again || again.status === 'pending';
+  if (pending) {
+    line(VIEW_WORDS.receipt_pending_result, fill(VIEW_WORDS.receipt_pending_result), INK);
+    line(VIEW_WORDS.replication_status, VIEW_WORDS.replication_status, INK3);
+  }
+  else {
+    line(VIEW_WORDS.receipt_result, fill(VIEW_WORDS.receipt_result), INK);
+    line(VIEW_WORDS.receipt_safety, fill(VIEW_WORDS.receipt_safety), INK2);
+  }
+  at += 6;
+  line(VIEW_WORDS.evidence_boundary, VIEW_WORDS.evidence_boundary, INK3);
+  const bottom = at - step + 6;
+  receiptBox = {x0: x0 - 8, y0: y - 13, x1: x1, y1: bottom};
+  receiptDrawn = {rows: rows, size: size, box: receiptBox, pending: pending,
+    numbers: {first_model: first, replication: again}};
+  return bottom;
+}
+/** where the receipt strip stands, and what it painted, once it has been drawn */
+let receiptBox = null, receiptDrawn = null;
+
+/**
+ * The outcome story: what this run found, in plain English, before any picture is read.
+ *
+ * The paragraph is the auditor's, with every number read off the run by the bake and none of them
+ * typed. Under it stands one column per method: its name and the one sentence saying why it landed
+ * where the paragraph says it did, or, where a viewer has opened the details, the exact readings
+ * across the eight seeds instead. Choosing a column chooses that method's trajectory, so every
+ * picture on the page answers one sentence a reader has just read. The limits stand under them
+ * all, in one short block.
+ *
+ * In a frame 1280 wide or narrower those four columns would leave the picture a strip too thin to
+ * read as a picture, so they stand behind the details control there: nothing of them is drawn
+ * until a reader opens the details, and then all four sentences are written out in full, in the
+ * words that say why each method landed where it did. The paragraph, the limits and the line
+ * under them stay on screen in every frame.
+ */
+function drawStory(x0, y, x1){
+  const story = VIEW.outcome_story;
+  storyDrawn = null;
+  storyPicks = [];
+  receiptBox = null;
+  receiptDrawn = null;
+  if (!story || x1 - x0 < 300){ storyBox = null; return; }
+  // every word of the story is reading text, so all of it stands at the size the contract fixes
+  const read = (W >= VIEW_WORDS.reading.wideFrom)
+    ? VIEW_WORDS.reading.large : VIEW_WORDS.reading.small;
+  const small = read;
+  const room = x1 - x0;
+  // the paragraph, and the limits directly beside it, so what this is and what it is not are read
+  // in the same breath
+  const limitFrom = x0 + Math.round(room * 0.70);
+  label(VIEW_WORDS.storyHeading, x0, y, 'left', INK2);
+  // what this page is, on the heading's own line, before the finding it carries
+  ctx.font = F(11);
+  const headingWide = ctx.measureText(String(VIEW_WORDS.storyHeading).toUpperCase()).width
+    + 0.88*String(VIEW_WORDS.storyHeading).length + 20;
+  const subtitleRows = wrapInto(VIEW_WORDS.subtitle, room - headingWide, 11);
+  ctx.font = F(11); ctx.fillStyle = INK3;
+  let subtitleAt = y;
+  for (const one of subtitleRows){ ctx.fillText(one, x0 + headingWide, subtitleAt); subtitleAt += 15; }
+  let at = Math.max(y + read + 6, subtitleAt + 4);
+  // the finding, and the limits directly beside it, so what this is and what it is not are read
+  // in the same breath
+  const bodyTop = at;
+  label(VIEW_WORDS.limitsHeading, limitFrom, bodyTop, 'left', INK3);
+  /**
+   * The finding, holding nothing the page writes out again lower down.
+   *
+   * A campaign that writes its finding as separate sentences has one sentence for each method,
+   * which stands under that method's own name, and a last sentence, which stands as the
+   * conclusion under them all. Both are dropped here, so a reader is given each sentence once
+   * and the paragraph is the two sentences nothing else says: what the run found, and what it
+   * came to across every seed. A campaign that writes only the whole paragraph keeps it word for
+   * word.
+   */
+  const elsewhere = new Set();
+  if (showingGrowth && story.sentences && story.sentences.length > 1){
+    for (const one of story.methods) if (one.sentence) elsewhere.add(one.sentence);
+    elsewhere.add(story.sentences[story.sentences.length - 1]);
+  }
+  const kept = elsewhere.size ? story.sentences.filter((one) => !elsewhere.has(one)) : [];
+  const finding = kept.length ? kept.join(' ') : story.paragraph;
+  const paragraph = wrapInto(finding, limitFrom - x0 - 30, read);
+  ctx.font = F(read); ctx.fillStyle = INK;
+  for (const one of paragraph){ ctx.fillText(one, x0, at); at += read + 4; }
+  // Directly under the finding, where the campaign on screen recorded extra agents being called
+  // in: how many of this run's decisions called for them, how many were called in, and what share
+  // of the run's model time those calls took. The campaign writes the sentence; the page reads it.
+  const grown = (tree.growth && tree.growth.sentence) ? tree.growth.sentence : '';
+  const grownRows = grown ? wrapInto(grown, limitFrom - x0 - 30, read) : [];
+  if (grownRows.length){
+    at += 4;
+    ctx.font = F(read); ctx.fillStyle = INK2;
+    for (const one of grownRows){ ctx.fillText(one, x0, at); at += read + 4; }
+  }
+  let limitAt = bodyTop + read + 6;
+  const limitRows = [];
+  ctx.fillStyle = INK3;
+  for (const one of story.limits){
+    for (const row of wrapInto(one, x1 - limitFrom, read)){
+      ctx.font = F(read);
+      ctx.fillText(row, limitFrom, limitAt);
+      limitRows.push(row);
+      limitAt += read + 4;
+    }
+    limitAt += 4;
+  }
+  const limitBox = {x0: limitFrom - 8, y0: bodyTop - 13, x1: x1, y1: limitAt - read};
+  at = Math.max(at, limitAt) + 10;
+
+  const here = (tree.nodes[sel] && tree.nodes[sel].branch >= 0
+    && tree.branches[tree.nodes[sel].branch]) ? tree.branches[tree.nodes[sel].branch].method_id : null;
+  const shownMethods = AGENT_WORK.method_order;
+  const gap = 18;
+  const columnsTo = x1;
+  // where the frame is narrow the four columns are drawn only once a reader opens the details,
+  // and the sentence each one carries there is the plain one saying why that method landed where
+  // it did, which is the sentence a wide frame keeps on screen at all times
+  const narrow = W <= VIEW_WORDS.reading.narrowTo;
+  const painted = !narrow || storyDetails;
+  /**
+   * The accepted receipt run, in the right column, directly under the limits.
+   *
+   * It is a separate accepted run, so it stands beside both campaigns and says nothing about
+   * either one. In a wide frame it is on the canvas at all times, in the column the limits stand
+   * in, and the four method sentences give it the width it needs. In a frame 1280 wide or
+   * narrower there is no room for it at rest: painting it there pushes the picture under the 220
+   * pixels the contract fixes for it, so there it stands behind the details control, with the
+   * four method sentences, and comes on screen with them.
+   */
+  const receiptOn = painted;
+  const receiptFrom = receiptOn ? x1 - RECEIPT_COLUMN : x1;
+  // the strip is a compact reading rather than prose, so it is written at the smaller of the two
+  // reading sizes in both frames, which is the floor the contract fixes and never under it
+  const receiptBottom = receiptOn
+    ? drawReceipt(receiptFrom, limitAt + 8, x1, VIEW_WORDS.reading.small) : limitAt;
+  // the four sentences give up the width the strip takes, so nothing is drawn behind it
+  const methodsTo = receiptOn ? Math.min(columnsTo, receiptFrom - 30) : columnsTo;
+  const each = (methodsTo - x0 - gap*(shownMethods.length - 1)) / shownMethods.length;
+  let deepest = at;
+  const said = [];
+  shownMethods.forEach((id, i) => {
+    const cx = x0 + i*(each + gap);
+    const row = story.methods.find(one => one.method_id === id) || {label: id};
+    const on = here === id;
+    const sentence = (storyDetails && !narrow)
+      ? (story.details[story.methods.indexOf(row)] || '')
+      // the four sentences above are the first campaign's own; a campaign that names its methods
+      // elsewhere carries a sentence for each of them in its own story block
+      : (VIEW_WORDS.why[id] || row.sentence || '');
+    if (!painted){
+      said.push({method: id, name: row.label, sentence: sentence, size: small, open: on,
+        painted: false, rows: [], box: null});
+      return;
+    }
+    label(row.label, cx, at, 'left', on ? ACCHI : INK2);
+    ctx.fillStyle = on ? INK : INK2;
+    let line = at + small + 6;
+    const rows = wrapInto(sentence, each, small);
+    for (const one of rows){
+      ctx.fillText(one, cx, line);
+      line += small + 4;
+    }
+    deepest = Math.max(deepest, line);
+    said.push({method: id, name: row.label, sentence: sentence, size: small, open: on,
+      painted: true, rows: rows,
+      box: {x0: cx - 6, y0: at - 13, x1: cx + each, y1: line - small}});
+  });
+  storyPicks = said.filter(one => one.painted).map(one => ({method: one.method, box: one.box}));
+
+  // the bottom line, under all four of them: what this run is really about. It is written only
+  // where the bake has proved both readings behind it, and the true counts stand in where not.
+  const proved = story.handoff && story.handoff.every_chain_failed_it
+    && story.handoff.capacity_or_double_booking_breaks === 0;
+  // A campaign that ends its own finding on a conclusion carries that sentence last in its story
+  // block, and the page paints that one instead of the sentence written above for the first
+  // campaign. It is the campaign's own last word, not a reading, so no count stands in for it.
+  const closed = showingGrowth && story.sentences && story.sentences.length
+    ? story.sentences[story.sentences.length - 1] : '';
+  const bottom = closed || (proved ? VIEW_WORDS.bottomLine
+    : VIEW_WORDS.bottomLineCount(story.handoff ? story.handoff.chains_that_failed_it : 0,
+      story.handoff ? story.handoff.chains : 0,
+      story.handoff ? story.handoff.capacity_or_double_booking_breaks : 0));
+  // the conclusion stands under the strip as well as under the four sentences, so neither the
+  // strip nor a sentence is ever written across it
+  deepest = Math.max(deepest, receiptBottom);
+  const sentencesBottom = deepest;
+  let bottomAt = deepest + 12;
+  const bottomTop = bottomAt - small + 2;
+  const bottomRows = wrapInto(bottom, columnsTo - x0, read);
+  ctx.font = F(read); ctx.fillStyle = INK;
+  for (const one of bottomRows){ ctx.fillText(one, x0, bottomAt); bottomAt += read + 4; }
+  // the readings that ground that sentence, where a viewer has opened the details behind the story
+  const grounds = (storyDetails && story.handoff && story.handoff.detail)
+    ? wrapInto(story.handoff.detail, columnsTo - x0, read) : [];
+  if (grounds.length){
+    bottomAt += 4;
+    ctx.fillStyle = INK2;
+    for (const one of grounds){ ctx.fillText(one, x0, bottomAt); bottomAt += read + 4; }
+  }
+  deepest = bottomAt;
+
+  // The story stands in two rows of the frame: the finding and its limits, which keep clear of
+  // the readout column beside them, and the four sentences under them, which run the whole width
+  // where that column has already ended above them. Both are kept, so nothing is drawn behind
+  // either, and the one box below is the room they take together.
+  const topBox = {x0: x0 - 8, y0: y - 14, x1: x1, y1: at - small - 4};
+  const columnsBox = {x0: x0 - 8, y0: at - small - 2, x1: columnsTo,
+    y1: sentencesBottom - small + 6};
+  storyBox = {x0: x0 - 8, y0: y - 14, x1: Math.max(x1, columnsTo), y1: deepest - small + 6};
+  storyDrawn = {heading: String(VIEW_WORDS.storyHeading).toUpperCase(),
+    subtitle: VIEW_WORDS.subtitle, subtitleRows: subtitleRows, top: topBox, columns: columnsBox,
+    paragraph: finding, rows: paragraph, size: read, methods: said,
+    growth: grown, growthRows: grownRows,
+    limitsHeading: String(VIEW_WORDS.limitsHeading).toUpperCase(),
+    limits: story.limits.slice(), limitRows: limitRows, limitSize: read,
+    limitBox: limitBox, details: storyDetails, box: storyBox,
+    bottomLine: bottom, bottomRows: bottomRows, bottomProved: proved, grounds: grounds,
+    bottomBox: {x0: x0 - 8, y0: bottomTop, x1: columnsTo, y1: bottomAt - read + 4}};
+}
+/** where the story stands, what it said, and which of its sentences can be chosen */
+let storyBox = null, storyDrawn = null, storyPicks = [];
+/** where the counters stand, so nothing is ever written across them either */
+let countersBox = null;
+/** where the controls stand, once they have been placed at the foot of the left column */
+let controlBox = null;
+
+/**
+ * The whole detail of the step a viewer picked, in its own column, where the frame is wide.
+ *
+ * A decision reads as the impact design fixes it: where it stands in the seventy-two hours, the
+ * proposal itself, what the admission gate did with it, and what that one moment served and
+ * wasted. The cumulative readings belong to the band under the picture and are not repeated here.
+ * One agent step inside a decision reads as the dense-network contract fixes it: the decision and
+ * its deadline, what this scout, reviewer, coordinator or checker actually said or did, which
+ * kind of step it is and its place in the method, whether the modeled state changed, and the
+ * modeled change at that one moment.
+ */
+function drawPanel(x0, y, x1, n){
+  const room = x1 - x0;
+  // the column stops short of the line under the picture
+  const floor = H - BOT - 26;
+  const home = n.cls ? tree.nodes[n.home] : n;
+  const lines = panelLines(n, home).filter(one => one.text);
+  // No line of the opened decision is ever dropped from this column. Where its lines do not fit,
+  // the column is read one step smaller, and never under sixteen pixels; where that is still not
+  // enough it takes the free canvas above it, under the conclusion paragraph; and where even that
+  // is not enough its longest line simply breaks into the rows it needs and the column stands as
+  // tall as they make it.
+  const tall = (size) => lines.reduce(
+    (held, one) => held + wrapInto(one.text, room, size).length*(size + 4) + 4, 0);
+  const under = (size, at) => at + 44 + tall(size) - 4 - floor;
+  let read = VIEW_WORDS.reading.large;
+  let top = y;
+  while (read > VIEW_WORDS.reading.small && under(read, top) > 0) read -= 1;
+  // the free canvas is what stands between the conclusion paragraph and the head of the column
+  if (storyBox && under(read, top) > 0){
+    top = Math.max(storyBox.y1 + 16, top - under(read, top));
+  }
+  const step = read + 4;
+  label(VIEW_WORDS.panelHeading, x0, top, 'left', INK2);
+  ctx.font = F(11); ctx.fillStyle = INK3;
+  const branch = (home.branch >= 0) ? tree.branches[home.branch] : null;
+  ctx.fillText(VIEW_WORDS.panelRun(tree.seed, branch ? branch.label : ''), x0, top + 18);
+  let at = top + 44;
+  const drawn = [];
+  for (const one of lines){
+    const rows = wrapInto(one.text, room, read);
+    ctx.fillStyle = one.color;
+    for (const row of rows){
+      ctx.font = F(read);
+      ctx.fillText(row, x0, at);
+      at += step;
+    }
+    // the rows it was broken into, so a gate can read back what the column actually painted
+    drawn.push({text: one.text, size: read, color: one.color, rows: rows.slice()});
+    at += 4;
+  }
+  panelBox = {x0: x0 - 10, y0: top - 14, x1: x1, y1: at};
+  panelDrawn = {heading: String(VIEW_WORDS.panelHeading).toUpperCase(), lines: drawn,
+    size: read, kind: n.cls || 'decision', box: panelBox};
+}
+/** where the readout column stands, and what it said, once it has been drawn */
+let panelBox = null, panelDrawn = null;
+
+/** the ordered contents of one readout, for a decision or for one agent step inside it */
+function panelLines(n, home){
+  const s = states[sel] || 'pending';
+  if (n.incident || (!n.cls && !n.counters)){
+    return [{text: n.action, color: INK}, {text: n.sentence, color: INK2}];
+  }
+  const situation = VIEW_WORDS.situation(
+    clockAt(home.res), VIEW_WORDS.hours(home.hours || 0), VIEW.incident.hours);
+  if (n.cls){
+    const hue = GLYPH[n.cls] || {live: INK};
+    return [
+      {text: situation, color: INK2},
+      {text: n.readout[0] || n.action, color: s === 'pending' ? INK3 : hue.live},
+      {text: n.readout[1] || '', color: INK2},
+      {text: home.sentence, color: home.admitted === false ? BAD : INK},
+      {text: home.counters
+        ? VIEW_WORDS.moment(home.servedNames[0], home.servedCount - 1, home.waste) : '',
+      color: INK2},
+    ];
+  }
+  // the four lines the opened decision is read by. The cumulative readings and the projection are
+  // not among them: the band under the picture always carries those, and the column never says a
+  // second time what the band is already saying.
+  return [
+    {text: situation, color: INK2},
+    // the column carries the count of the further assignments, because the band no longer does
+    {text: n.more ? n.action + '  ' + VIEW_WORDS.more(n.more) : n.action, color: INK},
+    {text: n.sentence, color: n.admitted === false ? BAD : INK},
+    {text: n.counters ? VIEW_WORDS.moment(n.servedNames[0], n.servedCount - 1, n.waste) : '',
+      color: INK2},
+  ];
+}
+
+/**
+ * Choosing one of the story's method sentences chooses that method's trajectory.
+ *
+ * The story comes first and every picture on the page answers one of its sentences, so a reader
+ * who wants the evidence for a sentence points at the sentence itself. Nothing is created,
+ * sampled or graded: the same recorded trajectory is simply the one now selected.
+ */
+function pickStory(e){
+  if (!storyPicks.length || onButton(e.target)) return;
+  const rect = stage.getBoundingClientRect();
+  const x = e.clientX - rect.left, y = e.clientY - rect.top;
+  for (const one of storyPicks){
+    if (x < one.box.x0 || x > one.box.x1 || y < one.box.y0 || y > one.box.y1) continue;
+    const branch = tree.branches.findIndex(held => held.method_id === one.method);
+    if (branch < 0) return;
+    const at = tree.nodes.findIndex(held => held.branch === branch && !held.cls);
+    if (at < 0) return;
+    sel = at;
+    userPicked = true;
+    return;
+  }
+}
+
+/** the four readings of one node, each written the way its own counter is read */
+function counterText(node){
+  const fields = VIEW.counter_fields;
+  // the counters belong to the decision, so opening one of its agent steps never displaces them
+  const at = (node && node.cls) ? tree.nodes[node.home] : node;
+  const held = at && at.counters;
+  const say = [VIEW_WORDS.hours, VIEW_WORDS.share, VIEW_WORDS.whole, VIEW_WORDS.whole];
+  return fields.map((field, i) => {
+    const value = held ? held[field] : null;
+    return (value === null || value === undefined) ? VIEW_WORDS.none : say[i](value);
+  });
+}
+
+/**
+ * One line of the readout, right against the edge of the frame.
+ *
+ * Nothing is ever cut and nothing is ever fine print. Reading text is 18 pixels in a wide frame
+ * and 16 in a narrow one; a line too long for its room is written at 16 first, and only where
+ * even that will not hold does it drop a whole sentence from its end. A reader is never left
+ * holding half a thought.
+ */
+function say(bits, y, room, col){
+  const kept = bits.filter(Boolean);
+  if (!kept.length) return 0;
+  // the rows of one line stand this far apart, the same distance the band's own lines stand apart
+  const step = 19;
+  const read = VIEW_WORDS.reading;
+  let size = read.large;
+  ctx.font = F(size);
+  if (W < read.wideFrom && ctx.measureText(kept.join('  ')).width > room){
+    size = read.small;
+    ctx.font = F(size);
+  }
+  while (kept.length > 1 && ctx.measureText(kept.join('  ')).width > room) kept.pop();
+  const said = kept.join('  ');
+  // One sentence a method recorded can be longer than the frame is wide. It is one thought and
+  // one quotation, so it is never cut and never shrunk under reading size: it is broken between
+  // words into as many rows as it needs, and those rows stack upward from where the line sits,
+  // so the line's last row always stands exactly where the line belongs.
+  const rows = [];
+  let row = '';
+  for (const word of said.split(' ')){
+    const next = row ? row + ' ' + word : word;
+    if (row && ctx.measureText(next).width > room){ rows.push(row); row = word; }
+    else row = next;
+  }
+  if (row) rows.push(row);
+  ctx.fillStyle = col;
+  ctx.textAlign = 'right';
+  rows.forEach((one, i) => ctx.fillText(
+    one, W - (compact ? 10 : 16), y - (rows.length - 1 - i) * step));
+  ctx.textAlign = 'left';
+  // one handle, so a gate can read what the band says, how big it says it, and in how many rows
+  if (tree && tree.said) tree.said.push({text: said, size: size, color: col, y: y,
+    rows: rows.length, parts: rows.slice(),
+    over: rows.filter((one) => ctx.measureText(one).width > room).length});
+  return rows.length;
+}
+
+/**
+ * The band under the picture: four lines, in the order a person needs them.
+ *
+ * The situation this decision stands in, the proposal itself, what the admission gate did with it
+ * beside what that one moment served and wasted, and the four cumulative readings with the
+ * projection to the close of the seventy-two hours. The proposal and the verdict are the two the
+ * eye goes to, so they are the two written in the brighter ink.
+ *
+ * The last two lines share their row with the controls and stop short of them. The evidence
+ * pointer and the count of public reports behind a moment stay in the campaign's own file, where
+ * the page keeps them: they are machinery, and this band is for a reader.
+ */
+function drawReadout(padX, n){
+  const s = states[sel] || 'pending';
+  const room = W - padX*2;
+  // the controls stand in the left column now, so the band keeps its whole width for its words
+  const rail = controlBox ? room : (W - padX) - (tp.offsetLeft + tp.offsetWidth + 14);
+  tree.said = [];
+
+  // One agent step inside a decision reads in the order the dense-network contract fixes: the
+  // decision and its deadline; what this scout, reviewer, coordinator or checker said or did,
+  // beside which kind of step it is and its place in the method; whether the modeled state
+  // changed; and what that one moment served and wasted.
+  if (n.cls){
+    const home = tree.nodes[n.home];
+    const hue = GLYPH[n.cls] || {live: INK};
+    const proposal = Math.max(1, say([n.readout[0] || n.action, n.readout[1] || ''], H-43, room,
+      s === 'pending' ? INK3 : hue.live));
+    say([VIEW_WORDS.situation(clockAt(home.res), VIEW_WORDS.hours(home.hours || 0),
+      VIEW.incident.hours)], H-43 - proposal*19, room, INK2);
+    say([home.sentence], H-24, rail, home.admitted === false ? BAD : INK);
+    say([home.counters
+      ? VIEW_WORDS.moment(home.servedNames[0], home.servedCount - 1, home.waste) : ''],
+    H-5, rail, INK2);
+    tree.said.sort((one, two) => one.y - two.y);
+    tree.bandTop = H-43 - proposal*19 - 14;
+    return;
+  }
+
+  // (3) what the admission gate did with it, then what this one moment served and wasted. Both
+  // are read here, before anything is drawn, because the column beside the picture may have said
+  // them already.
+  const became = (s==='pending') ? VIEW_WORDS.waiting
+    : (s==='running') ? VIEW_WORDS.showing : n.sentence;
+  const moment = n.counters
+    ? VIEW_WORDS.moment(n.servedNames[0], n.servedCount - 1, n.waste) : '';
+  // Where the readout column stands beside the picture and has said the proposal, what became of
+  // it and what the moment served, the band does not say any of them a second time: it keeps the
+  // situation and the cumulative readings, and the column carries the count of the further
+  // assignments. The column never drops one of those sentences, and where a frame is too narrow
+  // for a column at all the band still carries every line, so a reader never loses one.
+  const paired = panelBox !== null && panelDrawn
+    && [n.action, became, moment].filter(Boolean)
+      .every((one) => panelDrawn.lines.some((held) => held.text.startsWith(one)));
+
+  // (2) the proposal itself, in the campaign's own sentence, and how many more it carried. It is
+  // written first because a long one takes more than one row and everything above it moves up.
+  const proposal = paired ? 0 : Math.max(1,
+    say([n.action, n.more ? VIEW_WORDS.more(n.more) : ''], H-43, room, INK));
+
+  // (1) where in the seventy-two hours this decision stands, and what opened in the stretch
+  // before it, which the clock and the world did on their own
+  const here = [VIEW_WORDS.situation(
+    clockAt(n.res), VIEW_WORDS.hours(n.hours || 0), VIEW.incident.hours)];
+  if (n.counters){
+    here.push((n.first ? VIEW_WORDS.sinceStart : VIEW_WORDS.since)(
+      VIEW_WORDS.list(sinceBefore(n))));
+  }
+  const top = paired ? H-24 : H-43 - proposal*19;
+  say(here, top, room, INK2);
+
+  if (!paired) say([became, moment], H-24, rail, s==='running' ? ACCHI : INK);
+
+  // (4) the four cumulative readings the counters carry, then the registered primary outcome
+  const fields = VIEW.counter_fields;
+  const closing = [];
+  if (n.counters){
+    closing.push(VIEW_WORDS.sofar(VIEW_WORDS.share(n.counters[fields[1]]),
+      n.counters[fields[2]], VIEW_WORDS.hours(n.counters[fields[0]])));
+  }
+  if (n.projected !== null && n.projected !== undefined){
+    closing.push(VIEW_WORDS.projected(VIEW_WORDS.hours(n.projected)));
+  }
+  say(closing, H-5, rail, INK2);
+
+  // the band reads top to bottom whichever of its lines was written first
+  tree.said.sort((one, two) => one.y - two.y);
+  // where the top of the band's own writing now is, so the hour numbers under the run stand down
+  // for the decisions whose sentence needed the room they stand in
+  tree.bandTop = top - 14;
+}
+
+/**
+ * What changed between one decision and the one before it on the same branch.
+ *
+ * The clock runs on between two checkpoints and new needs open on their own, so none of this is
+ * credited to the action on this node. Every number is the campaign's own reading of the
+ * difference between its two checkpoints.
+ */
+function sinceBefore(n){
+  const fields = VIEW.counter_fields;
+  const clauses = [VIEW_WORDS.sinceHours(VIEW_WORDS.hours(n.since || 0))];
+  const delta = n.delta || {};
+  if (delta[fields[0]]) clauses.push(VIEW_WORDS.sinceWaited(VIEW_WORDS.hours(delta[fields[0]])));
+  if (delta[fields[2]]) clauses.push(VIEW_WORDS.sinceOpen(delta[fields[2]]));
+  if (delta[fields[3]]) clauses.push(VIEW_WORDS.sinceWaste(delta[fields[3]]));
+  if (clauses.length === 1) clauses.push(VIEW_WORDS.sinceNothing);
+  return clauses;
+}
+
+function drawSpark(x,y,w,h){
+  hair(x, y+h, x+w, y+h, RULE);
+  const n = Math.min(HIST, histN);
+  if (n > 1){
+    ctx.beginPath();
+    for (let i=0;i<n;i++){
+      const idx = (histN - n + i + HIST*2) % HIST;
+      const v = Math.min(1, hist[idx]/Math.max(1, tree.peak));
+      const px = x + (i/(n-1))*w;
+      const py = y + h - v*h;
+      if (i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    }
+    ctx.strokeStyle = ACC; ctx.lineWidth = 1; ctx.stroke();
+  }
+  const last = hist[(histN-1+HIST)%HIST] || 0;
+  const ly = y + h - Math.min(1,last/Math.max(1, tree.peak))*h;
+  ctx.fillStyle = ACCHI; ctx.fillRect(x+w-2, Math.round(ly)-1, 3, 3);
+}
+
+function drawNodeMarks(t){
+  if (!gl_ok) return;
+  for (let i=0;i<tree.nodes.length;i++){
+    if (states[i] !== 'running') continue;
+    const s = scr[i]; if (!s || !s.vis) continue;
+    ctx.globalAlpha = 0.45 + 0.45*(0.5 + 0.5*Math.sin(t*3.4 + i));
+    cross(s.x, s.y + TOP, 6, ACCHI);
+    ctx.globalAlpha = 1;
+  }
+  for (let i=0;i<tree.nodes.length;i++){
+    if (states[i] !== 'pruned') continue;
+    const s = scr[i]; if (!s || !s.vis) continue;
+    ctx.strokeStyle = BAD; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(s.x-4.5, s.y+TOP-4.5); ctx.lineTo(s.x+4.5, s.y+TOP+4.5);
+    ctx.moveTo(s.x+4.5, s.y+TOP-4.5); ctx.lineTo(s.x-4.5, s.y+TOP+4.5);
+    ctx.stroke();
+  }
+  // Every decision of a method keeps its own agent work folded away under one small marker, so a
+  // reader can see that the work is there before opening it. The decision now open wears none: its
+  // steps stand around it instead.
+  tree.clusters = [];
+  ctx.globalAlpha = 0.7;
+  for (let i=0;i<tree.nodes.length;i++){
+    const one = tree.nodes[i];
+    if (one.cls || one.branch < 0) continue;
+    const branch = tree.branches[one.branch];
+    if (!branch || branch.kind !== 'method') continue;
+    if (one.branch === openBranch && i === 1 + openBranch*tree.perBranch + openDecision) continue;
+    const o = scr[i]; if (!o || !o.vis) continue;
+    ctx.fillStyle = INK3;
+    for (let k=0;k<3;k++){
+      ctx.beginPath();
+      ctx.arc(o.x - 5 + k*5, o.y + TOP - 13, 1.4, 0, Math.PI*2);
+      ctx.fill();
+    }
+    tree.clusters.push({id: i, branch: one.branch, x: o.x, y: o.y + TOP});
+  }
+  ctx.globalAlpha = 1;
+
+  // Every agent step carries its own kind's shape as well as its colour, so a reader who cannot
+  // tell the hues apart still reads the open decision, and so does a grayscale print of it.
+  tree.drawn = [];
+  for (let i=0;i<tree.nodes.length;i++){
+    const one = tree.nodes[i];
+    if (!one.cls) continue;
+    const o = scr[i]; if (!o || !o.vis) continue;
+    const kind = GLYPH[one.cls];
+    if (!kind) continue;
+    const waiting = states[i] === 'pending';
+    ctx.globalAlpha = waiting ? 0.45 : 0.92;
+    glyph(kind.glyph, o.x, o.y + TOP, 4.5, waiting ? kind.done : kind.live);
+    // An agent the decision called in keeps the shape of the work it did and gains one ring, in
+    // the colour the campaign gives called-in work. The shape says what it did; the ring says it
+    // was not on the team when the decision began.
+    const called = one.added ? CALLED_IN : null;
+    if (called){
+      ctx.strokeStyle = waiting ? called.done : called.live;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(o.x, o.y + TOP, 7.5, 0, Math.PI*2);
+      ctx.stroke();
+    }
+    tree.drawn.push({id: i, cls: kind.id, glyph: kind.glyph,
+      color: waiting ? kind.done : kind.live, waiting: waiting,
+      ring: called ? (waiting ? called.done : called.live) : null});
+  }
+  ctx.globalAlpha = 1;
+  // a rejected proposal carries a mark as well as a colour, so its state is never colour alone
+  for (let i=0;i<tree.nodes.length;i++){
+    if (tree.nodes[i].cls !== 'rejected' || states[i] === 'pending') continue;
+    const s = scr[i]; if (!s || !s.vis) continue;
+    ctx.strokeStyle = BAD; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(s.x-4.5, s.y+TOP-4.5); ctx.lineTo(s.x+4.5, s.y+TOP+4.5);
+    ctx.moveTo(s.x+4.5, s.y+TOP-4.5); ctx.lineTo(s.x-4.5, s.y+TOP+4.5);
+    ctx.stroke();
+  }
+
+  // each branch says which of the five it is, once, at the far end of its own lane, and stands
+  // out of the way of whichever decision is open
+  const last = {};
+  for (let i=0;i<tree.nodes.length;i++){
+    if (tree.nodes[i].branch >= 0 && !tree.nodes[i].cls) last[tree.nodes[i].branch] = i;
+  }
+  const open = scr[sel];
+  ctx.font = F(11);
+  // where the phrase beside the open decision is about to be written, measured the way the
+  // component writes it, so that no branch name is drawn across it
+  const openSaid = (open && open.vis) ? roomFor(sel) : '';
+  const openW = openSaid ? ctx.measureText(openSaid).width : 0;
+  const openX = openSaid
+    ? ((open.x + 16 + openW <= W - 8) ? open.x + 16 : open.x - 16 - openW) : 0;
+  const openY = openSaid
+    ? ((open.y + TOP - 12 < TOP + 14) ? open.y + TOP + 24 : open.y + TOP - 8) : 0;
+  const named = [];
+  for (const key in last){
+    const i = last[key], o = scr[i];
+    if (!o || !o.vis || i === sel || i === hover) continue;
+    const w = ctx.measureText(tree.nodes[i].label).width;
+    const x = o.x + 14, y = o.y + TOP + 4;
+    if (openSaid && Math.abs(y - openY) < 15 && x < openX + openW + 10 && x + w > openX - 10){
+      continue;
+    }
+    // one branch name is never written across another, and none is written across the words at
+    // the edge of the frame
+    const box = {x0: x - 6, y0: y - 12, x1: x + w + 6, y1: y + 4};
+    const crossed = [...named, keyBox, storyBox, panelBox, countersBox, controlBox].some((held) => held
+      && box.x0 < held.x1 && box.x1 > held.x0 && box.y0 < held.y1 && box.y1 > held.y0);
+    if (crossed) continue;
+    named.push(box);
+    ctx.fillStyle = (tree.nodes[i].branch === (tree.nodes[sel]||{}).branch) ? INK2 : INK3;
+    ctx.fillText(tree.nodes[i].label, x, y);
+  }
+  if (hover >= 0 && hover !== sel && scr[hover] && scr[hover].vis){
+    const said = roomFor(hover);
+    if (said){
+      cross(scr[hover].x, scr[hover].y+TOP, 8, INK);
+      tag(said, scr[hover].x, scr[hover].y+TOP, INK2);
+    }
+  }
+  const s = scr[sel];
+  if (s && s.vis){
+    const x = Math.round(s.x), y = Math.round(s.y)+TOP, r = 11;
+    ctx.strokeStyle = ACCHI; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x-r+0.5,y-r+3.5); ctx.lineTo(x-r+0.5,y-r+0.5); ctx.lineTo(x-r+3.5,y-r+0.5);
+    ctx.moveTo(x+r-3.5,y-r+0.5); ctx.lineTo(x+r-0.5,y-r+0.5); ctx.lineTo(x+r-0.5,y-r+3.5);
+    ctx.moveTo(x+r-0.5,y+r-3.5); ctx.lineTo(x+r-0.5,y+r-0.5); ctx.lineTo(x+r-3.5,y+r-0.5);
+    ctx.moveTo(x-r+3.5,y+r-0.5); ctx.lineTo(x-r+0.5,y+r-0.5); ctx.lineTo(x-r+0.5,y+r-3.5);
+    ctx.stroke();
+    // an agent step's phrase keeps its own kind's colour, so the picture and the key never disagree
+    const kind = tree.nodes[sel].cls ? GLYPH[tree.nodes[sel].cls] : null;
+    if (openSaid) tag(openSaid, x, y, kind ? kind.live : ACCHI);
+  }
+}
+
+/**
+ * The whole phrase this node can stand beside, or nothing.
+ *
+ * The campaign writes each action several ways, from the longest form to the shortest, and none
+ * of them is ever cut short or ended in a row of dots. This takes the longest form that stands
+ * inside the width a phrase beside a node may have and still fits in the frame beside the gem.
+ * Where no form does, nothing is written there: the whole action is always readable in the band
+ * under the picture, and the bracket around the gem still says which decision is open.
+ */
+function roomFor(i){
+  const o = scr[i], n = tree.nodes[i];
+  if (!o || !n) return '';
+  ctx.font = F(11);
+  // the words beside the picture are never written over: a phrase that would cross the key, the
+  // story or the readout column is not the phrase this node stands beside
+  const clear = (x0, w) => {
+    const y0 = (o.y + TOP - 12 < TOP + 14) ? o.y + TOP + 12 : o.y + TOP - 20;
+    const y1 = y0 + 14;
+    for (const box of [keyBox, storyBox, panelBox, countersBox, controlBox]){
+      if (!box) continue;
+      if (x0 < box.x1 && x0 + w > box.x0 && y0 < box.y1 && y1 > box.y0) return false;
+    }
+    return true;
+  };
+  for (const said of (n.labels && n.labels.length ? n.labels : [n.tag])){
+    if (!said) continue;
+    const w = ctx.measureText(said).width;
+    if (w > VIEW_WORDS.labelWidth) continue;
+    if (o.x + 16 + w <= W - 8 && clear(o.x + 16, w)) return said;
+    if (o.x - 16 - w >= 8 && clear(o.x - 16 - w, w)) return said;
+  }
+  return '';
+}
+
+function tag(text, x, y, col){
+  ctx.font = F(11);
+  const w = ctx.measureText(text).width;
+  let tx = x + 16, ty = y - 12;
+  const right = (tx + w <= W - 8);
+  if (!right) tx = x - 16 - w;
+  if (ty < TOP + 14) ty = y + 20;
+  hair(x + (right?11:-11), y, tx + (right?-4:w+4), ty+3, RULE2);
+  ctx.fillStyle = col; ctx.fillText(text, tx, ty+4);
+}
+
+function drawTimeline(padX){
+  const x0 = padX + (compact ? ((tp.offsetWidth||90) + 12) : 0);
+  const x1 = W - padX;
+  // the one approved layout exception: the timeline overlays the bottom edge of the picture, so
+  // the band below it is left clear for the action sentence and the controls
+  const y  = H - BOT - 26;
+  if (x1 - x0 < 60 || !tree.total) return;
+  const map = u => x0 + (u/tree.total)*(x1-x0);
+  // A decision whose own sentence needs more than one row grows the band under this line into the
+  // room the hour numbers stand in. The sentence is what a reader came for, so the numbers stand
+  // down for that decision and the hour marks themselves stay.
+  const numbered = !(tree.bandTop < y + 18);
+
+  hair(x0, y, x1, y, RULE2);
+  const totSec = tree.total * SEC_PER_UNIT;
+  for (let s=0; s<=totSec; s++){
+    const px = map(s/SEC_PER_UNIT);
+    const major = (s % 5 === 0);
+    hair(px, y, px, y + (major?6:3), major?RULE2:RULE);
+    if (major && s>0 && !compact && numbered) label(s+VIEW_WORDS.tickUnit, px, y+18, 'center', INK3);
+  }
+  if (!compact && numbered){
+    // the marks are hours now, and there are seventy-two of them: the line is named only where
+    // its name ends before the first hour mark it would otherwise be written across
+    const said = VIEW_WORDS.timeline(VIEW.incident.hours);
+    ctx.font = F(11);
+    const room = map(5/SEC_PER_UNIT) - x0 - 10;
+    if (ctx.measureText(said.toUpperCase()).width + 0.88*said.length <= room){
+      label(said, x0, y+18, 'left', INK3);
+    }
+  }
+
+  const cols = {};
+  for (let i=0;i<tree.nodes.length;i++){
+    const n = tree.nodes[i];
+    if (!n.reach) continue;
+    const px = Math.round(map(n.open));
+    const st = cols[px] || 0;
+    cols[px] = st + 1;
+    const s = states[i];
+    ctx.fillStyle = (s==='done') ? ACC : (s==='running') ? ACCHI : (s==='pruned') ? BAD : '#3a3a40';
+    ctx.fillRect(px-2, y - 6 - Math.min(st,3)*3, 4, 2);
+  }
+
+  const px = map(Math.min(p, tree.total));
+  ctx.strokeStyle = ACCHI; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(Math.round(px)+0.5, y-18); ctx.lineTo(Math.round(px)+0.5, y+7); ctx.stroke();
+  ctx.fillStyle = ACCHI;
+  ctx.beginPath();
+  ctx.moveTo(px, y-18); ctx.lineTo(px-3.5, y-24); ctx.lineTo(px+3.5, y-24); ctx.closePath(); ctx.fill();
+}
+
+function drawGrain(){
+  if (!noiseTile || D.grain <= 0.001) return;
+  ctx.save();
+  ctx.globalAlpha = D.grain * 0.6;
+  const ox = -Math.floor(Math.random()*128), oy = -Math.floor(Math.random()*128);
+  for (let x=ox; x<W; x+=128) for (let y=oy; y<H; y+=128) ctx.drawImage(noiseTile, x, y);
+  ctx.globalAlpha = D.grain * 0.10;
+  ctx.fillStyle = '#c9c9c9';
+  for (let y=TOP; y<H-BOT; y+=3) ctx.fillRect(0, y, W, 1);
+  ctx.restore();
+}
+
+/* ---------------------------------------------------------------- pointing */
+let camAz = 0.42, camEl = 0.24, drift = 0, dragging = false, lastX = 0, lastY = 0, moved = 0;
+const ray = new THREE.Raycaster();
+const ptr = new THREE.Vector2();
+
+function pointerNode(cx, cy){
+  if (!gl_ok || !nodeMesh) return -1;
+  const r = glc.getBoundingClientRect();
+  if (r.width < 1 || r.height < 1) return -1;
+  ptr.x = ((cx - r.left)/r.width)*2 - 1;
+  ptr.y = -((cy - r.top)/r.height)*2 + 1;
+  if (ptr.x < -1 || ptr.x > 1 || ptr.y < -1 || ptr.y > 1) return -1;
+  ray.setFromCamera(ptr, camera);
+  const hit = ray.intersectObject(nodeMesh, false);
+  return (hit && hit.length && hit[0].instanceId !== undefined) ? hit[0].instanceId : -1;
+}
+function onButton(t){ return !!(t && t.classList && t.classList.contains('btn')); }
+
+stage.addEventListener('pointerdown', e=>{
+  if (onButton(e.target)) return;
+  stage.focus({preventScroll:true});
+  dragging = true; moved = 0; lastX = e.clientX; lastY = e.clientY;
+  stage.classList.add('drag');
+  if (stage.setPointerCapture){ try { stage.setPointerCapture(e.pointerId); } catch(_){} }
+});
+stage.addEventListener('pointermove', e=>{
+  if (dragging){
+    const dx = e.clientX - lastX, dy = e.clientY - lastY;
+    lastX = e.clientX; lastY = e.clientY;
+    moved += Math.abs(dx) + Math.abs(dy);
+    camAz -= dx*0.006;
+    camEl = Math.max(-0.12, Math.min(0.95, camEl + dy*0.004));
+    drift = 0;
+  } else if (!onButton(e.target)) {
+    hover = pointerNode(e.clientX, e.clientY);
+    stage.classList.toggle('pick', hover >= 0);
+  }
+});
+stage.addEventListener('pointerup', e=>{
+  if (!dragging) return;
+  dragging = false; stage.classList.remove('drag');
+  if (moved < 5){
+    const id = pointerNode(e.clientX, e.clientY);
+    if (id >= 0){ sel = id; userPicked = true; }
+  }
+});
+stage.addEventListener('pointercancel', ()=>{ dragging = false; stage.classList.remove('drag'); });
+stage.addEventListener('pointerleave', ()=>{ hover = -1; stage.classList.remove('pick'); });
+
+stage.addEventListener('keydown', e=>{
+  if (onButton(e.target)) return;
+  const n = tree.nodes[sel];
+  if (!n) return;
+  if (e.key === ' '){ setPlaying(!playing); e.preventDefault(); return; }
+  if (e.key === 'ArrowRight'){
+    if (n.kids.length){ sel = n.kids[0]; userPicked = true; }
+    e.preventDefault(); return;
+  }
+  if (e.key === 'ArrowLeft'){
+    if (n.parent >= 0){ sel = n.parent; userPicked = true; }
+    e.preventDefault(); return;
+  }
+  if (e.key === 'ArrowUp' || e.key === 'ArrowDown'){
+    if (n.parent >= 0){
+      const sib = tree.nodes[n.parent].kids;
+      const i = sib.indexOf(sel);
+      const d = (e.key === 'ArrowUp') ? -1 : 1;
+      if (i >= 0 && sib.length) sel = sib[(i + d + sib.length) % sib.length];
+      userPicked = true;
+    }
+    e.preventDefault();
+  }
+});
+
+function setPlaying(v){
+  playing = v;
+  bPlay.textContent = v ? 'Pause' : 'Play';
+  bPlay.setAttribute('data-on', v ? '1' : '0');
+  bPlay.setAttribute('aria-pressed', String(!v));
+}
+bPlay.addEventListener('click', ()=> setPlaying(!playing));
+bAgain.addEventListener('click', ()=>{ p = 0; endHold = 0; userPicked = false; sel = 0; setPlaying(true); });
+bNew.addEventListener('click', ()=> newRun());
+// the story turns between its four sentences and the exact readings behind them, and back
+bStory.addEventListener('click', ()=>{
+  storyDetails = !storyDetails;
+  bStory.setAttribute('data-on', storyDetails ? '1' : '0');
+  bStory.setAttribute('aria-pressed', String(storyDetails));
+});
+// the whole network of the run on screen, in its own page, which creates nothing either
+bFull.addEventListener('click', ()=> window.open(fullHref(), '_blank', 'noopener'));
+
+function newRun(){
+  seed = (seed*1664525 + 1013904223) >>> 0;
+  openBranch = -1; openDecision = -1; grow = 1;
+  tree = buildTree(seed);
+  states = new Array(tree.nodes.length).fill('');
+  scr.length = 0;
+  sel = 0; hover = -1; userPicked = false; p = 0; endHold = 0;
+  buildScene();
+  resolveStates(); paintStates();
+  setPlaying(true);
+}
+
+/**
+ * Show the second accepted campaign, or bring the first one back.
+ *
+ * The growth run's two files are fetched the first time a reader asks for that run, and kept, so
+ * a reader who never asks never waits for them. The page is then rebuilt from whichever campaign
+ * is on screen through the same code as before: the same trajectories, the same key, the same
+ * band. The run steps back to that campaign's first recorded seed and no decision is left open,
+ * so either campaign is read from the top. Nothing is run and nothing is graded.
+ */
+const setCampaign = async (growth) => {
+  if (growth && !GROWTH_RUN){
+    bCamp.disabled = true;
+    const fetched = await Promise.all(
+      GROWTH_FILES.map(one => fetch(one).then(answer => answer.json())));
+    GROWTH_RUN = {view: fetched[0], agents: fetched[1]};
+    bCamp.disabled = false;
+  }
+  const held = growth ? GROWTH_RUN : ACCEPTED_RUN;
+  showingGrowth = growth;
+  VIEW = held.view;
+  AGENT_WORK = held.agents;
+  readClasses();
+  wrapped.clear();
+  bCamp.textContent = growth ? VIEW_WORDS.acceptedCampaign : VIEW_WORDS.growthCampaign;
+  bCamp.setAttribute('data-on', growth ? '1' : '0');
+  seedAt = 0;
+  newRun();
+};
+// the other accepted campaign, and back again. Neither one is fetched until a reader asks for it.
+bCamp.addEventListener('click', ()=> setCampaign(!showingGrowth));
+
+/* ------------------------------------------------------------------- dials */
+window.setDial = function(name, value){
+  const v = Number(value);
+  if (!isFinite(v) || !Object.prototype.hasOwnProperty.call(D, name)) return;
+  D[name] = v;
+  if (name === 'glow'){ if (haloMat) haloMat.uniforms.uGlow.value = v; }
+  else if (name === 'edge'){ if (edgeLine) edgeLine.material.opacity = v; }
+  else if (name === 'spread'){ if (gl_ok){ placeTree(tree); refreshGeometry(); } }
+  else if (name === 'grid') rebuildGrid();
+  else if (name === 'dim') paintStates();
+  else if (name === 'flow') rebuildFlow();
+  else if (name==='soft'||name==='az'||name==='el'||name==='ilev'||name==='warm'||name==='amb'||name==='rim') applyLights();
+};
+
+/* -------------------------------------------------------------- frame loop */
+let last = 0, clock = 0, histT = 0, raf = 0;
+
+function frame(now){
+  raf = requestAnimationFrame(frame);
+  const dt = Math.min(0.05, last ? (now-last)/1000 : 0.016);
+  last = now; clock += dt;
+
+  if (playing){
+    p += dt * 0.42 * D.tempo;
+    if (p >= tree.total){
+      p = tree.total;
+      endHold += dt;
+      if (endHold > 1.6){ newRun(); return; }
+    }
+  }
+
+  let live = 0;
+  for (let i=0;i<tree.nodes.length;i++) if (states[i] === 'running') live++;
+  const s = signal(clock, dt, live);
+  histT += dt;
+  if (histT > 0.055){ histT = 0; hist[histN % HIST] = s; histN++; }
+
+  if (resolveStates()) paintStates();
+
+  if (!userPicked){
+    let best = -1, bt = -1;
+    for (let i=0;i<tree.nodes.length;i++){
+      if (states[i] === 'running' && tree.nodes[i].open > bt){ bt = tree.nodes[i].open; best = i; }
+    }
+    if (best >= 0) sel = best;
+  }
+
+  if (gl_ok && nodeMesh){
+    if (!dragging) drift += dt;
+    const az = camAz + Math.sin(drift*0.13)*0.10;
+    const dist = 12.2 * D.depth;
+    camera.position.set(
+      target.x + dist*Math.sin(az)*Math.cos(camEl),
+      target.y + dist*Math.sin(camEl) + 1.1,
+      target.z + dist*Math.cos(az)*Math.cos(camEl));
+    camera.lookAt(target);
+
+    for (let i=0;i<tree.nodes.length;i++){
+      const st = states[i];
+      let sc = (st==='pending') ? 0.62 : (st==='skipped') ? 0.5 : (st==='pruned') ? 0.8 : 1;
+      if (st === 'running') sc = 1.12 + 0.16*Math.sin(clock*5.2 + i*1.7);
+      if (i === sel) sc *= 1.12;
+      tmpAx.set(0.3,1,0.2).normalize();
+      tmpM.compose(tree.nodes[i].pos, tmpQ.setFromAxisAngle(tmpAx, clock*0.35 + i), tmpS.set(sc,sc,sc));
+      nodeMesh.setMatrixAt(i, tmpM);
+    }
+    nodeMesh.instanceMatrix.needsUpdate = true;
+
+    const hs = haloGeo.getAttribute('aSize'), ha = haloGeo.getAttribute('aAlpha'), hc = haloGeo.getAttribute('aColor');
+    for (let i=0;i<tree.nodes.length;i++){
+      const st = states[i];
+      let size, alpha, cr = 0.09, cg = 0.30, cb = 0.66;
+      if (st === 'running'){ size = 1.5 + 0.35*Math.sin(clock*5.2 + i*1.7); alpha = 1; cr=0.30; cg=0.55; cb=0.95; }
+      else if (st === 'done'){ size = 0.72; alpha = 0.5; }
+      else if (st === 'pruned'){ size = 0.86; alpha = 0.55; cr=0.70; cg=0.09; cb=0.14; }
+      else { size = 0.34; alpha = 0.12*(1 - D.dim*0.8); cr=0.16; cg=0.18; cb=0.22; }
+      if (i === sel){ size *= 1.35; alpha = Math.max(alpha, 0.6); }
+      hs.array[i] = size*0.9; ha.array[i] = alpha;
+      hc.array[i*3] = cr; hc.array[i*3+1] = cg; hc.array[i*3+2] = cb;
+    }
+    hs.needsUpdate = true; ha.needsUpdate = true; hc.needsUpdate = true;
+
+    const fp = flowGeo.getAttribute('position');
+    for (let i=0;i<flow.length;i++){
+      const f = flow[i];
+      f.off += dt * (0.30 + 0.12*(((f.e*7)%5)/5)) * D.tempo;
+      if (f.off > 1) f.off -= 1;
+      const a = tree.nodes[tree.edges[f.e][0]].pos, b = tree.nodes[tree.edges[f.e][1]].pos;
+      ctrlPoint(a,b,tmpV2);
+      bez(a,tmpV2,b,f.off,tmpV);
+      fp.array[i*3] = tmpV.x; fp.array[i*3+1] = tmpV.y; fp.array[i*3+2] = tmpV.z;
+    }
+    fp.needsUpdate = true;
+
+    if (ring && tree.nodes[sel]){
+      ring.position.copy(tree.nodes[sel].pos);
+      ring.lookAt(camera.position);
+      ring.rotation.z = clock*0.6;
+      ring.material.opacity = Math.max(0, Math.min(1, 0.55 + 0.25*Math.sin(clock*2.4)));
+    }
+
+    renderer.render(scene, camera);
+
+    for (let i=0;i<tree.nodes.length;i++){
+      tmpProj.copy(tree.nodes[i].pos).project(camera);
+      const o = scr[i] || (scr[i] = {x:0,y:0,vis:false});
+      o.x = (tmpProj.x*0.5+0.5)*FW;
+      o.y = (-tmpProj.y*0.5+0.5)*FH;
+      o.vis = (tmpProj.z < 1) && o.x > -40 && o.x < FW+40 && o.y > -40 && o.y < FH+40;
+    }
+  }
+
+  drawHud(clock);
+}
+
+/* --------------------------------------------------------------- lifecycle */
+noiseTile = makeNoise();
+tree = buildTree(seed);
+states = new Array(tree.nodes.length).fill('');
+layout();
+buildScene();
+resolveStates();
+paintStates();
+setPlaying(true);
+
+if ('ResizeObserver' in window){ new ResizeObserver(()=>layout()).observe(stage); }
+else window.addEventListener('resize', layout);
+
+document.addEventListener('visibilitychange', ()=>{
+  if (document.hidden){ if (raf) cancelAnimationFrame(raf); raf = 0; }
+  else if (!raf){ last = 0; raf = requestAnimationFrame(frame); }
+});
+
+if (Array.isArray(window.__dq)){
+  for (const q of window.__dq) window.setDial(q[0], q[1]);
+  window.__dq.length = 0;
+}
+
+raf = requestAnimationFrame(frame);
+}
+</script>
+
+<script>
+/* liveref dials runtime — the canvas drawer drives these values */
+(()=>{ const el=document.getElementById('liveref-dials');
+  if(!el) return;
+  const dials=JSON.parse(el.textContent);
+  addEventListener('message', e=>{ const m=e.data||{};
+    if (m.liveref==='set') window.setDial?.(m.name, m.value);
+    if (m.liveref==='init') for (const k in (m.values||{})) window.setDial?.(k, m.values[k]); });
+  parent.postMessage({liveref:'dials', list:dials}, '*');
+})();
+</script>
+</body>
+</html>

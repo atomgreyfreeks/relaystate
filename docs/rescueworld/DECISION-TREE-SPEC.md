@@ -311,14 +311,14 @@ screen. Every number says what it counts.
 
 ## Authoritative data
 
-- `public/rescueworld-log.json` — 414 events, eleven
+- `app/public/rescueworld-log.json` — 414 events, eleven
   `DECISION_PROPOSED` events, decision context, public record and recorded model
   answers.
-- `public/rescueworld-highlights.json` — registered membership, method
+- `app/public/rescueworld-highlights.json` — registered membership, method
   counts, seed outcomes and agreement groups.
-- `src/rescueworld/trace.ts` — existing plain-language labels and answer
+- `app/src/rescueworld/trace.ts` — existing plain-language labels and answer
   translations.
-- `src/rescueworld/highlights.ts` — existing eight-cell semantics.
+- `app/src/rescueworld/highlights.ts` — existing eight-cell semantics.
 
 Registered event IDs:
 

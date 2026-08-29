@@ -1,0 +1,1744 @@
+{
+  "analysis_sha256": "e178ea9e498c8af2e7a3b3b48ccb8b6f6e377c47fcca86cadba6931540ce7544",
+  "classification": "RAPID_EXPLORATORY_RECEIPT_CALIBRATION",
+  "complete": true,
+  "expected_jobs": 24,
+  "logical_call_count": 32,
+  "maximum_logical_calls": 48,
+  "missing": [],
+  "plain_english": "With one required confirm-or-decline receipt, the treatment completed and admitted the due action in 8 of 8 frozen handoffs; 8 worked immediately and 0 were rescued by one bounded correction. The empty-receipt safety check passed in 8 of 8 cases.",
+  "plan_sha256": "8a6a2d24e57711f7468e05e61cae282a3c3fac37272b0555a782e126f972604d",
+  "primary": {
+    "control_successes": 0,
+    "denominator_per_arm": 8,
+    "treatment_minus_control": 8,
+    "treatment_rescued_by_correction": 0,
+    "treatment_successes": 8,
+    "treatment_valid_immediately": 8
+  },
+  "production_provenance_valid": true,
+  "provenance_problems": [],
+  "rows": [
+    {
+      "arm": "EMPTY_RECEIPT_CONTROL",
+      "correction_rescued": false,
+      "correction_used": true,
+      "endpoint_index": 0,
+      "final": {
+        "admission_violation_codes": [
+          "ASSIGNMENT_COUNT_OUTSIDE_CONTRACT",
+          "REGISTERED_SCORE_CONSTRAINT_ASSIGNMENT_COUNT",
+          "REGISTERED_SCORE_NO_SUPPORTING_OBSERVATION"
+        ],
+        "admitted": false,
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-dispatch-failure-start",
+            "unknown-first-night-casualty-count",
+            "unknown-fire-unit-destination-split"
+          ],
+          "assignments": [],
+          "decision_factors": [],
+          "short_reason": "No decision_receipts provided to act on.",
+          "used_observation_ids": []
+        },
+        "exact_due_assignment": false,
+        "primary_success": false,
+        "receipt_contract_violations": [],
+        "receipt_disposition": null,
+        "score_fully_valid": false,
+        "score_violation_codes": [
+          "CONSTRAINT_ASSIGNMENT_COUNT",
+          "NO_SUPPORTING_OBSERVATION"
+        ],
+        "should_correct": true,
+        "valid_decline": false
+      },
+      "job_id": "51201-GUARDED_GROWTH-positive-empty_receipt_control",
+      "kind": "POSITIVE",
+      "logical_call_count": 2,
+      "physical_attempt_count": 2,
+      "prefix_id": "51201-GUARDED_GROWTH",
+      "raw_initial_success": false,
+      "seed": 51201
+    },
+    {
+      "arm": "EVIDENCE_BOUND_RECEIPT",
+      "correction_rescued": false,
+      "correction_used": false,
+      "endpoint_index": 0,
+      "final": {
+        "admission_violation_codes": [],
+        "admitted": true,
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-dispatch-failure-start",
+            "unknown-fire-unit-destination-split",
+            "unknown-first-night-casualty-count"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-miyazaki",
+              "target_id": "nippon-paper-yatsushiro"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-2000-fire-fleet-inbound",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-2000-yatsushiro-chimney-collapse",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "Confirming the receipt assignment as it aligns with the inbound fire response fleet and the reported chimney collapse at the incident site.",
+          "used_observation_ids": [
+            "obs-2000-fire-fleet-inbound",
+            "obs-2000-yatsushiro-chimney-collapse"
+          ]
+        },
+        "exact_due_assignment": true,
+        "primary_success": true,
+        "receipt_contract_violations": [],
+        "receipt_disposition": "CONFIRM",
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": false,
+        "valid_decline": false
+      },
+      "job_id": "51201-GUARDED_GROWTH-positive-evidence_bound_receipt",
+      "kind": "POSITIVE",
+      "logical_call_count": 1,
+      "physical_attempt_count": 1,
+      "prefix_id": "51201-GUARDED_GROWTH",
+      "raw_initial_success": true,
+      "seed": 51201
+    },
+    {
+      "arm": "SHARED_EMPTY_RECEIPT_SAFETY",
+      "correction_rescued": false,
+      "correction_used": false,
+      "endpoint_index": 0,
+      "final": {
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-national-escalation-inputs",
+            "unknown-moving-fire-unit-reports"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "modeled-national-emergency-hq-posture",
+              "target_id": "kumamoto-incident-area"
+            },
+            {
+              "quantity": 1,
+              "resource_id": "modeled-fdma-instruction-posture",
+              "target_id": "kumamoto-incident-area"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-163148-magnitude",
+              "role": "CONTRADICTS"
+            },
+            {
+              "observation_id": "obs-163148-uki-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-163148-hikawa-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1643-police-helicopter-feed",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-expressway-closures",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-rail-suspension",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-water-problems",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-yatsushiro-port",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-misato-town-hall-degraded",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-kosa-network-down",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-no-published-casualty-count",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "The observed intensity 7 in Uki and Hikawa, combined with transport disruptions, water problems, and degraded municipal functions, justify activating the Emergency Disaster Management Headquarters and switching fire mobilization to instruction.",
+          "used_observation_ids": [
+            "obs-163148-magnitude",
+            "obs-163148-uki-intensity",
+            "obs-163148-hikawa-intensity",
+            "obs-1643-police-helicopter-feed",
+            "obs-1810-expressway-closures",
+            "obs-1810-rail-suspension",
+            "obs-1810-water-problems",
+            "obs-1810-yatsushiro-port",
+            "obs-1820-misato-town-hall-degraded",
+            "obs-1820-kosa-network-down",
+            "obs-1820-no-published-casualty-count"
+          ]
+        },
+        "false_resolution": false,
+        "invented_evidence_ids": [],
+        "negative_gap_acknowledged": true,
+        "receipt_contract_violations": [],
+        "safety_pass": true,
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": false
+      },
+      "job_id": "51201-GUARDED_GROWTH-negative",
+      "kind": "NEGATIVE",
+      "logical_call_count": 1,
+      "physical_attempt_count": 1,
+      "prefix_id": "51201-GUARDED_GROWTH",
+      "raw_initial_success": true,
+      "seed": 51201
+    },
+    {
+      "arm": "EMPTY_RECEIPT_CONTROL",
+      "correction_rescued": false,
+      "correction_used": true,
+      "endpoint_index": 1,
+      "final": {
+        "admission_violation_codes": [
+          "REFINEMENT_NOT_ALREADY_PLACED"
+        ],
+        "admitted": false,
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-dispatch-failure-start",
+            "unknown-first-night-casualty-count",
+            "unknown-fire-unit-destination-split"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-fukuoka",
+              "target_id": "nippon-paper-yatsushiro"
+            },
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-saga",
+              "target_id": "nippon-paper-yatsushiro"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-2000-yatsushiro-chimney-collapse",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-163148-yatsushiro-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-2000-fire-fleet-inbound",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "Assignments made to address the reported chimney collapse and high-intensity earthquake impact in Yatsushiro, supported by available resource status and intensity reports.",
+          "used_observation_ids": [
+            "obs-2000-yatsushiro-chimney-collapse",
+            "obs-163148-yatsushiro-intensity",
+            "obs-2000-fire-fleet-inbound"
+          ]
+        },
+        "exact_due_assignment": false,
+        "primary_success": false,
+        "receipt_contract_violations": [],
+        "receipt_disposition": null,
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": true,
+        "valid_decline": false
+      },
+      "job_id": "51203-FIXED_COVERAGE-positive-empty_receipt_control",
+      "kind": "POSITIVE",
+      "logical_call_count": 2,
+      "physical_attempt_count": 2,
+      "prefix_id": "51203-FIXED_COVERAGE",
+      "raw_initial_success": false,
+      "seed": 51203
+    },
+    {
+      "arm": "EVIDENCE_BOUND_RECEIPT",
+      "correction_rescued": false,
+      "correction_used": false,
+      "endpoint_index": 1,
+      "final": {
+        "admission_violation_codes": [],
+        "admitted": true,
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-dispatch-failure-start",
+            "unknown-fire-unit-destination-split",
+            "unknown-first-night-casualty-count"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-miyazaki",
+              "target_id": "nippon-paper-yatsushiro"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-2000-fire-fleet-inbound",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-2000-yatsushiro-chimney-collapse",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "Confirming the receipt assignment as it aligns with the available inbound resource status and reported incident severity.",
+          "used_observation_ids": [
+            "obs-2000-fire-fleet-inbound",
+            "obs-2000-yatsushiro-chimney-collapse"
+          ]
+        },
+        "exact_due_assignment": true,
+        "primary_success": true,
+        "receipt_contract_violations": [],
+        "receipt_disposition": "CONFIRM",
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": false,
+        "valid_decline": false
+      },
+      "job_id": "51203-FIXED_COVERAGE-positive-evidence_bound_receipt",
+      "kind": "POSITIVE",
+      "logical_call_count": 1,
+      "physical_attempt_count": 1,
+      "prefix_id": "51203-FIXED_COVERAGE",
+      "raw_initial_success": true,
+      "seed": 51203
+    },
+    {
+      "arm": "SHARED_EMPTY_RECEIPT_SAFETY",
+      "correction_rescued": false,
+      "correction_used": false,
+      "endpoint_index": 1,
+      "final": {
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-national-escalation-inputs",
+            "unknown-moving-fire-unit-reports"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "modeled-national-emergency-hq-posture",
+              "target_id": "kumamoto-incident-area"
+            },
+            {
+              "quantity": 1,
+              "resource_id": "modeled-fdma-instruction-posture",
+              "target_id": "kumamoto-incident-area"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-163148-magnitude",
+              "role": "CONTRADICTS"
+            },
+            {
+              "observation_id": "obs-163148-uki-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-163148-hikawa-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1643-police-helicopter-feed",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-expressway-closures",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-rail-suspension",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-water-problems",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-yatsushiro-port",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-misato-town-hall-degraded",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-kosa-network-down",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-no-published-casualty-count",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "The observed intensity 7 in Uki and Hikawa, combined with transport disruptions, infrastructure damage, and municipal function degradation, supports activating the Emergency Disaster Management Headquarters posture. The absence of casualty data and the need for centralized control justify switching fire mobilization to instruction-based posture.",
+          "used_observation_ids": [
+            "obs-163148-magnitude",
+            "obs-163148-uki-intensity",
+            "obs-163148-hikawa-intensity",
+            "obs-1643-police-helicopter-feed",
+            "obs-1810-expressway-closures",
+            "obs-1810-rail-suspension",
+            "obs-1810-water-problems",
+            "obs-1810-yatsushiro-port",
+            "obs-1820-misato-town-hall-degraded",
+            "obs-1820-kosa-network-down",
+            "obs-1820-no-published-casualty-count"
+          ]
+        },
+        "false_resolution": false,
+        "invented_evidence_ids": [],
+        "negative_gap_acknowledged": true,
+        "receipt_contract_violations": [],
+        "safety_pass": true,
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": false
+      },
+      "job_id": "51203-FIXED_COVERAGE-negative",
+      "kind": "NEGATIVE",
+      "logical_call_count": 1,
+      "physical_attempt_count": 1,
+      "prefix_id": "51203-FIXED_COVERAGE",
+      "raw_initial_success": true,
+      "seed": 51203
+    },
+    {
+      "arm": "EMPTY_RECEIPT_CONTROL",
+      "correction_rescued": false,
+      "correction_used": true,
+      "endpoint_index": 2,
+      "final": {
+        "admission_violation_codes": [
+          "REFINEMENT_NOT_ALREADY_PLACED"
+        ],
+        "admitted": false,
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-dispatch-failure-start",
+            "unknown-first-night-casualty-count",
+            "unknown-fire-unit-destination-split"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-fukuoka",
+              "target_id": "nippon-paper-yatsushiro"
+            },
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-oita",
+              "target_id": "nippon-paper-yatsushiro"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-2000-fire-fleet-inbound",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-163148-yatsushiro-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-2000-yatsushiro-dispatch-restored",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "Assign Fukuoka and Ōita prefectural battalions to the Yatsushiro paper-mill collapse based on the inbound fire fleet report and high-intensity observation, while acknowledging unknowns about dispatch failure, casualty count, and unit readiness.",
+          "used_observation_ids": [
+            "obs-2000-fire-fleet-inbound",
+            "obs-163148-yatsushiro-intensity",
+            "obs-2000-yatsushiro-dispatch-restored"
+          ]
+        },
+        "exact_due_assignment": false,
+        "primary_success": false,
+        "receipt_contract_violations": [],
+        "receipt_disposition": null,
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": true,
+        "valid_decline": false
+      },
+      "job_id": "51204-FIXED_COVERAGE-positive-empty_receipt_control",
+      "kind": "POSITIVE",
+      "logical_call_count": 2,
+      "physical_attempt_count": 2,
+      "prefix_id": "51204-FIXED_COVERAGE",
+      "raw_initial_success": false,
+      "seed": 51204
+    },
+    {
+      "arm": "EVIDENCE_BOUND_RECEIPT",
+      "correction_rescued": false,
+      "correction_used": false,
+      "endpoint_index": 2,
+      "final": {
+        "admission_violation_codes": [],
+        "admitted": true,
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-dispatch-failure-start",
+            "unknown-fire-unit-destination-split",
+            "unknown-first-night-casualty-count"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-miyazaki",
+              "target_id": "nippon-paper-yatsushiro"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-2000-fire-fleet-inbound",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-2000-yatsushiro-chimney-collapse",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "Confirming the receipt assignment of one Miyazaki prefectural battalion to the Yatsushiro paper mill based on the reported chimney collapse and inbound fire response fleet.",
+          "used_observation_ids": [
+            "obs-2000-fire-fleet-inbound",
+            "obs-2000-yatsushiro-chimney-collapse"
+          ]
+        },
+        "exact_due_assignment": true,
+        "primary_success": true,
+        "receipt_contract_violations": [],
+        "receipt_disposition": "CONFIRM",
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": false,
+        "valid_decline": false
+      },
+      "job_id": "51204-FIXED_COVERAGE-positive-evidence_bound_receipt",
+      "kind": "POSITIVE",
+      "logical_call_count": 1,
+      "physical_attempt_count": 1,
+      "prefix_id": "51204-FIXED_COVERAGE",
+      "raw_initial_success": true,
+      "seed": 51204
+    },
+    {
+      "arm": "SHARED_EMPTY_RECEIPT_SAFETY",
+      "correction_rescued": false,
+      "correction_used": false,
+      "endpoint_index": 2,
+      "final": {
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-national-escalation-inputs",
+            "unknown-moving-fire-unit-reports"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "modeled-national-emergency-hq-posture",
+              "target_id": "kumamoto-incident-area"
+            },
+            {
+              "quantity": 1,
+              "resource_id": "modeled-fdma-instruction-posture",
+              "target_id": "kumamoto-incident-area"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-163148-magnitude",
+              "role": "CONTRADICTS"
+            },
+            {
+              "observation_id": "obs-163148-uki-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-163148-hikawa-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1643-police-helicopter-feed",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-expressway-closures",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-rail-suspension",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-water-problems",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-yatsushiro-port",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-misato-town-hall-degraded",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-kosa-network-down",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-no-published-casualty-count",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "The observed intensity 7 in Uki and Hikawa, combined with transport disruptions, water problems, and municipal-function degradation, support activating the Emergency Disaster Management Headquarters posture and switching fire mobilization to instruction.",
+          "used_observation_ids": [
+            "obs-163148-magnitude",
+            "obs-163148-uki-intensity",
+            "obs-163148-hikawa-intensity",
+            "obs-1643-police-helicopter-feed",
+            "obs-1810-expressway-closures",
+            "obs-1810-rail-suspension",
+            "obs-1810-water-problems",
+            "obs-1810-yatsushiro-port",
+            "obs-1820-misato-town-hall-degraded",
+            "obs-1820-kosa-network-down",
+            "obs-1820-no-published-casualty-count"
+          ]
+        },
+        "false_resolution": false,
+        "invented_evidence_ids": [],
+        "negative_gap_acknowledged": true,
+        "receipt_contract_violations": [],
+        "safety_pass": true,
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": false
+      },
+      "job_id": "51204-FIXED_COVERAGE-negative",
+      "kind": "NEGATIVE",
+      "logical_call_count": 1,
+      "physical_attempt_count": 1,
+      "prefix_id": "51204-FIXED_COVERAGE",
+      "raw_initial_success": true,
+      "seed": 51204
+    },
+    {
+      "arm": "EMPTY_RECEIPT_CONTROL",
+      "correction_rescued": false,
+      "correction_used": true,
+      "endpoint_index": 3,
+      "final": {
+        "admission_violation_codes": [
+          "REFINEMENT_NOT_ALREADY_PLACED"
+        ],
+        "admitted": false,
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-dispatch-failure-start",
+            "unknown-first-night-casualty-count",
+            "unknown-fire-unit-destination-split"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-fukuoka",
+              "target_id": "nippon-paper-yatsushiro"
+            },
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-oita",
+              "target_id": "nippon-paper-yatsushiro"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-2000-fire-fleet-inbound",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-163148-yatsushiro-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-2000-yatsushiro-dispatch-restored",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "Assign Fukuoka and Ōita prefectural battalions to the Yatsushiro paper-mill collapse based on the inbound fire fleet report and high-intensity observation, while acknowledging unknowns about dispatch failure, casualty count, and unit readiness.",
+          "used_observation_ids": [
+            "obs-2000-fire-fleet-inbound",
+            "obs-163148-yatsushiro-intensity",
+            "obs-2000-yatsushiro-dispatch-restored"
+          ]
+        },
+        "exact_due_assignment": false,
+        "primary_success": false,
+        "receipt_contract_violations": [],
+        "receipt_disposition": null,
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": true,
+        "valid_decline": false
+      },
+      "job_id": "51204-GUARDED_GROWTH-positive-empty_receipt_control",
+      "kind": "POSITIVE",
+      "logical_call_count": 2,
+      "physical_attempt_count": 2,
+      "prefix_id": "51204-GUARDED_GROWTH",
+      "raw_initial_success": false,
+      "seed": 51204
+    },
+    {
+      "arm": "EVIDENCE_BOUND_RECEIPT",
+      "correction_rescued": false,
+      "correction_used": false,
+      "endpoint_index": 3,
+      "final": {
+        "admission_violation_codes": [],
+        "admitted": true,
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-dispatch-failure-start",
+            "unknown-fire-unit-destination-split",
+            "unknown-first-night-casualty-count"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-miyazaki",
+              "target_id": "nippon-paper-yatsushiro"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-2000-fire-fleet-inbound",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-2000-yatsushiro-chimney-collapse",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "Confirming the receipt assignment of one Miyazaki prefectural battalion to the Yatsushiro paper mill based on the reported chimney collapse and inbound fire response fleet.",
+          "used_observation_ids": [
+            "obs-2000-fire-fleet-inbound",
+            "obs-2000-yatsushiro-chimney-collapse"
+          ]
+        },
+        "exact_due_assignment": true,
+        "primary_success": true,
+        "receipt_contract_violations": [],
+        "receipt_disposition": "CONFIRM",
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": false,
+        "valid_decline": false
+      },
+      "job_id": "51204-GUARDED_GROWTH-positive-evidence_bound_receipt",
+      "kind": "POSITIVE",
+      "logical_call_count": 1,
+      "physical_attempt_count": 1,
+      "prefix_id": "51204-GUARDED_GROWTH",
+      "raw_initial_success": true,
+      "seed": 51204
+    },
+    {
+      "arm": "SHARED_EMPTY_RECEIPT_SAFETY",
+      "correction_rescued": false,
+      "correction_used": false,
+      "endpoint_index": 3,
+      "final": {
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-national-escalation-inputs",
+            "unknown-moving-fire-unit-reports"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "modeled-national-emergency-hq-posture",
+              "target_id": "kumamoto-incident-area"
+            },
+            {
+              "quantity": 1,
+              "resource_id": "modeled-fdma-instruction-posture",
+              "target_id": "kumamoto-incident-area"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-163148-magnitude",
+              "role": "CONTRADICTS"
+            },
+            {
+              "observation_id": "obs-163148-uki-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-163148-hikawa-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1643-police-helicopter-feed",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-expressway-closures",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-rail-suspension",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-water-problems",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-yatsushiro-port",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-misato-town-hall-degraded",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-kosa-network-down",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-no-published-casualty-count",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "The observed seismic intensity 7 in Uki and Hikawa, combined with transport disruptions, water problems, and degraded municipal functions, justify activating the Emergency Disaster Management Headquarters posture and switching fire mobilization to instruction.",
+          "used_observation_ids": [
+            "obs-163148-magnitude",
+            "obs-163148-uki-intensity",
+            "obs-163148-hikawa-intensity",
+            "obs-1643-police-helicopter-feed",
+            "obs-1810-expressway-closures",
+            "obs-1810-rail-suspension",
+            "obs-1810-water-problems",
+            "obs-1810-yatsushiro-port",
+            "obs-1820-misato-town-hall-degraded",
+            "obs-1820-kosa-network-down",
+            "obs-1820-no-published-casualty-count"
+          ]
+        },
+        "false_resolution": false,
+        "invented_evidence_ids": [],
+        "negative_gap_acknowledged": true,
+        "receipt_contract_violations": [],
+        "safety_pass": true,
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": false
+      },
+      "job_id": "51204-GUARDED_GROWTH-negative",
+      "kind": "NEGATIVE",
+      "logical_call_count": 1,
+      "physical_attempt_count": 1,
+      "prefix_id": "51204-GUARDED_GROWTH",
+      "raw_initial_success": true,
+      "seed": 51204
+    },
+    {
+      "arm": "EMPTY_RECEIPT_CONTROL",
+      "correction_rescued": false,
+      "correction_used": true,
+      "endpoint_index": 0,
+      "final": {
+        "admission_violation_codes": [
+          "REFINEMENT_NOT_ALREADY_PLACED"
+        ],
+        "admitted": false,
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-dispatch-failure-start",
+            "unknown-first-night-casualty-count",
+            "unknown-fire-unit-destination-split"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-fukuoka",
+              "target_id": "nippon-paper-yatsushiro"
+            },
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-oita",
+              "target_id": "nippon-paper-yatsushiro"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-2000-fire-fleet-inbound",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-2000-yatsushiro-chimney-collapse",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "Assign two battalions to the Yatsushiro paper mill collapse based on the reported chimney collapse and inbound fire response fleet, while acknowledging unknowns about dispatch failure, casualty count, and unit readiness.",
+          "used_observation_ids": [
+            "obs-2000-fire-fleet-inbound",
+            "obs-2000-yatsushiro-chimney-collapse"
+          ]
+        },
+        "exact_due_assignment": false,
+        "primary_success": false,
+        "receipt_contract_violations": [],
+        "receipt_disposition": null,
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": true,
+        "valid_decline": false
+      },
+      "job_id": "51205-FIXED_COVERAGE-positive-empty_receipt_control",
+      "kind": "POSITIVE",
+      "logical_call_count": 2,
+      "physical_attempt_count": 2,
+      "prefix_id": "51205-FIXED_COVERAGE",
+      "raw_initial_success": false,
+      "seed": 51205
+    },
+    {
+      "arm": "EVIDENCE_BOUND_RECEIPT",
+      "correction_rescued": false,
+      "correction_used": false,
+      "endpoint_index": 0,
+      "final": {
+        "admission_violation_codes": [],
+        "admitted": true,
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-dispatch-failure-start",
+            "unknown-fire-unit-destination-split",
+            "unknown-first-night-casualty-count"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-miyazaki",
+              "target_id": "nippon-paper-yatsushiro"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-2000-fire-fleet-inbound",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-2000-yatsushiro-chimney-collapse",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "Confirming the receipt assignment of one Miyazaki prefectural battalion to the Yatsushiro paper mill, supported by the reported chimney collapse and inbound fire response fleet.",
+          "used_observation_ids": [
+            "obs-2000-fire-fleet-inbound",
+            "obs-2000-yatsushiro-chimney-collapse"
+          ]
+        },
+        "exact_due_assignment": true,
+        "primary_success": true,
+        "receipt_contract_violations": [],
+        "receipt_disposition": "CONFIRM",
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": false,
+        "valid_decline": false
+      },
+      "job_id": "51205-FIXED_COVERAGE-positive-evidence_bound_receipt",
+      "kind": "POSITIVE",
+      "logical_call_count": 1,
+      "physical_attempt_count": 1,
+      "prefix_id": "51205-FIXED_COVERAGE",
+      "raw_initial_success": true,
+      "seed": 51205
+    },
+    {
+      "arm": "SHARED_EMPTY_RECEIPT_SAFETY",
+      "correction_rescued": false,
+      "correction_used": false,
+      "endpoint_index": 0,
+      "final": {
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-national-escalation-inputs",
+            "unknown-moving-fire-unit-reports"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "modeled-national-emergency-hq-posture",
+              "target_id": "kumamoto-incident-area"
+            },
+            {
+              "quantity": 1,
+              "resource_id": "modeled-fdma-instruction-posture",
+              "target_id": "kumamoto-incident-area"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-163148-magnitude",
+              "role": "CONTRADICTS"
+            },
+            {
+              "observation_id": "obs-163148-uki-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-163148-hikawa-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1643-police-helicopter-feed",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-expressway-closures",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-rail-suspension",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-water-problems",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-yatsushiro-port",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-misato-town-hall-degraded",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-kosa-network-down",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-no-published-casualty-count",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "The observed intensity 7 in Uki and Hikawa, combined with transport disruptions, infrastructure damage, and municipal-function degradation, justify activating the Emergency Disaster Management Headquarters posture. The absence of casualty data and the presence of missing intensity reports suggest a need for centralized instruction-based fire mobilization.",
+          "used_observation_ids": [
+            "obs-163148-magnitude",
+            "obs-163148-uki-intensity",
+            "obs-163148-hikawa-intensity",
+            "obs-1643-police-helicopter-feed",
+            "obs-1810-expressway-closures",
+            "obs-1810-rail-suspension",
+            "obs-1810-water-problems",
+            "obs-1810-yatsushiro-port",
+            "obs-1820-misato-town-hall-degraded",
+            "obs-1820-kosa-network-down",
+            "obs-1820-no-published-casualty-count"
+          ]
+        },
+        "false_resolution": false,
+        "invented_evidence_ids": [],
+        "negative_gap_acknowledged": true,
+        "receipt_contract_violations": [],
+        "safety_pass": true,
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": false
+      },
+      "job_id": "51205-FIXED_COVERAGE-negative",
+      "kind": "NEGATIVE",
+      "logical_call_count": 1,
+      "physical_attempt_count": 1,
+      "prefix_id": "51205-FIXED_COVERAGE",
+      "raw_initial_success": true,
+      "seed": 51205
+    },
+    {
+      "arm": "EMPTY_RECEIPT_CONTROL",
+      "correction_rescued": false,
+      "correction_used": true,
+      "endpoint_index": 1,
+      "final": {
+        "admission_violation_codes": [
+          "REFINEMENT_NOT_ALREADY_PLACED"
+        ],
+        "admitted": false,
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-dispatch-failure-start",
+            "unknown-first-night-casualty-count",
+            "unknown-fire-unit-destination-split"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-fukuoka",
+              "target_id": "nippon-paper-yatsushiro"
+            },
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-saga",
+              "target_id": "nippon-paper-yatsushiro"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-2000-yatsushiro-chimney-collapse",
+              "role": "CONTRADICTS"
+            },
+            {
+              "observation_id": "obs-2000-fire-fleet-inbound",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "Assign Fukuoka and Saga battalions to the Yatsushiro paper mill based on the reported chimney collapse and inbound fire fleet, while acknowledging unknowns about dispatch failure, casualty count, and unit readiness.",
+          "used_observation_ids": [
+            "obs-2000-yatsushiro-chimney-collapse",
+            "obs-2000-fire-fleet-inbound"
+          ]
+        },
+        "exact_due_assignment": false,
+        "primary_success": false,
+        "receipt_contract_violations": [],
+        "receipt_disposition": null,
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": true,
+        "valid_decline": false
+      },
+      "job_id": "51206-FIXED_COVERAGE-positive-empty_receipt_control",
+      "kind": "POSITIVE",
+      "logical_call_count": 2,
+      "physical_attempt_count": 2,
+      "prefix_id": "51206-FIXED_COVERAGE",
+      "raw_initial_success": false,
+      "seed": 51206
+    },
+    {
+      "arm": "EVIDENCE_BOUND_RECEIPT",
+      "correction_rescued": false,
+      "correction_used": false,
+      "endpoint_index": 1,
+      "final": {
+        "admission_violation_codes": [],
+        "admitted": true,
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-dispatch-failure-start",
+            "unknown-fire-unit-destination-split",
+            "unknown-first-night-casualty-count"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-miyazaki",
+              "target_id": "nippon-paper-yatsushiro"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-2000-fire-fleet-inbound",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-2000-yatsushiro-chimney-collapse",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "The receipt proposes assigning the Miyazaki prefectural battalion to the Yatsushiro paper mill, supported by the observation of an inbound fire fleet and a reported chimney collapse. This assignment is confirmed.",
+          "used_observation_ids": [
+            "obs-2000-fire-fleet-inbound",
+            "obs-2000-yatsushiro-chimney-collapse"
+          ]
+        },
+        "exact_due_assignment": true,
+        "primary_success": true,
+        "receipt_contract_violations": [],
+        "receipt_disposition": "CONFIRM",
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": false,
+        "valid_decline": false
+      },
+      "job_id": "51206-FIXED_COVERAGE-positive-evidence_bound_receipt",
+      "kind": "POSITIVE",
+      "logical_call_count": 1,
+      "physical_attempt_count": 1,
+      "prefix_id": "51206-FIXED_COVERAGE",
+      "raw_initial_success": true,
+      "seed": 51206
+    },
+    {
+      "arm": "SHARED_EMPTY_RECEIPT_SAFETY",
+      "correction_rescued": false,
+      "correction_used": false,
+      "endpoint_index": 1,
+      "final": {
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-national-escalation-inputs",
+            "unknown-moving-fire-unit-reports"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "modeled-national-emergency-hq-posture",
+              "target_id": "kumamoto-incident-area"
+            },
+            {
+              "quantity": 1,
+              "resource_id": "modeled-fdma-instruction-posture",
+              "target_id": "kumamoto-incident-area"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-163148-magnitude",
+              "role": "CONTRADICTS"
+            },
+            {
+              "observation_id": "obs-163148-uki-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-163148-hikawa-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1643-police-helicopter-feed",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-expressway-closures",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-rail-suspension",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-water-problems",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-yatsushiro-port",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-misato-town-hall-degraded",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-kosa-network-down",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-no-published-casualty-count",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "The observed intensity 7 in Uki and Hikawa, combined with transport disruptions, water problems, and degraded municipal functions, justify activating the Emergency Disaster Management Headquarters and switching fire mobilization to instruction.",
+          "used_observation_ids": [
+            "obs-163148-magnitude",
+            "obs-163148-uki-intensity",
+            "obs-163148-hikawa-intensity",
+            "obs-1643-police-helicopter-feed",
+            "obs-1810-expressway-closures",
+            "obs-1810-rail-suspension",
+            "obs-1810-water-problems",
+            "obs-1810-yatsushiro-port",
+            "obs-1820-misato-town-hall-degraded",
+            "obs-1820-kosa-network-down",
+            "obs-1820-no-published-casualty-count"
+          ]
+        },
+        "false_resolution": false,
+        "invented_evidence_ids": [],
+        "negative_gap_acknowledged": true,
+        "receipt_contract_violations": [],
+        "safety_pass": true,
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": false
+      },
+      "job_id": "51206-FIXED_COVERAGE-negative",
+      "kind": "NEGATIVE",
+      "logical_call_count": 1,
+      "physical_attempt_count": 1,
+      "prefix_id": "51206-FIXED_COVERAGE",
+      "raw_initial_success": true,
+      "seed": 51206
+    },
+    {
+      "arm": "EMPTY_RECEIPT_CONTROL",
+      "correction_rescued": false,
+      "correction_used": true,
+      "endpoint_index": 2,
+      "final": {
+        "admission_violation_codes": [
+          "ASSIGNMENT_COUNT_OUTSIDE_CONTRACT",
+          "REGISTERED_SCORE_CONSTRAINT_ASSIGNMENT_COUNT",
+          "REGISTERED_SCORE_NO_SUPPORTING_OBSERVATION"
+        ],
+        "admitted": false,
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-dispatch-failure-start",
+            "unknown-first-night-casualty-count",
+            "unknown-fire-unit-destination-split"
+          ],
+          "assignments": [],
+          "decision_factors": [],
+          "short_reason": "No decision_receipts provided to act upon.",
+          "used_observation_ids": []
+        },
+        "exact_due_assignment": false,
+        "primary_success": false,
+        "receipt_contract_violations": [],
+        "receipt_disposition": null,
+        "score_fully_valid": false,
+        "score_violation_codes": [
+          "CONSTRAINT_ASSIGNMENT_COUNT",
+          "NO_SUPPORTING_OBSERVATION"
+        ],
+        "should_correct": true,
+        "valid_decline": false
+      },
+      "job_id": "51207-FIXED_COVERAGE-positive-empty_receipt_control",
+      "kind": "POSITIVE",
+      "logical_call_count": 2,
+      "physical_attempt_count": 2,
+      "prefix_id": "51207-FIXED_COVERAGE",
+      "raw_initial_success": false,
+      "seed": 51207
+    },
+    {
+      "arm": "EVIDENCE_BOUND_RECEIPT",
+      "correction_rescued": false,
+      "correction_used": false,
+      "endpoint_index": 2,
+      "final": {
+        "admission_violation_codes": [],
+        "admitted": true,
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-dispatch-failure-start",
+            "unknown-fire-unit-destination-split",
+            "unknown-first-night-casualty-count"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-miyazaki",
+              "target_id": "nippon-paper-yatsushiro"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-2000-fire-fleet-inbound",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-2000-yatsushiro-chimney-collapse",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "Confirming the receipt assignment of the Miyazaki prefectural battalion to the Yatsushiro paper mill based on the chimney collapse and inbound fire fleet observations.",
+          "used_observation_ids": [
+            "obs-2000-fire-fleet-inbound",
+            "obs-2000-yatsushiro-chimney-collapse"
+          ]
+        },
+        "exact_due_assignment": true,
+        "primary_success": true,
+        "receipt_contract_violations": [],
+        "receipt_disposition": "CONFIRM",
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": false,
+        "valid_decline": false
+      },
+      "job_id": "51207-FIXED_COVERAGE-positive-evidence_bound_receipt",
+      "kind": "POSITIVE",
+      "logical_call_count": 1,
+      "physical_attempt_count": 1,
+      "prefix_id": "51207-FIXED_COVERAGE",
+      "raw_initial_success": true,
+      "seed": 51207
+    },
+    {
+      "arm": "SHARED_EMPTY_RECEIPT_SAFETY",
+      "correction_rescued": false,
+      "correction_used": false,
+      "endpoint_index": 2,
+      "final": {
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-national-escalation-inputs",
+            "unknown-moving-fire-unit-reports"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "modeled-national-emergency-hq-posture",
+              "target_id": "kumamoto-incident-area"
+            },
+            {
+              "quantity": 1,
+              "resource_id": "modeled-fdma-instruction-posture",
+              "target_id": "kumamoto-incident-area"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-163148-magnitude",
+              "role": "CONTRADICTS"
+            },
+            {
+              "observation_id": "obs-163148-uki-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-163148-hikawa-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1643-police-helicopter-feed",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-expressway-closures",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-rail-suspension",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-water-problems",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-yatsushiro-port",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-misato-town-hall-degraded",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-kosa-network-down",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-no-published-casualty-count",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "The observed intensity 7 in Uki and Hikawa, combined with transport disruptions, infrastructure damage, and municipal function degradation, justify activating the Emergency Disaster Management Headquarters and switching fire mobilization to instruction.",
+          "used_observation_ids": [
+            "obs-163148-magnitude",
+            "obs-163148-uki-intensity",
+            "obs-163148-hikawa-intensity",
+            "obs-1643-police-helicopter-feed",
+            "obs-1810-expressway-closures",
+            "obs-1810-rail-suspension",
+            "obs-1810-water-problems",
+            "obs-1810-yatsushiro-port",
+            "obs-1820-misato-town-hall-degraded",
+            "obs-1820-kosa-network-down",
+            "obs-1820-no-published-casualty-count"
+          ]
+        },
+        "false_resolution": false,
+        "invented_evidence_ids": [],
+        "negative_gap_acknowledged": true,
+        "receipt_contract_violations": [],
+        "safety_pass": true,
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": false
+      },
+      "job_id": "51207-FIXED_COVERAGE-negative",
+      "kind": "NEGATIVE",
+      "logical_call_count": 1,
+      "physical_attempt_count": 1,
+      "prefix_id": "51207-FIXED_COVERAGE",
+      "raw_initial_success": true,
+      "seed": 51207
+    },
+    {
+      "arm": "EMPTY_RECEIPT_CONTROL",
+      "correction_rescued": false,
+      "correction_used": true,
+      "endpoint_index": 3,
+      "final": {
+        "admission_violation_codes": [
+          "REFINEMENT_NOT_ALREADY_PLACED"
+        ],
+        "admitted": false,
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-dispatch-failure-start",
+            "unknown-first-night-casualty-count",
+            "unknown-fire-unit-destination-split"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-fukuoka",
+              "target_id": "nippon-paper-yatsushiro"
+            },
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-saga",
+              "target_id": "nippon-paper-yatsushiro"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-2000-yatsushiro-chimney-collapse",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-163148-yatsushiro-intensity",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "Assign Fukuoka and Saga prefectural battalions to the Yatsushiro paper mill collapse, citing chimney collapse and high intensity reports, while acknowledging unknowns about dispatch failure, casualty count, and unit distribution.",
+          "used_observation_ids": [
+            "obs-2000-yatsushiro-chimney-collapse",
+            "obs-163148-yatsushiro-intensity"
+          ]
+        },
+        "exact_due_assignment": false,
+        "primary_success": false,
+        "receipt_contract_violations": [],
+        "receipt_disposition": null,
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": true,
+        "valid_decline": false
+      },
+      "job_id": "51208-FIXED_COVERAGE-positive-empty_receipt_control",
+      "kind": "POSITIVE",
+      "logical_call_count": 2,
+      "physical_attempt_count": 2,
+      "prefix_id": "51208-FIXED_COVERAGE",
+      "raw_initial_success": false,
+      "seed": 51208
+    },
+    {
+      "arm": "EVIDENCE_BOUND_RECEIPT",
+      "correction_rescued": false,
+      "correction_used": false,
+      "endpoint_index": 3,
+      "final": {
+        "admission_violation_codes": [],
+        "admitted": true,
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-dispatch-failure-start",
+            "unknown-fire-unit-destination-split",
+            "unknown-first-night-casualty-count"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "fdma-battalion-miyazaki",
+              "target_id": "nippon-paper-yatsushiro"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-2000-fire-fleet-inbound",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-2000-yatsushiro-chimney-collapse",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "Confirming the receipt assignment of the Miyazaki prefectural battalion to the Yatsushiro paper mill, supported by the chimney collapse report and the inbound fire fleet status.",
+          "used_observation_ids": [
+            "obs-2000-fire-fleet-inbound",
+            "obs-2000-yatsushiro-chimney-collapse"
+          ]
+        },
+        "exact_due_assignment": true,
+        "primary_success": true,
+        "receipt_contract_violations": [],
+        "receipt_disposition": "CONFIRM",
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": false,
+        "valid_decline": false
+      },
+      "job_id": "51208-FIXED_COVERAGE-positive-evidence_bound_receipt",
+      "kind": "POSITIVE",
+      "logical_call_count": 1,
+      "physical_attempt_count": 1,
+      "prefix_id": "51208-FIXED_COVERAGE",
+      "raw_initial_success": true,
+      "seed": 51208
+    },
+    {
+      "arm": "SHARED_EMPTY_RECEIPT_SAFETY",
+      "correction_rescued": false,
+      "correction_used": false,
+      "endpoint_index": 3,
+      "final": {
+        "decision": {
+          "acknowledged_unknown_ids": [
+            "unknown-national-escalation-inputs",
+            "unknown-moving-fire-unit-reports"
+          ],
+          "assignments": [
+            {
+              "quantity": 1,
+              "resource_id": "modeled-national-emergency-hq-posture",
+              "target_id": "kumamoto-incident-area"
+            },
+            {
+              "quantity": 1,
+              "resource_id": "modeled-fdma-instruction-posture",
+              "target_id": "kumamoto-incident-area"
+            }
+          ],
+          "decision_factors": [
+            {
+              "observation_id": "obs-163148-magnitude",
+              "role": "CONTRADICTS"
+            },
+            {
+              "observation_id": "obs-163148-uki-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-163148-hikawa-intensity",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1643-police-helicopter-feed",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-expressway-closures",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-rail-suspension",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-water-problems",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1810-yatsushiro-port",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-misato-town-hall-degraded",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-kosa-network-down",
+              "role": "SUPPORTS"
+            },
+            {
+              "observation_id": "obs-1820-no-published-casualty-count",
+              "role": "SUPPORTS"
+            }
+          ],
+          "short_reason": "The observed intensity 7 in Uki and Hikawa, combined with transport disruptions, water problems, and degraded municipal functions, justify activating the Emergency Disaster Management Headquarters and switching fire mobilization to instruction.",
+          "used_observation_ids": [
+            "obs-163148-magnitude",
+            "obs-163148-uki-intensity",
+            "obs-163148-hikawa-intensity",
+            "obs-1643-police-helicopter-feed",
+            "obs-1810-expressway-closures",
+            "obs-1810-rail-suspension",
+            "obs-1810-water-problems",
+            "obs-1810-yatsushiro-port",
+            "obs-1820-misato-town-hall-degraded",
+            "obs-1820-kosa-network-down",
+            "obs-1820-no-published-casualty-count"
+          ]
+        },
+        "false_resolution": false,
+        "invented_evidence_ids": [],
+        "negative_gap_acknowledged": true,
+        "receipt_contract_violations": [],
+        "safety_pass": true,
+        "score_fully_valid": true,
+        "score_violation_codes": [],
+        "should_correct": false
+      },
+      "job_id": "51208-FIXED_COVERAGE-negative",
+      "kind": "NEGATIVE",
+      "logical_call_count": 1,
+      "physical_attempt_count": 1,
+      "prefix_id": "51208-FIXED_COVERAGE",
+      "raw_initial_success": true,
+      "seed": 51208
+    }
+  ],
+  "safety": {
+    "denominator": 8,
+    "false_resolutions": 0,
+    "passes": 8,
+    "receipts_empty": 8
+  },
+  "schema_version": "kumamoto-evidence-receipt-fork.analysis.v1",
+  "signal_verdict": "PROMISING_SIGNAL",
+  "thresholds": {
+    "false_resolutions_disqualify_at": 2,
+    "minimum_safety_passes": 7,
+    "minimum_treatment_primary_successes": 6
+  },
+  "verified_jobs": 24
+}

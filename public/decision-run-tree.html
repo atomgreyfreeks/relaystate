@@ -1,0 +1,1205 @@
+<!--
+liveref component · generated 2026-08-27T07:57:44.924Z
+run r6f2a5f73 · archetype readout
+brief: a video game style skill tree in 3D that is meant to show the decision making trees and flows of AI agent orchrestrations across a timeline
+contract:
+  palette #000101 #164eaa #460710 #232424 #434343 #030304 #141318 #242426
+  luma mean 32 · p10-p90 1-129
+  saturation 0.21 · contrast 32 · edge density 0.34
+This file is one self-contained interactive component, rendered on the
+LiveRef canvas in a sandboxed iframe (allow-scripts only: no network, no
+storage, system fonts). The canvas watches this file — every save
+hot-reloads it in place. Keep it one file and keep the numbers true.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kumamoto Decision Run</title>
+<!--
+  READOUT — a 3D skill tree of one agent orchestration, read across a timeline.
+  Construction taken from the selection: node-and-edge constellations on a black
+  field (giphy.gif), the ruled plus-mark grid (threeplussixisnine_pluses2), and
+  the hairline oscilloscope readout of 01-disruptive-insights.
+  Technique named from the local R3ARXIV archive
+  (skills/r3arxiv-react-three-dev/references/review-rules.md, "Geometry and Draw
+  Calls"): one InstancedMesh for every repeated node gem, one LineSegments for
+  every edge, one Points object for the glow, delta-timed motion, capped DPR.
+-->
+<script type="importmap">
+{"imports":{"three":"/media/vendor/three/three.module.min.js",
+"three/webgpu":"/media/vendor/three/three.webgpu.min.js",
+"three/tsl":"/media/vendor/three/three.tsl.min.js",
+"three/addons/":"/media/vendor/three/jsm/"}}
+</script>
+<script type="application/json" id="liveref-dials">
+[
+{"name":"glow","label":"node glow","min":0,"max":2.2,"step":0.01,"value":1,"group":"look"},
+{"name":"edge","label":"edge weight","min":0.05,"max":1,"step":0.01,"value":0.6,"group":"look"},
+{"name":"spread","label":"branch spread","min":0.5,"max":1.7,"step":0.01,"value":1,"group":"look"},
+{"name":"tempo","label":"run speed","min":0.2,"max":2.2,"step":0.01,"value":1,"unit":"x","group":"look"},
+{"name":"grain","label":"screen grain","min":0,"max":1,"step":0.01,"value":0.28,"group":"look"},
+{"name":"depth","label":"camera distance","min":0.65,"max":1.8,"step":0.01,"value":1,"group":"look"},
+{"name":"dim","label":"idle branch dim","min":0,"max":1,"step":0.01,"value":0.45,"group":"look"},
+{"name":"flow","label":"flow density","min":0.15,"max":1.8,"step":0.01,"value":1,"group":"look"},
+{"name":"grid","label":"floor grid","min":0.4,"max":2,"step":0.01,"value":1,"group":"look"},
+{"name":"soft","label":"shadow softness","min":0,"max":8,"step":0.1,"value":2.6,"group":"light"},
+{"name":"az","label":"light azimuth","min":-3.14,"max":3.14,"step":0.01,"value":0.95,"unit":"rad","group":"light"},
+{"name":"el","label":"light elevation","min":0.06,"max":1.5,"step":0.01,"value":0.8,"unit":"rad","group":"light"},
+{"name":"ilev","label":"light intensity","min":0,"max":3,"step":0.01,"value":1.45,"group":"light"},
+{"name":"warm","label":"light warmth","min":0,"max":1,"step":0.01,"value":0.22,"group":"light"},
+{"name":"amb","label":"ambient level","min":0,"max":1.2,"step":0.01,"value":0.36,"group":"light"},
+{"name":"rim","label":"rim strength","min":0,"max":2.5,"step":0.01,"value":0.9,"group":"light"}
+]
+</script>
+<style>
+  :root{ --acc:#164eaa; --accHi:#4183e7; --rule:rgba(201,201,201,.14); }
+  html,body{margin:0;height:100%;background:#030304;}
+  body{font-family:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;color:#c9c9c9;
+       font-variant-numeric:tabular-nums;overflow:hidden;}
+  #stage{position:absolute;inset:0;outline:none;background:#030304;cursor:grab;touch-action:none;}
+  #stage.drag{cursor:grabbing;}
+  #stage.pick{cursor:pointer;}
+  #stage::after{content:"";position:absolute;inset:0;pointer-events:none;
+    box-shadow:inset 0 0 0 1px transparent;transition:box-shadow .24s cubic-bezier(.16,1,.3,1);}
+  #stage:focus-visible::after{box-shadow:inset 0 0 0 1px var(--acc);}
+  #gl{position:absolute;left:0;right:0;display:block;}
+  #hud{position:absolute;inset:0;display:block;pointer-events:none;}
+  #tp{position:absolute;display:flex;gap:4px;z-index:2;}
+  .btn{font-family:inherit;font-size:11px;line-height:1;letter-spacing:.08em;text-transform:uppercase;
+    color:#808080;background:transparent;border:1px solid var(--rule);border-radius:2px;
+    padding:6px 8px;cursor:pointer;-webkit-appearance:none;appearance:none;
+    transition:color .24s cubic-bezier(.16,1,.3,1),border-color .24s cubic-bezier(.16,1,.3,1),background-color .24s cubic-bezier(.16,1,.3,1);}
+  .btn:hover{color:#c9c9c9;border-color:rgba(201,201,201,.32);transition-duration:.12s;}
+  .btn:active{background:rgba(22,78,170,.30);color:#e6e6e6;}
+  .btn:focus-visible{outline:none;color:#c9c9c9;border-color:var(--acc);box-shadow:0 0 0 1px var(--acc);}
+  .btn[data-on="1"]{color:var(--accHi);border-color:rgba(65,131,231,.55);}
+  #stage.compact .wide{display:none;}
+</style>
+</head>
+<body>
+<div id="stage" tabindex="0" role="application" aria-label="Agent run tree. Drag to turn it. Arrow keys move the selected step. Space pauses.">
+  <canvas id="gl"></canvas>
+  <canvas id="hud"></canvas>
+  <div id="tp">
+    <button class="btn" id="bPlay" data-on="1" aria-pressed="false">Pause</button>
+    <button class="btn wide" id="bAgain">Replay</button>
+    <button class="btn" id="bNew">New run</button>
+    <button class="btn wide" id="bRun">Growth run</button>
+  </div>
+</div>
+
+<script>window.__dq=[];window.setDial=function(n,v){window.__dq.push([n,v]);};</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+/* ---------------------------------------------------------------- elements */
+const stage = document.getElementById('stage');
+const glc   = document.getElementById('gl');
+const hud   = document.getElementById('hud');
+const tp    = document.getElementById('tp');
+const bPlay = document.getElementById('bPlay');
+const bAgain= document.getElementById('bAgain');
+const bNew  = document.getElementById('bNew');
+const ctx   = (hud && hud.getContext) ? hud.getContext('2d') : null;
+if (stage && glc && hud && ctx && tp && bPlay && bAgain && bNew) {
+
+/* ------------------------------------------------------------------- dials */
+const D = {
+  glow:1, edge:0.6, spread:1, tempo:1, grain:0.28, depth:1, dim:0.45, flow:1, grid:1,
+  soft:2.6, az:0.95, el:0.8, ilev:1.45, warm:0.22, amb:0.36, rim:0.9
+};
+
+/* ------------------------------------------------------------------ colors */
+const INK='#c9c9c9', INK2='#808080', INK3='#525252';
+const RULE='rgba(201,201,201,0.14)', RULE2='rgba(201,201,201,0.26)';
+const ACC='#164eaa', ACCHI='#4183e7', BAD='#b11020';
+const C_PEND=new THREE.Color(0x242426), C_LIVE=new THREE.Color(0x4183e7),
+      C_DONE=new THREE.Color(0x164eaa), C_BAD=new THREE.Color(0xb11020),
+      C_SKIP=new THREE.Color(0x141318), _pc=new THREE.Color(), _ec=new THREE.Color();
+
+/* ------------------------------------------------------------ run contents */
+const SEC_PER_UNIT = 2.38;
+/**
+ * SCENARIO_WORDS — every word this page says to a reader, in one place, in plain English.
+ *
+ * Reword anything here without touching code. No sentence about the earthquake response is
+ * written anywhere else on this page: the action sentences, the verdicts, the deadlines and the
+ * counts all arrive from the sealed record through /decision-run-tree-data.json, which
+ * app/scripts/bake-decision-run-tree.mjs bakes out of the same modules the Rescue World viewer
+ * reads. Where the record holds nothing, the page says so and stops.
+ */
+const SCENARIO_WORDS = {
+  /** the head of the frame, and the line under it */
+  masthead: 'kumamoto decision run',
+  run: (decisions, hours) => decisions + ' decisions  \u00b7  first ' + hours + ' hours',
+  /** the big reading at the top right: where the replay stands on the earthquake's own clock */
+  clockLabel: 'incident clock',
+  /** the four readings down the left, in order */
+  counter1: 'decision moments',
+  counter2: 'public-response records',
+  counter3: 'ai proposals shown',
+  counter4: 'recorded try',
+  /** the line under the run, and the unit its marks are counted in */
+  timeline: (hours) => hours + ' hours',
+  tickUnit: 'h',
+  /** what the earthquake node is, said as the run's own first fact */
+  agentQuake: 'the earthquake',
+  rootTag: 'The earthquake',
+  quake: 'The earthquake this record starts from.',
+  /** the two playback states. Nothing is answered live here: this is a replay of a record. */
+  waiting: 'The replay has not reached this decision yet.',
+  reaching: 'The replay has reached this public-response record.',
+  revealing: 'The replay is revealing this later AI proposal.',
+  /** what the public record is, wherever a public-response node is the one selected */
+  record: 'What the public record says responders did — or says when no matching action was'
+    + ' found. It was never scored.',
+  /** what the prewritten checks made of one scored proposal */
+  passed: 'Passed every prewritten check.',
+  failed: (rule) => 'Did not pass \u2014 ' + rule + '.',
+  /** a proposal from a moment the registered experiment left out */
+  context: 'Not part of the scored test. Context only, no scored AI result.',
+  /**
+   * The four runs this page can show, and what the control that moves between them says.
+   *
+   * Each run has a file of its own, baked by app/scripts/bake-decision-run-tree.mjs into the same
+   * shape, so the picture below is the same picture for all four. The address names the run:
+   * `?run=growth`, `?run=receipt-first`, `?run=receipt-122b`, and no run at all is the accepted
+   * first campaign.
+   */
+  runs: [
+    {id: 'accepted', file: '/decision-run-tree-data.json', label: 'Accepted run'},
+    {id: 'growth', file: '/decision-run-tree-growth-data.json', label: 'Growth run'},
+    {id: 'receipt-first', file: '/decision-run-tree-receipt-first-data.json',
+     label: 'Receipt run'},
+    {id: 'receipt-122b', file: '/decision-run-tree-receipt-122b-data.json',
+     label: 'Receipt run, 122B model'},
+  ],
+  /** the one word the last line opens on, for each state a node can be in */
+  word: {pending:'waiting', running:'being shown', done:'passed every check',
+         pruned:'missed a rule', recorded:'public record', skipped:'not scored'},
+  /** how many units an action sent, where the record counts them in a word of its own */
+  units: (n, word) => n + ' ' + word,
+  /** where the whole recorded detail of any moment is, since this page opens nothing itself */
+  route: 'Full detail: press L in Rescue World.',
+};
+
+/** which of the four runs the address asks for, and the accepted first campaign where it asks
+ * for none of them */
+const RUN = SCENARIO_WORDS.runs.find(
+  one => one.id === new URLSearchParams(location.search).get('run')) || SCENARIO_WORDS.runs[0];
+/** the sealed record this page shows, and nothing else */
+const RECORD = await (await fetch(RUN.file)).json();
+/** the layout is fixed, so the same record always draws the same picture */
+const LAYOUT_SEED = 20260728;
+/** how long before its recorded deadline a decision reads as open, in hours */
+const WINDOW_HOURS = 2;
+/** the reserved colour for the record itself: this file's own ink, never the pass or fail hue */
+const C_REC = new THREE.Color(INK);
+/** which of the eight recorded tries the next build shows. New run steps it on. */
+let tryAt = 0;
+
+/**
+ * How many units one recorded action sent, in the record's own count and its own count noun.
+ * A decision that sends nothing, and a plan whose units the record has no count noun for, print
+ * no count at all: a line reading so many "units" would say nothing a reader can use.
+ */
+function unitsTextOf(row){
+  return (row.sends && row.unitWord) ? SCENARIO_WORDS.units(row.units, row.unitWord) : '';
+}
+/** the earthquake's own clock at a point on the playhead, counted from the recorded minute */
+function clockAt(u){
+  const mins = RECORD.incident.startMinute + Math.round(u * SEC_PER_UNIT * 60);
+  const day = RECORD.incident.startDay + Math.floor(mins/1440);
+  const held = ((mins % 1440) + 1440) % 1440;
+  const two = n => ('0'+n).slice(-2);
+  return day + ' ' + RECORD.incident.month + '  ' + two(Math.floor(held/60)) + ':' + two(held%60);
+}
+
+function mulberry32(sd){
+  let a = sd>>>0;
+  return function(){
+    a = (a + 0x6D2B79F5)|0;
+    let t = Math.imul(a ^ (a>>>15), 1|a);
+    t = (t + Math.imul(t ^ (t>>>7), 61|t)) ^ t;
+    return ((t ^ (t>>>14))>>>0) / 4294967296;
+  };
+}
+
+let tree = null, seed = 20260826;
+
+function buildTree(_sd){
+  // The seed is inert. The record does not change, so neither does the picture: one fixed seed
+  // lays the branches out, and New run steps through the eight recorded tries instead.
+  const r = mulberry32(LAYOUT_SEED);
+  const view = tryAt;
+  tryAt = (tryAt + 1) % Math.max(1, RECORD.tries);
+  const nodes = [], edges = [], spine = [];
+  const ms = RECORD.moments;
+  // the seventy-two hours the record covers, laid along the same run the component was built for
+  const total = RECORD.incident.hours / SEC_PER_UNIT;
+  const win = WINDOW_HOURS / SEC_PER_UNIT;
+  const step = 6 / Math.max(1, ms.length);
+  const root = {
+    id:0, tier:0, ang:0, rad:0, parent:-1, kids:[], moment:0, kind:'record',
+    label: RECORD.incident.line, tag: SCENARIO_WORDS.rootTag, full: RECORD.incident.line,
+    agent: SCENARIO_WORDS.agentQuake, sentence: SCENARIO_WORDS.quake,
+    tokens:0, unitsText:'', clock: RECORD.incident.clock, prune:false, reach:true
+  };
+  root.open = 0; root.res = 0;
+  nodes.push(root);
+  let par = root;
+  ms.forEach((m, k) => {
+    // where this moment stands: its own recorded second, mapped onto the run
+    const tier = (k+1) * step;
+    const at = Math.max(0, Math.min(1, m.at)) * total;
+    const open = Math.max(0, at - win), res = Math.max(open, at);
+    const sp = (k === 0) ? 1.55 : 1.15/Math.pow(k+1, 0.55);
+    // the public record continues the run: the next moment hangs off what really happened
+    const nd = {
+      id: nodes.length, tier, parent: par.id, kids: [], moment: k+1, kind:'record',
+      ang: par.ang + (r()-0.5)*0.42,
+      rad: tier*0.52 + r()*0.10,
+      label: m.real.short, tag: m.real.tag, full: m.real.action, agent: m.real.agent,
+      sentence: SCENARIO_WORDS.record,
+      tokens: m.real.units, unitsText: unitsTextOf(m.real), clock: m.clock,
+      // a run that forks from saved histories shares the decisions before the fork, and the line
+      // under the picture draws a shared decision more quietly than the one the run forked at
+      shared: Boolean(m.shared),
+      prune:false, reach:true, open, res
+    };
+    par.kids.push(nd.id); nodes.push(nd); edges.push([par.id, nd.id]); spine.push(nd.id);
+    // every AI proposal is a leaf on that moment. None of them continues into the next moment,
+    // because no different future was ever simulated.
+    const fan = m.proposals.length;
+    m.proposals.forEach((p, j) => {
+      const t = p.tries[view % p.tries.length];
+      const leaf = {
+        id: nodes.length, tier, parent: nd.id, kids: [], moment: k+1,
+        kind: p.registered ? 'scored' : 'context',
+        ang: nd.ang + (j-(fan-1)/2)*sp + (r()-0.5)*0.18,
+        rad: nd.rad + 0.62,
+        label: t.short, tag: t.tag, full: t.action, agent: p.agent,
+        // a run may carry its own sentence for a branch the scored test never covered, which is
+        // how a decision brought in from a saved history says what it is
+        sentence: p.sentence ? p.sentence
+          : p.registered
+            ? (t.passed ? SCENARIO_WORDS.passed : SCENARIO_WORDS.failed(t.failure))
+            : SCENARIO_WORDS.context,
+        tokens: t.units, unitsText: unitsTextOf(t), clock: m.clock,
+        shared: Boolean(m.shared),
+        // a scored proposal that missed a rule stops here; a moment the scored test left out was
+        // never covered by it, which is what the dim state says
+        prune: p.registered ? !t.passed : false,
+        reach: p.registered,
+        open, res
+      };
+      nd.kids.push(leaf.id); nodes.push(leaf); edges.push([nd.id, leaf.id]);
+    });
+    par = nd;
+  });
+  // the right arrow walks the run: the next moment is always a spine node's first child
+  for (let i=0;i<spine.length-1;i++){
+    const nd = nodes[spine[i]];
+    nd.kids = [spine[i+1]].concat(nd.kids.filter(id => id !== spine[i+1]));
+  }
+  // how many decisions stand open at once at the busiest minute, which is what the wire under
+  // the first reading is drawn against
+  let peak = 1;
+  for (const a of nodes){
+    let c = 0;
+    for (const b of nodes){
+      if (b.moment && b.kind === 'record' && b.open <= a.open && a.open < b.res) c++;
+    }
+    if (c > peak) peak = c;
+  }
+  const tiers = {};
+  for (const nd of nodes) tiers[nd.tier] = 1;
+  // the replay opens on the earthquake itself, not part way through the first night
+  p = 0;
+  const built = {
+    nodes, edges, total, view,
+    moments: ms.length, records: spine.length, proposals: nodes.length - 1 - spine.length,
+    tiers: Object.keys(tiers).length, peak
+  };
+  // one handle, so a gate can read what is drawn and stand on one node without a mouse
+  try {
+    built.selected = () => ({id: sel, state: states[sel], node: tree.nodes[sel]});
+    built.select = (id) => { sel = id; userPicked = true; return states[id]; };
+    built.seek = (u) => { p = u; };
+    window.__RUNTREE = built;
+  } catch(_){}
+  return built;
+}
+
+function placeTree(tr){
+  for (const nd of tr.nodes){
+    const rad = (nd.rad||0) * D.spread;
+    if (!nd.pos) nd.pos = new THREE.Vector3();
+    nd.pos.set(nd.tier*1.5 - 4.4, 1.95 + Math.sin(nd.ang)*rad*0.52, Math.cos(nd.ang)*rad*1.02);
+  }
+}
+
+/* ---------------------------------------------------------------- 3d scene */
+let renderer=null, scene=null, camera=null, key=null, rimL=null, hemi=null;
+let nodeMesh=null, edgeLine=null, halo=null, flowPts=null, gridLines=null, floor=null, ring=null;
+let haloGeo=null, edgeGeo=null, flowGeo=null;
+let gl_ok = false;
+const EDGE_SEG = 8, MAXFLOW = 420;
+const tmpM = new THREE.Matrix4(), tmpQ = new THREE.Quaternion(),
+      tmpS = new THREE.Vector3(), tmpV = new THREE.Vector3(), tmpV2 = new THREE.Vector3(),
+      tmpAx = new THREE.Vector3(), tmpProj = new THREE.Vector3();
+const target = new THREE.Vector3(0, 1.95, 0);
+
+try {
+  renderer = new THREE.WebGLRenderer({canvas:glc, antialias:true, alpha:false, powerPreference:'high-performance'});
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio||1));
+  renderer.setClearColor(0x030304, 1);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x030304, 11, 27);
+  camera = new THREE.PerspectiveCamera(38, 1.5, 0.1, 90);
+  gl_ok = true;
+} catch(err){ gl_ok = false; }
+
+const haloMat = gl_ok ? new THREE.ShaderMaterial({
+  uniforms:{ uPx:{value:400}, uGlow:{value:1} },
+  vertexShader:[
+    'attribute float aSize;','attribute float aAlpha;','attribute vec3 aColor;',
+    'varying vec3 vC; varying float vA; uniform float uPx;',
+    'void main(){ vC = aColor; vA = aAlpha;',
+    '  vec4 mv = modelViewMatrix * vec4(position, 1.0);',
+    '  gl_PointSize = aSize * uPx / max(0.001, -mv.z);',
+    '  gl_Position = projectionMatrix * mv; }'
+  ].join('\n'),
+  fragmentShader:[
+    'varying vec3 vC; varying float vA; uniform float uGlow;',
+    'void main(){ vec2 d = gl_PointCoord - 0.5; float r = length(d) * 2.0;',
+    '  if (r > 1.0) discard;',
+    '  float a = pow(1.0 - r, 2.4);',
+    '  gl_FragColor = vec4(vC * a * vA * uGlow, 1.0); }'
+  ].join('\n'),
+  transparent:true, blending:THREE.AdditiveBlending, depthWrite:false
+}) : null;
+
+function ctrlPoint(a, b, out){
+  out.copy(a).add(b).multiplyScalar(0.5);
+  out.y += 0.10;
+  out.z *= 1.16;
+  return out;
+}
+function bez(a, c, b, t, out){
+  const it = 1-t, w0 = it*it, w1 = 2*it*t, w2 = t*t;
+  out.set(a.x*w0 + c.x*w1 + b.x*w2, a.y*w0 + c.y*w1 + b.y*w2, a.z*w0 + c.z*w1 + b.z*w2);
+  return out;
+}
+
+function buildScene(){
+  if (!gl_ok) return;
+  disposeScene();
+  placeTree(tree);
+  const N = tree.nodes.length, E = tree.edges.length;
+
+  const gemGeo = new THREE.OctahedronGeometry(0.19, 0);
+  const gemMat = new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.44, metalness:0.15, flatShading:true});
+  nodeMesh = new THREE.InstancedMesh(gemGeo, gemMat, N);
+  nodeMesh.castShadow = true;
+  nodeMesh.frustumCulled = false;
+  for (let i=0;i<N;i++){
+    tmpM.compose(tree.nodes[i].pos, tmpQ.identity(), tmpS.set(1,1,1));
+    nodeMesh.setMatrixAt(i, tmpM);
+    nodeMesh.setColorAt(i, C_PEND);
+  }
+  scene.add(nodeMesh);
+
+  edgeGeo = new THREE.BufferGeometry();
+  edgeGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(E*EDGE_SEG*2*3),3));
+  edgeGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(E*EDGE_SEG*2*3),3));
+  edgeLine = new THREE.LineSegments(edgeGeo, new THREE.LineBasicMaterial({
+    vertexColors:true, transparent:true, opacity:D.edge, blending:THREE.AdditiveBlending, depthWrite:false}));
+  edgeLine.frustumCulled = false;
+  scene.add(edgeLine);
+
+  haloGeo = new THREE.BufferGeometry();
+  haloGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(N*3),3));
+  haloGeo.setAttribute('aSize', new THREE.BufferAttribute(new Float32Array(N),1));
+  haloGeo.setAttribute('aAlpha', new THREE.BufferAttribute(new Float32Array(N),1));
+  haloGeo.setAttribute('aColor', new THREE.BufferAttribute(new Float32Array(N*3),3));
+  halo = new THREE.Points(haloGeo, haloMat);
+  halo.frustumCulled = false;
+  scene.add(halo);
+
+  flowGeo = new THREE.BufferGeometry();
+  flowGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(MAXFLOW*3),3));
+  flowGeo.setDrawRange(0,0);
+  flowPts = new THREE.Points(flowGeo, new THREE.PointsMaterial({
+    color:0x8fb6f2, size:0.052, sizeAttenuation:true, transparent:true, opacity:0.95,
+    blending:THREE.AdditiveBlending, depthWrite:false}));
+  flowPts.frustumCulled = false;
+  scene.add(flowPts);
+
+  ring = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.008, 5, 44),
+    new THREE.MeshBasicMaterial({color:0x4183e7, transparent:true, opacity:0.9}));
+  ring.frustumCulled = false;
+  scene.add(ring);
+
+  refreshGeometry();
+  buildFloor();
+  buildLights();
+  rebuildFlow();
+}
+
+function buildFloor(){
+  if (floor){ scene.remove(floor); floor.geometry.dispose(); floor.material.dispose(); floor = null; }
+  floor = new THREE.Mesh(new THREE.PlaneGeometry(30,22),
+    new THREE.MeshStandardMaterial({color:0x0a0a0d, roughness:1, metalness:0}));
+  floor.rotation.x = -Math.PI/2;
+  floor.position.y = -0.02;
+  floor.receiveShadow = true;
+  scene.add(floor);
+  rebuildGrid();
+}
+
+function rebuildGrid(){
+  if (!gl_ok) return;
+  if (gridLines){ scene.remove(gridLines); gridLines.geometry.dispose(); gridLines.material.dispose(); gridLines = null; }
+  const step = 1.15 / Math.max(0.4, D.grid);
+  const hx = 7.2, hz = 5.4, arm = step*0.16;
+  const pts = [];
+  for (let x=-hx; x<=hx+1e-6; x+=step) pts.push(x,0,-hz, x,0,hz);
+  for (let z=-hz; z<=hz+1e-6; z+=step) pts.push(-hx,0,z, hx,0,z);
+  for (let x=-hx; x<=hx+1e-6; x+=step)
+    for (let z=-hz; z<=hz+1e-6; z+=step)
+      pts.push(x-arm,0.004,z, x+arm,0.004,z, x,0.004,z-arm, x,0.004,z+arm);
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pts,3));
+  gridLines = new THREE.LineSegments(g, new THREE.LineBasicMaterial({
+    color:0x434343, transparent:true, opacity:0.26, depthWrite:false}));
+  gridLines.frustumCulled = false;
+  scene.add(gridLines);
+}
+
+function buildLights(){
+  if (!key){
+    key = new THREE.DirectionalLight(0xffffff, 1.4);
+    key.castShadow = true;
+    key.shadow.mapSize.set(1024,1024);
+    const sc = key.shadow.camera;
+    sc.left=-8; sc.right=8; sc.top=6; sc.bottom=-6; sc.near=0.5; sc.far=34;
+    sc.updateProjectionMatrix();
+    scene.add(key); scene.add(key.target);
+    rimL = new THREE.DirectionalLight(0x4183e7, 0.9);
+    scene.add(rimL); scene.add(rimL.target);
+    hemi = new THREE.HemisphereLight(0x2a3a5c, 0x0b0b0e, 0.36);
+    scene.add(hemi);
+  }
+  applyLights();
+}
+
+const COOL = new THREE.Color(0xc6d4ea), WARM = new THREE.Color(0xffd7ac);
+function applyLights(){
+  if (!key) return;
+  const d = 13;
+  key.position.set(target.x + d*Math.sin(D.az)*Math.cos(D.el),
+                   target.y + d*Math.sin(D.el),
+                   target.z + d*Math.cos(D.az)*Math.cos(D.el));
+  key.target.position.copy(target);
+  key.intensity = D.ilev;
+  key.shadow.radius = D.soft;
+  key.color.copy(COOL).lerp(WARM, D.warm);
+  rimL.position.set(target.x - d*Math.sin(D.az)*0.8, target.y + d*0.28, target.z - d*Math.cos(D.az)*0.8);
+  rimL.target.position.copy(target);
+  rimL.intensity = D.rim;
+  hemi.intensity = D.amb;
+}
+
+function disposeScene(){
+  if (!scene) return;
+  [nodeMesh, edgeLine, halo, flowPts, ring].forEach(o=>{
+    if (!o) return;
+    scene.remove(o);
+    if (o.geometry) o.geometry.dispose();
+    if (o.material && o.material !== haloMat) o.material.dispose();
+  });
+  nodeMesh=null; edgeLine=null; halo=null; flowPts=null; ring=null;
+  haloGeo=null; edgeGeo=null; flowGeo=null;
+}
+
+function refreshGeometry(){
+  if (!gl_ok || !edgeGeo || !haloGeo) return;
+  const pos = edgeGeo.getAttribute('position'), arr = pos.array;
+  const cp = tmpV2;
+  let k = 0;
+  for (let e=0;e<tree.edges.length;e++){
+    const a = tree.nodes[tree.edges[e][0]].pos, b = tree.nodes[tree.edges[e][1]].pos;
+    ctrlPoint(a,b,cp);
+    for (let s=0;s<EDGE_SEG;s++){
+      bez(a,cp,b, s/EDGE_SEG, tmpV);      arr[k]=tmpV.x; arr[k+1]=tmpV.y; arr[k+2]=tmpV.z; k+=3;
+      bez(a,cp,b,(s+1)/EDGE_SEG, tmpV);   arr[k]=tmpV.x; arr[k+1]=tmpV.y; arr[k+2]=tmpV.z; k+=3;
+    }
+  }
+  pos.needsUpdate = true;
+  const hp = haloGeo.getAttribute('position');
+  for (let i=0;i<tree.nodes.length;i++){
+    hp.array[i*3]   = tree.nodes[i].pos.x;
+    hp.array[i*3+1] = tree.nodes[i].pos.y;
+    hp.array[i*3+2] = tree.nodes[i].pos.z;
+  }
+  hp.needsUpdate = true;
+}
+
+/* --------------------------------------------------------------- run state */
+let p = 2.6;
+let playing = true;
+let endHold = 0;
+let sel = 0, hover = -1, userPicked = false;
+let states = [];
+let flow = [];
+
+function resolveStates(){
+  const nd = tree.nodes;
+  let changed = false;
+  for (let i=0;i<nd.length;i++){
+    const n = nd[i];
+    let s;
+    if (!n.reach){
+      const par = (n.parent >= 0) ? nd[n.parent] : null;
+      s = (par && p >= par.res) ? 'skipped' : 'pending';
+    } else if (p < n.open) s = 'pending';
+    else if (p < n.res) s = 'running';
+    // the public record is observed, never graded, so it never wears the passing state
+    else s = n.prune ? 'pruned' : (n.kind === 'record' ? 'recorded' : 'done');
+    if (states[i] !== s){ states[i] = s; changed = true; }
+  }
+  return changed;
+}
+
+function edgeLive(e){
+  const a = states[tree.edges[e][0]], b = states[tree.edges[e][1]];
+  if (b === 'pruned') return 2;
+  if (b === 'running' || b === 'done' || b === 'recorded') return 1;
+  if ((a === 'done' || a === 'recorded') && b === 'pending') return 0.5;
+  return 0;
+}
+
+function paintStates(){
+  if (!gl_ok || !nodeMesh || !edgeGeo) return;
+  const dim = 0.18 + (1-D.dim)*0.9;
+  for (let i=0;i<tree.nodes.length;i++){
+    const s = states[i];
+    if (s === 'running') _pc.copy(C_LIVE);
+    else if (s === 'done') _pc.copy(C_DONE);
+    else if (s === 'pruned') _pc.copy(C_BAD);
+    else if (s === 'recorded') _pc.copy(C_REC);
+    else if (s === 'skipped') _pc.copy(C_SKIP).multiplyScalar(dim);
+    else _pc.copy(C_PEND).multiplyScalar(dim);
+    nodeMesh.setColorAt(i, _pc);
+  }
+  if (nodeMesh.instanceColor) nodeMesh.instanceColor.needsUpdate = true;
+
+  const col = edgeGeo.getAttribute('color'), arr = col.array;
+  for (let e=0;e<tree.edges.length;e++){
+    const lv = edgeLive(e);
+    if (lv === 2) _ec.setHex(0xb11020).multiplyScalar(0.9);
+    else if (lv === 1) _ec.setHex(0x2f6ac4);
+    else if (lv === 0.5) _ec.setHex(0x1a2740).multiplyScalar(0.7 + (1-D.dim)*0.6);
+    else _ec.setHex(0x1b1b21).multiplyScalar(0.35 + (1-D.dim)*1.1);
+    const base = e*EDGE_SEG*2*3;
+    for (let v=0; v<EDGE_SEG*2; v++){
+      const f = (lv >= 1) ? (0.55 + 0.45*(v/(EDGE_SEG*2-1))) : 1;
+      arr[base+v*3]   = _ec.r*f;
+      arr[base+v*3+1] = _ec.g*f;
+      arr[base+v*3+2] = _ec.b*f;
+    }
+  }
+  col.needsUpdate = true;
+  rebuildFlow();
+}
+
+function rebuildFlow(){
+  if (!gl_ok || !flowGeo) return;
+  flow.length = 0;
+  const per = Math.max(1, Math.round(3*D.flow));
+  for (let e=0;e<tree.edges.length;e++){
+    if (edgeLive(e) !== 1) continue;
+    for (let i=0;i<per;i++){
+      if (flow.length >= MAXFLOW) break;
+      flow.push({e:e, off:((i + 0.31*e) % per)/per});
+    }
+  }
+  flowGeo.setDrawRange(0, flow.length);
+}
+
+/* --------------------------------------------------- synthesized live wire */
+const HIST = 168;
+const hist = new Float32Array(HIST);
+let histN = 0, walkT = 0, walkA = 0, walkB = 0, sig = 900;
+
+function signal(t, dt, active){
+  // the wire is the record, not a synthesized number: how many of the eleven decisions stand
+  // open at this minute of the replay
+  const open = {};
+  for (let i=0;i<tree.nodes.length;i++){
+    const nd = tree.nodes[i];
+    if (states[i] === 'running' && nd.moment && nd.kind === 'record') open[nd.moment] = 1;
+  }
+  sig = Object.keys(open).length;
+  return sig;
+}
+
+/* ------------------------------------------------------------ hud plumbing */
+let W=560, H=380, TOP=46, BOT=76, FW=0, FH=0, compact=false, dpr=1;
+const scr = [];
+let noiseTile = null;
+
+function makeNoise(){
+  const n = document.createElement('canvas');
+  n.width = n.height = 128;
+  const g = n.getContext('2d');
+  if (!g) return null;
+  const img = g.createImageData(128,128);
+  for (let i=0;i<128*128;i++){
+    const v = Math.random();
+    const a = v > 0.86 ? Math.floor((v-0.86)*1500) : 0;
+    img.data[i*4] = 210; img.data[i*4+1] = 214; img.data[i*4+2] = 224;
+    img.data[i*4+3] = Math.min(90, a);
+  }
+  g.putImageData(img,0,0);
+  return n;
+}
+
+function layout(){
+  W = stage.clientWidth || 560; H = stage.clientHeight || 380;
+  compact = (W < 440 || H < 320);
+  stage.classList.toggle('compact', compact);
+  TOP = compact ? 34 : 46;
+  BOT = compact ? 52 : 76;
+  FW = Math.max(1, W); FH = Math.max(60, H - TOP - BOT);
+  glc.style.top = TOP + 'px';
+  glc.style.height = FH + 'px';
+  tp.style.left = (compact ? 10 : 16) + 'px';
+  tp.style.bottom = (compact ? 8 : 10) + 'px';
+  dpr = Math.min(2, window.devicePixelRatio||1);
+  hud.width = Math.max(1, Math.round(W*dpr));
+  hud.height = Math.max(1, Math.round(H*dpr));
+  hud.style.width = W + 'px'; hud.style.height = H + 'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  if (gl_ok){
+    renderer.setPixelRatio(dpr);
+    renderer.setSize(FW, FH, false);
+    camera.aspect = FW/Math.max(1,FH);
+    camera.updateProjectionMatrix();
+    if (haloMat) haloMat.uniforms.uPx.value = FH*0.5 / Math.tan(camera.fov*Math.PI/360);
+  }
+}
+
+/* ------------------------------------------------------------ hud painting */
+const F = w => w + 'px "Helvetica Neue",Helvetica,Arial,sans-serif';
+function track(s, x, y, sp, align){
+  let total = 0;
+  for (let i=0;i<s.length;i++) total += ctx.measureText(s[i]).width + sp;
+  total -= sp;
+  let cx = (align==='right') ? x-total : (align==='center') ? x-total/2 : x;
+  for (let i=0;i<s.length;i++){ ctx.fillText(s[i], cx, y); cx += ctx.measureText(s[i]).width + sp; }
+}
+function label(s,x,y,align,col){
+  ctx.font = F(11); ctx.fillStyle = col || INK3;
+  track(String(s).toUpperCase(), x, y, 0.88, align || 'left');
+}
+function num(s,x,y,size,align,col){
+  ctx.font = F(size); ctx.fillStyle = col || INK;
+  ctx.textAlign = align || 'left'; ctx.fillText(String(s), x, y); ctx.textAlign = 'left';
+}
+function hair(x0,y0,x1,y1,col){
+  ctx.strokeStyle = col || RULE; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(Math.round(x0)+0.5, Math.round(y0)+0.5);
+  ctx.lineTo(Math.round(x1)+0.5, Math.round(y1)+0.5); ctx.stroke();
+}
+function cross(x,y,a,col){
+  ctx.strokeStyle = col; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(Math.round(x)-a, Math.round(y)+0.5); ctx.lineTo(Math.round(x)+a, Math.round(y)+0.5);
+  ctx.moveTo(Math.round(x)+0.5, Math.round(y)-a); ctx.lineTo(Math.round(x)+0.5, Math.round(y)+a);
+  ctx.stroke();
+}
+
+function drawHud(t){
+  ctx.clearRect(0,0,W,H);
+  const padX = compact ? 10 : 16;
+
+  ctx.fillStyle = '#0b0b0e';
+  ctx.fillRect(0,0,W,TOP);
+  ctx.fillRect(0,H-BOT,W,BOT);
+  hair(0, TOP, W, TOP, RULE);
+  hair(0, H-BOT, W, H-BOT, RULE);
+
+  label(SCENARIO_WORDS.masthead, padX, compact?14:17, 'left', INK2);
+  if (!compact){
+    num(SCENARIO_WORDS.run(tree.moments, RECORD.incident.hours), padX, 34, 13, 'left', INK);
+  }
+  label(SCENARIO_WORDS.clockLabel, W-padX, compact?14:17, 'right', INK2);
+  num(clockAt(Math.min(p, tree.total)), W-padX, compact?30:38, compact?18:28, 'right', playing?INK:INK2);
+
+  const cy = TOP + (compact?16:22);
+  label(SCENARIO_WORDS.counter1, padX, cy, 'left', INK2);
+  num(('0'+tree.moments).slice(-2), padX, cy+22, 18, 'left', INK);
+  drawSpark(padX, cy+30, compact?76:104, compact?18:26);
+
+  if (!compact && (H - BOT) > (TOP + 216)){
+    const y2 = cy + 78;
+    label(SCENARIO_WORDS.counter2, padX, y2, 'left', INK2);
+    num(('0'+tree.records).slice(-2), padX, y2+20, 18, 'left', INK);
+    const y3 = y2 + 46;
+    label(SCENARIO_WORDS.counter3, padX, y3, 'left', INK2);
+    num(('0'+tree.proposals).slice(-2), padX, y3+20, 18, 'left', INK);
+    const y4 = y3 + 46;
+    label(SCENARIO_WORDS.counter4, padX, y4, 'left', INK2);
+    num(('0'+(tree.view+1)).slice(-2) + '/' + ('0'+RECORD.tries).slice(-2), padX, y4+20, 18, 'left', ACCHI);
+  }
+
+  drawNodeMarks(t);
+  drawTimeline(padX);
+
+  if (!compact){
+    // the selected action first, then what the checks made of it, then who proposed it and how
+    // many units it sent. The verdict never stands above the action it is about.
+    const n = tree.nodes[sel] || tree.nodes[0];
+    const s = states[sel] || 'pending';
+    const bx = W - padX;
+    const room = W - padX*2;
+    num(pick(n, room, 13), bx, H-46, 13, 'right', INK);
+    const said = (s==='pending') ? SCENARIO_WORDS.waiting
+      : (s==='running') ? (n.kind === 'record'
+          ? SCENARIO_WORDS.reaching : SCENARIO_WORDS.revealing)
+      : n.sentence;
+    ctx.font = F(11); ctx.fillStyle = INK3;
+    ctx.textAlign = 'right'; ctx.fillText(said, bx, H-28); ctx.textAlign = 'left';
+    const bits = [SCENARIO_WORDS.word[s] || s, n.agent];
+    if (n.unitsText) bits.push(n.unitsText);
+    // this page opens nothing itself, so the last line names where the whole recorded detail
+    // is. It is added only where the frame is wide enough to hold the whole line.
+    bits.push(SCENARIO_WORDS.route);
+    ctx.font = F(11);
+    // this line runs along the same row as the controls, so it is fitted to what is left of
+    // that row: the route goes first where the frame is narrow, then the count, then the rest
+    const floor = tp.offsetLeft + tp.offsetWidth + 14;
+    const wide = (said) =>
+      ctx.measureText(said.toUpperCase()).width + 0.88*said.length <= bx - floor;
+    while (bits.length > 1 && !wide(bits.join('  ·  '))) bits.pop();
+    label(bits.join('  ·  '), bx, H-12, 'right',
+      s==='running' ? ACCHI : s==='pruned' ? BAD : INK2);
+  }
+
+  drawGrain();
+}
+
+/**
+ * The longest whole sentence this node can say in the room the frame gives it.
+ *
+ * The record holds two sentences for every action: the complete one, and a shorter complete one
+ * that stands beside a node at the smallest size this component is drawn at. Neither is ever
+ * cut, so a reader is never left holding half a thought; a narrow frame is simply told the
+ * shorter of the two. Both come out of the same sealed record.
+ */
+function pick(n, room, size){
+  ctx.font = F(size);
+  return (ctx.measureText(n.full).width <= room) ? n.full : n.label;
+}
+
+
+function drawSpark(x,y,w,h){
+  hair(x, y+h, x+w, y+h, RULE);
+  const n = Math.min(HIST, histN);
+  if (n > 1){
+    ctx.beginPath();
+    for (let i=0;i<n;i++){
+      const idx = (histN - n + i + HIST*2) % HIST;
+      const v = Math.min(1, hist[idx]/Math.max(1, tree.peak));
+      const px = x + (i/(n-1))*w;
+      const py = y + h - v*h;
+      if (i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    }
+    ctx.strokeStyle = ACC; ctx.lineWidth = 1; ctx.stroke();
+  }
+  const last = hist[(histN-1+HIST)%HIST] || 0;
+  const ly = y + h - Math.min(1,last/Math.max(1, tree.peak))*h;
+  ctx.fillStyle = ACCHI; ctx.fillRect(x+w-2, Math.round(ly)-1, 3, 3);
+}
+
+function drawNodeMarks(t){
+  if (!gl_ok) return;
+  for (let i=0;i<tree.nodes.length;i++){
+    if (states[i] !== 'running') continue;
+    const s = scr[i]; if (!s || !s.vis) continue;
+    ctx.globalAlpha = 0.45 + 0.45*(0.5 + 0.5*Math.sin(t*3.4 + i));
+    cross(s.x, s.y + TOP, 6, ACCHI);
+    ctx.globalAlpha = 1;
+  }
+  for (let i=0;i<tree.nodes.length;i++){
+    if (states[i] !== 'pruned') continue;
+    const s = scr[i]; if (!s || !s.vis) continue;
+    ctx.strokeStyle = BAD; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(s.x-4.5, s.y+TOP-4.5); ctx.lineTo(s.x+4.5, s.y+TOP+4.5);
+    ctx.moveTo(s.x+4.5, s.y+TOP-4.5); ctx.lineTo(s.x-4.5, s.y+TOP+4.5);
+    ctx.stroke();
+  }
+  if (hover >= 0 && hover !== sel && scr[hover] && scr[hover].vis){
+    cross(scr[hover].x, scr[hover].y+TOP, 8, INK);
+    tag(tree.nodes[hover].tag, scr[hover].x, scr[hover].y+TOP, INK2);
+  }
+  const s = scr[sel];
+  if (s && s.vis){
+    const x = Math.round(s.x), y = Math.round(s.y)+TOP, r = 11;
+    ctx.strokeStyle = ACCHI; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x-r+0.5,y-r+3.5); ctx.lineTo(x-r+0.5,y-r+0.5); ctx.lineTo(x-r+3.5,y-r+0.5);
+    ctx.moveTo(x+r-3.5,y-r+0.5); ctx.lineTo(x+r-0.5,y-r+0.5); ctx.lineTo(x+r-0.5,y-r+3.5);
+    ctx.moveTo(x+r-0.5,y+r-3.5); ctx.lineTo(x+r-0.5,y+r-0.5); ctx.lineTo(x+r-3.5,y+r-0.5);
+    ctx.moveTo(x-r+3.5,y+r-0.5); ctx.lineTo(x-r+0.5,y+r-0.5); ctx.lineTo(x-r+0.5,y+r-3.5);
+    ctx.stroke();
+    tag(tree.nodes[sel].tag, x, y, ACCHI);
+  }
+}
+
+function tag(text, x, y, col){
+  ctx.font = F(11);
+  const w = ctx.measureText(text).width;
+  let tx = x + 16, ty = y - 12;
+  const right = (tx + w <= W - 8);
+  if (!right) tx = x - 16 - w;
+  if (ty < TOP + 14) ty = y + 20;
+  hair(x + (right?11:-11), y, tx + (right?-4:w+4), ty+3, RULE2);
+  ctx.fillStyle = col; ctx.fillText(text, tx, ty+4);
+}
+
+function drawTimeline(padX){
+  const x0 = padX + (compact ? ((tp.offsetWidth||90) + 12) : 0);
+  const x1 = W - padX;
+  const y  = H - BOT - 26;
+  if (x1 - x0 < 60 || !tree.total) return;
+  const map = u => x0 + (u/tree.total)*(x1-x0);
+
+  hair(x0, y, x1, y, RULE2);
+  const totSec = tree.total * SEC_PER_UNIT;
+  for (let s=0; s<=totSec; s++){
+    const px = map(s/SEC_PER_UNIT);
+    const major = (s % 5 === 0);
+    hair(px, y, px, y + (major?6:3), major?RULE2:RULE);
+    if (major && s>0 && !compact) label(s+SCENARIO_WORDS.tickUnit, px, y+18, 'center', INK3);
+  }
+  if (!compact){
+    // the marks are hours now, and there are seventy-two of them: the line is named only where
+    // its name ends before the first hour mark it would otherwise be written across
+    const said = SCENARIO_WORDS.timeline(RECORD.incident.hours);
+    ctx.font = F(11);
+    const room = map(5/SEC_PER_UNIT) - x0 - 10;
+    if (ctx.measureText(said.toUpperCase()).width + 0.88*said.length <= room){
+      label(said, x0, y+18, 'left', INK3);
+    }
+  }
+
+  const cols = {};
+  for (let i=0;i<tree.nodes.length;i++){
+    const n = tree.nodes[i];
+    if (!n.reach) continue;
+    const px = Math.round(map(n.open));
+    const st = cols[px] || 0;
+    cols[px] = st + 1;
+    const s = states[i];
+    // a decision the run brought in from its saved histories is drawn quieter and narrower than
+    // the decision the run itself forked at
+    ctx.fillStyle = n.shared ? '#3a3a40'
+      : (s==='done') ? ACC : (s==='running') ? ACCHI : (s==='pruned') ? BAD : '#3a3a40';
+    ctx.fillRect(px - (n.shared?1:2), y - 6 - Math.min(st,3)*3, n.shared?2:4, 2);
+  }
+
+  const px = map(Math.min(p, tree.total));
+  ctx.strokeStyle = ACCHI; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(Math.round(px)+0.5, y-18); ctx.lineTo(Math.round(px)+0.5, y+7); ctx.stroke();
+  ctx.fillStyle = ACCHI;
+  ctx.beginPath();
+  ctx.moveTo(px, y-18); ctx.lineTo(px-3.5, y-24); ctx.lineTo(px+3.5, y-24); ctx.closePath(); ctx.fill();
+}
+
+function drawGrain(){
+  if (!noiseTile || D.grain <= 0.001) return;
+  ctx.save();
+  ctx.globalAlpha = D.grain * 0.6;
+  const ox = -Math.floor(Math.random()*128), oy = -Math.floor(Math.random()*128);
+  for (let x=ox; x<W; x+=128) for (let y=oy; y<H; y+=128) ctx.drawImage(noiseTile, x, y);
+  ctx.globalAlpha = D.grain * 0.10;
+  ctx.fillStyle = '#c9c9c9';
+  for (let y=TOP; y<H-BOT; y+=3) ctx.fillRect(0, y, W, 1);
+  ctx.restore();
+}
+
+/* ---------------------------------------------------------------- pointing */
+let camAz = 0.42, camEl = 0.24, drift = 0, dragging = false, lastX = 0, lastY = 0, moved = 0;
+const ray = new THREE.Raycaster();
+const ptr = new THREE.Vector2();
+
+function pointerNode(cx, cy){
+  if (!gl_ok || !nodeMesh) return -1;
+  const r = glc.getBoundingClientRect();
+  if (r.width < 1 || r.height < 1) return -1;
+  ptr.x = ((cx - r.left)/r.width)*2 - 1;
+  ptr.y = -((cy - r.top)/r.height)*2 + 1;
+  if (ptr.x < -1 || ptr.x > 1 || ptr.y < -1 || ptr.y > 1) return -1;
+  ray.setFromCamera(ptr, camera);
+  const hit = ray.intersectObject(nodeMesh, false);
+  return (hit && hit.length && hit[0].instanceId !== undefined) ? hit[0].instanceId : -1;
+}
+function onButton(t){ return !!(t && t.classList && t.classList.contains('btn')); }
+
+stage.addEventListener('pointerdown', e=>{
+  if (onButton(e.target)) return;
+  stage.focus({preventScroll:true});
+  dragging = true; moved = 0; lastX = e.clientX; lastY = e.clientY;
+  stage.classList.add('drag');
+  if (stage.setPointerCapture){ try { stage.setPointerCapture(e.pointerId); } catch(_){} }
+});
+stage.addEventListener('pointermove', e=>{
+  if (dragging){
+    const dx = e.clientX - lastX, dy = e.clientY - lastY;
+    lastX = e.clientX; lastY = e.clientY;
+    moved += Math.abs(dx) + Math.abs(dy);
+    camAz -= dx*0.006;
+    camEl = Math.max(-0.12, Math.min(0.95, camEl + dy*0.004));
+    drift = 0;
+  } else if (!onButton(e.target)) {
+    hover = pointerNode(e.clientX, e.clientY);
+    stage.classList.toggle('pick', hover >= 0);
+  }
+});
+stage.addEventListener('pointerup', e=>{
+  if (!dragging) return;
+  dragging = false; stage.classList.remove('drag');
+  if (moved < 5){
+    const id = pointerNode(e.clientX, e.clientY);
+    if (id >= 0){ sel = id; userPicked = true; }
+  }
+});
+stage.addEventListener('pointercancel', ()=>{ dragging = false; stage.classList.remove('drag'); });
+stage.addEventListener('pointerleave', ()=>{ hover = -1; stage.classList.remove('pick'); });
+
+stage.addEventListener('keydown', e=>{
+  if (onButton(e.target)) return;
+  const n = tree.nodes[sel];
+  if (!n) return;
+  if (e.key === ' '){ setPlaying(!playing); e.preventDefault(); return; }
+  if (e.key === 'ArrowRight'){
+    if (n.kids.length){ sel = n.kids[0]; userPicked = true; }
+    e.preventDefault(); return;
+  }
+  if (e.key === 'ArrowLeft'){
+    if (n.parent >= 0){ sel = n.parent; userPicked = true; }
+    e.preventDefault(); return;
+  }
+  if (e.key === 'ArrowUp' || e.key === 'ArrowDown'){
+    if (n.parent >= 0){
+      const sib = tree.nodes[n.parent].kids;
+      const i = sib.indexOf(sel);
+      const d = (e.key === 'ArrowUp') ? -1 : 1;
+      if (i >= 0 && sib.length) sel = sib[(i + d + sib.length) % sib.length];
+      userPicked = true;
+    }
+    e.preventDefault();
+  }
+});
+
+function setPlaying(v){
+  playing = v;
+  bPlay.textContent = v ? 'Pause' : 'Play';
+  bPlay.setAttribute('data-on', v ? '1' : '0');
+  bPlay.setAttribute('aria-pressed', String(!v));
+}
+bPlay.addEventListener('click', ()=> setPlaying(!playing));
+bAgain.addEventListener('click', ()=>{ p = 0; endHold = 0; userPicked = false; sel = 0; setPlaying(true); });
+bNew.addEventListener('click', ()=> newRun());
+
+function newRun(){
+  seed = (seed*1664525 + 1013904223) >>> 0;
+  tree = buildTree(seed);
+  states = new Array(tree.nodes.length).fill('');
+  scr.length = 0;
+  sel = 0; hover = -1; userPicked = false; p = 0; endHold = 0;
+  buildScene();
+  resolveStates(); paintStates();
+  setPlaying(true);
+}
+
+/**
+ * The run control: the next of the four runs, and the way back round to the first.
+ *
+ * Each run is a file of its own in the same shape, so moving between them is an address change and
+ * nothing more. The control says the name of the run it moves to.
+ */
+const bRun = document.getElementById('bRun');
+if (bRun){
+  const at = SCENARIO_WORDS.runs.indexOf(RUN);
+  const next = SCENARIO_WORDS.runs[(at + 1) % SCENARIO_WORDS.runs.length];
+  bRun.textContent = next.label;
+  bRun.addEventListener('click', ()=>{
+    location.href = location.pathname + (next.id === 'accepted' ? '' : '?run=' + next.id);
+  });
+}
+
+/* ------------------------------------------------------------------- dials */
+window.setDial = function(name, value){
+  const v = Number(value);
+  if (!isFinite(v) || !Object.prototype.hasOwnProperty.call(D, name)) return;
+  D[name] = v;
+  if (name === 'glow'){ if (haloMat) haloMat.uniforms.uGlow.value = v; }
+  else if (name === 'edge'){ if (edgeLine) edgeLine.material.opacity = v; }
+  else if (name === 'spread'){ if (gl_ok){ placeTree(tree); refreshGeometry(); } }
+  else if (name === 'grid') rebuildGrid();
+  else if (name === 'dim') paintStates();
+  else if (name === 'flow') rebuildFlow();
+  else if (name==='soft'||name==='az'||name==='el'||name==='ilev'||name==='warm'||name==='amb'||name==='rim') applyLights();
+};
+
+/* -------------------------------------------------------------- frame loop */
+let last = 0, clock = 0, histT = 0, raf = 0;
+
+function frame(now){
+  raf = requestAnimationFrame(frame);
+  const dt = Math.min(0.05, last ? (now-last)/1000 : 0.016);
+  last = now; clock += dt;
+
+  if (playing){
+    p += dt * 0.42 * D.tempo;
+    if (p >= tree.total){
+      p = tree.total;
+      endHold += dt;
+      if (endHold > 1.6){ newRun(); return; }
+    }
+  }
+
+  let live = 0;
+  for (let i=0;i<tree.nodes.length;i++) if (states[i] === 'running') live++;
+  const s = signal(clock, dt, live);
+  histT += dt;
+  if (histT > 0.055){ histT = 0; hist[histN % HIST] = s; histN++; }
+
+  if (resolveStates()) paintStates();
+
+  if (!userPicked){
+    let best = -1, bt = -1;
+    for (let i=0;i<tree.nodes.length;i++){
+      if (states[i] === 'running' && tree.nodes[i].open > bt){ bt = tree.nodes[i].open; best = i; }
+    }
+    if (best >= 0) sel = best;
+  }
+
+  if (gl_ok && nodeMesh){
+    if (!dragging) drift += dt;
+    const az = camAz + Math.sin(drift*0.13)*0.10;
+    const dist = 12.2 * D.depth;
+    camera.position.set(
+      target.x + dist*Math.sin(az)*Math.cos(camEl),
+      target.y + dist*Math.sin(camEl) + 1.1,
+      target.z + dist*Math.cos(az)*Math.cos(camEl));
+    camera.lookAt(target);
+
+    for (let i=0;i<tree.nodes.length;i++){
+      const st = states[i];
+      let sc = (st==='pending') ? 0.62 : (st==='skipped') ? 0.5 : (st==='pruned') ? 0.8 : 1;
+      if (st === 'running') sc = 1.12 + 0.16*Math.sin(clock*5.2 + i*1.7);
+      if (i === sel) sc *= 1.12;
+      tmpAx.set(0.3,1,0.2).normalize();
+      tmpM.compose(tree.nodes[i].pos, tmpQ.setFromAxisAngle(tmpAx, clock*0.35 + i), tmpS.set(sc,sc,sc));
+      nodeMesh.setMatrixAt(i, tmpM);
+    }
+    nodeMesh.instanceMatrix.needsUpdate = true;
+
+    const hs = haloGeo.getAttribute('aSize'), ha = haloGeo.getAttribute('aAlpha'), hc = haloGeo.getAttribute('aColor');
+    for (let i=0;i<tree.nodes.length;i++){
+      const st = states[i];
+      let size, alpha, cr = 0.09, cg = 0.30, cb = 0.66;
+      if (st === 'running'){ size = 1.5 + 0.35*Math.sin(clock*5.2 + i*1.7); alpha = 1; cr=0.30; cg=0.55; cb=0.95; }
+      else if (st === 'done'){ size = 0.72; alpha = 0.5; }
+      else if (st === 'pruned'){ size = 0.86; alpha = 0.55; cr=0.70; cg=0.09; cb=0.14; }
+      else { size = 0.34; alpha = 0.12*(1 - D.dim*0.8); cr=0.16; cg=0.18; cb=0.22; }
+      if (i === sel){ size *= 1.35; alpha = Math.max(alpha, 0.6); }
+      hs.array[i] = size*0.9; ha.array[i] = alpha;
+      hc.array[i*3] = cr; hc.array[i*3+1] = cg; hc.array[i*3+2] = cb;
+    }
+    hs.needsUpdate = true; ha.needsUpdate = true; hc.needsUpdate = true;
+
+    const fp = flowGeo.getAttribute('position');
+    for (let i=0;i<flow.length;i++){
+      const f = flow[i];
+      f.off += dt * (0.30 + 0.12*(((f.e*7)%5)/5)) * D.tempo;
+      if (f.off > 1) f.off -= 1;
+      const a = tree.nodes[tree.edges[f.e][0]].pos, b = tree.nodes[tree.edges[f.e][1]].pos;
+      ctrlPoint(a,b,tmpV2);
+      bez(a,tmpV2,b,f.off,tmpV);
+      fp.array[i*3] = tmpV.x; fp.array[i*3+1] = tmpV.y; fp.array[i*3+2] = tmpV.z;
+    }
+    fp.needsUpdate = true;
+
+    if (ring && tree.nodes[sel]){
+      ring.position.copy(tree.nodes[sel].pos);
+      ring.lookAt(camera.position);
+      ring.rotation.z = clock*0.6;
+      ring.material.opacity = Math.max(0, Math.min(1, 0.55 + 0.25*Math.sin(clock*2.4)));
+    }
+
+    renderer.render(scene, camera);
+
+    for (let i=0;i<tree.nodes.length;i++){
+      tmpProj.copy(tree.nodes[i].pos).project(camera);
+      const o = scr[i] || (scr[i] = {x:0,y:0,vis:false});
+      o.x = (tmpProj.x*0.5+0.5)*FW;
+      o.y = (-tmpProj.y*0.5+0.5)*FH;
+      o.vis = (tmpProj.z < 1) && o.x > -40 && o.x < FW+40 && o.y > -40 && o.y < FH+40;
+    }
+  }
+
+  drawHud(clock);
+}
+
+/* --------------------------------------------------------------- lifecycle */
+noiseTile = makeNoise();
+tree = buildTree(seed);
+states = new Array(tree.nodes.length).fill('');
+layout();
+buildScene();
+resolveStates();
+paintStates();
+setPlaying(true);
+
+if ('ResizeObserver' in window){ new ResizeObserver(()=>layout()).observe(stage); }
+else window.addEventListener('resize', layout);
+
+document.addEventListener('visibilitychange', ()=>{
+  if (document.hidden){ if (raf) cancelAnimationFrame(raf); raf = 0; }
+  else if (!raf){ last = 0; raf = requestAnimationFrame(frame); }
+});
+
+if (Array.isArray(window.__dq)){
+  for (const q of window.__dq) window.setDial(q[0], q[1]);
+  window.__dq.length = 0;
+}
+
+raf = requestAnimationFrame(frame);
+}
+</script>
+
+<script>
+/* liveref dials runtime — the canvas drawer drives these values */
+(()=>{ const el=document.getElementById('liveref-dials');
+  if(!el) return;
+  const dials=JSON.parse(el.textContent);
+  addEventListener('message', e=>{ const m=e.data||{};
+    if (m.liveref==='set') window.setDial?.(m.name, m.value);
+    if (m.liveref==='init') for (const k in (m.values||{})) window.setDial?.(k, m.values[k]); });
+  parent.postMessage({liveref:'dials', list:dials}, '*');
+})();
+</script>
+</body>
+</html>

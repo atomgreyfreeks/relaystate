@@ -265,100 +265,120 @@
 
   <section id="s0" data-name="Opening">
     <div class="inner">
-      <p class="marker">Auraworld</p>
-      <h1>This is how the project grew, in five steps.</h1>
-      <p class="lead">We started with a question about how living networks grow. We finished with a tool that shows how decisions were made during a real earthquake. Each step below grew out of the one before it.</p>
+      <p class="marker">Auraworld &nbsp;&middot;&nbsp; Rescue World</p>
+      <h1>We studied how living systems find what matters—and used that lesson to help AI remember the right decision at the right time.</h1>
+      <p class="lead">The path led from growth intelligence, to tests of AI teamwork, to a seventy-two-hour earthquake simulation, and finally to a simple action card that worked in every tested handoff.</p>
       <p class="hint">Scroll down, or press the down arrow key.</p>
     </div>
   </section>
 
-  <section id="s1" data-name="The idea">
+  <section id="s1" data-name="The idea evolved">
     <div class="inner">
-      <p class="marker">Step one of five &nbsp;&middot;&nbsp; The idea</p>
-      <h2>We asked whether fleets of AI agents work better when they copy living networks.</h2>
-      <p>Slime moulds, fungal networks and tree roots find good routes through changing ground using simple local rules, with no manager telling any part of the network what to do.</p>
-      <p>We wrote three experiments to test whether a fleet of AI agents would work better under the same rules, and we wrote down what we expected before any agent ran.</p>
-      <p>Most of those written predictions turned out to be wrong, because capable agents already repeated the evidence inside their own writing and covered the gap the growth rules were meant to close.</p>
-      <p>That honest miss pushed the work toward a sharper question: what has to travel between two agents so that a guess does not quietly turn into a fact?</p>
-    </div>
-  </section>
-
-  <section id="s2" data-name="The real gains">
-    <div class="inner">
-      <p class="marker">Step two of five &nbsp;&middot;&nbsp; The real gains</p>
-      <h2>Checking the handoff between agents produced the first real gain.</h2>
-      <p>We built teams of AI agents that had to name the cause of a computer outage, choose the repair, and name the document that proved it.</p>
-      <p>The agents sent each other short cards marking every possible cause as supported, rejected, or still undecided. Ordinary code then checked each card before the next agent was allowed to act.</p>
-      <p>We broke the links between an agent's answer and the evidence behind it, to see which teams noticed.</p>
+      <p class="marker">01 &nbsp;&middot;&nbsp; What living systems taught us</p>
+      <h2>Send attention toward pressure, uncertainty and new information.</h2>
+      <p>Roots, fungi and slime moulds sense local conditions and extend themselves toward useful signals. We translated that behavior into AI teamwork: keep several possibilities alive, revisit the uncertain parts, and direct review toward the evidence that can change the next action.</p>
+      <p>Our earlier tests turned that idea into three practical rules. Keep evidence attached to each idea. Keep unanswered questions visible. Let the AI repair one failed step without restarting the whole task.</p>
       <div class="figures">
-        <div class="figure">
-          <b>48.6</b>
-          <span>Score for teams that passed the broken handoff straight along, out of a hundred points.</span>
-        </div>
-        <div class="figure">
-          <b>96.5</b>
-          <span>Score on the same broken cases when ordinary code rebuilt and checked the links first.</span>
-        </div>
+        <div class="figure"><b>96.52 / 100</b><span>Overall score when AI roles had to combine conflicting reports into one checked recommendation.</span></div>
+        <div class="figure"><b>120 / 120</b><span>Test cases in which the checked reports led the final AI to the required place.</span></div>
+        <div class="figure"><b>34 / 40</b><span>Earthquake decisions that passed every rule after the AI was shown the exact rule it had broken and tried once more.</span></div>
       </div>
-      <p class="footnote">On the cases where nothing was broken, the checking cost almost nothing, so the whole gain came from catching a failure that would otherwise have travelled onward.</p>
     </div>
   </section>
 
-  <section id="s3" data-name="The real disaster">
+  <section id="s2" data-name="The handoff gain">
     <div class="inner">
-      <p class="marker">Step three of five &nbsp;&middot;&nbsp; The real disaster</p>
-      <h2>We took that finding to a real earthquake in southern Japan.</h2>
-      <p>On 28 July 2026 an earthquake of magnitude 7.1 struck Kumamoto Prefecture. In the hours that followed, fire agencies, defence units and town halls made a long chain of choices while the information in front of them was still incomplete.</p>
-      <p>We rebuilt the first three days from public records, then sealed the viewer record as 414 numbered events: 403 public-record events and 11 later simulated decision points.</p>
-      <p>That file is sealed with a fingerprint of its own contents, so any later edit shows up and nobody can quietly rewrite what happened.</p>
-      <p>One fact in the record set the direction of everything after it: most of the deaths were in towns that the first official readings did not single out.</p>
+      <p class="marker">02 &nbsp;&middot;&nbsp; From a benchmark to an emergency</p>
+      <h2>We gave the AI a current picture it could use to make the next decision.</h2>
+      <p>An AI team is several AI roles sharing one task: some read reports, some check the findings, and one chooses an action. Every finding carried its source, place, quantity and unanswered questions. Ordinary software checked whether the proposed action followed the exercise's evidence, resource and timing rules.</p>
+      <p>This created a clear chain from a public report, to an AI interpretation, to a proposed action, to a checked change inside the simulation. It also let us test whether that chain could survive across many connected decisions.</p>
+      <p class="footnote">The next test kept the same emergency alive from the first decision through the seventy-two-hour close.</p>
     </div>
   </section>
 
-  <section id="s4" data-name="The simulated decisions">
+  <section id="s3" data-name="The continuous test">
     <div class="inner">
-      <p class="marker">Step four of five &nbsp;&middot;&nbsp; The simulated decisions</p>
-      <h2>AI agents then answered the same decisions the real responders faced.</h2>
-      <p>We took five moments from the earthquake record where a real person had to commit to a choice, and gave the agents only the public information that existed before each reconstructed deadline. Two scored moments also used explicit exercise assumptions where the public record did not reveal what a real desk knew.</p>
-      <p>Every answer was graded against rules we wrote down before the run, and both of us checked the grading independently afterwards.</p>
+      <p class="marker">03 &nbsp;&middot;&nbsp; The continuous disaster test</p>
+      <h2>The same AI team stayed with one earthquake for all seventy-two hours.</h2>
+      <p>Rescue World replays 414 public-record events from the first three days after the 2026 Kumamoto earthquake. Inside that fixed timeline, AI teams faced eleven decisions about fire crews, missing readings, collapsed buildings, shelter pressure, aftershocks and water delivery.</p>
+      <p>Each team saw the information available at that moment. A proposal changed the simulation only after it passed the evidence, resource and timing checks. Earlier assignments then shaped which actions were still possible later.</p>
+      <p>We completed 32 full runs of the seventy-two-hour emergency, containing 352 checked decision moments. Every new decision received the reports available then, the assignments already made and the questions still unanswered.</p>
+      <p class="footnote">The clock was compressed, so the seventy-two-hour replay completed at model speed.</p>
+    </div>
+  </section>
+
+  <section id="s4" data-name="What the simulation revealed">
+    <div class="inner">
+      <p class="marker">04 &nbsp;&middot;&nbsp; The operational challenge</p>
+      <h2>Every new decision depended on work that had already happened.</h2>
+      <p>Fire and collapse response gave way to missing sensor reports, shelter pressure, water shortages, an aftershock and a final change in mission. A crew assigned early remained unavailable elsewhere. An unanswered question stayed open. A proposal that failed the rules changed nothing.</p>
+      <p>The test showed why follow-through matters. The AI handling a later moment needed to know exactly what had already been promised, why it had been promised and what it now had to do.</p>
+      <p class="footnote">All reported effects are modeled task units inside the exercise.</p>
+    </div>
+  </section>
+
+  <section id="s5" data-name="The handoff that broke">
+    <div class="inner">
+      <p class="marker">05 &nbsp;&middot;&nbsp; The handoff that exposed the gap</p>
+      <h2>The system failed to act on an earlier crew assignment when confirmation became due.</h2>
+      <p>At 20:00, the AI had to place response groups across two collapsed buildings. The paired decision then asked it to confirm a group already assigned to the paper mill.</p>
+      <p>The paper-mill confirmation stayed unresolved in all 32 complete runs. We then isolated eight saved histories in which the earlier paper-mill assignment was valid. Those eight histories gave us a fair test of whether the later AI could use that exact assignment.</p>
       <div class="figures">
-        <div class="figure">
-          <b>0 of 40</b>
-          <span>Answers that passed every rule when the agents worked from plain written notes.</span>
-        </div>
-        <div class="figure">
-          <b>17 of 40</b>
-          <span>Answers that passed when they worked from a table of checked evidence instead.</span>
-        </div>
-        <div class="figure">
-          <b>34 of 40</b>
-          <span>Answers that passed after one short correction message pointed out the broken rule.</span>
-        </div>
+        <div class="figure"><b>32</b><span>Complete seventy-two-hour simulation runs.</span></div>
+        <div class="figure"><b>32</b><span>Campaigns in which the confirmation stayed unresolved.</span></div>
+        <div class="figure"><b>1</b><span>Earlier crew assignment the later AI still had to confirm.</span></div>
       </div>
-      <p class="footnote">The table of checked evidence also lost ground on one rule about staying inside the allowed limits, so we recorded that claim as a failure.</p>
+      <p>This gave us a precise research question: how can the system bring an important earlier decision back at the exact moment it needs follow-through?</p>
     </div>
   </section>
 
-  <section id="s5" data-name="The interface">
+  <section id="s6" data-name="The action card">
     <div class="inner">
-      <p class="marker">Step five of five &nbsp;&middot;&nbsp; The interface</p>
-      <h2>The last step was making all of it readable by a person.</h2>
-      <p>The whole run plays back in one window, moment by moment, at a pace a person can follow.</p>
-      <p>When a decision arrives, a card names who was deciding, what they knew at that minute, what they chose, and what else was open to them.</p>
-      <p>Nothing from later in the timeline is allowed onto that card, so you only ever see what the decider could see.</p>
-      <p>Two readers with no knowledge of this project judged the screen text one sentence at a time. The second reading marked 1,191 sentences clear, 34 vague and 3 unreadable; all 37 remaining problems were then repaired. The finished mechanical audit now lists 1,227 visible strings and finds zero failures, while quotations from the recording remain unchanged.</p>
+      <p class="marker">06 &nbsp;&middot;&nbsp; The action card</p>
+      <h2>We turned the earlier assignment into a clear piece of work that had to be completed.</h2>
+      <p>Most AI teamwork systems pass notes or summaries forward. During a long task, the next AI usually receives a large history and must work out which earlier detail matters now.</p>
+      <p>Our system creates an action card whenever a decision creates future work. The card says what was decided, which resource and place it concerns, which reports support it, what remains unknown and what must happen next.</p>
+      <p>When that next step becomes possible, the card goes directly to the AI making the decision. The AI must <b>confirm</b> or <b>decline</b> it, and software checks the answer.</p>
+      <p class="lead">The important decision was no longer background history. It arrived as work that had to be completed.</p>
     </div>
   </section>
 
-  <section id="s6" data-name="What this is now">
+  <section id="s7" data-name="The action-card result">
     <div class="inner">
-      <p class="marker">Where this arrived</p>
-      <h2>This is now a tool for reading decisions made under pressure.</h2>
-      <p class="lead">It holds a real disaster still, replays the moments where somebody had to commit, and shows how a fleet of AI agents answered using only the public information available by each reconstructed deadline; two scored moments also used explicit exercise assumptions. It is worth having when a wrong choice is expensive and somebody will later ask what the choice was based on.</p>
+      <p class="marker">07 &nbsp;&middot;&nbsp; The verified action-card result</p>
+      <h2>The AI completed the exact due action in every tested handoff.</h2>
+      <div class="figures">
+        <div class="figure"><b>8 / 8</b><span>Histories in which the decision-making AI confirmed the exact crew assignment.</span></div>
+        <div class="figure"><b>8 / 8</b><span>Confirmations accepted by the complete rule check on the first attempt.</span></div>
+        <div class="figure"><b>8 / 8</b><span>Safety cases in which the specified unsupported moving-unit question stayed open.</span></div>
+      </div>
+      <p>We tested eight saved, unchanged versions of the paper-mill handoff. Qwen3-32B completed the exact confirmation in all eight, and every answer passed the complete rule check on its first attempt.</p>
+      <div class="boundary"><p class="label">Verified second-model result</p><p>Qwen3.5-122B also completed the exact confirmation in all eight histories on its first attempt. Seven of eight safety replies passed every rule. The remaining reply kept the unsupported question open and invented nothing, but it gave the wrong number of assignments and no supporting report. Neither model falsely claimed that an unresolved task was complete.</p></div>
+    </div>
+  </section>
+
+  <section id="s8" data-name="Rescue World and MMM">
+    <div class="inner">
+      <p class="marker">08 &nbsp;&middot;&nbsp; Turning the experiment into a tool</p>
+      <h2>Rescue World makes the result something a person can inspect.</h2>
+      <p>The plain-English story comes first: what was happening, what the AI proposed, how much it proposed, where it would go, whether the simulation accepted it, why, and what remained unanswered.</p>
+      <p>The 3D environment shows the disaster situation. The combined graph shows the agent teamwork behind a proposal and the modeled demands connected to it. These visual aids support the plain-English explanation.</p>
+      <p>Model–Move–Mesh gives a reader three simple questions: <b>Model</b>—what did the AI believe from the reports available then? <b>Move</b>—what exact proposal did it make? <b>Mesh</b>—did the supporting reports, unanswered questions and earlier assignments reach this decision intact?</p>
+      <p class="footnote">The human-readable disaster story leads every view. The 3D world and network graph provide context for inspection.</p>
+    </div>
+  </section>
+
+  <section id="s9" data-name="What this is now">
+    <div class="inner">
+      <p class="marker">09 &nbsp;&middot;&nbsp; The finding and the product</p>
+      <h2>Important decisions should automatically return when it is time to act on them.</h2>
+      <p class="lead">When an AI makes a decision that will matter later, the system should create a clear action card and deliver it to the person or AI handling the next step exactly when they need it.</p>
+      <p>Rescue World lets a person follow the emergency, inspect the AI proposal, read the action card, see whether the simulation accepted the answer and understand what remains open.</p>
       <div class="boundary">
-        <p class="label">One honest boundary</p>
-        <p>The grading measures whether a decision can be traced back to what was known at the time, and whether it followed the rules written before the run. It does not grade the real responders, and it is no evidence that an AI system would have saved lives in Kumamoto.</p>
+        <p class="label">Evidence boundary</p>
+        <p>We demonstrated the action card on one exact handoff, eight saved versions of the situation and two Qwen models from the same model family. The findings describe decisions inside this exercise; they do not yet establish performance in other emergencies.</p>
       </div>
+      <p class="footnote">Next research step: repeat the mechanism across a second incident and additional model families.</p>
     </div>
   </section>
 

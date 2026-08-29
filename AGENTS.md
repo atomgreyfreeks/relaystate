@@ -16,10 +16,12 @@ old phrase.
 Before editing, read in this order:
 
 1. `README.md`
-2. `docs/rescueworld/SPEC-2.md`
-3. `docs/rescueworld/STORY-TEMPLATE.md`
-4. `product/disaster-replay/README.md`
-5. `experiment/PRODUCTION-RESULTS.md`
+2. `docs/rescueworld/README-YUKI.md`
+3. `docs/rescueworld/YUKI-RESCUE-WORLD-ONE-SHEET.md`
+4. `docs/rescueworld/YUKI-HANDOFF-2026-08-28.md`
+5. `docs/rescueworld/ORCHESTRATION-PROCESS-MAP.html`
+6. `docs/rescueworld/SPEC-2.md`
+7. `product/disaster-replay/README.md`
 
 Run `npm ci` and `npm run verify` before claiming the package works. For any visible change, run
 `npm run test:browser` and inspect both screenshots it reports.
@@ -30,12 +32,30 @@ Run `npm ci` and `npm run verify` before claiming the package works. For any vis
   the render loop never reruns agent logic.
 - Real public-response events, simulated stand-in agent decisions, and analysis written later are
   three different kinds of information. Never blend them.
-- A decision “passed every prewritten check” only when it met every rule frozen before the run.
-- The registered result is `0/40 → 17/40 → 34/40`. The evidence-table claim failed one registered
-  rule; the bounded-feedback claim passed its narrower rules.
-- The experiment measures traceability, communication, and rule-following inside a reconstruction.
-  It does not prove better real-world judgment, superiority to responders, or lives saved.
-- The descriptive 88-run figures are context only and must never replace the registered result.
+- The continuous exercise contains 32 complete 72-hour runs and 352 checked decision moments.
+- The paper-mill confirmation remained unresolved in all 32 complete runs.
+- The focused action-card result uses eight saved histories in which the earlier paper-mill
+  assignment was valid. It is a test of one handoff, not another full 72-hour campaign.
+- Qwen3-32B completed the exact follow-up on the first attempt in 8/8 histories; full safety was
+  8/8; false completions were 0.
+- Qwen3.5-122B completed the exact follow-up on the first attempt in 8/8 histories; full safety was
+  7/8; false completions were 0. The remaining case kept the unsupported task open but missed an
+  assignment-count and supporting-report rule.
+- Both tested models are from the Qwen family. Do not claim independence across unrelated model
+  families.
+- These experiments measure modeled decisions, operational continuity, traceability, and
+  rule-following. They do not measure real dispatches, people reached, or lives saved.
+- The older `0/40 → 17/40 → 34/40` benchmark is research history. It explains how the project
+  developed but is not the final Rescue World finding.
+
+## Writing for the submission
+
+- Assume the reader has never heard of AI orchestration.
+- Introduce the ordinary-language term **action card** before **decision receipt**.
+- Explain the complete human problem and outcome before implementation details.
+- Describe the technique on its own terms: a decision that creates future work becomes a clear
+  action card and returns when the follow-up becomes possible.
+- Treat the 3D world and graphs as tools for explanation and inspection, not as the finding.
 
 ## Security boundary
 

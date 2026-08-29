@@ -6,7 +6,7 @@
  * the two runs made different choices from the same information, so the ghost echoes, the in-place
  * world swap, and the debrief diff all read from one derivation instead of three.
  *
- * The pairing rule comes from the recorded feasibility review: two runs are matched
+ * The pairing rule comes from codex's feasibility review (board message #564): two runs are matched
  * by scenario, by decision stage, and by the difference in their selected targets. Event
  * identifiers are never assumed to line up between runs. Inside one run, event identifiers are
  * used, because `caused_by` is that run's own record of what led to what.

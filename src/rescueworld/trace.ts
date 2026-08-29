@@ -23,7 +23,7 @@
  *
  * Why the check's message is quoted rather than reconstructed. The experiment's own checker
  * returns its feedback as one line per broken rule, written `CODE: detail`
- * (`experiment/runner/kumamoto_real_response/scoring.py`, function
+ * (`experiments/kumamoto-real-response/runner/kumamoto_real_response/scoring.py`, function
  * `feedback_messages`). The rules it broke are recorded on the evidence-table answer inside the
  * sealed event, so the same lines are rebuilt here from sealed data and match the message the
  * desk actually received in all one hundred and twenty-eight recorded runs.
@@ -407,8 +407,7 @@ const checkerMessages = (violations: RawViolation[]): string[] =>
  * kosa-town) quantity 0 must be at least 1"; a ceiling breach reads "quantities sum to 24,
  * exceeding maximum 22". This is a pattern matched against the record's own text and never a
  * sentence anyone reads, so it is written as a pattern. As a bare string literal it was collected
- * by the plain-language audit described in `docs/rescueworld/PLAIN-TEXT-METHODS.md` and put in
- * front of a judge as the fragment "must be at
+ * by `app/scripts/audit-plain-text.mjs` and put in front of a judge as the fragment "must be at
  * least", which has no reading and names nothing a viewer can meet.
  */
 const QUANTITY_FLOOR = /must be at least/;

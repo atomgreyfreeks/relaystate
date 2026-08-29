@@ -1,0 +1,53 @@
+{
+  "schema_version": "rescueworld-receipt-evidence-bundle.v1",
+  "status": "accepted_focused_finding",
+  "accepted_on": "2026-08-28",
+  "claim_scope": "A focused test of one follow-up in eight saved histories from the 72-hour exercise; separate from the registered full-campaign claims.",
+  "source_protocol": "experiments/kumamoto-bounded-probe-pilot/RECEIPT-DISPOSITION-PROTOCOL.md",
+  "runs": [
+    {
+      "id": "receipt-fork-20260828-v1",
+      "model": {
+        "id": "Qwen/Qwen3-32B-AWQ",
+        "revision": "0499c3ac83fdef8810b907a23894ba91e95eddd8"
+      },
+      "analysis": {
+        "file": "receipt-fork-20260828-v1/receipt-fork-analysis.json",
+        "file_sha256": "e00a3f01a3e21f2a20f4ca816d61823c3012cc55802b69745d30078840d7f8bb",
+        "semantic_sha256": "e178ea9e498c8af2e7a3b3b48ccb8b6f6e377c47fcca86cadba6931540ce7544"
+      },
+      "plan": {
+        "file": "receipt-fork-20260828-v1/receipt-fork-plan.json",
+        "file_sha256": "5158c3d2f13d9d52246e23e426ec2a54cb128bf5621a4aedd053b970c56a2584",
+        "semantic_sha256": "8a6a2d24e57711f7468e05e61cae282a3c3fac37272b0555a782e126f972604d"
+      },
+      "result": {
+        "exact_first_try": "8/8",
+        "full_safety_check": "8/8",
+        "false_resolutions": 0
+      }
+    },
+    {
+      "id": "qwen35-receipt-production-v2",
+      "model": {
+        "id": "Qwen/Qwen3.5-122B-A10B-GPTQ-Int4",
+        "revision": "30cd92cba9707a9aba09d1e490ed4b66b78e9606"
+      },
+      "analysis": {
+        "file": "qwen35-receipt-production-v2/qwen35-receipt-fork-analysis.json",
+        "file_sha256": "33bcdffecb0fa70109ddaaad388ab7b57f9776537f09007ce4f76abfc59385ae",
+        "semantic_sha256": "79b3519371feb063f6e0fb64582ceb9d38bf817965f3035ce4d6095b69a4fb16"
+      },
+      "plan": {
+        "file": "qwen35-receipt-production-v2/qwen35-receipt-plan.json",
+        "file_sha256": "1a57abce3ad3ff5375b945739db1ac8f805aa3801dc9adf09e8520df8b567b23",
+        "semantic_sha256": "4df21debf564ce1610cf8dcd9376fc57f80d01d7f2180dd13e77fd26c90a55bd"
+      },
+      "result": {
+        "exact_first_try": "8/8",
+        "full_safety_check": "7/8",
+        "false_resolutions": 0
+      }
+    }
+  ]
+}

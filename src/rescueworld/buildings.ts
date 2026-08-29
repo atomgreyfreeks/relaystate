@@ -19,7 +19,7 @@
  * stand, which is around the epicentre and well south of the exercise's rescue sites. They are
  * never drawn damaged and are never marked as a rescue site, because the exercise's reports and
  * outcomes are invented and no invented outcome may be attached to a real, identified building
- * (`docs/rescueworld/SPEC.md`, section 6).
+ * (docs/rescueworld/SPEC.md section 6, and codex's attribution point, board message #482).
  *
  * A tile that cannot be read is reported and skipped. One unreadable tile costs its own
  * buildings and nothing else.

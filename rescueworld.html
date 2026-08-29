@@ -328,6 +328,22 @@
   #minicv{display:block}
   #minilab{margin-top:3px;text-align:center}
 
+  /* ---- the two other Rescue World pages. They stand in the left column between the report
+         locator above them and the small map below, so they cross no control that was already
+         there. The map's height is set by the recorded ground, so main.ts writes it into
+         --minih and these two sit clear above whatever it turns out to be. Each is a link and
+         opens its page in a new tab, so the replay keeps running behind it. */
+  #openpair{left:24px;bottom:calc(66px + var(--minih,151px) + 14px);
+    display:flex;flex-direction:column;gap:6px;width:236px}
+  #openpair a{display:flex;align-items:center;justify-content:space-between;gap:10px;
+    box-sizing:border-box;min-height:44px;padding:7px 12px 8px;
+    font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;line-height:1.4;
+    text-decoration:none;color:#e9edf2;background:rgba(0,0,0,.55);
+    border:1px solid rgba(255,255,255,.22)}
+  #openpair a:hover{border-color:rgba(255,255,255,.62)}
+  #openpair a b{font-weight:400}
+  #openpair a i{font-style:normal;font-size:12px;opacity:.55;flex:0 0 auto;line-height:1}
+
   /* ---- the transport: rounds, not a video scrub bar. The run is a sequence of steps the
          desk takes, so the time control counts those steps and the clock rides underneath. */
   /* The round's headline can run to three lines on a wide moment, and a fixed height cut the
@@ -1033,7 +1049,8 @@
   body.treeon #caption,body.treeon #mini,body.treeon #bar,body.treeon #telegraph,
   body.treeon #actcard,body.treeon #quakestrip,body.treeon #deskToast,body.treeon #camctl,
   body.treeon #watch,body.treeon #desk,body.treeon #outcome,body.treeon #chip,
-  body.treeon #tag,body.treeon #ghost,body.treeon #rwArtChip,
+  body.treeon #tag,body.treeon #ghost,body.treeon #rwRunChip,body.treeon #rwArtChip,
+  body.treeon #openpair,
   body.treeon #meter{opacity:0;pointer-events:none;
     transition:opacity .30s cubic-bezier(.16,1,.3,1)}
 
@@ -1053,8 +1070,10 @@
   /* ---- the debrief: what rises when the run ends. The world dims behind it, the outcome is
          stated as a sentence before it is stated as a number, and the one moment where the two
          desks chose differently is told as three beats you can fly back to. */
-  /* Layer 9, which is the layer the help, the ledger and the real-decision surface stand on. A
-     surface that holds the whole frame stands above every floating control. */
+  /* Layer 9, which is the layer the help, the ledger and the real-decision surface stand on.
+     At layer 8 it shared a layer with the run-preparation chip, and the chip, being added to the
+     page later, printed over the debrief's opening sentence. A surface that holds the whole
+     frame stands above every floating control. */
   #debrief{inset:0;z-index:9;background:rgba(0,0,0,.94);display:none;
     align-items:center;justify-content:center;pointer-events:auto;opacity:0;
     transition:opacity .45s cubic-bezier(.16,1,.3,1)}
@@ -1341,6 +1360,14 @@
 <div class="hud" id="mini">
   <canvas id="minicv" width="132" height="198"></canvas>
   <div class="k" id="minilab">full-map view</div>
+</div>
+
+<!-- the three other Rescue World pages, reachable from the replay itself. Their words live in
+     app/src/rescueworld/copy.ts (OPEN_PAGES), which main.ts writes in here at start-up. -->
+<div class="hud on" id="openpair">
+  <a id="openTree" href="/decision-run-tree.html" target="_blank" rel="noopener"><b>&mdash;</b><i>&#8599;</i></a>
+  <a id="openImpact" href="/impact-view.html" target="_blank" rel="noopener"><b>&mdash;</b><i>&#8599;</i></a>
+  <a id="openNetwork" href="/decision-network.html" target="_blank" rel="noopener"><b>&mdash;</b><i>&#8599;</i></a>
 </div>
 
 <div class="hud on" id="bar">

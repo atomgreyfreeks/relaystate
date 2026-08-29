@@ -52,8 +52,8 @@ try {
 
   await page.goto(base, { waitUntil: "load", timeout: 30_000 });
   assert.equal(await page.$eval("h1", (node) => node.textContent.trim()),
-    "See what happened, what the agents knew, and why a decision passed.");
-  assert.equal(await page.$$eval(".card", (nodes) => nodes.length), 4);
+    "See what happened, what the AI knew, and whether important work reached the next decision.");
+  assert.equal(await page.$$eval(".card", (nodes) => nodes.length), 6);
   assert.ok(await page.$eval('a[href="/rescueworld.html"]', (node) => node instanceof HTMLAnchorElement));
   await page.screenshot({ path: "/tmp/rescue-world-partner-hub.png", fullPage: true });
 
@@ -144,7 +144,7 @@ try {
     return body && Number.parseFloat(getComputedStyle(body).opacity) > 0.95;
   });
   assert.match(await page.$eval("#ledgerTitle", (node) => node.textContent),
-    /AI agents proposed rescue actions/i);
+    /AI agents later proposed rescue actions/i);
   const ledger = await page.evaluate(() => {
     const row = document.querySelector("#ledgerRows .ledrow");
     const chose = row?.querySelector(".lchose");
@@ -186,7 +186,7 @@ try {
   assert.match(await page.$eval("#traceHeading", (node) => node.textContent), /tested/i);
   assert.deepEqual(noise, [], `browser warnings or errors: ${noise.join(" | ")}`);
 
-  console.log("PASS: the partner hub loads, exposes four current review paths, and fits at 1440×900.");
+  console.log("PASS: the partner hub loads, exposes six current review paths, and fits at 1440×900.");
   console.log("PASS: B opens the viewer from a fresh tab and all 11 decision milestones move the map.");
   console.log("PASS: the viewer carries 11 action-first decisions, exactly 120 scored proposals, and no invented branches.");
   console.log("PASS: the ledger preserves 0/40 → 17/40 → 34/40 and the flagship keeps six semantic cards.");

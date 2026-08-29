@@ -1,13 +1,38 @@
-# Rescue World — partner handoff
+# Rescue World — Yuki submission handoff
 
-This private package contains the current Rescue World build: a three-dimensional replay of the
-first 72 hours after the July 2026 Kumamoto earthquake, plus the recorded agent-decision exercise,
-the public-data replay contract, the audited aggregate result, and the two current presentations.
+This private repository contains the current Rescue World product, the two presentations, the
+plain-language process map, and portable copies of the accepted experiment evidence.
 
-It does **not** contain the old six-candidate gallery, VPN credentials, GPU credentials, remote
-launch scripts, or private run controls. The browser viewer is complete and reads the same sealed
-414-event file as the exhibition build. The private run-preparation control was intentionally
-removed from this handoff; no simulation event, result, source asset, or presentation was changed.
+If you are Yuki—or an AI helping Yuki—start with
+[`docs/rescueworld/README-YUKI.md`](docs/rescueworld/README-YUKI.md). It is the index for the
+submission package and explains what to open, what the project found, which numbers are safe to
+use, and where every result came from.
+
+## The project in one minute
+
+We studied how an AI can keep making connected decisions during a long, changing situation.
+Rescue World replays the first 72 hours after a Kumamoto earthquake and shows eleven moments when
+an AI had to propose a response.
+
+The full exercise exposed one clear problem. An earlier decision assigned a response group to a
+paper mill. A later decision needed to confirm that exact assignment. The confirmation remained
+unresolved in all 32 complete runs because the earlier decision was buried in the growing history.
+
+The final technique makes an **action card** whenever a decision creates work for later. The card
+records the exact decision, supporting reports, unanswered questions, and required next step.
+When that next step becomes possible, the system puts the card directly in front of the AI handling
+it and requires a clear confirmation or decline.
+
+We tested eight saved histories in which the earlier assignment was valid:
+
+- Qwen3-32B completed the exact follow-up on the first attempt in **8 of 8** histories. All **8 of
+  8** safety checks passed, with **0** false completions.
+- Qwen3.5-122B completed the exact follow-up on the first attempt in **8 of 8** histories. **7 of
+  8** full safety checks passed, with **0** false completions. The remaining safety case kept the
+  unsupported task open but missed an assignment-count and supporting-report rule.
+
+This is a focused result inside a modeled exercise. It does not measure real dispatches, people
+reached, lives saved, or real-world emergency outcomes.
 
 ## Start in three commands
 
@@ -19,81 +44,66 @@ npm run verify
 npm run dev
 ```
 
-Then open <http://localhost:5184>. The first page is the partner hub. Its largest button opens the
-simulation at <http://localhost:5184/rescueworld.html>.
+Then open <http://127.0.0.1:5184>.
 
-If another computer is on the same trusted local network, use the host computer's LAN address with
-port `5184`, for example `http://192.168.1.20:5184`. Do not expose the development server directly
-to the public internet.
+## Fastest useful review
 
-## The fastest review
+1. Read [`docs/rescueworld/YUKI-RESCUE-WORLD-ONE-SHEET.md`](docs/rescueworld/YUKI-RESCUE-WORLD-ONE-SHEET.md).
+2. Open <http://127.0.0.1:5184/rescueworld.html> for the full 72-hour world.
+3. Press `T` to inspect how one AI proposal was built.
+4. Press `B` to see the eleven decision moments.
+5. Open <http://127.0.0.1:5184/impact-view.html> for the plain-English outcomes and accepted
+   action-card result.
+6. Open <http://127.0.0.1:5184/decision-network.html> for the color-coded AI decision network.
+7. Read the full story in
+   [`docs/rescueworld/emergence-presentation.html`](docs/rescueworld/emergence-presentation.html)
+   and the shorter version in
+   [`docs/rescueworld/submission-presentation.html`](docs/rescueworld/submission-presentation.html).
 
-1. Open the hub and read “What was built.”
-2. Open **Rescue World**, choose **Begin**, and let the opening act play.
-3. Press `B` for the visual map of all eleven decisions and choose one moment.
-4. Press `T` to walk through that moment's six-step agent trace.
-5. Press `R` for the experiment in complete sentences; press `L` for the full decision list.
-6. Return to the hub and open **How this project grew**, then **Submission briefing**.
+## Verify the accepted action-card evidence
 
-The result is specific. Plain written notes produced `0/40` decisions that passed every prewritten
-check. An evidence table produced `17/40`. The same table plus one bounded correction produced
-`34/40`. The evidence-table claim failed its registered resource-limit rule: it was allowed to
-reduce the share of answers that stayed inside the exercise's hard limits by no more than five
-percentage points, but that share fell by ten. The bounded-feedback claim passed. These are
-traceability and rule-following results inside a reconstructed simulation. They do not prove better
-real-world judgment or lives saved.
-
-## Instructions for an AI coding harness
-
-Read these files in order before changing anything:
-
-1. [`AGENTS.md`](AGENTS.md) — scope, truth boundaries, and the change protocol.
-2. [`README.md`](README.md) — how to run and review the package.
-3. [`docs/rescueworld/SPEC-2.md`](docs/rescueworld/SPEC-2.md) — current viewer contract.
-4. [`docs/rescueworld/STORY-TEMPLATE.md`](docs/rescueworld/STORY-TEMPLATE.md) — fixed story and grade wording.
-5. [`product/disaster-replay/README.md`](product/disaster-replay/README.md) — replay and data contract.
-6. [`experiment/PRODUCTION-RESULTS.md`](experiment/PRODUCTION-RESULTS.md) — registered findings and limits.
-
-Then run:
+The tracked evidence bundle contains the exact accepted analyses and plans for both model runs.
 
 ```bash
-npm ci
-npm run verify
-npm run test:browser
+node scripts/bake-receipt-fork.mjs --check
 ```
 
-`npm run test:browser` uses an installed Chrome browser. If Chrome is in a nonstandard location,
-set `RESCUE_CHROME` to its executable path. The test starts its own local server, opens the hub and
-the viewer, checks the opening interaction and decision ledger, saves screenshots under `/tmp`, and
-closes everything it started.
-
-On some systems, `npm ci` says it skipped the optional `fsevents` install script. That helper is not
-needed by this package; continue to `npm run verify`. Treat any other installation error as a real
-failure rather than assuming it is harmless.
+The command verifies the file hashes, embedded analysis identities, model IDs, model revisions,
+accepted counts, and the public data used by the viewer.
 
 ## Package map
 
-- `index.html` — the human partner hub.
-- `rescueworld.html` — the live exhibition viewer.
-- `src/rescueworld/` — the Three.js log-driven viewer.
-- `src/rescueworld-art-director/` — presentation-only grade and burn-color controls.
-- `public/rescueworld-log.json` — the baked 414-event viewer record.
-- `public/rescueworld-assets/` — terrain and official context layers used by that record.
-- `public/docs/` — browser-ready guide and presentations.
-- `docs/rescueworld/` — design, evidence, copy, and reconstruction documents.
-- `product/disaster-replay/` — schemas, importers, sealed timelines, certificates, and verifiers.
-- `experiment/` — preregistration, runner source, frozen manifest, aggregate result, and report.
-- `scripts/` — package, data, and browser gates.
+- `docs/rescueworld/README-YUKI.md` — start-here index for Yuki and his AI tools.
+- `docs/rescueworld/YUKI-HANDOFF-2026-08-28.md` — full narrative, translation guidance, and claims.
+- `docs/rescueworld/YUKI-RESCUE-WORLD-ONE-SHEET.md` — one-page product and presentation guide.
+- `docs/rescueworld/evidence/receipt-fork/` — portable accepted analyses, plans, and manifest.
+- `rescueworld.html` — full interactive Rescue World.
+- `public/impact-view.html` — plain-English simulation outcomes and focused result.
+- `public/decision-network.html` — color-coded network behind each proposal.
+- `public/decision-run-tree.html` — run-tree view of the recorded decision paths.
+- `src/rescueworld/` — Three.js viewer implementation.
+- `product/disaster-replay/` — sealed replay data, schemas, certificates, and verifiers.
+- `experiment/` — the earlier registered benchmark package preserved as research history.
+
+## Instructions for an AI coding harness
+
+Read these files before rewriting submission material:
+
+1. `README.md`
+2. `docs/rescueworld/README-YUKI.md`
+3. `docs/rescueworld/YUKI-RESCUE-WORLD-ONE-SHEET.md`
+4. `docs/rescueworld/YUKI-HANDOFF-2026-08-28.md`
+5. `docs/rescueworld/ORCHESTRATION-PROCESS-MAP.html`
+
+Preserve the exact result counts, model identities, evidence hashes, and claim boundary. Introduce
+the ordinary-language term **action card** before the technical term **decision receipt**. Explain
+the human problem and result before implementation details. Treat the visualizations as tools for
+inspection and explanation, not as the finding itself.
 
 ## Working safely
 
-- The viewer is a log consumer. Do not run agent logic inside its render loop.
-- Keep recorded public facts, simulated agent decisions, and later analysis visibly separate.
+- Keep public records, simulated AI proposals, and later analysis visibly separate.
 - Never rewrite the sealed timeline to make a presentation claim easier.
-- Do not report the descriptive 88-run figures as the registered result.
-- Do not add credentials, `.env` files, VPN notes, private server addresses, or remote launch commands.
+- Do not add credentials, `.env` files, VPN notes, private server addresses, or remote launch
+  commands.
 - After any change, run `npm run verify`; after a visible change, also run `npm run test:browser`.
-
-The public-data sources and attribution are listed in
-[`product/disaster-replay/DATA-SOURCES.md`](product/disaster-replay/DATA-SOURCES.md). The package's
-plain-language boundaries are summarized in [`NOTICE.md`](NOTICE.md).

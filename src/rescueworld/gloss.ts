@@ -28,7 +28,7 @@
  *   record is what the run actually held.
  *
  * The method, the detectors and the ranked findings this file answers are written up in
- * `docs/rescueworld/PLAIN-TEXT-METHODS.md`. The source-repository copy audit reads this
+ * `docs/rescueworld/PLAIN-TEXT-METHODS.md`. `node app/scripts/audit-plain-text.mjs` reads this
  * file, so a string glossed here is judged on the words a viewer actually reads.
  */
 
@@ -1294,7 +1294,7 @@ const MARK = "␟";
  * occurrence is parked as it is matched, so the fourth "GSDF" in a paragraph is not explained a
  * fourth time and no bracket is ever nested inside another.
  *
- * The same source-repository copy audit reads this table out of this
+ * The same pass runs in `app/scripts/audit-plain-text.mjs`, which reads this table out of this
  * file, so the audit judges the words a viewer reads and not the record's own.
  */
 export function plainQuoted(raw: string): string {

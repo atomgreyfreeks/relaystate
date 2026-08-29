@@ -134,9 +134,18 @@ export interface TreeWhy {
 /** one moment of decision: one beacon on the line, and everything that opens under it */
 export interface TreeJunction {
   momentId: string;
-  /** the number this moment carries in the record */
+  /**
+   * The sealed slot number this moment carries in the record, such as 9 for
+   * `slot-09-push-water-planning`. It names the moment inside the record and it is never the
+   * number a reader is shown, because the record numbers the slots in a different order from
+   * the order the deadlines fall in.
+   */
   number: number;
-  /** where it stands along the line, left to right, counted from zero */
+  /**
+   * Where it stands along the line, left to right, counted from zero. Adding one to this gives
+   * the number the screen prints, so the eighth beacon a reader meets reads "Decision 8 of 11"
+   * whatever slot number the record gave it.
+   */
   order: number;
   /** how far into the recorded seventy-two hours it happened, from zero to one */
   at: number;
@@ -644,8 +653,11 @@ export function drawTree(
     // one tab stop for the whole row, moved to whichever beacon is open by `draw`
     beacon.tabIndex = -1;
     beacon.setAttribute("aria-selected", "false");
+    // The number a reader hears is the beacon's own place in the row, not the slot number the
+    // record filed the moment under. The two disagree, because the record's slots were numbered
+    // before the deadlines were put in time order.
     beacon.setAttribute("aria-label", COPY.TREE.markLabel(
-      junction.number, model.junctions.length, junction.when, junction.locator,
+      junction.order + 1, model.junctions.length, junction.when, junction.locator,
       junction.registered));
     const eye = make("span", "tneye");
     // the beacons breathe out of step with one another, on a delay taken from where each one
@@ -914,8 +926,9 @@ export function drawTree(
     // which moment is open stays in the frame however far the panel is scrolled, so a reader
     // never has to remember what supplied the detail they are looking at
     const selhead = make("div", "tselhead");
+    // the same count the beacon says: where this moment stands in the row, counted from one
     selhead.append(make("div", "tlab",
-      COPY.TREE.place(junction.number, model.junctions.length)));
+      COPY.TREE.place(junction.order + 1, model.junctions.length)));
     selhead.append(make("div", "twhen", COPY.TREE.when(junction.when)));
     panelBody.append(selhead);
     panelBody.append(make("h3", "tseltitle", junction.title));

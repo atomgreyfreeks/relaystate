@@ -9,7 +9,19 @@ const required = [
   "public/rescueworld-log.json", "public/rescueworld-highlights.json",
   "public/real-response-summary.json", "public/docs/emergence-presentation.html",
   "public/docs/submission-presentation.html", "public/docs/rescueworld-guide.html",
+  "public/impact-view.html", "public/decision-network.html", "public/decision-run-tree.html",
+  "public/receipt-fork-data.json", "public/decision-network-data.json",
+  "public/decision-network-growth-data.json", "public/decision-run-tree-data.json",
+  "public/decision-run-tree-growth-data.json",
+  "public/decision-run-tree-receipt-first-data.json",
+  "public/decision-run-tree-receipt-122b-data.json",
+  "public/media/vendor/three/three.core.min.js",
+  "public/media/vendor/three/three.module.min.js",
   "docs/rescueworld/SPEC-2.md", "docs/rescueworld/STORY-TEMPLATE.md",
+  "docs/rescueworld/README-YUKI.md", "docs/rescueworld/YUKI-HANDOFF-2026-08-28.md",
+  "docs/rescueworld/YUKI-RESCUE-WORLD-ONE-SHEET.md",
+  "docs/rescueworld/ORCHESTRATION-PROCESS-MAP.html",
+  "docs/rescueworld/evidence/receipt-fork/acceptance-manifest.json",
   "product/disaster-replay/README.md", "product/disaster-replay/DATA-SOURCES.md",
   "experiment/PREREG.md", "experiment/PRODUCTION-RESULTS.md",
   "experiment/results/production-analysis.json",
@@ -31,8 +43,9 @@ for (const href of [
   "/docs/submission-presentation.html", "/docs/rescueworld-guide.html",
 ]) assert.ok(index.includes(`href="${href}"`), `hub link is missing: ${href}`);
 assert.match(index, /414/);
-assert.match(index, /0\/40[\s\S]*17\/40[\s\S]*34\/40/);
-assert.match(index, /does not prove better real-world judgment or lives saved/i);
+assert.match(index, /0\/32[\s\S]*Qwen3-32B[\s\S]*8\/8[\s\S]*Qwen3\.5-122B/);
+assert.match(index, /does not measure real dispatches, people reached, or lives saved/i);
+assert.match(index, /action card/i);
 
 const guide = fs.readFileSync(path.join(ROOT, "public/docs/rescueworld-guide.html"), "utf8");
 assert.equal((guide.match(/href="\/rescueworld\.html"/g) ?? []).length, 3,
@@ -104,4 +117,4 @@ for (const file of files) {
 
 console.log(`PASS: ${required.length} required handoff files are present.`);
 console.log(`PASS: ${files.length} packaged files contain no known credentials, private infrastructure, or stale six-candidate brief.`);
-console.log("PASS: the hub links the current viewer, both presentations, guide, result, and limitations.");
+console.log("PASS: the hub links the viewer, presentations, guide, decision views, accepted action-card result, and limitations.");
