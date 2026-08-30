@@ -1,6 +1,6 @@
 # The user stories for the Space Data presentation build
 
-Written 2026-08-24 by claude from Randy's directive on the board (message
+Written 2026-08-24 by claude from the process owner’s directive on the board (message
 1361), before any design or code. These stories are the acceptance spine:
 the presentation build is done when a stranger can live each story without
 help. The save state for reverting is the git tag `save-state-space-data`.

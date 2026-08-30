@@ -1,6 +1,6 @@
 # Rescue World — the experience proposal
 
-## What this is (Randy's reframe, 2026-08-23)
+## What this is (the process owner’s reframe, 2026-08-23)
 
 Rescue World is a disaster-decision simulator built from real incidents: it
 reconstructs the real decision points with the information that existed at
@@ -133,7 +133,7 @@ information.
 
 ## The full incident — the agents work the real scenario
 
-Randy's directive, stated twice in session: using all of the data is
+the process owner’s directive, stated twice in session: using all of the data is
 critical, because the data is the agents' working material, not scenery.
 After this proposal is approved, a second recorded scenario is built from
 the complete open set now being acquired: the seven official updates and

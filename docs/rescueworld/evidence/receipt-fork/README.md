@@ -1,6 +1,6 @@
 # Portable evidence for the Rescue World action-card finding
 
-This directory lets Yuki or a reviewer inspect and verify the two accepted focused runs from a
+This directory lets a reviewer inspect and verify the two accepted focused runs from a
 clean checkout. The original run directories contain every raw model call and remain outside Git;
 the four JSON files here are exact copies of the accepted analysis and plan files.
 

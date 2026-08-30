@@ -3,7 +3,7 @@
 Status: normative product-wide override, 2026-08-26
 
 This contract applies to the live replay, decision tree, decision ledger, act
-cards, story panel, map telegraph, walk-through and debrief. It records Randy's
+cards, story panel, map telegraph, walk-through and debrief. It records the process owner’s
 product ruling after the method-first decision-tree preview made the central
 failure visible:
 
@@ -115,7 +115,7 @@ tries without replacing the action layer.
 
 ### Three-dimensional decision-run tree
 
-The exhibition may also reuse Randy's existing three-dimensional agent-run
+The exhibition may also reuse the process owner’s existing three-dimensional agent-run
 tree. That component is an exact-reuse surface, not a visual redesign. Its
 reference is `docs/rescueworld/reference/agent-run-tree-component.html`,
 SHA-256
@@ -143,7 +143,7 @@ geometry, light, camera, motion, control, layout or Rescue World node. Rescue
 World has no agent-owner encoding and remains exact apart from the shared
 timeline-overlay exception above.
 
-There is a second board-tree-only exception, for the camera. Randy asked for it
+There is a second board-tree-only exception, for the camera. The process owner asked for it
 on 2026-08-27, in his own words: he wanted to zoom in on the board's task tree
 and look around it. The board task tree therefore adds a wheel zoom, a pan and a
 reset to the component's own left-drag turning. The mouse wheel and a two-finger
@@ -227,7 +227,7 @@ random sampling, live clock or newly derived grade.
 
 #### The dense decision network page
 
-Randy set this target on 2026-08-27 and Codex approved the plan the same day.
+The process owner set this target on 2026-08-27 and Codex approved the plan the same day.
 The audience and truth contract for the page is
 `docs/rescueworld/DENSE-DECISION-NETWORK-CONTRACT.md`, which is the authority on
 its node classes, its method-specific edges, its model-call provenance and its
@@ -277,7 +277,7 @@ clear of the key's column at both frame sizes.
 
 #### The combined impact view
 
-Randy set this target on 2026-08-27, after looking at the impact view and at the
+The process owner set this target on 2026-08-27, after looking at the impact view and at the
 dense decision network side by side. The two are one page now. The page is
 `app/public/impact-view.html`, its numbers are baked by
 `app/scripts/bake-impact-view.mjs` into `app/public/impact-view-data.json`, the

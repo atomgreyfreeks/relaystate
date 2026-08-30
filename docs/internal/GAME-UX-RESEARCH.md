@@ -312,7 +312,7 @@ becomes the notification stack. Every one of the eleven moment rows carries, at 
 without hovering, four things: the office that decided, the choice that was made in plain
 words, the agreement strip out of eight, and the check verdict as a word. Today the row carries
 the title, the clock, the decider, a count of ways of working, and a passed-or-ahead line, and
-it carries no outcome at all. That absence is precisely Randy's complaint, and this is the
+it carries no outcome at all. That absence is precisely the process owner’s complaint, and this is the
 smallest change that closes it. Second, the play control in our transport bar adopts the
 renaming behaviour: approaching a decision moment it reads "Next: the water decision, 22:40",
 and while a moment resolves it names what is being decided. Third, we build the Civilization VI
@@ -695,7 +695,7 @@ Ranked by how much understanding each buys per hour of work.
 
 1. **Give every row in the decision rail its outcome.** Each of the eleven moment rows carries
    the office that decided, the choice in plain words, the agreement strip out of eight, and the
-   check verdict as a word, all visible without hovering. This is the direct answer to Randy's
+   check verdict as a word, all visible without hovering. This is the direct answer to the process owner’s
    complaint that the decision-making is invisible, and every value is parsed already. Serves
    stories one and two. Effort: Small.
 2. **Draw the agreement strip out of eight everywhere a choice appears.** Eight cells, filled
@@ -723,7 +723,7 @@ The Civilization VI timeline ribbon ranks sixth and should be built if the first
 early, because it gives the run a spine a viewer can scrub and click.
 
 The run launcher from story five ranks seventh for tomorrow, and it needs one paragraph of its
-own, because Randy asked for it by name. The full round trip to the graphics processors and back
+own, because The process owner asked for it by name. The full round trip to the graphics processors and back
 is Large and will not land by nine. What can land is the Frostpunk 2 half of it, which is the
 screen that prepares the run. It lists the method to vary, the seed count and the moment to
 emphasise, with each option stating what it changes before it is committed. It ends in one

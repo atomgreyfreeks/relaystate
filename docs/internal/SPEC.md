@@ -1,15 +1,15 @@
 # Rescue World — build specification
 
 Status: draft 7, written 2026-08-23 by claude. Draft 5 expanded frontend
-item 6 to Randy's full-game-control directive from board message #464: a
+item 6 to the process owner’s full-game-control directive from board message #464: a
 free-flying camera, interactive panels answering the selection, and a
 single-world mode to inhabit. Draft 6 made the single-desk world the
 default view, confined the side-by-side comparison screen to internal use
-per Randy's ruling in board messages #475 and #476, and added the
+per the process owner’s ruling in board messages #475 and #476, and added the
 building-attribution boundary from board message #482. Draft 7 folds in
-Randy's session directive of 2026-08-23: this is a labeled simulation, so
+the process owner’s session directive of 2026-08-23: this is a labeled simulation, so
 simulated damage is shown fully and vividly — the boundary is attribution,
-not restraint. Draft 2 folded in Randy's
+not restraint. Draft 2 folded in the process owner’s
 binding aesthetic directive (board message #406): the Halo Forge
 post-processing chain is used as code, the Halo Forge component generator
 supplies the 3D instruments standing on the terrain, and Halo Forge's design
@@ -68,20 +68,20 @@ A full survey of this machine ran on 2026-08-23. Its findings bind this spec:
   layout is exactly the disaster schema: green becomes blocked roads, blue
   becomes affected population.
 - Look: the Halo Forge engine (`liveref/media/components/halo-forge.html`)
-  carries Randy's approved post-processing chain — bloom, chromatic split,
+  carries the process owner’s approved post-processing chain — bloom, chromatic split,
   scanlines, film grain, vignette, seven named looks — in about 250 lines of
   dependency-free WebGL (`initPost`, `resizePost`, `postCompose`, the grade
-  shader). Per Randy's directive, that chain is ported into the instrument
+  shader). Per the process owner’s directive, that chain is ported into the instrument
   as code and used as the final pass over every frame, so Rescue World is
   graded by the same program that grades the globe.
 - Components: Halo Forge also contains a component generation system — the
   instrument stations, dials, panels, and labels it builds procedurally and
   drives through `window.setDial` and `window.HALO.library`, already adapted
   once in `board/public/dome.html` where stations are generated from real
-  board data. Per Randy's directive, Rescue World reuses that generator: its
+  board data. Per the process owner’s directive, Rescue World reuses that generator: its
   components stand horizontally on the terrain at world sites — villages,
   shelters, rescue units — and their dials are driven by the event log.
-- Design language: Halo Forge's design language, as it appears on Randy's
+- Design language: Halo Forge's design language, as it appears on the process owner’s
   ideometry reference canvas, is the visual authority — Randy has already
   approved it, so nothing visual is invented that it does not cover. The
   colour-usage laws in `app/src/design/system.ts` (one signal thing per
@@ -179,7 +179,7 @@ cloned from mapworld. In build order:
    dome adapter's station pattern, stand the generated instruments
    horizontally on the terrain at villages, shelters, and rescue units, and
    drive their dials from the event log with the dome's eased pulses.
-6. Full game control of the world, per Randy's directive in board message
+6. Full game control of the world, per the process owner’s directive in board message
    #464: complete camera and heads-up-display control of the terrain, just
    like a video game — a living virtual environment, never playback-only.
    The camera flies free: orbit, pan, zoom, keyboard flight with the W, A, S
@@ -192,7 +192,7 @@ cloned from mapworld. In build order:
    instrument for building and verification only; Randy ruled in board
    messages #475 and #476 that nothing about it is used in the final
    output. Time is presented the way a real-time-strategy game presents it,
-   per Randy's session directive of 2026-08-23: a round counter as the
+   per the process owner’s session directive of 2026-08-23: a round counter as the
    primary time display (the exercise is round-based underneath), a
    step-one-round key and a step-one-event key, play at a few named speeds,
    and a pause that never hides the world — no video-style scrub bar on the
@@ -245,7 +245,7 @@ before its first byte enters the repository.
 - Synthetic inputs are always labeled synthetic, on screen and in the files.
 - Simulated damage is shown fully and vividly — fire, flooding, collapse,
   burned ground — because the whole world is labeled a simulation and the
-  demonstration must be as effective as possible (Randy's directive,
+  demonstration must be as effective as possible (the process owner’s directive,
   2026-08-23). The boundary is attribution, not restraint: the simulation
   may damage anything on screen, including the real building models, but
   no visual ever claims to show the real recorded condition of a specific

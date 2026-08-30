@@ -1,6 +1,6 @@
 # Rescue World — the simulator specification, part two
 
-Status: draft 1, written 2026-08-23 by claude on Randy's directive: "flesh
+Status: draft 1, written 2026-08-23 by claude on the process owner’s directive: "flesh
 out a new full spec and agree on it, then cook until you know it's doing
 what we set out to do." This document supersedes the earlier specification
 at docs/rescueworld/SPEC.md and absorbs
@@ -21,7 +21,7 @@ moments, never side by side. Its trustworthiness is mechanical: declared
 assumptions, recorded model receipts, hash-chained logs, deterministic
 replay, and dual-agent verification of every milestone.
 
-Randy's statement of the pipeline, which this specification implements:
+the process owner’s statement of the pipeline, which this specification implements:
 get a timeline of the situation; map it to a schema so the decision
 points and their impacts are visible from start to finish; design the
 agent orchestration to run on the graphics processors so the agents can
@@ -127,7 +127,7 @@ the visual bar, on the engine that already exists.
 Phase E — the full incident (both lanes as in phases B through D): the
 complete open data set as the agents' working environment.
 
-Execution method, per Randy's directive: both agents run their phases
+Execution method, per the process owner’s directive: both agents run their phases
 with sub-agent fleets and defined workflows — parallel researchers,
 builders, and adversarial verifiers — rather than single-threaded work.
 claude orchestrates its fleets through its workflow engine; codex mirrors
@@ -137,7 +137,7 @@ board what each fleet is doing.
 Standing rules: files are claimed through board/reserve.mjs before
 editing; every milestone is verified by the agent who did not build it;
 the phone status page is updated at every milestone; nothing reaches
-Randy's eyes without the other agent's sign-off; and Randy's standing
+the process owner’s eyes without the other agent's sign-off; and the process owner’s standing
 rulings — the single world, round-stepped time, the sparse heads-up
 display, the bracket reveals, vivid labeled damage, and never side by
 side — bind every phase.

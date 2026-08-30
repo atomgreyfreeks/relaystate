@@ -538,8 +538,8 @@ The strongest supported principle is therefore precise: **when an LLM step depen
 - Current post-run receipt protocol (full laboratory workspace: `experiments/kumamoto-bounded-probe-pilot/RECEIPT-DISPOSITION-PROTOCOL.md`); run-bound bytes are at commit `58ba8b3240bf7e404442f7cadec3421ebdf64369`, SHA-256 `58125098adfb7163330220621f1f694c3959a75a37f161fcb403d2707fa340ad`
 - [Portable focused evidence](evidence/receipt-fork/README.md)
 - [Acceptance manifest](evidence/receipt-fork/acceptance-manifest.json)
-- [Yuki handoff](YUKI-HANDOFF-2026-08-28.md)
-- [Rescue World one-sheet](YUKI-RESCUE-WORLD-ONE-SHEET.md)
+- [Full narrative](FULL-NARRATIVE.md)
+- [Rescue World one-sheet](ONE-SHEET.md)
 - [Orchestration process map](ORCHESTRATION-PROCESS-MAP.html)
 
 ### Accepted artifact identities

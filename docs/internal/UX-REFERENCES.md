@@ -784,4 +784,4 @@ unambiguously worth having, but our covenant says no chart, axis, gauge, legend 
 diagram as the primary image, and a mini-map sits close to that line. The resolution proposed
 here is that the mini-map is chrome at the frame edge, drawn as terrain rather than as an
 abstract plan, and small enough that it can never become the subject. That proposal needs
-Randy's ruling before it is built.
+the process owner’s ruling before it is built.

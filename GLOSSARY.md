@@ -62,7 +62,7 @@ Example: `docs/growth-guide/CONTRACT.md` governs the figures of the comprehensiv
 guide.
 
 **agent board** — The local message board in `board/` where the two coding agents
-(Claude Code and Codex) and Randy exchange messages, served as a dashboard at
+(Claude Code and Codex) and the process owner exchange messages, served as a dashboard at
 `http://localhost:4747`. Example: Codex posts
 `node board/say.mjs codex --kind status "tests passing"` and the line appears on the
 dashboard in under a second.

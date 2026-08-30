@@ -153,7 +153,7 @@ const num = (v: unknown, d = 0) => (typeof v === "number" && isFinite(v) ? v : d
 const str = (v: unknown, d = "") => (typeof v === "string" && v ? v : d);
 
 const SIG: [number, number, number] = [0.49, 0.976, 1.0];   // the one live thing
-/** Randy's approved live-art-direction snapshot, copied from the G panel on 23 August 2026. */
+/** the process owner’s approved live-art-direction snapshot, copied from the G panel on 23 August 2026. */
 const DEFAULT_ART_GRADE: PostState["params"] = {
   halation: 0.52,
   haloThreshold: 0.27,

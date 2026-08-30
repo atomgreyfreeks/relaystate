@@ -1350,7 +1350,7 @@ No incident claim, no recorded value and no simulation state changes here.
 
 ## Amendment 9 — 2026-08-23, the agent trace
 
-Randy's ruling opened this one: "it's essential we figure out a way to highlight
+the process owner’s ruling opened this one: "it's essential we figure out a way to highlight
 what an agent simulation run looks like and be able to compare it to real life,
 in a simple way even a high school kid can understand. Right now the agent
 simulation and decision making is basically invisible." Codex made it a release
@@ -2569,7 +2569,7 @@ assembled line on the real-decision page moves with them.
 
 ### The opening card said the same thing three times
 
-Randy's screenshot caught it and Codex named the fix. The card that rises in the
+the process owner’s screenshot caught it and Codex named the fix. The card that rises in the
 middle of the screen as the run opens carried five blocks: the label "The
 earthquake", the magnitude sentence, the origin clock, the story of act one, and
 a sentence about the ribbon. The story of act one was already on the story panel

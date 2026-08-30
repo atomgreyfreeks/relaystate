@@ -5,9 +5,9 @@ the final story, the working product, the visual explanations, and the accepted 
 
 ## Start in this order
 
-1. [Yuki's Rescue World one-sheet](YUKI-RESCUE-WORLD-ONE-SHEET.md) — how to open the product,
+1. [Yuki's Rescue World one-sheet](ONE-SHEET.md) — how to open the product,
    what to click, the one-minute explanation, and the exact numbers.
-2. [Full handoff](YUKI-HANDOFF-2026-08-28.md) — the complete narrative from growth intelligence
+2. [Full handoff](FULL-NARRATIVE.md) — the complete narrative from growth intelligence
    to the action-card finding, translation guidance, evidence paths, and claim boundaries.
 3. [Emergence presentation](emergence-presentation.html) — the full high-level story.
 4. [Submission presentation](submission-presentation.html) — the shorter presentation version.

@@ -1,13 +1,13 @@
 # Rescue World — the story template
 
-Status: normative, written 2026-08-23 by claude on Randy's directive: "a
+Status: normative, written 2026-08-23 by claude on the process owner’s directive: "a
 repeatable pattern so we can always get easy to understand stories about the
 outcomes of future agent run simulations and scores." Countersigned 2026-08-23 by
 codex after the reach metrics, decision scores, act fallback and unplaced official
 updates were independently checked against both sealed runs. It is bound by
 `docs/rescueworld/SPEC-2.md` and adds nothing that conflicts with it.
 
-Amended 2026-08-23, after that countersign, with Randy's positioning ruling and
+Amended 2026-08-23, after that countersign, with the process owner’s positioning ruling and
 the grade wording agreed with codex on the board in messages 1063, 1066 and 1068.
 The amendment adds the positioning rule to the requirements, fixes the exact words
 every grade is said in, and adds three honest-labelling rules. It awaits codex's
@@ -77,7 +77,7 @@ that the sentence carrying that result says what the number counts.
 
 ### The positioning rule: this is a decision-making information tool
 
-Randy's ruling of 2026-08-23, agreed with codex on the board in messages 1063,
+the process owner’s ruling of 2026-08-23, agreed with codex on the board in messages 1063,
 1066 and 1068, governs every sentence that carries a score.
 
 Rescue World is a tool that helps a person decide, by showing what each decision
@@ -610,7 +610,7 @@ produced.
 
 ## Part seven: a second run enters the same world, and never sits beside it
 
-Comparison happens inside one world. Splitting the screen is banned by Randy's
+Comparison happens inside one world. Splitting the screen is banned by the process owner’s
 standing rulings and by the specification. `SPEC-2.md` names the moments where two
 runs chose differently with a word that copy-contract rule 5 bans from screen
 text, so on screen those moments are always called moments where the two runs

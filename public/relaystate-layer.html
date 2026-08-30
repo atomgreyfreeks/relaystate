@@ -1,0 +1,545 @@
+<!--
+liveref component · RELAYSTATE layer readout — side-by-side edition
+brief: the identical agent lattice rendered twice in one frame. The upper pane
+runs without the handover record, the lower pane with it. Same wiring, same
+agents, same model, same camera — the only difference on screen is the lane.
+contract:
+  palette #000101 #164eaa #460710 #232424 #434343 #030304 #141318 #242426
+  construction follows decision-network.html: one InstancedMesh for repeated
+  node gems, one LineSegments for every edge, one renderer scissored into two
+  viewports, a 2D canvas for every icon, label and readout, capped DPR.
+-->
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RELAYSTATE — 引継書のある／ない</title>
+<script type="importmap">
+{"imports":{"three":"/media/vendor/three/three.module.min.js",
+"three/webgpu":"/media/vendor/three/three.webgpu.min.js",
+"three/tsl":"/media/vendor/three/three.tsl.min.js",
+"three/addons/":"/media/vendor/three/jsm/"}}
+</script>
+<script type="application/json" id="liveref-dials">
+[
+{"name":"glow","label":"node glow","min":0,"max":2.2,"step":0.01,"value":1,"group":"look"},
+{"name":"edge","label":"edge weight","min":0.05,"max":1,"step":0.01,"value":0.55,"group":"look"},
+{"name":"spread","label":"tier spread","min":0.5,"max":1.7,"step":0.01,"value":1,"group":"look"},
+{"name":"tempo","label":"run speed","min":0.2,"max":2.2,"step":0.01,"value":1,"unit":"x","group":"look"},
+{"name":"grain","label":"screen grain","min":0,"max":1,"step":0.01,"value":0.2,"group":"look"},
+{"name":"depth","label":"camera distance","min":0.65,"max":1.8,"step":0.01,"value":1,"group":"look"},
+{"name":"rail","label":"relay lane glow","min":0,"max":2,"step":0.01,"value":1,"group":"look"},
+{"name":"grid","label":"floor grid","min":0.4,"max":2,"step":0.01,"value":1,"group":"look"},
+{"name":"tips","label":"node labels","min":0,"max":1,"step":0.01,"value":1,"group":"look"},
+{"name":"ilev","label":"light intensity","min":0,"max":3,"step":0.01,"value":1.45,"group":"light"},
+{"name":"amb","label":"ambient level","min":0,"max":1.2,"step":0.01,"value":0.36,"group":"light"},
+{"name":"rim","label":"rim strength","min":0,"max":2.5,"step":0.01,"value":0.9,"group":"light"}
+]
+</script>
+<style>
+  :root{ --acc:#164eaa; --accHi:#4183e7; --rule:rgba(201,201,201,.14); }
+  html,body{margin:0;height:100%;background:#030304;}
+  body{font-family:"Helvetica Neue",Helvetica,"Hiragino Sans","Yu Gothic UI",Arial,system-ui,sans-serif;
+       color:#c9c9c9;font-variant-numeric:tabular-nums;overflow:hidden;}
+  #stage{position:absolute;inset:0;outline:none;background:#030304;cursor:grab;touch-action:none;}
+  #stage.drag{cursor:grabbing;}
+  #stage::after{content:"";position:absolute;inset:0;pointer-events:none;
+    box-shadow:inset 0 0 0 1px transparent;transition:box-shadow .24s cubic-bezier(.16,1,.3,1);}
+  #stage:focus-visible::after{box-shadow:inset 0 0 0 1px var(--acc);}
+  #gl{position:absolute;left:0;right:0;display:block;}
+  #hud{position:absolute;inset:0;display:block;pointer-events:none;}
+  #tp{position:absolute;display:flex;gap:4px;z-index:2;}
+  .btn{font-family:inherit;font-size:11px;line-height:1;letter-spacing:.06em;
+    color:#808080;background:transparent;border:1px solid var(--rule);border-radius:2px;
+    padding:6px 9px;cursor:pointer;-webkit-appearance:none;appearance:none;
+    transition:color .24s cubic-bezier(.16,1,.3,1),border-color .24s cubic-bezier(.16,1,.3,1),background-color .24s cubic-bezier(.16,1,.3,1);}
+  .btn:hover{color:#c9c9c9;border-color:rgba(201,201,201,.32);transition-duration:.12s;}
+  .btn:active{background:rgba(22,78,170,.30);color:#e6e6e6;}
+  .btn:focus-visible{outline:none;color:#c9c9c9;border-color:var(--acc);box-shadow:0 0 0 1px var(--acc);}
+  .btn[data-on="1"]{color:var(--accHi);border-color:rgba(65,131,231,.55);}
+  #stage.compact .wide{display:none;}
+</style>
+</head>
+<body>
+<div id="stage" tabindex="0" role="application" aria-label="上段は引継書なし、下段は引継書あり。同じ配線を同時に走らせた比較。スペースで一時停止。">
+  <canvas id="gl"></canvas>
+  <canvas id="hud"></canvas>
+  <div id="tp">
+    <button class="btn" id="bPlay" data-on="1" aria-pressed="false">一時停止</button>
+    <button class="btn wide" id="bAgain">最初から</button>
+  </div>
+</div>
+
+<script>window.__dq=[];window.setDial=function(n,v){window.__dq.push([n,v]);};</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+const INK='#c9c9c9', INK2='#808080', INK3='#525252';
+const RULE='rgba(201,201,201,0.14)', RULE2='rgba(201,201,201,0.26)';
+const BLUE='#4183e7', REDD='#c96b62';
+
+const VIEW = {
+  title: '前の判断は、次の判断に届いているか',
+  subtitle: '同じ配線・同じAI・同じモデルを、上下で同時に走らせている。違うのは下段のレーン1本だけ。',
+  panes: [
+    {relay:false, tag:'① 引継書レーン　なし', note:'いま多くの構成がこれ'},
+    {relay:true,  tag:'② 引継書レーン　あり', note:'足したのはレーン1本'}
+  ],
+  classes: [
+    {id:'scout', icon:'eye',   key:'報告を読む',        live:'#5ec8d6', done:'#25454c'},
+    {id:'rev',   icon:'check', key:'証拠と照合',        live:'#8f86d8', done:'#2f2c48'},
+    {id:'prop',  icon:'flag',  key:'行動を提案',        live:'#d8a44e', done:'#4a3a1e'},
+    {id:'rule',  icon:'gate',  key:'ルール検査（コード）', live:'#9aa2ad', done:'#333940'},
+    {id:'state', icon:'disc',  key:'確定して残る',      live:'#3f9fb0', done:'#1e3a40'},
+    {id:'card',  icon:'doc',   key:'引継書が運ばれる',   live:BLUE,      done:'#1b2c47'},
+    {id:'lost',  icon:'cross', key:'前の判断が届かない', live:REDD,      done:'#3a201e'},
+  ],
+  limitation: '格子は普通のAI構成。足しているのは下段のレーン1本だけ。判断のつながり方は説明用の例です。'
+};
+
+const TIERS=8;
+const LABELS=['初動の消防','欠測の確認','崩壊現場へ配置','派遣を確認',
+              '自衛隊へ要請','給水を配分','余震の点検','任務の転換'];
+const DEPS=[{from:1,to:3},{from:2,to:5},{from:4,to:7}];
+
+const D={glow:1,edge:0.55,spread:1,tempo:1,grain:0.2,depth:1,rail:1,grid:1,tips:1,
+         ilev:1.45,amb:0.36,rim:0.9};
+
+const stage=document.getElementById('stage'), glc=document.getElementById('gl'),
+      hud=document.getElementById('hud'), ctx=hud.getContext('2d'), tp=document.getElementById('tp');
+let W=0,H=0,TOP=78,BOT=136,FW=1,FH=1,PANE=1,dpr=1,compact=false;
+let PANELW=0, S=1;
+
+let renderer,gl_ok=false;
+try{ renderer=new THREE.WebGLRenderer({canvas:glc,antialias:true,alpha:false});
+     renderer.setClearColor(0x030304,1); renderer.setScissorTest(true); gl_ok=true; }catch(e){ gl_ok=false; }
+
+const scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x030304,0.021);
+const camera=new THREE.PerspectiveCamera(38,1,0.1,400);
+
+const amb=new THREE.AmbientLight(0xffffff,D.amb);
+const keyL=new THREE.DirectionalLight(0xfff2e2,D.ilev); keyL.position.set(9,15,11);
+const rimL=new THREE.DirectionalLight(BLUE,D.rim); rimL.position.set(-11,5,-9);
+scene.add(amb,keyL,rimL);
+
+const SPREAD0=3.5; let X0=0,DX=0;
+const tierX=i=>X0+i*DX;
+function recomputeSpread(){ DX=SPREAD0*D.spread; X0=-DX*(TIERS-1)/2; }
+recomputeSpread();
+
+const GEM=new THREE.OctahedronGeometry(0.17,0);
+const gemMat=new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.44,metalness:0.15,flatShading:true});
+
+const NODES=[];
+for(let i=0;i<TIERS;i++){
+  for(let s=0;s<3;s++) NODES.push({tier:i,kind:'scout',off:new THREE.Vector3(-0.62,2.95,-1.15+s*1.15),scale:1.0});
+  for(let s=0;s<3;s++) NODES.push({tier:i,kind:'rev',  off:new THREE.Vector3( 0.30,1.70,-1.15+s*1.15),scale:1.2});
+  NODES.push({tier:i,kind:'prop', off:new THREE.Vector3(0, 0.48,0),scale:1.5});
+  NODES.push({tier:i,kind:'rule', off:new THREE.Vector3(0,-0.62,0),scale:1.1});
+  NODES.push({tier:i,kind:'state',off:new THREE.Vector3(0,-1.72,0),scale:1.4});
+}
+const N=NODES.length;
+const nodeMesh=new THREE.InstancedMesh(GEM,gemMat,N);
+nodeMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+nodeMesh.instanceColor=new THREE.InstancedBufferAttribute(new Float32Array(N*3),3);
+scene.add(nodeMesh);
+
+const cardMesh=new THREE.InstancedMesh(new THREE.OctahedronGeometry(0.26,0),
+  new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.3,metalness:0.2,flatShading:true}),DEPS.length);
+cardMesh.instanceColor=new THREE.InstancedBufferAttribute(new Float32Array(DEPS.length*3),3);
+scene.add(cardMesh);
+
+function nodeAt(tier,kind,n){ let seen=0;
+  for(let i=0;i<NODES.length;i++){ const a=NODES[i];
+    if(a.tier===tier&&a.kind===kind){ if(seen===(n||0)) return i; seen++; } } return -1; }
+
+const EPAIRS=[];
+for(let i=0;i<TIERS;i++){
+  for(let s=0;s<3;s++) for(let r=0;r<3;r++) EPAIRS.push({a:nodeAt(i,'scout',s),b:nodeAt(i,'rev',r),kind:'pass'});
+  for(let r=0;r<3;r++) EPAIRS.push({a:nodeAt(i,'rev',r),b:nodeAt(i,'prop'),kind:'pass'});
+  EPAIRS.push({a:nodeAt(i,'prop'),b:nodeAt(i,'rule'),kind:'pass'});
+  EPAIRS.push({a:nodeAt(i,'rule'),b:nodeAt(i,'state'),kind:'carry'});
+  if(i<TIERS-1) EPAIRS.push({a:nodeAt(i,'state'),b:nodeAt(i+1,'scout',1),kind:'carry'});
+}
+const edgePos=new Float32Array(EPAIRS.length*6), edgeCol=new Float32Array(EPAIRS.length*6);
+const edgeGeo=new THREE.BufferGeometry();
+edgeGeo.setAttribute('position',new THREE.BufferAttribute(edgePos,3));
+edgeGeo.setAttribute('color',new THREE.BufferAttribute(edgeCol,3));
+const edgeLine=new THREE.LineSegments(edgeGeo,
+  new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:D.edge}));
+scene.add(edgeLine);
+
+const RAIL_Y=-3.9;
+const railGeo=new THREE.BufferGeometry();
+const railLine=new THREE.LineSegments(railGeo,
+  new THREE.LineBasicMaterial({color:0x4183e7,transparent:true,opacity:0}));
+scene.add(railLine);
+function rebuildRail(){ const half=DX*(TIERS-1)/2+1.8;
+  railGeo.setAttribute('position',new THREE.Float32BufferAttribute([-half,RAIL_Y,0,half,RAIL_Y,0],3)); }
+rebuildRail();
+
+let gridLines=null;
+function buildGrid(){
+  if(gridLines){ scene.remove(gridLines); gridLines.geometry.dispose(); }
+  const pts=[],a=0.16*D.grid,halfW=DX*(TIERS-1)/2+3.2;
+  for(let x=-halfW;x<=halfW;x+=1.6) for(let z=-4;z<=4;z+=1.6){
+    pts.push(x-a,-4.9,z,x+a,-4.9,z); pts.push(x,-4.9,z-a,x,-4.9,z+a); }
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));
+  gridLines=new THREE.LineSegments(g,new THREE.LineBasicMaterial({color:0x242426,transparent:true,opacity:0.5}));
+  scene.add(gridLines);
+}
+buildGrid();
+
+let playing=true,t=0,yaw=0.16,drag=false,lastX=0;
+const ease=v=>v<.5?2*v*v:1-Math.pow(-2*v+2,2)/2;
+const seg=(v,a,b)=>Math.max(0,Math.min(1,(v-a)/(b-a)));
+const _m=new THREE.Matrix4(),_q=new THREE.Quaternion(),_s=new THREE.Vector3(),
+      _p=new THREE.Vector3(),_c=new THREE.Color(),_pv=new THREE.Vector3();
+const AXIS=new THREE.Vector3(0,1,0), AXIS2=new THREE.Vector3(0.4,1,0).normalize();
+const cls=id=>VIEW.classes.find(k=>k.id===id);
+
+// one pane's worth of marks and tallies, refilled before that pane renders
+const PANEDATA=[{marks:[],cards:[],open:[],counts:{}},{marks:[],cards:[],open:[],counts:{}}];
+
+/* Build the scene for one pane. Called once per pane per frame, so the two
+   panes are the same geometry differing only in `relay`. */
+function collect(relay, out){
+  const head=t*TIERS;
+  const counts={scout:0,rev:0,prop:0,rule:0,state:0,card:0,lost:0,reject:0,open:0};
+  out.marks.length=0; out.cards.length=0; out.open.length=0;
+  // without the record the refused proposal never reaches the store, so the
+  // decision it belonged to is simply left open
+  const blocked=new Set();
+  if(!relay) for(const d of DEPS) if(head>d.to+0.62){ blocked.add(d.to); out.open.push(d.to); }
+  counts.reject=blocked.size; counts.open=blocked.size;
+
+  for(let i=0;i<N;i++){
+    const nd=NODES[i], local=Math.max(0,Math.min(1,head-nd.tier));
+    let a=0;
+    if(nd.kind==='scout') a=ease(seg(local,0,.30));
+    else if(nd.kind==='rev') a=ease(seg(local,.22,.52));
+    else if(nd.kind==='prop') a=ease(seg(local,.46,.70));
+    else if(nd.kind==='rule') a=ease(seg(local,.64,.84));
+    else a=ease(seg(local,.78,1));
+
+    if(blocked.has(nd.tier) && nd.kind==='state') a*=0.10;   // never admitted
+    const x=tierX(nd.tier)+nd.off.x;
+    _p.set(x,nd.off.y,nd.off.z);
+    _s.setScalar(nd.scale*(0.35+a*0.65));
+    _q.setFromAxisAngle(AXIS,nd.tier*0.3+t*0.6);
+    _m.compose(_p,_q,_s); nodeMesh.setMatrixAt(i,_m);
+
+    let hex=a>0.5?cls(nd.kind).live:cls(nd.kind).done, outcome=null;
+    if(nd.kind==='prop'){
+      const dep=DEPS.find(d=>d.to===nd.tier);
+      if(dep&&head>nd.tier+0.62){ outcome=relay?'ok':'lost'; hex=relay?BLUE:REDD; }
+    }
+    if(blocked.has(nd.tier)){
+      if(nd.kind==='rule'){ outcome='reject'; hex=REDD; }
+      if(nd.kind==='state'){ outcome='noadvance'; hex='#4a2622'; }
+    }
+    _c.set(hex).multiplyScalar(0.5+a*0.5*(0.6+D.glow*0.4));
+    nodeMesh.setColorAt(i,_c);
+    if(a>0.5) counts[nd.kind]++;
+
+    if(a>0.12 && (nd.kind==='prop'||nd.kind==='rule'||nd.kind==='state'||
+                  ((nd.kind==='scout'||nd.kind==='rev')&&nd.off.z===0))){
+      out.marks.push({x,y:nd.off.y,z:nd.off.z,kind:nd.kind,tier:nd.tier,a,hex,outcome});
+    }
+  }
+  nodeMesh.instanceMatrix.needsUpdate=true;
+  if(nodeMesh.instanceColor) nodeMesh.instanceColor.needsUpdate=true;
+
+  for(let e=0;e<EPAIRS.length;e++){
+    const {a:ia,b:ib,kind}=EPAIRS[e], A=NODES[ia], B=NODES[ib], o=e*6;
+    edgePos[o]=tierX(A.tier)+A.off.x; edgePos[o+1]=A.off.y; edgePos[o+2]=A.off.z;
+    edgePos[o+3]=tierX(B.tier)+B.off.x; edgePos[o+4]=B.off.y; edgePos[o+5]=B.off.z;
+    let lit=Math.min(1,Math.max(0,head-Math.max(A.tier,B.tier)-0.2));
+    if(kind==='carry' && blocked.has(A.tier)) lit*=0.18;
+    const v=(kind==='carry'?0.34:0.15)*lit;
+    const cr=kind==='carry'?v*0.35:v, cg=kind==='carry'?v*1.1:v, cb=kind==='carry'?v*1.25:v;
+    edgeCol[o]=cr; edgeCol[o+1]=cg; edgeCol[o+2]=cb;
+    edgeCol[o+3]=cr; edgeCol[o+4]=cg; edgeCol[o+5]=cb;
+  }
+  edgeGeo.attributes.position.needsUpdate=true;
+  edgeGeo.attributes.color.needsUpdate=true;
+  edgeLine.material.opacity=D.edge;
+
+  railLine.material.opacity=(relay?ease(seg(t,.02,.10)):0)*0.55*D.rail;
+
+  for(let i=0;i<DEPS.length;i++){
+    const d=DEPS[i], live=seg(head,d.from+0.85,d.to+0.55);
+    const vis=relay&&live>0&&live<1;
+    if(relay&&live>=1) counts.card++;
+    if(!relay&&head>d.to+0.62) counts.lost++;
+    if(!vis){ _s.setScalar(0.0001); _p.set(0,RAIL_Y,0); }
+    else{
+      counts.card++;
+      const x0=tierX(d.from),x1=tierX(d.to); let px,py;
+      if(live<.16){ const k=ease(live/.16); px=x0; py=-1.72+(RAIL_Y+1.72)*k; }
+      else if(live<.84){ const k=ease((live-.16)/.68); px=x0+(x1-x0)*k; py=RAIL_Y; }
+      else { const k=ease((live-.84)/.16); px=x1; py=RAIL_Y+(0.48-RAIL_Y)*k; }
+      _p.set(px,py,0); _s.setScalar(1);
+      out.cards.push({x:px,y:py,live});
+    }
+    _q.setFromAxisAngle(AXIS2,t*7+i);
+    _m.compose(_p,_q,_s); cardMesh.setMatrixAt(i,_m);
+    _c.set(BLUE).multiplyScalar(0.7+0.5*D.glow);
+    cardMesh.setColorAt(i,_c);
+  }
+  cardMesh.instanceMatrix.needsUpdate=true;
+  if(cardMesh.instanceColor) cardMesh.instanceColor.needsUpdate=true;
+  out.counts=counts;
+}
+
+function placeCamera(){
+  const halfSpan=DX*(TIERS-1)/2+2.2;
+  const need=halfSpan/(Math.tan(camera.fov*Math.PI/360)*Math.max(0.4,camera.aspect));
+  const dist=Math.max(16,need)*D.depth;
+  camera.position.set(Math.sin(yaw)*dist,dist*0.30,Math.cos(yaw)*dist);
+  camera.lookAt(0,-0.5,0);
+}
+
+/* ---------------------------------------------------------------- layout */
+function layout(){
+  W=stage.clientWidth||560; H=stage.clientHeight||380;
+  compact=(W<620||H<420);
+  stage.classList.toggle('compact',compact);
+  const s0=Math.max(0.9,Math.min(1.9,H/860));
+  TOP=Math.round((compact?52:78)*s0); BOT=Math.round((compact?92:136)*s0);
+  PANELW=compact?0:Math.min(380,Math.round(W*0.26));
+  S=Math.max(0.9,Math.min(1.9,H/860));      // projector type scale
+  FW=Math.max(1,W); FH=Math.max(80,H-TOP-BOT); PANE=Math.floor(FH/2);
+  glc.style.top=TOP+'px'; glc.style.height=FH+'px';
+  tp.style.left=(compact?10:16)+'px'; tp.style.bottom=(compact?8:10)+'px';
+  dpr=Math.min(2,window.devicePixelRatio||1);
+  hud.width=Math.max(1,Math.round(W*dpr)); hud.height=Math.max(1,Math.round(H*dpr));
+  hud.style.width=W+'px'; hud.style.height=H+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  if(gl_ok){
+    renderer.setPixelRatio(dpr);
+    renderer.setSize(FW,FH,false);
+    camera.aspect=FW/Math.max(1,PANE);   // both panes share one aspect
+    camera.updateProjectionMatrix();
+  }
+}
+
+/* ----------------------------------------------------------- hud painting */
+const F=w=>w+'px "Helvetica Neue",Helvetica,"Hiragino Sans","Yu Gothic UI",Arial,sans-serif';
+const MINPT=15;   // never smaller than this before scaling — wall legibility
+function jp(s,x,y,size,align,col){ ctx.font=F(Math.max(MINPT,size)*S); ctx.fillStyle=col||INK;
+  ctx.textAlign=align||'left'; ctx.fillText(String(s),x,y); ctx.textAlign='left'; }
+function hair(x0,y0,x1,y1,col){ ctx.strokeStyle=col||RULE; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(Math.round(x0)+0.5,Math.round(y0)+0.5);
+  ctx.lineTo(Math.round(x1)+0.5,Math.round(y1)+0.5); ctx.stroke(); }
+
+function icon(kind,x,y,r0,col){
+  const r=r0*S;
+  ctx.strokeStyle=col; ctx.fillStyle=col; ctx.lineWidth=1.3*S; ctx.beginPath();
+  if(kind==='eye'){ ctx.ellipse(x,y,r,r*0.62,0,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(x,y,r*0.26,0,Math.PI*2); ctx.fill(); }
+  else if(kind==='check'){ ctx.strokeRect(x-r*0.9,y-r*0.9,r*1.8,r*1.8);
+    ctx.beginPath(); ctx.moveTo(x-r*0.4,y); ctx.lineTo(x-r*0.05,y+r*0.42);
+    ctx.lineTo(x+r*0.5,y-r*0.45); ctx.stroke(); }
+  else if(kind==='flag'){ ctx.moveTo(x-r*0.55,y+r); ctx.lineTo(x-r*0.55,y-r); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x-r*0.55,y-r); ctx.lineTo(x+r*0.85,y-r*0.55);
+    ctx.lineTo(x-r*0.55,y-r*0.1); ctx.closePath(); ctx.fill(); }
+  else if(kind==='gate'){ ctx.moveTo(x-r,y-r*0.85); ctx.lineTo(x-r,y+r*0.85);
+    ctx.moveTo(x+r,y-r*0.85); ctx.lineTo(x+r,y+r*0.85); ctx.stroke();
+    ctx.fillRect(x-r,y-r*0.2,r*2,r*0.4); }
+  else if(kind==='disc'){ ctx.arc(x,y,r*0.8,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x,y,r*1.15,0,Math.PI*2); ctx.stroke(); }
+  else if(kind==='doc'){ ctx.rect(x-r*0.72,y-r,r*1.44,r*2); ctx.stroke(); ctx.lineWidth=1;
+    for(let i=0;i<3;i++){ ctx.beginPath();
+      ctx.moveTo(x-r*0.42,y-r*0.5+i*r*0.5); ctx.lineTo(x+r*0.42,y-r*0.5+i*r*0.5); ctx.stroke(); } }
+  else if(kind==='cross'){ ctx.moveTo(x-r*0.8,y-r*0.8); ctx.lineTo(x+r*0.8,y+r*0.8);
+    ctx.moveTo(x+r*0.8,y-r*0.8); ctx.lineTo(x-r*0.8,y+r*0.8); ctx.stroke(); }
+}
+
+// project into a given pane; WebGL panes stack downward on the 2D layer
+function project(x,y,z,paneTop){
+  _pv.set(x,y,z).project(camera);
+  return {x:(_pv.x*0.5+0.5)*FW, y:paneTop+(-_pv.y*0.5+0.5)*PANE, on:_pv.z<1};
+}
+
+function drawPane(pi){
+  const pane=VIEW.panes[pi], data=PANEDATA[pi];
+  const paneTop=TOP+pi*PANE;
+  const head=t*TIERS, active=Math.min(TIERS-1,Math.floor(head));
+  const padX=compact?10:20;
+  const HEADH=Math.round((compact?30:42)*S);
+
+  // ---- the picture's own marks
+  for(const m of data.marks){
+    const p=project(m.x,m.y,m.z,paneTop);
+    if(!p.on || p.y<paneTop+HEADH+6 || p.y>paneTop+PANE-8) continue;
+    if(p.x < PANELW+16) continue;                 // never draw under the panel
+    const c=cls(m.outcome==='lost'?'lost':(m.outcome==='ok'?'card':m.kind));
+    icon(c.icon,p.x,p.y,compact?6:8.5,m.hex);
+    if(D.tips>0.02 && !compact && m.tier===active && m.a>0.5 && p.x<FW-230)
+      jp(cls(m.kind).key,p.x+15,p.y+6,18,'left','rgba(201,201,201,'+(0.7*D.tips).toFixed(2)+')');
+    if(m.outcome && !compact && p.x<FW-250){
+      const SAY={lost:'前の判断が入力に無い', ok:'前の判断が届いた',
+                 reject:'ルール検査で棄却', noadvance:'記録に残らない'};
+      jp(SAY[m.outcome],p.x+15,p.y+6,19,'left',m.outcome==='ok'?BLUE:REDD);
+    }
+  }
+  for(const cm of data.cards){
+    const p=project(cm.x,cm.y,0,paneTop);
+    if(!p.on || p.y<paneTop+HEADH+6 || p.y>paneTop+PANE-8 || p.x<PANELW+16) continue;
+    icon('doc',p.x,p.y,compact?7:10,BLUE);
+    if(!compact && cm.live>0.25 && cm.live<0.75 && p.x<FW-330)
+      jp('引継書 — 前の判断をそのまま運ぶ',p.x+16,p.y+6,19,'left','#6f9fe8');
+  }
+
+  // ---- pane header
+  ctx.fillStyle='rgba(11,11,14,0.86)';
+  ctx.fillRect(0,paneTop,FW,HEADH);
+  hair(0,paneTop,FW,paneTop,RULE);
+  jp(pane.tag,padX,paneTop+(compact?21:29),compact?20:30,'left',pane.relay?BLUE:INK);
+  if(!compact) jp(pane.note,padX+330,paneTop+29,17,'left',INK3);
+
+  const c=data.counts;
+  const badge = pane.relay
+    ? '届いた '+(c.card||0)+'　棄却 0　未完 0'
+    : '届かなかった '+(c.lost||0)+'　棄却 '+(c.reject||0)+'　未完 '+(c.open||0);
+  jp(badge,FW-padX,paneTop+(compact?21:29),compact?16:21,'right',pane.relay?BLUE:REDD);
+
+  // ---- the consequence panel, in the empty column at the left
+  if(compact) return;
+  const px=padX, py=paneTop+HEADH+22, col=pane.relay?BLUE:REDD;
+  jp(pane.relay?'すべて引き継がれた':'終わっていない作業',px,py,23,'left',col);
+  hair(px,py+10,px+PANELW-30,py+10,pane.relay?'rgba(65,131,231,0.35)':'rgba(201,107,98,0.35)');
+
+  let at=py+44*S;
+  for(const d of DEPS){
+    const due=head>d.to+0.62;
+    const name=LABELS[d.to];
+    if(pane.relay){
+      icon(due?'doc':'disc',px+9,at-6,7,due?BLUE:'#1b2c47');
+      jp(name,px+28,at,21,'left',due?INK:INK3);
+      if(due) jp('引き継がれた',px+PANELW-30,at,15,'right',BLUE);
+    } else {
+      icon(due?'cross':'disc',px+9,at-6,7,due?REDD:'#28282a');
+      jp(name,px+28,at,21,'left',due?REDD:INK3);
+      if(due) jp('未完',px+PANELW-30,at,15,'right',REDD);
+    }
+    at+=34*S;
+  }
+
+  at+=16*S;
+  const lines = pane.relay
+    ? ['棄却は起きない。','判断は記録に入り、','次の判断へ渡る。']
+    : ['エラーは出ない。','記録も残る。','この作業だけが終わらない。'];
+  for(const one of lines){ jp(one,px,at,18,'left',pane.relay?'rgba(65,131,231,0.8)':'rgba(201,107,98,0.85)'); at+=26*S; }
+}
+
+function drawKeyRow(y){
+  const padX=compact?10:20, items=VIEW.classes;
+  const w=(W-padX*2)/items.length;
+  items.forEach((one,i)=>{
+    const x=padX+i*w;
+    icon(one.icon,x+9,y-6,7,one.live);
+    jp(one.key,x+24,y,compact?15:18,'left',INK2);
+  });
+}
+
+function drawTimeline(y){
+  const padX=compact?10:20,x0=padX,x1=W-padX;
+  hair(x0,y,x1,y,RULE);
+  const head=t*TIERS, active=Math.min(TIERS-1,Math.floor(head));
+  for(let i=0;i<TIERS;i++){
+    const px=x0+(i+0.5)/TIERS*(x1-x0), on=(i===active);
+    ctx.strokeStyle=on?BLUE:RULE2; ctx.lineWidth=on?2:1;
+    ctx.beginPath(); ctx.moveTo(Math.round(px)+0.5,y-5); ctx.lineTo(Math.round(px)+0.5,y+7); ctx.stroke();
+    ctx.lineWidth=1;
+    jp((i+1)+'　'+LABELS[i],px,y+26*S,compact?15:18,'center',on?INK:INK3);
+  }
+}
+
+function drawGrain(){
+  if(D.grain<=0) return;
+  const n=Math.round(W*H*0.00035*D.grain);
+  ctx.fillStyle='rgba(201,201,201,0.045)';
+  for(let i=0;i<n;i++) ctx.fillRect(Math.random()*W|0,Math.random()*H|0,1,1);
+}
+
+function drawHud(){
+  ctx.clearRect(0,0,W,H);
+  const padX=compact?10:20;
+  ctx.fillStyle='#0b0b0e';
+  ctx.fillRect(0,0,W,TOP); ctx.fillRect(0,H-BOT,W,BOT);
+  hair(0,TOP,W,TOP,RULE); hair(0,H-BOT,W,H-BOT,RULE);
+
+  jp(VIEW.title,padX,compact?24:34,compact?19:30,'left',INK);
+  if(!compact) jp(VIEW.subtitle,padX,62,17,'left',INK3);
+  const head=t*TIERS, active=Math.min(TIERS,Math.floor(head)+1);
+  jp('判断',W-padX,compact?18:26,compact?13:16,'right',INK2);
+  jp(active+' / '+TIERS,W-padX,compact?40:60,compact?22:34,'right',playing?INK:INK2);
+
+  drawPane(0);
+  drawPane(1);
+  // the seam between the two runs
+  hair(0,TOP+PANE,W,TOP+PANE,RULE2);
+
+  drawKeyRow(H-BOT+(compact?22:30));
+  drawTimeline(H-BOT+(compact?52:70));
+  if(!compact) jp(VIEW.limitation,padX,H-14,14,'left',INK3);
+  drawGrain();
+}
+
+/* ---------------------------------------------------------------- inputs */
+const bPlay=document.getElementById('bPlay'),bAgain=document.getElementById('bAgain');
+bPlay.onclick=()=>{ playing=!playing; bPlay.textContent=playing?'一時停止':'再生';
+  bPlay.dataset.on=playing?'1':'0'; bPlay.setAttribute('aria-pressed',playing?'false':'true'); };
+bAgain.onclick=()=>{ t=0; playing=true; bPlay.textContent='一時停止'; bPlay.dataset.on='1'; };
+stage.addEventListener('pointerdown',e=>{drag=true;lastX=e.clientX;stage.classList.add('drag');stage.setPointerCapture(e.pointerId);});
+stage.addEventListener('pointermove',e=>{ if(drag){ yaw-=(e.clientX-lastX)*0.005; lastX=e.clientX; } });
+stage.addEventListener('pointerup',()=>{drag=false;stage.classList.remove('drag');});
+stage.addEventListener('keydown',e=>{
+  if(e.key===' '){e.preventDefault();bPlay.click();}
+  if(e.key==='ArrowLeft') yaw+=0.08;
+  if(e.key==='ArrowRight') yaw-=0.08;
+});
+
+window.setDial=function(name,value){
+  const v=Number(value);
+  if(!isFinite(v)||!Object.prototype.hasOwnProperty.call(D,name)) return;
+  D[name]=v;
+  if(name==='spread'){ recomputeSpread(); rebuildRail(); buildGrid(); }
+  else if(name==='grid') buildGrid();
+  else if(name==='amb') amb.intensity=v;
+  else if(name==='ilev') keyL.intensity=v;
+  else if(name==='rim') rimL.intensity=v;
+};
+if(Array.isArray(window.__dq)){ for(const q of window.__dq) window.setDial(q[0],q[1]); window.__dq.length=0; }
+
+let last=0;
+function frame(now){
+  requestAnimationFrame(frame);
+  const dt=last?Math.min(0.05,(now-last)/1000):0; last=now;
+  if(playing){ t+=dt*0.048*D.tempo; if(t>1.16) t=0; }
+
+  placeCamera();
+  if(gl_ok){
+    // upper pane: the run without the record. lower pane: the same run with it.
+    // one renderer, one camera, two scissored viewports — nothing else differs.
+    for(let pi=0;pi<2;pi++){
+      collect(VIEW.panes[pi].relay, PANEDATA[pi]);
+      const vy = (pi===0) ? FH-PANE : 0;      // WebGL origin is bottom-left
+      renderer.setViewport(0,vy,FW,PANE);
+      renderer.setScissor(0,vy,FW,PANE);
+      renderer.render(scene,camera);
+    }
+  }
+  drawHud();
+}
+new ResizeObserver(layout).observe(stage);
+layout(); stage.focus(); requestAnimationFrame(frame);
+</script>
+</body>
+</html>

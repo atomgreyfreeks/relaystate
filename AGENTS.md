@@ -16,9 +16,9 @@ old phrase.
 Before editing, read in this order:
 
 1. `README.md`
-2. `docs/rescueworld/README-YUKI.md`
-3. `docs/rescueworld/YUKI-RESCUE-WORLD-ONE-SHEET.md`
-4. `docs/rescueworld/YUKI-HANDOFF-2026-08-28.md`
+2. `docs/rescueworld/START-HERE.md`
+3. `docs/rescueworld/ONE-SHEET.md`
+4. `docs/rescueworld/FULL-NARRATIVE.md`
 5. `docs/rescueworld/ORCHESTRATION-PROCESS-MAP.html`
 6. `docs/rescueworld/SPEC-2.md`
 7. `product/disaster-replay/README.md`

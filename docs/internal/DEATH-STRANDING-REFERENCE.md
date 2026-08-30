@@ -1,6 +1,6 @@
 # Rescue World — the Death Stranding map-screen reference
 
-Written 2026-08-23 by claude, at Randy's directive: "look at screenshots from the UI in
+Written 2026-08-23 by claude, at the process owner’s directive: "look at screenshots from the UI in
 death stranding's map screens, also death stranding 2 ... we are going for those vibes big
 time." Death Stranding's map screens are now the declared aesthetic north star for Rescue
 World, the 3D disaster-operations world specified in `SPEC.md` beside this file.
@@ -1069,7 +1069,7 @@ how much of each we spend and where.
 
 **The corner-bracket reveal is already the house gesture.** The markup with the `rv` class,
 with its four condensed brackets easing and rotating out from the box centre and then revealing
-the body, is closer to Randy's stated love of spin-open reveals than anything Death Stranding
+the body, is closer to the process owner’s stated love of spin-open reveals than anything Death Stranding
 does. Keep it.
 
 **The grade is already the right grade.** The ported Halo Forge chain has corner-weighted

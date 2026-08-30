@@ -160,8 +160,8 @@ Model–Move–Mesh gives the reader three questions:
 
 ## What Yuki should open first
 
-1. `docs/rescueworld/README-YUKI.md` — the index for Yuki and any AI tools helping with the submission.
-2. `docs/rescueworld/YUKI-RESCUE-WORLD-ONE-SHEET.md` — the one-page “open this, click this, explain this” guide.
+1. `docs/rescueworld/START-HERE.md` — the index for Yuki and any AI tools helping with the submission.
+2. `docs/rescueworld/ONE-SHEET.md` — the one-page “open this, click this, explain this” guide.
 3. `docs/rescueworld/emergence-presentation.html` — the complete story from growth intelligence to the finding and product.
 4. `docs/rescueworld/submission-presentation.html` — the shorter presentation version.
 5. `docs/rescueworld/ORCHESTRATION-PROCESS-MAP.html` — the beginner explanation plus the exact process and quality checks.

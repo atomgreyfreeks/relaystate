@@ -1,109 +1,119 @@
-# Rescue World — Yuki submission handoff
+# Rescue World
 
-This private repository contains the current Rescue World product, the two presentations, the
-plain-language process map, and portable copies of the accepted experiment evidence.
+**When one AI decision constrains a later one, does that decision actually reach the step that needs it?**
 
-If you are Yuki—or an AI helping Yuki—start with
-[`docs/rescueworld/README-YUKI.md`](docs/rescueworld/README-YUKI.md). It is the index for the
-submission package and explains what to open, what the project found, which numbers are safe to
-use, and where every result came from.
+We replayed the first 72 hours after a modelled 2026 Kumamoto earthquake as a connected exercise —
+414 hash-linked events, eleven AI decision moments, state carried the whole way through — and ran it
+to completion 32 times. Every one of those 32 runs failed the same handoff.
 
-## The project in one minute
+This repository contains the working software, the interactive explanations, the accepted evidence,
+and the working paper.
 
-We studied how an AI can keep making connected decisions during a long, changing situation.
-Rescue World replays the first 72 hours after a Kumamoto earthquake and shows eleven moments when
-an AI had to propose a response.
+---
 
-The full exercise exposed one clear problem. An earlier decision assigned a response group to a
-paper mill. A later decision needed to confirm that exact assignment. The confirmation remained
-unresolved in all 32 complete runs because the earlier decision was buried in the growing history.
+## Start here
 
-The final technique makes an **action card** whenever a decision creates work for later. The card
-records the exact decision, supporting reports, unanswered questions, and required next step.
-When that next step becomes possible, the system puts the card directly in front of the AI handling
-it and requires a clear confirmation or decline.
-
-We tested eight saved histories in which the earlier assignment was valid:
-
-- Qwen3-32B completed the exact follow-up on the first attempt in **8 of 8** histories. All **8 of
-  8** safety checks passed, with **0** false completions.
-- Qwen3.5-122B completed the exact follow-up on the first attempt in **8 of 8** histories. **7 of
-  8** full safety checks passed, with **0** false completions. The remaining safety case kept the
-  unsupported task open but missed an assignment-count and supporting-report rule.
-
-This is a focused result inside a modeled exercise. It does not measure real dispatches, people
-reached, lives saved, or real-world emergency outcomes.
-
-## Start in three commands
-
-You need Node.js 20 or newer.
+| If you have | Open |
+|---|---|
+| **2 minutes** | [One sheet](docs/rescueworld/ONE-SHEET.md) — what it is, the exact numbers, what not to claim |
+| **10 minutes** | [Start here](docs/rescueworld/START-HERE.md) — the index to everything below |
+| **30 minutes** | [Full narrative](docs/rescueworld/FULL-NARRATIVE.md) — the whole story, plainly written |
+| **You review research** | [Working paper](docs/rescueworld/RESCUE-WORLD-PAPER-DRAFT.md) — methods, results, threats to validity, claim boundary |
 
 ```bash
 npm ci
-npm run verify
-npm run dev
+npm run verify      # rebuilds every published number from the sealed record
+npm run dev         # then open http://127.0.0.1:5184
 ```
 
-Then open <http://127.0.0.1:5184>.
+Node 20 or newer.
 
-## Fastest useful review
+---
 
-1. Read [`docs/rescueworld/YUKI-RESCUE-WORLD-ONE-SHEET.md`](docs/rescueworld/YUKI-RESCUE-WORLD-ONE-SHEET.md).
-2. Open <http://127.0.0.1:5184/rescueworld.html> for the full 72-hour world.
-3. Press `T` to inspect how one AI proposal was built.
-4. Press `B` to see the eleven decision moments.
-5. Open <http://127.0.0.1:5184/impact-view.html> for the plain-English outcomes and accepted
-   action-card result.
-6. Open <http://127.0.0.1:5184/decision-network.html> for the color-coded AI decision network.
-7. Read the full story in
-   [`docs/rescueworld/emergence-presentation.html`](docs/rescueworld/emergence-presentation.html)
-   and the shorter version in
-   [`docs/rescueworld/submission-presentation.html`](docs/rescueworld/submission-presentation.html).
+## Things you can open and click
 
-## Verify the accepted action-card evidence
+Run `npm run dev`, then:
 
-The tracked evidence bundle contains the exact accepted analyses and plans for both model runs.
+| | What it shows |
+|---|---|
+| `/rescueworld.html` | **The 72-hour world.** Real Kumamoto terrain from Japan's Geospatial Information Authority, 414 recorded events, eleven decision moments you can inspect one by one. `B` for all decisions, `T` for the evidence behind one, `H` to reset the camera. |
+| `/decision-network.html` | **The work behind one proposal.** Every dot is one recorded model call, rule check, or state change — nothing added for looks. |
+| `/decision-network-ja.html` | The same network with Japanese labels, opening on the growth run. |
+| `/impact-view.html` | Plain-English outcomes across the campaign, and the accepted handover result. |
+| `/decision-run-tree.html` | The recorded decision paths as a tree, including the handover runs. |
+| `/relaystate-layer.html` | **The mechanism, side by side.** The identical lattice run twice — once without the handover record, once with it. Same wiring, same agents, same model. |
+| [Orchestration process map](docs/rescueworld/ORCHESTRATION-PROCESS-MAP.html) | How one decision becomes the next action, in beginner language, with the quality-control process drawn out. |
+| [Emergence presentation](docs/rescueworld/emergence-presentation.html) · [Submission presentation](docs/rescueworld/submission-presentation.html) | The long and short versions of the story. These open directly, no server needed. |
+
+---
+
+## What we found
+
+The exercise exposed one clean failure. At 20:00 a decision assigned response groups across two
+collapse sites. A linked decision at the **same cutoff** could confirm only a group named in that
+exact proposal. **None of the 32 complete campaigns produced a valid confirmation.** The state
+validator correctly refused every bad answer, so nothing was ever double-assigned — but the work
+was simply never finished, and nothing errored.
+
+We then took the eight saved histories where a valid earlier assignment existed and re-ran only the
+receiving decision, twice: once with an empty record field, once with a **handover record** carrying
+the exact assignment, the evidence it may cite, the questions it must leave open, and a required
+confirm-or-decline answer.
+
+| | Empty record | Handover record |
+|---|---:|---:|
+| Qwen3-32B | 0 / 8 | **8 / 8**, first attempt |
+| Qwen3.5-122B | 0 / 8 | **8 / 8**, first attempt |
+
+Zero false completions in either run.
+
+---
+
+## What this does **not** show
+
+Stated plainly, because the result is narrow and the paper says so throughout:
+
+- The two decisions shared **one cutoff**. This is not a test of memory across elapsed time.
+- All eight runs used the **same record content** — eight repeated samples of one handoff, not eight independent cases.
+- The control had **no access to the fact at all**, so this cannot separate "the record format helped" from "we supplied the answer."
+- Both models are **Qwen family**. This is not cross-family replication.
+- The modelled units are exercise constructs. **Not people, not dispatches, not lives saved.**
+
+The next experiments — fact-matched controls, active declines, delayed persistence — are specified
+in §12 of the paper.
+
+---
+
+## Verifying the evidence yourself
 
 ```bash
 node scripts/bake-receipt-fork.mjs --check
 ```
 
-The command verifies the file hashes, embedded analysis identities, model IDs, model revisions,
-accepted counts, and the public data used by the viewer.
+Checks the file hashes, the embedded analysis identities, model IDs and revisions, the accepted
+counts, and the public data the viewers read. The portable bundle is in
+`docs/rescueworld/evidence/receipt-fork/`.
 
-## Package map
+---
 
-- `docs/rescueworld/README-YUKI.md` — start-here index for Yuki and his AI tools.
-- `docs/rescueworld/YUKI-HANDOFF-2026-08-28.md` — full narrative, translation guidance, and claims.
-- `docs/rescueworld/YUKI-RESCUE-WORLD-ONE-SHEET.md` — one-page product and presentation guide.
-- `docs/rescueworld/evidence/receipt-fork/` — portable accepted analyses, plans, and manifest.
-- `rescueworld.html` — full interactive Rescue World.
-- `public/impact-view.html` — plain-English simulation outcomes and focused result.
-- `public/decision-network.html` — color-coded network behind each proposal.
-- `public/decision-run-tree.html` — run-tree view of the recorded decision paths.
-- `src/rescueworld/` — Three.js viewer implementation.
-- `product/disaster-replay/` — sealed replay data, schemas, certificates, and verifiers.
-- `experiment/` — the earlier registered benchmark package preserved as research history.
+## Layout
 
-## Instructions for an AI coding harness
+```
+rescueworld.html            the 72-hour viewer
+public/                     the other viewers and their baked data
+src/rescueworld/            viewer implementation
+docs/rescueworld/           reader documents, presentations, evidence bundle
+docs/internal/              build-time specs and copy decks (not needed to read the project)
+product/disaster-replay/    sealed replay data, schemas, certificates, verifiers
+experiment/                 the earlier registered benchmark, kept as research history
+scripts/                    the verification commands
+```
 
-Read these files before rewriting submission material:
+## Data and attribution
 
-1. `README.md`
-2. `docs/rescueworld/README-YUKI.md`
-3. `docs/rescueworld/YUKI-RESCUE-WORLD-ONE-SHEET.md`
-4. `docs/rescueworld/YUKI-HANDOFF-2026-08-28.md`
-5. `docs/rescueworld/ORCHESTRATION-PROCESS-MAP.html`
+Terrain, road restrictions, shelters and building models are real public data from Japan's
+Geospatial Information Authority, MLIT, Project PLATEAU, JMA and e-Stat. Every AI decision in the
+record is explicitly simulated and labelled as such. See [`NOTICE.md`](NOTICE.md) and
+[`product/disaster-replay/DATA-SOURCES.md`](product/disaster-replay/DATA-SOURCES.md).
 
-Preserve the exact result counts, model identities, evidence hashes, and claim boundary. Introduce
-the ordinary-language term **action card** before the technical term **decision receipt**. Explain
-the human problem and result before implementation details. Treat the visualizations as tools for
-inspection and explanation, not as the finding itself.
-
-## Working safely
-
-- Keep public records, simulated AI proposals, and later analysis visibly separate.
-- Never rewrite the sealed timeline to make a presentation claim easier.
-- Do not add credentials, `.env` files, VPN notes, private server addresses, or remote launch
-  commands.
-- After any change, run `npm run verify`; after a visible change, also run `npm run test:browser`.
+Working notes for anyone editing this repository are in [`AGENTS.md`](AGENTS.md).
