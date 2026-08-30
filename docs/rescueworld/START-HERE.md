@@ -1,11 +1,11 @@
 # Rescue World submission package — start here
 
-This is the index for Yuki and any AI tools helping with the hackathon submission. It points to
+This is the index to the package. It points to
 the final story, the working product, the visual explanations, and the accepted experiment data.
 
 ## Start in this order
 
-1. [Yuki's Rescue World one-sheet](ONE-SHEET.md) — how to open the product,
+1. [One sheet](ONE-SHEET.md) — how to open the product,
    what to click, the one-minute explanation, and the exact numbers.
 2. [Full handoff](FULL-NARRATIVE.md) — the complete narrative from growth intelligence
    to the action-card finding, translation guidance, evidence paths, and claim boundaries.
@@ -77,7 +77,7 @@ This is a modeled exercise, not a real dispatch system. The focused result cover
 eight saved histories, one incident, and two models from the same Qwen family. It does not measure
 people reached, lives saved, or real-world emergency outcomes.
 
-## Guidance for Yuki's AI tools
+## Guidance for anyone rewriting this material
 
 - Read this file, the one-sheet, and the full handoff before rewriting anything.
 - Preserve the exact counts, model IDs, revisions, file names, and hashes.

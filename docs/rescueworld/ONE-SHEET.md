@@ -1,4 +1,4 @@
-# Rescue World: Yuki's one-sheet guide
+# Rescue World: one-sheet guide
 
 ## What this is
 

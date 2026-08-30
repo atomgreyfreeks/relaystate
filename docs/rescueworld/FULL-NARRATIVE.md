@@ -1,7 +1,7 @@
-# Rescue World handoff for Yuki
+# Rescue World — the full narrative
 
 Date: 28 August 2026
-Purpose: understand the project quickly, work with your own AI tools, and prepare the Japanese translation.
+Purpose: understand the project quickly, and have the exact numbers and claim boundaries to hand.
 
 ## The sixty-second explanation
 
@@ -158,9 +158,9 @@ Model–Move–Mesh gives the reader three questions:
 - Keep the boundary visible: these are modeled decisions inside one earthquake exercise, not claims about real dispatches, people reached or lives saved.
 - Do not describe the second model as an unrelated model family. Both models are from the Qwen lineage.
 
-## What Yuki should open first
+## What to open first
 
-1. `docs/rescueworld/START-HERE.md` — the index for Yuki and any AI tools helping with the submission.
+1. `docs/rescueworld/START-HERE.md` — the index to the whole package.
 2. `docs/rescueworld/ONE-SHEET.md` — the one-page “open this, click this, explain this” guide.
 3. `docs/rescueworld/emergence-presentation.html` — the complete story from growth intelligence to the finding and product.
 4. `docs/rescueworld/submission-presentation.html` — the shorter presentation version.
