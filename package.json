@@ -13,6 +13,7 @@
     "verify:data": "node scripts/verify-data.mjs",
     "verify:package": "node scripts/verify-package.mjs",
     "verify:evidence": "node scripts/bake-receipt-fork.mjs --check",
+    "verify:numbers": "node scripts/reproduce-headline.mjs",
     "verify": "npm run build && npm run verify:data && npm run verify:evidence && npm run verify:package",
     "test:browser": "node scripts/browser-smoke.mjs"
   },
