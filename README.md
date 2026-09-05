@@ -442,6 +442,7 @@ number, not enough to re-read the model's prose.*
 | 30分 | [FULL-NARRATIVE](docs/rescueworld/FULL-NARRATIVE.md) — 成長知能から始まった経緯を平易に |
 | 全部 | [論文ドラフト](docs/rescueworld/RESCUE-WORLD-PAPER-DRAFT.md) — 手法・結果・妥当性への脅威・主張の境界 |
 | 32回の走行で何が起きたか | [CONTINUOUS-CAMPAIGN-FINDINGS](docs/rescueworld/CONTINUOUS-CAMPAIGN-FINDINGS.md) — 発見1の詳細 |
+| これからどうするか | [PRODUCT-DIRECTION](docs/rescueworld/PRODUCT-DIRECTION.md) — 製品化の道筋、未解決の問題、構築順序 |
 
 ---
 
